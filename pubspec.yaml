@@ -38,6 +38,9 @@ dependencies:
   user_repository:
     path: packages/user_repository
 
+  courses_repository:
+    path: packages/courses_repository
+
   studip_api_client:
     path: packages/studip_api_client
 
@@ -50,6 +53,9 @@ dependencies:
 
   oauth2_client: ^3.2.1
   http: ^0.13.5
+
+  equatable: ^2.0.3
+
 
   ######### STATE MANAGEMENT ############
   bloc: ^8.1.1

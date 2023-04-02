@@ -1,4 +1,5 @@
 import 'package:authentication_repository/authentication_repository.dart';
+import 'package:courses_repository/courses_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:studip_api_client/studip_api_client.dart';
 import 'package:studipadawan/app/view/app.dart';
@@ -22,10 +23,13 @@ Future<void> main() async {
 
   final userRepository = UserRepository(studIpApiClient: apiClient);
 
+  final coursesRepository = CourseRepository(apiClient: apiClient);
+
   //await authenticationRepository.user.first;
 
   runApp(App(
     authenticationRepository: authenticationRepository,
     userRepository: userRepository,
+      coursesRepository: coursesRepository,
   ));
 }

@@ -3,6 +3,7 @@ import 'dart:ffi';
 import 'dart:io';
 
 import 'package:http/http.dart' as http;
+import 'package:studip_api_client/src/models/course_response.dart';
 import 'package:studip_api_client/studip_api_client.dart';
 
 /// An exception thrown when there is a problem decoded the response body.
@@ -105,8 +106,31 @@ class StudIpApiClient {
     return CurrentUserResponse.fromJson(body);
   }
 
+  Future<CourseResponse> getCourses(String userId) async {
+    final uri = Uri.parse("$_baseUrl/jsonapi.php/v1/users/$userId/courses");
+
+    final response = await _httpClient.get(
+      uri,
+      headers: await _getRequestHeaders(),
+    );
+    print(response.statusCode);
+
+    final body = response.json();
+
+    print(response.statusCode);
+    print(response.body);
+    if (response.statusCode != HttpStatus.ok) {
+      throw StudIpApiRequestFailure(
+        body: body,
+        statusCode: response.statusCode,
+      );
+    }
+    return CourseResponse.fromJson(body);
+  }
+
   Future<Map<String, String>> _getRequestHeaders() async {
     final token = await _tokenProvider();
+    // token prüfen ob abgelaufen
     _printWrapped(token);
     return <String, String>{
       HttpHeaders.contentTypeHeader: ContentType.json.value,

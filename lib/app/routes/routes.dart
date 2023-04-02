@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:studipadawan/courses/view/courses_page.dart';
 import 'package:studipadawan/home/view/home_page.dart';
 
 import '../../login/view/view.dart';
@@ -11,7 +12,7 @@ List<Page<dynamic>> onGenerateAppViewPages(
   print("state: $state");
   switch (state) {
     case AppStatus.authenticated:
-      return [HomePage.page()];
+      return [CoursesPage.page()];
     case AppStatus.unauthenticated:
       return [LoginPage.page()];
   }

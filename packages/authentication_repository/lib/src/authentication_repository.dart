@@ -51,6 +51,7 @@ class AuthenticationRepository {
           Jwt.parseJwt(tokenResponse.accessToken!);
       String userId = decodedToken["sub"];
       print(userId);
+      print("refresh_token: ${tokenResponse.refreshToken}");
       final user = User(userId);
       _controller.add(user);
       _currentUser = user;

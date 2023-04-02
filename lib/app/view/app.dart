@@ -1,4 +1,5 @@
 import 'package:authentication_repository/authentication_repository.dart';
+import 'package:courses_repository/src/courses_repository.dart';
 import 'package:flow_builder/flow_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,11 +10,12 @@ import 'package:user_repository/src/user_repository.dart';
 class App extends StatelessWidget {
   const App({
     super.key,
-    required AuthenticationRepository authenticationRepository, required UserRepository userRepository,
-  }) : _authenticationRepository = authenticationRepository, _userRepository = userRepository;
+    required AuthenticationRepository authenticationRepository, required UserRepository userRepository, required CourseRepository coursesRepository,
+  }) : _authenticationRepository = authenticationRepository, _userRepository = userRepository, _courseRepository = coursesRepository;
 
   final AuthenticationRepository _authenticationRepository;
   final UserRepository _userRepository;
+  final CourseRepository _courseRepository;
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +23,7 @@ class App extends StatelessWidget {
       providers: [
         RepositoryProvider.value(value: _authenticationRepository),
         RepositoryProvider.value(value: _userRepository),
+        RepositoryProvider.value(value: _courseRepository),
       ],
       child: MultiBlocProvider(providers: [
         BlocProvider(
