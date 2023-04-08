@@ -6,6 +6,7 @@ import 'package:studipadawan/app/bloc/app_bloc.dart';
 import 'package:studipadawan/courses/bloc/CourseBloc.dart';
 import 'package:studipadawan/courses/bloc/courses_event.dart';
 import 'package:studipadawan/courses/bloc/courses_state.dart';
+import 'package:studipadawan/courses/view/widgets/semester_card.dart';
 import 'package:user_repository/user_repository.dart';
 
 class CoursesPage extends StatelessWidget {
@@ -45,11 +46,12 @@ class CoursesPage extends StatelessWidget {
             return const Text("LOADING..");
           } else {
             return ListView.builder(
-                itemCount: state.courses.length,
-                itemBuilder: (context, index) => ListTile(
-                      title: Text(state.courses[index].title),
-                      subtitle: Text(state.courses[index].subtitle ?? ""),
-                    ));
+                itemCount: state.semesters.length,
+                itemBuilder: (context, index) {
+                  return SemesterCard(
+                    semester: state.semesters.elementAt(index),
+                  );
+                });
           }
         },
       ),
