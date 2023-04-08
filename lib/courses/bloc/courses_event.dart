@@ -1,4 +1,3 @@
-
 import 'package:equatable/equatable.dart';
 
 abstract class CourseEvent extends Equatable {
@@ -13,4 +12,3 @@ class CoursesRequested extends CourseEvent {
   @override
   List<Object?> get props => [userId];
 }
-

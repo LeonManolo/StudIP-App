@@ -29,6 +29,7 @@ class CourseBloc extends Bloc<CourseEvent, CourseState> {
 
       return Semester(repositorySemester: repositorySemester, courses: courses);
     }).toList();
+
     emit(CourseState(status: CourseStatus.populated, semesters: semesters));
   }
 }
