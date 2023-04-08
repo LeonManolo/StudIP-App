@@ -13,8 +13,7 @@ class CourseRepository {
     try {
       final response = await _apiClient.getCourses(userId);
       final courses = response.courses;
-      Map<String, List<CourseResponse>> semesterToCourses =
-          Map<String, List<CourseResponse>>();
+      Map<String, List<CourseResponse>> semesterToCourses = {};
       for (var course in courses) {
         if (semesterToCourses.containsKey(course.semesterId)) {
           semesterToCourses[course.semesterId]?.add(course);
@@ -27,13 +26,8 @@ class CourseRepository {
           .map((semesterId) => _apiClient.getSemester(semesterId)));
 
       final semesters = semestersResponse.map((semesterResponse) {
-        return Semester(
-          id: semesterResponse.id,
-          title: semesterResponse.title,
-          start: DateTime.parse(semesterResponse.start),
-          end: DateTime.parse(semesterResponse.end),
-          startOfLectures: DateTime.parse(semesterResponse.startOfLectures),
-          endOfLectures: DateTime.parse(semesterResponse.endOfLectures),
+        return Semester.fromSemesterResponse(
+          semesterResponse: semesterResponse,
           courses: semesterToCourses[semesterResponse.id]
                   ?.map((courseResponse) =>
                       Course.fromCourseResponse(courseResponse))

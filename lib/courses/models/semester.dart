@@ -1,4 +1,5 @@
 import 'course.dart';
+import 'package:intl/intl.dart';
 import 'package:courses_repository/src/models/models.dart' as RepositoryModels;
 
 class Semester {
@@ -21,4 +22,12 @@ class Semester {
         end = repositorySemester.end,
         startOfLectures = repositorySemester.startOfLectures,
         endOfLectures = repositorySemester.endOfLectures;
+
+  String get semesterTimeSpan {
+    return "${DateFormat("dd.MM.yyyy").format(start)} - ${DateFormat("dd.MM.yyyy").format(end)}";
+  }
+
+  String get lecturesTimeSpan {
+    return "${DateFormat("dd.MM.yyyy").format(startOfLectures)} - ${DateFormat("dd.MM.yyyy").format(endOfLectures)}";
+  }
 }

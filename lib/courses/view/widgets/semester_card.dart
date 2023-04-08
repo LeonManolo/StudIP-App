@@ -17,12 +17,44 @@ class SemesterCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(
-              semester.title,
-              style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.grey),
+            Row(
+              children: [
+                Text(
+                  semester.title,
+                  style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey),
+                ),
+                const Spacer(),
+                GestureDetector(
+                  child: const Icon(Icons.info_outline_rounded, size: 22),
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: Text(semester.title),
+                        content: SingleChildScrollView(
+                            child: ListBody(
+                          children: [
+                            Text(
+                                "Semesterzeitraum:\n${semester.semesterTimeSpan}"),
+                            const SizedBox(height: 12),
+                            Text(
+                                "Unterrichtszeitraum:\n${semester.lecturesTimeSpan}"),
+                          ],
+                        )),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(context),
+                            child: const Text("Ok"),
+                          )
+                        ],
+                      ),
+                    );
+                  },
+                )
+              ],
             ),
             for (Course course in semester.courses) _courseCard(course)
           ],

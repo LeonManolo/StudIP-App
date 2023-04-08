@@ -18,7 +18,7 @@ class CoursesPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Veranstaltungen"),
+        title: const Text("Kurse"),
         actions: <Widget>[
           IconButton(
             key: const Key('homePage_logout_iconButton'),
