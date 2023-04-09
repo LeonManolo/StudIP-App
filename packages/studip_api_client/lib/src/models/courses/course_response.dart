@@ -1,13 +1,24 @@
 class CourseListResponse {
   final List<CourseResponse> courses;
+  final int? offset;
+  final int? limit;
+  final int? total;
 
-  const CourseListResponse({required this.courses});
+  const CourseListResponse(
+      {required this.courses, this.offset, this.limit, this.total});
 
   factory CourseListResponse.fromJson(Map<String, dynamic> json) {
     List<dynamic> courses = json["data"];
+    Map<String, dynamic> pageInfo = json["meta"]["page"];
 
     return CourseListResponse(
-        courses: courses.map((j) => CourseResponse.fromJson(j)).toList());
+        courses: courses
+            .map((rawCourseResponse) =>
+                CourseResponse.fromJson(rawCourseResponse))
+            .toList(),
+        offset: pageInfo["offset"],
+        limit: pageInfo["limit"],
+        total: pageInfo["total"]);
   }
 }
 

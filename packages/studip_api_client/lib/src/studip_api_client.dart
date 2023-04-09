@@ -103,8 +103,13 @@ class StudIpApiClient {
     return CurrentUserResponse.fromJson(body);
   }
 
-  Future<CourseListResponse> getCourses(String userId) async {
-    final uri = Uri.parse("$_baseUrl/jsonapi.php/v1/users/$userId/courses");
+  Future<CourseListResponse> getCourses(
+      {required String userId, required int offset, required int limit}) async {
+    final uri = Uri.parse("$_baseUrl/jsonapi.php/v1/users/$userId/courses")
+        .replace(queryParameters: {
+      "page[offset]": "$offset",
+      "page[limit]": "$limit"
+    });
 
     final response = await _httpClient.get(
       uri,

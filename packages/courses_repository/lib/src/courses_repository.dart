@@ -11,8 +11,8 @@ class CourseRepository {
 
   Future<List<Semester>> getCoursesGroupedBySemester(String userId) async {
     try {
-      final response = await _apiClient.getCourses(userId);
-      final courses = response.courses;
+      final courses = await _getCourses(userId: userId, limit: 30, offset: 0);
+
       Map<String, List<CourseResponse>> semesterToCourses = {};
       for (var course in courses) {
         if (semesterToCourses.containsKey(course.semesterId)) {
@@ -41,6 +41,26 @@ class CourseRepository {
       return semesters;
     } catch (error, stackTrace) {
       Error.throwWithStackTrace(error, stackTrace);
+    }
+  }
+
+  Future<List<CourseResponse>> _getCourses({
+    required String userId,
+    required int limit,
+    required int offset,
+  }) async {
+    final response = await _apiClient.getCourses(
+        userId: userId, limit: limit, offset: offset);
+
+    if ((response.total ?? 0) > limit &&
+        (response.offset ?? 0) + limit < (response.total ?? 0)) {
+      var courseResponses = response.courses;
+      courseResponses.addAll(await _getCourses(
+          userId: userId, limit: limit, offset: offset + limit));
+
+      return courseResponses;
+    } else {
+      return response.courses;
     }
   }
 }
