@@ -6,11 +6,8 @@ import 'package:studipadawan/app/bloc/app_bloc.dart';
 import 'package:studipadawan/courses/bloc/CourseBloc.dart';
 import 'package:studipadawan/courses/bloc/courses_event.dart';
 import 'package:studipadawan/courses/bloc/courses_state.dart';
-import 'package:studipadawan/courses/models/course.dart';
 import 'package:studipadawan/courses/view/widgets/semester_card.dart';
 import 'package:user_repository/user_repository.dart';
-
-import '../models/models.dart';
 
 class CoursesPage extends StatelessWidget {
   const CoursesPage({Key? key}) : super(key: key);
@@ -19,10 +16,10 @@ class CoursesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final courseBloc =
-        CourseBloc(courseRepository: context.read<CourseRepository>())
-          ..add(CoursesRequested(
-              userId: context.read<AuthenticationRepository>().currentUser.id));
+    final courseBloc = CourseBloc(
+        courseRepository: context.read<CourseRepository>(),
+        authenticationRepository: context.read<AuthenticationRepository>())
+      ..add(CoursesRequested());
 
     return Scaffold(
       appBar: _appBar(context),
@@ -36,11 +33,7 @@ class CoursesPage extends StatelessWidget {
           } else {
             return RefreshIndicator(
               onRefresh: () async {
-                courseBloc.add(CoursesRequested(
-                    userId: context
-                        .read<AuthenticationRepository>()
-                        .currentUser
-                        .id));
+                courseBloc.add(CoursesRequested());
               },
               child: ListView.builder(
                   itemCount: state.semesters.length,

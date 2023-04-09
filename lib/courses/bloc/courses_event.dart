@@ -5,10 +5,6 @@ abstract class CourseEvent extends Equatable {
 }
 
 class CoursesRequested extends CourseEvent {
-  final String userId;
-
-  const CoursesRequested({required this.userId});
-
   @override
-  List<Object?> get props => [userId];
+  List<Object?> get props => [];
 }
