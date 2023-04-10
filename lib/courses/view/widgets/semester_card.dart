@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../models/models.dart';
+import 'package:courses_repository/src/models/models.dart';
 
 class SemesterCard extends StatelessWidget {
   final Semester semester;
@@ -65,7 +65,7 @@ class SemesterCard extends StatelessWidget {
 
   Widget _courseCard(Course course) {
     return GestureDetector(
-      onTap: () => course.onCourseSelection(),
+      onTap: () => {},
       child: Container(
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(16),

@@ -4,5 +4,4 @@
 library courses_repository;
 
 export 'src/courses_repository.dart';
-
-// TODO: Export any libraries intended for clients of this package.
+export 'src/models/models.dart';

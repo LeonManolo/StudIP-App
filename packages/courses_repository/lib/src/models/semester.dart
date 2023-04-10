@@ -1,4 +1,5 @@
 import 'course.dart';
+import 'package:intl/intl.dart';
 import 'package:studip_api_client/src/models/models.dart' as APIModels;
 
 class Semester {
@@ -34,5 +35,13 @@ class Semester {
       endOfLectures: DateTime.parse(semesterResponse.endOfLectures),
       courses: courses,
     );
+  }
+
+  String get semesterTimeSpan {
+    return "${DateFormat("dd.MM.yyyy").format(start)} - ${DateFormat("dd.MM.yyyy").format(end)}";
+  }
+
+  String get lecturesTimeSpan {
+    return "${DateFormat("dd.MM.yyyy").format(startOfLectures)} - ${DateFormat("dd.MM.yyyy").format(endOfLectures)}";
   }
 }

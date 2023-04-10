@@ -3,7 +3,7 @@ import 'package:courses_repository/courses_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:studipadawan/app/bloc/app_bloc.dart';
-import 'package:studipadawan/courses/bloc/CourseBloc.dart';
+import 'package:studipadawan/courses/bloc/course_bloc.dart';
 import 'package:studipadawan/courses/bloc/courses_event.dart';
 import 'package:studipadawan/courses/bloc/courses_state.dart';
 import 'package:studipadawan/courses/view/widgets/semester_card.dart';
