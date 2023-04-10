@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:studip_api_client/studip_api_client.dart';
+import 'package:courses_repository/src/models/models.dart';
 
 enum CourseStatus {
   initial,
@@ -10,11 +10,11 @@ enum CourseStatus {
 
 class CourseState extends Equatable {
   final CourseStatus status;
-  final List<Course> courses;
+  final List<Semester> semesters;
 
   const CourseState({
     required this.status,
-    this.courses = const [],
+    this.semesters = const [],
   });
 
   const CourseState.initial()
@@ -23,10 +23,10 @@ class CourseState extends Equatable {
         );
 
   @override
-  List<Object?> get props => [status, courses];
+  List<Object?> get props => [status, semesters];
 
-  CourseState copyWith({CourseStatus? status, List<Course>? courses}) {
+  CourseState copyWith({CourseStatus? status, List<Semester>? semesters}) {
     return CourseState(
-        status: status ?? this.status, courses: courses ?? this.courses);
+        status: status ?? this.status, semesters: semesters ?? this.semesters);
   }
 }

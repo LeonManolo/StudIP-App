@@ -8,7 +8,8 @@ import 'package:studipadawan/messages/view/messages_page.dart';
 class AuthenticatedPage extends StatefulWidget {
   const AuthenticatedPage({Key? key}) : super(key: key);
 
-  static Page<void> page() => const MaterialPage<void>(child: AuthenticatedPage());
+  static Page<void> page() =>
+      const MaterialPage<void>(child: AuthenticatedPage());
 
   @override
   State<AuthenticatedPage> createState() => _AuthenticatedPageState();
@@ -29,20 +30,25 @@ class _AuthenticatedPageState extends State<AuthenticatedPage> {
           CalenderPage(),
         ],
       ),
-      bottomNavigationBar: BottomNavigationBar(items: const [
-        BottomNavigationBarItem(
-          label: "Home",
-            icon: Icon(EvaIcons.homeOutline), activeIcon: Icon(EvaIcons.home)),
-        BottomNavigationBarItem(
-            label: "Veranstaltungen",
-            icon: Icon(EvaIcons.bookOpenOutline), activeIcon: Icon(EvaIcons.bookOpen)),
-        BottomNavigationBarItem(
-            label: "Nachrichten",
-            icon: Icon(EvaIcons.messageSquareOutline), activeIcon: Icon(EvaIcons.messageSquare)),
-        BottomNavigationBarItem(
-            label: "Kalender",
-            icon: Icon(EvaIcons.calendarOutline), activeIcon: Icon(EvaIcons.calendar)),
-      ],
+      bottomNavigationBar: BottomNavigationBar(
+        items: const [
+          BottomNavigationBarItem(
+              label: "Home",
+              icon: Icon(EvaIcons.homeOutline),
+              activeIcon: Icon(EvaIcons.home)),
+          BottomNavigationBarItem(
+              label: "Kurse",
+              icon: Icon(EvaIcons.bookOpenOutline),
+              activeIcon: Icon(EvaIcons.bookOpen)),
+          BottomNavigationBarItem(
+              label: "Nachrichten",
+              icon: Icon(EvaIcons.messageSquareOutline),
+              activeIcon: Icon(EvaIcons.messageSquare)),
+          BottomNavigationBarItem(
+              label: "Kalender",
+              icon: Icon(EvaIcons.calendarOutline),
+              activeIcon: Icon(EvaIcons.calendar)),
+        ],
         type: BottomNavigationBarType.fixed,
         currentIndex: _selectedTab,
         onTap: (value) {

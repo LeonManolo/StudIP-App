@@ -3,12 +3,11 @@ import 'dart:ffi';
 import 'dart:io';
 
 import 'package:http/http.dart' as http;
-import 'package:studip_api_client/src/models/course_response.dart';
+import 'package:studip_api_client/src/models/courses/course_response.dart';
 import 'package:studip_api_client/studip_api_client.dart';
 
 /// An exception thrown when there is a problem decoded the response body.
 class StudIpApiMalformedResponse implements Exception {
-
   const StudIpApiMalformedResponse({required this.error});
 
   /// The associated error.
@@ -17,7 +16,6 @@ class StudIpApiMalformedResponse implements Exception {
 
 /// An exception thrown when an http request failure occurs.
 class StudIpApiRequestFailure implements Exception {
-
   const StudIpApiRequestFailure({
     required this.statusCode,
     required this.body,
@@ -46,9 +44,9 @@ class StudIpApiClient {
     required TokenProvider tokenProvider,
     http.Client? httpClient,
   }) : this._(
-      baseUrl: "http://miezhaus.feste-ip.net:55109",
-      httpClient: httpClient,
-      tokenProvider: tokenProvider);
+            baseUrl: "http://miezhaus.feste-ip.net:55109",
+            httpClient: httpClient,
+            tokenProvider: tokenProvider);
 
   StudIpApiClient.localhost({
     required TokenProvider tokenProvider,
@@ -60,12 +58,11 @@ class StudIpApiClient {
   final TokenProvider _tokenProvider;
 
   Future<void> getUsers({Int? offset, Int? page, filter}) async {
-    final uri = Uri.parse("$_baseUrl/jsonapi.php/v1/users").replace(
-        queryParameters: <String, String> {
-          if (page != null) 'page': '$page',
-          if (offset != null) 'offset': '$offset',
-        }
-    );
+    final uri = Uri.parse("$_baseUrl/jsonapi.php/v1/users")
+        .replace(queryParameters: <String, String>{
+      if (page != null) 'page': '$page',
+      if (offset != null) 'offset': '$offset',
+    });
 
     final response = await _httpClient.get(
       uri,
@@ -106,8 +103,13 @@ class StudIpApiClient {
     return CurrentUserResponse.fromJson(body);
   }
 
-  Future<CourseResponse> getCourses(String userId) async {
-    final uri = Uri.parse("$_baseUrl/jsonapi.php/v1/users/$userId/courses");
+  Future<CourseListResponse> getCourses(
+      {required String userId, required int offset, required int limit}) async {
+    final uri = Uri.parse("$_baseUrl/jsonapi.php/v1/users/$userId/courses")
+        .replace(queryParameters: {
+      "page[offset]": "$offset",
+      "page[limit]": "$limit"
+    });
 
     final response = await _httpClient.get(
       uri,
@@ -125,7 +127,23 @@ class StudIpApiClient {
         statusCode: response.statusCode,
       );
     }
-    return CourseResponse.fromJson(body);
+    return CourseListResponse.fromJson(body);
+  }
+
+  Future<SemesterResponse> getSemester(String semesterId) async {
+    final uri = Uri.parse("$_baseUrl/jsonapi.php/v1/semesters/$semesterId");
+    final response = await _httpClient.get(
+      uri,
+      headers: await _getRequestHeaders(),
+    );
+
+    final body = response.json();
+
+    if (response.statusCode != HttpStatus.ok) {
+      throw StudIpApiRequestFailure(
+          body: body, statusCode: response.statusCode);
+    }
+    return SemesterResponse.fromJson(body);
   }
 
   Future<Map<String, String>> _getRequestHeaders() async {
