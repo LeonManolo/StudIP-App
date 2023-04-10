@@ -3,6 +3,7 @@ import 'package:courses_repository/src/courses_repository.dart';
 import 'package:flow_builder/flow_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:messages_repository/messages_repository.dart';
 import 'package:studipadawan/app/bloc/app_bloc.dart';
 import 'package:studipadawan/app/routes/routes.dart';
 import 'package:user_repository/src/user_repository.dart';
@@ -10,12 +11,19 @@ import 'package:user_repository/src/user_repository.dart';
 class App extends StatelessWidget {
   const App({
     super.key,
-    required AuthenticationRepository authenticationRepository, required UserRepository userRepository, required CourseRepository coursesRepository,
-  }) : _authenticationRepository = authenticationRepository, _userRepository = userRepository, _courseRepository = coursesRepository;
+    required AuthenticationRepository authenticationRepository,
+    required UserRepository userRepository,
+    required CourseRepository coursesRepository,
+    required MessageRepository messageRepository
+  })  : _authenticationRepository = authenticationRepository,
+        _userRepository = userRepository,
+        _courseRepository = coursesRepository,
+        _messageRepository = messageRepository;
 
   final AuthenticationRepository _authenticationRepository;
   final UserRepository _userRepository;
   final CourseRepository _courseRepository;
+  final MessageRepository _messageRepository;
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +32,7 @@ class App extends StatelessWidget {
         RepositoryProvider.value(value: _authenticationRepository),
         RepositoryProvider.value(value: _userRepository),
         RepositoryProvider.value(value: _courseRepository),
+        RepositoryProvider.value(value: _messageRepository),
       ],
       child: MultiBlocProvider(providers: [
         BlocProvider(

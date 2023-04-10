@@ -41,6 +41,9 @@ dependencies:
   courses_repository:
     path: packages/courses_repository
 
+  messages_repository:
+    path: packages/messages_repository
+
   studip_api_client:
     path: packages/studip_api_client
 
