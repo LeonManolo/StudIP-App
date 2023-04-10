@@ -39,7 +39,7 @@ class AuthenticationRepository {
 
   Future<void> loginWithStudIp() async {
     AccessTokenResponse tokenResponse = await _oAuth2Client
-        .getTokenWithAuthCodeFlow(clientId: '13', scopes: ['api']);
+        .getTokenWithAuthCodeFlow(clientId: '5', scopes: ['api']);
     tokenResponse.toMap().keys.forEach((element) {
       print(element);
     });

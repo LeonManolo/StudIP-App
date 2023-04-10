@@ -8,7 +8,6 @@ import 'package:studip_api_client/studip_api_client.dart';
 
 /// An exception thrown when there is a problem decoded the response body.
 class StudIpApiMalformedResponse implements Exception {
-
   const StudIpApiMalformedResponse({required this.error});
 
   /// The associated error.
@@ -17,7 +16,6 @@ class StudIpApiMalformedResponse implements Exception {
 
 /// An exception thrown when an http request failure occurs.
 class StudIpApiRequestFailure implements Exception {
-
   const StudIpApiRequestFailure({
     required this.statusCode,
     required this.body,
@@ -46,9 +44,9 @@ class StudIpApiClient {
     required TokenProvider tokenProvider,
     http.Client? httpClient,
   }) : this._(
-      baseUrl: "http://miezhaus.feste-ip.net:55109",
-      httpClient: httpClient,
-      tokenProvider: tokenProvider);
+            baseUrl: "http://miezhaus.feste-ip.net:55109",
+            httpClient: httpClient,
+            tokenProvider: tokenProvider);
 
   StudIpApiClient.localhost({
     required TokenProvider tokenProvider,
@@ -60,12 +58,11 @@ class StudIpApiClient {
   final TokenProvider _tokenProvider;
 
   Future<void> getUsers({Int? offset, Int? page, filter}) async {
-    final uri = Uri.parse("$_baseUrl/jsonapi.php/v1/users").replace(
-        queryParameters: <String, String> {
-          if (page != null) 'page': '$page',
-          if (offset != null) 'offset': '$offset',
-        }
-    );
+    final uri = Uri.parse("$_baseUrl/jsonapi.php/v1/users")
+        .replace(queryParameters: <String, String>{
+      if (page != null) 'page': '$page',
+      if (offset != null) 'offset': '$offset',
+    });
 
     final response = await _httpClient.get(
       uri,
@@ -84,7 +81,7 @@ class StudIpApiClient {
     }
   }
 
-  Future<CurrentUserResponse> getCurrentUser() async {
+  Future<UserResponse> getCurrentUser() async {
     final uri = Uri.parse("$_baseUrl/jsonapi.php/v1/users/me");
 
     final response = await _httpClient.get(
@@ -103,7 +100,73 @@ class StudIpApiClient {
         statusCode: response.statusCode,
       );
     }
-    return CurrentUserResponse.fromJson(body);
+    return UserResponse.fromJson(body);
+  }
+
+  Future<UserResponse> getUser(String userId) async {
+    final uri = Uri.parse("$_baseUrl/jsonapi.php/v1/users/$userId");
+
+    final response = await _httpClient.get(
+      uri,
+      headers: await _getRequestHeaders(),
+    );
+    print(response.statusCode);
+
+    final body = response.json();
+
+    print(response.statusCode);
+    print(response.body);
+    if (response.statusCode != HttpStatus.ok) {
+      throw StudIpApiRequestFailure(
+        body: body,
+        statusCode: response.statusCode,
+      );
+    }
+    return UserResponse.fromJson(body);
+  }
+
+  Future<MessageListResponse> getOutboxMessages(String userId) async {
+    final uri = Uri.parse("$_baseUrl/jsonapi.php/v1/users/$userId/outbox");
+    print(uri);
+    final response = await _httpClient.get(
+      uri,
+      headers: await _getRequestHeaders(),
+    );
+    print(response.statusCode);
+
+    final body = response.json();
+
+    print(response.statusCode);
+    print(response.body);
+    if (response.statusCode != HttpStatus.ok) {
+      throw StudIpApiRequestFailure(
+        body: body,
+        statusCode: response.statusCode,
+      );
+    }
+    return MessageListResponse.fromJson(body);
+  }
+
+  Future<MessageListResponse> getInboxMessages(String userId) async {
+    final uri = Uri.parse("$_baseUrl/jsonapi.php/v1/users/$userId/inbox");
+
+    final response = await _httpClient.get(
+      uri,
+      headers: await _getRequestHeaders(),
+    );
+    print(response.statusCode);
+
+    final body = response.json();
+
+    print(response.statusCode);
+    print(response.body);
+    if (response.statusCode != HttpStatus.ok) {
+      throw StudIpApiRequestFailure(
+        body: body,
+        statusCode: response.statusCode,
+      );
+    }
+    return MessageListResponse.fromJson(body);
   }
 
   Future<CourseResponse> getCourses(String userId) async {

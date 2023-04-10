@@ -8,7 +8,7 @@ class UserRepository {
     required StudIpApiClient studIpApiClient,
 }) : _apiClient = studIpApiClient;
 
-  Future<CurrentUserResponse> getCurrentUser() async {
+  Future<UserResponse> getCurrentUser() async {
     return await _apiClient.getCurrentUser();
   }
 }

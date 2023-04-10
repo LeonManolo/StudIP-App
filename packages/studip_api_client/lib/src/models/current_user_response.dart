@@ -1,4 +1,4 @@
-class CurrentUserResponse {
+class UserResponse {
   final String id;
   final String username;
   final String formattedName;
@@ -10,7 +10,7 @@ class CurrentUserResponse {
   final String? homepage;
   final String? address;
 
-  CurrentUserResponse({
+  UserResponse({
     required this.id,
     required this.username,
     required this.formattedName,
@@ -23,10 +23,10 @@ class CurrentUserResponse {
     required this.address,
   });
 
-  factory CurrentUserResponse.fromJson(Map<String, dynamic> json) {
+  factory UserResponse.fromJson(Map<String, dynamic> json) {
     final data = json["data"] as Map<String, dynamic>;
     final attributes = data['attributes'] as Map<String, dynamic>;
-    return CurrentUserResponse(
+    return UserResponse(
       id: data['id'] as String,
       username: attributes['username'] as String,
       formattedName: attributes['formatted-name'] as String,
