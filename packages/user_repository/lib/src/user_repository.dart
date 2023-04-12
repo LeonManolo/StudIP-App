@@ -1,12 +1,11 @@
-
 import 'package:studip_api_client/studip_api_client.dart';
 
 class UserRepository {
-  final StudIpApiClient _apiClient;
+  final StudIPUserClient _apiClient;
 
   UserRepository({
-    required StudIpApiClient studIpApiClient,
-}) : _apiClient = studIpApiClient;
+    required StudIPUserClient studIpApiClient,
+  }) : _apiClient = studIpApiClient;
 
   Future<UserResponse> getCurrentUser() async {
     return await _apiClient.getCurrentUser();

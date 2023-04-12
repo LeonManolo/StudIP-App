@@ -3,10 +3,10 @@ import 'package:courses_repository/src/models/course.dart';
 import 'package:studip_api_client/studip_api_client.dart';
 
 class CourseRepository {
-  final StudIpApiClient _apiClient;
+  final StudIPCoursesClient _apiClient;
 
   const CourseRepository({
-    required StudIpApiClient apiClient,
+    required StudIPCoursesClient apiClient,
   }) : _apiClient = apiClient;
 
   Future<List<Semester>> getCoursesGroupedBySemester(String userId) async {

@@ -24,14 +24,18 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
       RefreshRequested event, Emitter<MessageState> emit) async {
     emit(state.copyWith(status: MessageStatus.loading, messages: []));
 
-    if (state.isInbox) {
-      final messages = await _messageRepository
-          .getInboxMessages(_authenticationRepository.currentUser.id);
-      emit(MessageState(status: MessageStatus.populated, messages: messages));
-    } else {
-      final messages = await _messageRepository
-          .getOutboxMessages(_authenticationRepository.currentUser.id);
-      emit(MessageState(status: MessageStatus.populated, messages: messages));
+    try {
+      if (state.isInbox) {
+        final messages = await _messageRepository
+            .getInboxMessages(_authenticationRepository.currentUser.id);
+        emit(MessageState(status: MessageStatus.populated, messages: messages));
+      } else {
+        final messages = await _messageRepository
+            .getOutboxMessages(_authenticationRepository.currentUser.id);
+        emit(MessageState(status: MessageStatus.populated, messages: messages));
+      }
+    } catch (e) {
+      emit(const MessageState(status: MessageStatus.failure));
     }
   }
 
@@ -46,20 +50,24 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
         messages: [],
         toggleBoxStates: newToggleBoxState));
 
-    if (event.index == 0) {
-      emit(
-        state.copyWith(
-            status: MessageStatus.populated,
-            messages: await _messageRepository
-                .getInboxMessages(_authenticationRepository.currentUser.id)),
-      );
-    } else {
-      emit(
-        state.copyWith(
-            status: MessageStatus.populated,
-            messages: await _messageRepository
-                .getOutboxMessages(_authenticationRepository.currentUser.id)),
-      );
+    try {
+      if (event.index == 0) {
+        emit(
+          state.copyWith(
+              status: MessageStatus.populated,
+              messages: await _messageRepository
+                  .getInboxMessages(_authenticationRepository.currentUser.id)),
+        );
+      } else {
+        emit(
+          state.copyWith(
+              status: MessageStatus.populated,
+              messages: await _messageRepository
+                  .getOutboxMessages(_authenticationRepository.currentUser.id)),
+        );
+      }
+    } catch (e) {
+      emit(const MessageState(status: MessageStatus.failure));
     }
   }
 }
