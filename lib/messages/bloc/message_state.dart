@@ -33,7 +33,7 @@ class MessageState extends Equatable {
         );
 
   @override
-  List<Object?> get props => [status, messages];
+  List<Object?> get props => [status, messages, filter];
 
   MessageState copyWith({
     MessageStatus? status,

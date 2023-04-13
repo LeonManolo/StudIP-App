@@ -23,32 +23,12 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
   FutureOr<void> _onRefreshRequested(
       RefreshRequested event, Emitter<MessageState> emit) async {
     emit(state.copyWith(status: MessageStatus.loading, messages: []));
-
-    if (state.isInbox) {
-      final messages = await _messageRepository
-          .getInboxMessages(_authenticationRepository.currentUser.id);
-      emit(MessageState(status: MessageStatus.populated, messages: messages));
-    } else {
-      final messages = await _messageRepository
-          .getOutboxMessages(_authenticationRepository.currentUser.id);
-      emit(MessageState(status: MessageStatus.populated, messages: messages));
-    }
-  }
-
-  FutureOr<void> _onFilterRequested(
-      RefreshRequested event, Emitter<MessageState> emit) async {
-    emit(state.copyWith(status: MessageStatus.loading));
-    List<Message> messages;
-    if (state.isInbox) {
-      messages = await _messageRepository
-          .getInboxMessages(_authenticationRepository.currentUser.id);
-    } else {
-      messages = await _messageRepository
-          .getOutboxMessages(_authenticationRepository.currentUser.id);
-    }
-    emit(MessageState(
+    List<Message> messages = await getMessages();
+    emit(state.copyWith(
         status: MessageStatus.populated,
-        messages: filter(messages, state.filter)));
+        messages: state.isInbox
+            ? filter(messages, event.filter).toList()
+            : messages));
   }
 
   FutureOr<void> _onToggleBoxChange(
@@ -62,20 +42,21 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
         messages: [],
         toggleBoxStates: newToggleBoxState));
 
-    if (event.index == 0) {
-      emit(
-        state.copyWith(
-            status: MessageStatus.populated,
-            messages: await _messageRepository
-                .getInboxMessages(_authenticationRepository.currentUser.id)),
-      );
+    final List<Message> messages = await getMessages();
+    emit(state.copyWith(
+        status: MessageStatus.populated,
+        messages: state.isInbox
+            ? filter(messages, event.filter).toList()
+            : messages));
+  }
+
+  getMessages() async {
+    if (state.isInbox) {
+      return await _messageRepository
+          .getInboxMessages(_authenticationRepository.currentUser.id);
     } else {
-      emit(
-        state.copyWith(
-            status: MessageStatus.populated,
-            messages: await _messageRepository
-                .getOutboxMessages(_authenticationRepository.currentUser.id)),
-      );
+      return await _messageRepository
+          .getOutboxMessages(_authenticationRepository.currentUser.id);
     }
   }
 
