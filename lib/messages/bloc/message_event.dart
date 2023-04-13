@@ -12,6 +12,14 @@ class RefreshRequested extends MessageEvent {
   List<Object?> get props => [];
 }
 
+class FilterhRequested extends MessageEvent {
+  
+  const FilterhRequested();
+
+  @override
+  List<Object?> get props => [];
+}
+
 class InboxOutboxToggleBoxDidChange extends MessageEvent {
   final int index;
 
