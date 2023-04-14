@@ -3,8 +3,10 @@ import 'dart:ffi';
 import 'dart:io';
 
 import 'package:http/http.dart' as http;
-import 'package:studip_api_client/src/models/courses/course_response.dart';
 import 'package:studip_api_client/studip_api_client.dart';
+
+import 'models/message_response.dart';
+
 
 /// An exception thrown when there is a problem decoded the response body.
 class StudIpApiMalformedResponse implements Exception {
@@ -81,7 +83,7 @@ class StudIpApiClient {
     }
   }
 
-  Future<CurrentUserResponse> getCurrentUser() async {
+  Future<UserResponse> getCurrentUser() async {
     final uri = Uri.parse("$_baseUrl/jsonapi.php/v1/users/me");
 
     final response = await _httpClient.get(
@@ -100,7 +102,73 @@ class StudIpApiClient {
         statusCode: response.statusCode,
       );
     }
-    return CurrentUserResponse.fromJson(body);
+    return UserResponse.fromJson(body);
+  }
+
+  Future<UserResponse> getUser(String userId) async {
+    final uri = Uri.parse("$_baseUrl/jsonapi.php/v1/users/$userId");
+
+    final response = await _httpClient.get(
+      uri,
+      headers: await _getRequestHeaders(),
+    );
+    print(response.statusCode);
+
+    final body = response.json();
+
+    print(response.statusCode);
+    print(response.body);
+    if (response.statusCode != HttpStatus.ok) {
+      throw StudIpApiRequestFailure(
+        body: body,
+        statusCode: response.statusCode,
+      );
+    }
+    return UserResponse.fromJson(body);
+  }
+
+  Future<MessageListResponse> getOutboxMessages(String userId) async {
+    final uri = Uri.parse("$_baseUrl/jsonapi.php/v1/users/$userId/outbox");
+    print(uri);
+    final response = await _httpClient.get(
+      uri,
+      headers: await _getRequestHeaders(),
+    );
+    print(response.statusCode);
+
+    final body = response.json();
+
+    print(response.statusCode);
+    print(response.body);
+    if (response.statusCode != HttpStatus.ok) {
+      throw StudIpApiRequestFailure(
+        body: body,
+        statusCode: response.statusCode,
+      );
+    }
+    return MessageListResponse.fromJson(body);
+  }
+
+  Future<MessageListResponse> getInboxMessages(String userId) async {
+    final uri = Uri.parse("$_baseUrl/jsonapi.php/v1/users/$userId/inbox");
+
+    final response = await _httpClient.get(
+      uri,
+      headers: await _getRequestHeaders(),
+    );
+    print(response.statusCode);
+
+    final body = response.json();
+
+    print(response.statusCode);
+    print(response.body);
+    if (response.statusCode != HttpStatus.ok) {
+      throw StudIpApiRequestFailure(
+        body: body,
+        statusCode: response.statusCode,
+      );
+    }
+    return MessageListResponse.fromJson(body);
   }
 
   Future<CourseListResponse> getCourses(
@@ -144,6 +212,39 @@ class StudIpApiClient {
           body: body, statusCode: response.statusCode);
     }
     return SemesterResponse.fromJson(body);
+  }
+
+  Future<ScheduleResponse> getSchedule(
+      {required String userId, DateTime? semesterStart}) async {
+    int semesterStartInMillisecondsSinceEpoch;
+    if (semesterStart == null) {
+      semesterStartInMillisecondsSinceEpoch = DateTime.now().secondsSinceEpoch;
+    } else {
+      semesterStartInMillisecondsSinceEpoch = semesterStart.secondsSinceEpoch;
+    }
+
+    final uri = Uri.parse("$_baseUrl/jsonapi.php/v1/users/$userId/schedule")
+        .replace(queryParameters: {
+      "filter[timestamp]": "$semesterStartInMillisecondsSinceEpoch",
+    });
+
+    final response = await _httpClient.get(
+      uri,
+      headers: await _getRequestHeaders(),
+    );
+
+    final body = response.json();
+
+    if (response.statusCode != HttpStatus.ok) {
+      print("calendar error:");
+      print(response.statusCode);
+      print(body);
+      throw StudIpApiRequestFailure(
+        body: body,
+        statusCode: response.statusCode,
+      );
+    }
+    return ScheduleResponse.fromJson(body);
   }
 
   Future<Map<String, String>> _getRequestHeaders() async {

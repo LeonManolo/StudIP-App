@@ -40,9 +40,7 @@ class AuthenticationRepository {
   Future<void> loginWithStudIp() async {
     AccessTokenResponse tokenResponse = await _oAuth2Client
         .getTokenWithAuthCodeFlow(clientId: '5', scopes: ['api']);
-    tokenResponse.toMap().keys.forEach((element) {
-      print(element);
-    });
+
     print(tokenResponse.accessToken);
     if (tokenResponse.httpStatusCode == 200) {
       await _tokenStorage.saveToken(tokenResponse.accessToken!);
