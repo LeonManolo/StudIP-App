@@ -73,8 +73,6 @@ class StudIpApiClient {
 
     final body = jsonDecode(response.body);
 
-    print(response.statusCode);
-    print(response.body);
     if (response.statusCode != HttpStatus.ok) {
       throw StudIpApiRequestFailure(
         body: body,
@@ -90,12 +88,11 @@ class StudIpApiClient {
       uri,
       headers: await _getRequestHeaders(),
     );
-    print(response.statusCode);
+
 
     final body = response.json();
 
-    print(response.statusCode);
-    print(response.body);
+
     if (response.statusCode != HttpStatus.ok) {
       throw StudIpApiRequestFailure(
         body: body,
@@ -112,12 +109,9 @@ class StudIpApiClient {
       uri,
       headers: await _getRequestHeaders(),
     );
-    print(response.statusCode);
 
     final body = response.json();
 
-    print(response.statusCode);
-    print(response.body);
     if (response.statusCode != HttpStatus.ok) {
       throw StudIpApiRequestFailure(
         body: body,
@@ -129,17 +123,15 @@ class StudIpApiClient {
 
   Future<MessageListResponse> getOutboxMessages(String userId) async {
     final uri = Uri.parse("$_baseUrl/jsonapi.php/v1/users/$userId/outbox");
-    print(uri);
+
     final response = await _httpClient.get(
       uri,
       headers: await _getRequestHeaders(),
     );
-    print(response.statusCode);
+
 
     final body = response.json();
 
-    print(response.statusCode);
-    print(response.body);
     if (response.statusCode != HttpStatus.ok) {
       throw StudIpApiRequestFailure(
         body: body,
@@ -156,12 +148,10 @@ class StudIpApiClient {
       uri,
       headers: await _getRequestHeaders(),
     );
-    print(response.statusCode);
+
 
     final body = response.json();
 
-    print(response.statusCode);
-    print(response.body);
     if (response.statusCode != HttpStatus.ok) {
       throw StudIpApiRequestFailure(
         body: body,
@@ -183,12 +173,9 @@ class StudIpApiClient {
       uri,
       headers: await _getRequestHeaders(),
     );
-    print(response.statusCode);
 
     final body = response.json();
 
-    print(response.statusCode);
-    print(response.body);
     if (response.statusCode != HttpStatus.ok) {
       throw StudIpApiRequestFailure(
         body: body,
@@ -216,8 +203,7 @@ class StudIpApiClient {
 
   Future<Map<String, String>> _getRequestHeaders() async {
     final token = await _tokenProvider();
-    // token prüfen ob abgelaufen
-    _printWrapped(token);
+   // _printWrapped(token);
     return <String, String>{
       HttpHeaders.contentTypeHeader: ContentType.json.value,
       HttpHeaders.acceptHeader: "*/*",

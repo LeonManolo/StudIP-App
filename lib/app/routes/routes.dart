@@ -10,7 +10,6 @@ List<Page<dynamic>> onGenerateAppViewPages(
     AppStatus state,
     List<Page<dynamic>> pages,
     ) {
-  print("state: $state");
   switch (state) {
     case AppStatus.authenticated:
       return [AuthenticatedPage.page()];

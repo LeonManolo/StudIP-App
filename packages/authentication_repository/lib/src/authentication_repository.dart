@@ -41,17 +41,13 @@ class AuthenticationRepository {
     AccessTokenResponse tokenResponse = await _oAuth2Client
         .getTokenWithAuthCodeFlow(clientId: '5', scopes: ['api']);
     tokenResponse.toMap().keys.forEach((element) {
-      print(element);
     });
-    print(tokenResponse.accessToken);
     if (tokenResponse.httpStatusCode == 200) {
       await _tokenStorage.saveToken(tokenResponse.accessToken!);
       await _refreshTokenStorage.saveToken(tokenResponse.refreshToken!);
       Map<String, dynamic> decodedToken =
           Jwt.parseJwt(tokenResponse.accessToken!);
       String userId = decodedToken["sub"];
-      print(userId);
-      print("refresh_token: ${tokenResponse.refreshToken}");
       final user = User(userId);
       _controller.add(user);
       _currentUser = user;

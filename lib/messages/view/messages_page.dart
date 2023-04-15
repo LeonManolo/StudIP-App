@@ -7,117 +7,223 @@ import 'package:studipadawan/messages/bloc/message_event.dart';
 import 'package:studipadawan/messages/bloc/message_state.dart';
 import 'package:studipadawan/messages/view/widgets/InboxMessageWidget.dart';
 import 'package:studipadawan/messages/view/widgets/OutboxMessageWidget.dart';
-import 'package:user_repository/user_repository.dart';
+import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 
 import '../../app/bloc/app_bloc.dart';
 
-class MessagesPage extends StatelessWidget {
+class MessagesPage extends StatefulWidget {
   const MessagesPage({Key? key}) : super(key: key);
 
   static Page<void> page() => const MaterialPage<void>(child: MessagesPage());
 
   @override
+  createState() => _MessagesPageState();
+}
+
+class _MessagesPageState extends State<MessagesPage>
+    with SingleTickerProviderStateMixin {
+  MessageFilter currentFilter = MessageFilter.none;
+  late MessageBloc messageBloc;
+  late TabController _controller;
+
+  final List<Tab> messageTabs = [
+    const Tab(
+      icon: Icon(Icons.all_inbox),
+    ),
+    const Tab(
+      icon: Icon(Icons.outbox),
+    )
+  ];
+
+  bool isFilterVisible = true;
+
+  void toggleFilter() {
+    setState(() {
+      isFilterVisible = !isFilterVisible;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TabController(
+        length: messageTabs.length,
+        vsync: this,
+        animationDuration: Duration.zero);
+    messageBloc = MessageBloc(
+      messageRepository: context.read<MessageRepository>(),
+      authenticationRepository: context.read<AuthenticationRepository>(),
+    )..add(RefreshRequested(filter: currentFilter, isInbox: true));
+    _controller.addListener(() => {
+          toggleFilter(),
+          fetchMessages(),
+        });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    MessageFilter currentFilter = MessageFilter.none;
-
-    final messageBloc = MessageBloc(
-        messageRepository: context.read<MessageRepository>(),
-        authenticationRepository: context.read<AuthenticationRepository>())
-      ..add(RefreshRequested(filter: currentFilter));
-
-    handleFilterSelection(MessageFilter filter) {
-      currentFilter = filter;
-      messageBloc.add(RefreshRequested(filter: filter));
-    }
-
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Nachrichten"),
-        actions: <Widget>[
-          IconButton(
-            key: const Key('homePage_logout_iconButton'),
-            icon: const Icon(Icons.exit_to_app),
-            onPressed: () {
-              context.read<AppBloc>().add(const AppLogoutRequested());
-            },
-          )
-        ],
-      ),
+      appBar: buildAppBar(context),
       body: BlocBuilder<MessageBloc, MessageState>(
-          bloc: messageBloc,
-          builder: (context, state) {
-            return Column(children: [
-              Row(
-                children: [
-                  Container(
-                    margin: const EdgeInsets.only(left: 5),
-                    child: ToggleButtons(
-                        direction: Axis.horizontal,
-                        onPressed: (int index) {
-                          if (state.isInbox && index == 1 ||
-                              !state.isInbox && index == 0) {
-                            messageBloc.add(InboxOutboxToggleBoxDidChange(
-                                index: index, filter: currentFilter));
-                          }
-                        },
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(8)),
-                        selectedBorderColor: Colors.white,
-                        selectedColor: Colors.white,
-                        fillColor: Colors.blue,
-                        color: Colors.black,
-                        constraints: const BoxConstraints(
-                          minHeight: 30.0,
-                          minWidth: 80.0,
-                        ),
-                        isSelected: state.toggleBoxStates,
-                        children: state.toggleBoxLabels
-                            .map((labelString) => Text(labelString))
-                            .toList()),
-                  ),
-                  const Spacer(),
-                  PopupMenuButton<MessageFilter>(
-                      onSelected: (newFilter) =>
-                          handleFilterSelection(newFilter),
-                      itemBuilder: (context) => [
-                            const PopupMenuItem<MessageFilter>(
-                                value: MessageFilter.none,
-                                child: Text('Kein Filter')),
-                            const PopupMenuItem<MessageFilter>(
-                                value: MessageFilter.unread,
-                                child: Text('Ungelesene Nachrichten')),
-                            const PopupMenuItem<MessageFilter>(
-                                value: MessageFilter.read,
-                                child: Text('Gelesene Nachrichten'))
-                          ])
+        bloc: messageBloc,
+        builder: (context, state) {
+          return DefaultTabController(
+            initialIndex: 0,
+            length: messageTabs.length,
+            child: Scaffold(
+              appBar: buildTabBar(context),
+              body: TabBarView(
+                children: <Widget>[
+                  buildInboxWidget(context, state),
+                  buildOutboxWidget(context, state),
                 ],
               ),
-              Expanded(
-                child: state.status != MessageStatus.populated
-                    ? const Center(child: CircularProgressIndicator())
-                    : RefreshIndicator(
-                        onRefresh: () async => {
-                          messageBloc
-                              .add(RefreshRequested(filter: currentFilter))
-                        },
-                        child: ListView.separated(
-                          itemCount: state.messages.length,
-                          shrinkWrap: true,
-                          itemBuilder: (context, index) {
-                            return state.isInbox
-                                ? InboxMessageWidget(
-                                    message: state.messages[index])
-                                : OutboxMessageWidget(
-                                    message: state.messages[index]);
-                          },
-                          separatorBuilder: (context, index) {
-                            return const Divider();
-                          },
-                        ),
-                      ),
-              )
-            ]);
-          }),
+            ),
+          );
+        },
+      ),
     );
+  }
+
+  Row buildFilterRow(BuildContext context) {
+    return Row(
+      children: [
+        const Spacer(),
+        PopupMenuButton<MessageFilter>(
+            icon: funnelIcon(),
+            onSelected: (newFilter) => handleFilterSelection(newFilter),
+            itemBuilder: (context) => [
+                  PopupMenuItem<MessageFilter>(
+                      value: MessageFilter.none,
+                      child: filter(MessageFilter.none, "Kein Filter")),
+                  PopupMenuItem<MessageFilter>(
+                      value: MessageFilter.unread,
+                      child: filter(
+                          MessageFilter.unread, "Ungelesene Nachrichten")),
+                  PopupMenuItem<MessageFilter>(
+                      value: MessageFilter.read,
+                      child:
+                          filter(MessageFilter.read, "Gelesene Nachrichten")),
+                ])
+      ],
+    );
+  }
+
+  AppBar buildAppBar(BuildContext context) {
+    return AppBar(
+      title: const Text('Nachrichten'),
+      actions: <Widget>[
+        IconButton(
+          key: const Key('homePage_logout_iconButton'),
+          icon: const Icon(Icons.exit_to_app),
+          onPressed: () {
+            context.read<AppBloc>().add(const AppLogoutRequested());
+          },
+        )
+      ],
+    );
+  }
+
+  PreferredSize buildTabBar(BuildContext context) {
+    return PreferredSize(
+      preferredSize: const Size.fromHeight(kToolbarHeight),
+      child: Container(
+        color: Colors.blue,
+        child: SafeArea(
+          child: Column(
+            children: <Widget>[
+              Expanded(child: Container()),
+              TabBar(
+                controller: _controller,
+                tabs: messageTabs,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildRefreshableList({
+    required MessageState state,
+    required bool inbox,
+  }) {
+    if (state.messages.isEmpty) {
+      return const Center(
+        child: Text('No messages found'),
+      );
+    }
+    return RefreshIndicator(
+      onRefresh: () async => fetchMessages(),
+      child: ListView.separated(
+        itemCount: state.messages.length,
+        separatorBuilder: (context, index) => const Divider(),
+        itemBuilder: (context, index) {
+          if (state.status != MessageStatus.populated) {
+            return const Center(child: CircularProgressIndicator());
+          } else {
+            if (_controller.index == 0) {
+              return InboxMessageWidget(message: state.messages[index]);
+            } else {
+              return OutboxMessageWidget(message: state.messages[index]);
+            }
+          }
+        },
+      ),
+    );
+  }
+
+  Widget buildInboxWidget(BuildContext context, MessageState state) {
+    return Column(
+      children: [
+        if (isFilterVisible) buildFilterRow(context),
+        Expanded(
+            child: state.status != MessageStatus.populated
+                ? const Center(child: CircularProgressIndicator())
+                : buildRefreshableList(state: state, inbox: true)),
+      ],
+    );
+  }
+
+  Widget buildOutboxWidget(BuildContext context, MessageState state) {
+    return state.status != MessageStatus.populated
+        ? const Center(child: CircularProgressIndicator())
+        : buildRefreshableList(state: state, inbox: false);
+  }
+
+  fetchMessages() {
+    messageBloc.add(RefreshRequested(
+        filter: currentFilter, isInbox: _controller.index == 0));
+  }
+
+  handleFilterSelection(MessageFilter filter) {
+    currentFilter = filter;
+    fetchMessages();
+  }
+
+  funnelIcon() {
+    if (currentFilter != MessageFilter.none) {
+      return const Icon(EvaIcons.funnel, size: 25, color: Colors.blue);
+    } else {
+      return const Icon(EvaIcons.funnelOutline, size: 25, color: Colors.blue);
+    }
+  }
+
+  filter(MessageFilter filter, String filterText) {
+    if (currentFilter == filter) {
+      return Row(children: [
+        Text(filterText),
+        Container(
+            padding: const EdgeInsets.all(0),
+            margin: const EdgeInsets.all(0),
+            child: const Icon(
+              Icons.check,
+              color: Colors.blue,
+              size: 20.0,
+            ))
+      ]);
+    } else {
+      return Text(filterText);
+    }
   }
 }

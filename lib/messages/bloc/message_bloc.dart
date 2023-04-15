@@ -17,41 +17,22 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
         _authenticationRepository = authenticationRepository,
         super(const MessageState.initial()) {
     on<RefreshRequested>(_onRefreshRequested);
-    on<InboxOutboxToggleBoxDidChange>(_onToggleBoxChange);
   }
 
   FutureOr<void> _onRefreshRequested(
       RefreshRequested event, Emitter<MessageState> emit) async {
     emit(state.copyWith(status: MessageStatus.loading, messages: []));
-    List<Message> messages = await getMessages();
+
+    List<Message> messages = await getMessages(event.isInbox);
     emit(state.copyWith(
         status: MessageStatus.populated,
-        messages: state.isInbox
+        messages: event.isInbox
             ? filter(messages, event.filter).toList()
             : messages));
   }
 
-  FutureOr<void> _onToggleBoxChange(
-      InboxOutboxToggleBoxDidChange event, Emitter<MessageState> emit) async {
-    final newToggleBoxState = [for (var i = 0; i < 2; i += 1) i]
-        .map((index) => index == event.index)
-        .toList();
-
-    emit(state.copyWith(
-        status: MessageStatus.loading,
-        messages: [],
-        toggleBoxStates: newToggleBoxState));
-
-    final List<Message> messages = await getMessages();
-    emit(state.copyWith(
-        status: MessageStatus.populated,
-        messages: state.isInbox
-            ? filter(messages, event.filter).toList()
-            : messages));
-  }
-
-  getMessages() async {
-    if (state.isInbox) {
+  getMessages(bool isInbox) async {
+    if (isInbox) {
       return await _messageRepository
           .getInboxMessages(_authenticationRepository.currentUser.id);
     } else {
