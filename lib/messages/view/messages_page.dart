@@ -47,7 +47,9 @@ class _MessagesPageState extends State<MessagesPage>
       authenticationRepository: context.read<AuthenticationRepository>(),
     )..add(RefreshRequested(filter: currentFilter, isInbox: true));
     _controller.addListener(() => {
-          fetchMessages(),
+         if (_controller.indexIsChanging) {
+        fetchMessages()
+      }
         });
   }
 
@@ -206,17 +208,17 @@ class _MessagesPageState extends State<MessagesPage>
         : buildRefreshableList(state: state, inbox: false);
   }
 
-  fetchMessages() {
+  void fetchMessages() {
     messageBloc.add(RefreshRequested(
         filter: currentFilter, isInbox: _controller.index == 0));
   }
 
-  handleFilterSelection(MessageFilter filter) {
+  void handleFilterSelection(MessageFilter filter) {
     currentFilter = filter;
     fetchMessages();
   }
 
-  funnelIcon() {
+  Icon funnelIcon() {
     if (currentFilter != MessageFilter.none) {
       return const Icon(EvaIcons.funnel, size: 25, color: Colors.indigo);
     } else {
