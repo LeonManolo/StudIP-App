@@ -16,35 +16,26 @@ class CoursesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final courseBloc = CourseBloc(
-        courseRepository: context.read<CourseRepository>(),
-        authenticationRepository: context.read<AuthenticationRepository>())
-      ..add(CoursesRequested());
-
     return Scaffold(
       appBar: _appBar(context),
-      body: BlocBuilder<CourseBloc, CourseState>(
-        bloc: courseBloc,
-        builder: (context, state) {
-          if (state.status != CourseStatus.populated) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          } else {
-            return RefreshIndicator(
-              onRefresh: () async {
-                courseBloc.add(CoursesRequested());
-              },
-              child: ListView.builder(
-                  itemCount: state.semesters.length,
-                  itemBuilder: (context, index) {
-                    return SemesterCard(
-                      semester: state.semesters.elementAt(index),
-                    );
-                  }),
-            );
-          }
-        },
+      body: BlocProvider(
+        create: (context) => CourseBloc(
+          courseRepository: context.read<CourseRepository>(),
+          authenticationRepository: context.read<AuthenticationRepository>(),
+        )..add(CoursesRequested()),
+        child: BlocBuilder<CourseBloc, CourseState>(
+          builder: (context, state) {
+            if (state.status == CourseStatus.loading) {
+              return _loadingWidget();
+            } else if (state.status == CourseStatus.initial) {
+              return _initialWidget(context);
+            } else if (state.status == CourseStatus.failure) {
+              return _failureWidget(context);
+            } else {
+              return _populatedWidget(context, state);
+            }
+          },
+        ),
       ),
     );
   }
@@ -69,6 +60,53 @@ class CoursesPage extends StatelessWidget {
             },
             icon: const Icon(Icons.download))
       ],
+    );
+  }
+
+  Widget _loadingWidget() {
+    return const Center(
+      child: CircularProgressIndicator(),
+    );
+  }
+
+  Widget _initialWidget(BuildContext context) {
+    return Center(
+      child: ElevatedButton(
+        onPressed: () =>
+            BlocProvider.of<CourseBloc>(context).add(CoursesRequested()),
+        child: const Text("Load courses"),
+      ),
+    );
+  }
+
+  Widget _failureWidget(BuildContext context) {
+    return Center(
+      child: Column(
+        children: [
+          const Text("Error on load"),
+          ElevatedButton(
+            onPressed: () =>
+                BlocProvider.of<CourseBloc>(context).add(CoursesRequested()),
+            child: const Text("Load courses"),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _populatedWidget(BuildContext context, CourseState state) {
+    return RefreshIndicator(
+      onRefresh: () async {
+        BlocProvider.of<CourseBloc>(context).add(CoursesRequested());
+        // courseBloc.add(CoursesRequested());
+      },
+      child: ListView.builder(
+          itemCount: state.semesters.length,
+          itemBuilder: (context, index) {
+            return SemesterCard(
+              semester: state.semesters.elementAt(index),
+            );
+          }),
     );
   }
 }

@@ -5,23 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:messages_repository/messages_repository.dart';
 import 'package:studip_api_client/studip_api_client.dart';
 import 'package:studipadawan/app/view/app.dart';
-import 'package:token_storage/token_storage.dart';
 import 'package:user_repository/user_repository.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  //await Firebase.initializeApp();
+  final apiClient = StudIpApiClient();
 
-  final tokenStorage = SharedPrefsTokenStorage();
-  final refreshTokenStorage = SecureTokenStorage();
-
-  final apiClient = StudIpApiClient(tokenProvider: tokenStorage.readToken);
-
-
-  final authenticationRepository = AuthenticationRepository(
-      accessTokenStorage: tokenStorage,
-      refreshTokenStorage: refreshTokenStorage);
+  final authenticationRepository = AuthenticationRepository(client: apiClient);
 
   final userRepository = UserRepository(studIpApiClient: apiClient);
 
@@ -31,13 +22,11 @@ Future<void> main() async {
 
   final calenderRepository = CalenderRepository(apiClient: apiClient);
 
-  //await authenticationRepository.user.first;
-
   runApp(App(
     authenticationRepository: authenticationRepository,
     calenderRepository: calenderRepository,
     userRepository: userRepository,
-      coursesRepository: coursesRepository,
-      messageRepository: messagesRepository,
+    coursesRepository: coursesRepository,
+    messageRepository: messagesRepository,
   ));
 }
