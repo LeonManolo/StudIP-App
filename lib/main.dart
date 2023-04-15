@@ -1,4 +1,5 @@
 import 'package:authentication_repository/authentication_repository.dart';
+import 'package:calender_repository/calender_repository.dart';
 import 'package:courses_repository/courses_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:messages_repository/messages_repository.dart';
@@ -28,10 +29,13 @@ Future<void> main() async {
 
   final messagesRepository = MessageRepository(apiClient: apiClient);
 
+  final calenderRepository = CalenderRepository(apiClient: apiClient);
+
   //await authenticationRepository.user.first;
 
   runApp(App(
     authenticationRepository: authenticationRepository,
+    calenderRepository: calenderRepository,
     userRepository: userRepository,
       coursesRepository: coursesRepository,
       messageRepository: messagesRepository,

@@ -18,6 +18,7 @@ class InboxMessageWidget extends StatelessWidget {
 
     return ListTile(
         leading: Column(
+          // Center leading
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             message.isRead ? messageReadIcon() : messageUnreadIcon()

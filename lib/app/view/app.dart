@@ -14,16 +14,19 @@ class App extends StatelessWidget {
     required AuthenticationRepository authenticationRepository,
     required UserRepository userRepository,
     required CourseRepository coursesRepository,
-    required MessageRepository messageRepository
+    required MessageRepository messageRepository,
+    required CalenderRepository calenderRepository
   })  : _authenticationRepository = authenticationRepository,
         _userRepository = userRepository,
         _courseRepository = coursesRepository,
-        _messageRepository = messageRepository;
+        _messageRepository = messageRepository,
+        _calenderRepository = calenderRepository;
 
   final AuthenticationRepository _authenticationRepository;
   final UserRepository _userRepository;
   final CourseRepository _courseRepository;
   final MessageRepository _messageRepository;
+  final CalenderRepository _calenderRepository;
 
   @override
   Widget build(BuildContext context) {
@@ -33,13 +36,14 @@ class App extends StatelessWidget {
         RepositoryProvider.value(value: _userRepository),
         RepositoryProvider.value(value: _courseRepository),
         RepositoryProvider.value(value: _messageRepository),
+        RepositoryProvider.value(value: _calenderRepository),
       ],
       child: MultiBlocProvider(providers: [
         BlocProvider(
           create: (_) => AppBloc(
             authenticationRepository: _authenticationRepository,
           ),
-        )
+        ),
       ], child: const AppView()),
     );
   }
@@ -51,7 +55,7 @@ class AppView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      //theme: theme,
+      theme: const AppTheme().themeData,
       home: FlowBuilder<AppStatus>(
         state: context.select((AppBloc bloc) => bloc.state.status),
         onGeneratePages: onGenerateAppViewPages,

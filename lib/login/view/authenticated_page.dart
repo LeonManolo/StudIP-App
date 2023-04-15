@@ -1,6 +1,6 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:studipadawan/calender/view/calender_page.dart';
+import 'package:studipadawan/calendar/view/calendar_page.dart';
 import 'package:studipadawan/courses/view/courses_page.dart';
 import 'package:studipadawan/home/view/home_page.dart';
 import 'package:studipadawan/messages/view/messages_page.dart';
@@ -27,7 +27,7 @@ class _AuthenticatedPageState extends State<AuthenticatedPage> {
           HomePage(),
           CoursesPage(),
           MessagesPage(),
-          CalenderPage(),
+          CalendarPage(),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
