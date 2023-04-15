@@ -24,12 +24,7 @@ class HomePage extends StatelessWidget {
             onPressed: () {
               context.read<AppBloc>().add(const AppLogoutRequested());
             },
-          ),
-          IconButton(onPressed: () {
-            context.read<UserRepository>().getCurrentUser().then((value) =>
-            print("${value.email} ${value.username}"));
-          }
-              , icon: const Icon(Icons.download))
+          )
         ],
       ),
       body: Align(

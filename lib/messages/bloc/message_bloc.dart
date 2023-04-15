@@ -17,7 +17,6 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
         _authenticationRepository = authenticationRepository,
         super(const MessageState.initial()) {
     on<RefreshRequested>(_onRefreshRequested);
-    on<InboxOutboxToggleBoxDidChange>(_onToggleBoxChange);
   }
 
   FutureOr<void> _onRefreshRequested(
@@ -25,49 +24,46 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
     emit(state.copyWith(status: MessageStatus.loading, messages: []));
 
     try {
-      if (state.isInbox) {
-        final messages = await _messageRepository
+      List<Message> messages;
+      if (event.isInbox) {
+        messages = await _messageRepository
             .getInboxMessages(_authenticationRepository.currentUser.id);
-        emit(MessageState(status: MessageStatus.populated, messages: messages));
       } else {
-        final messages = await _messageRepository
+        messages = await _messageRepository
             .getOutboxMessages(_authenticationRepository.currentUser.id);
-        emit(MessageState(status: MessageStatus.populated, messages: messages));
+      }
+      emit(state.copyWith(
+          status: MessageStatus.populated,
+          messages: event.isInbox
+              ? filter(messages, event.filter).toList()
+              : messages));
+    } catch (e) {
+      emit(const MessageState(status: MessageStatus.failure));
+    }
+  }
+
+  getMessages(bool isInbox) async {
+    try {
+      if (isInbox) {
+        return await _messageRepository
+            .getInboxMessages(_authenticationRepository.currentUser.id);
+      } else {
+        return await _messageRepository
+            .getOutboxMessages(_authenticationRepository.currentUser.id);
       }
     } catch (e) {
       emit(const MessageState(status: MessageStatus.failure));
     }
   }
 
-  FutureOr<void> _onToggleBoxChange(
-      InboxOutboxToggleBoxDidChange event, Emitter<MessageState> emit) async {
-    final newToggleBoxState = [for (var i = 0; i < 2; i += 1) i]
-        .map((index) => index == event.index)
-        .toList();
-
-    emit(state.copyWith(
-        status: MessageStatus.loading,
-        messages: [],
-        toggleBoxStates: newToggleBoxState));
-
-    try {
-      if (event.index == 0) {
-        emit(
-          state.copyWith(
-              status: MessageStatus.populated,
-              messages: await _messageRepository
-                  .getInboxMessages(_authenticationRepository.currentUser.id)),
-        );
-      } else {
-        emit(
-          state.copyWith(
-              status: MessageStatus.populated,
-              messages: await _messageRepository
-                  .getOutboxMessages(_authenticationRepository.currentUser.id)),
-        );
-      }
-    } catch (e) {
-      emit(const MessageState(status: MessageStatus.failure));
+  filter(List<Message> messages, MessageFilter filter) {
+    switch (filter) {
+      case MessageFilter.read:
+        return messages.where((message) => message.isRead);
+      case MessageFilter.unread:
+        return messages.where((message) => !message.isRead);
+      default:
+        return messages;
     }
   }
 }

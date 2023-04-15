@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:messages_repository/messages_repository.dart';
+import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 
 class OutboxMessageWidget extends StatelessWidget {
   final Message message;
@@ -10,7 +11,8 @@ class OutboxMessageWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     messageIcon() {
-      return const Icon(Icons.message, color: Colors.blue, size: 24.0);
+      return const Icon(EvaIcons.messageSquare,
+          color: Colors.indigo, size: 24.0);
     }
 
     parseRecipients(final List<MessageUser> recipients) {

@@ -1,4 +1,4 @@
-import 'package:messages_repository/messages_repository.dart';
+import 'package:messages_repository/src/models/models.dart';
 
 class MessageListResponse {
   final List<Message> messages;

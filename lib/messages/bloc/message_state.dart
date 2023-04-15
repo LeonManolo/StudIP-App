@@ -8,20 +8,21 @@ enum MessageStatus {
   failure,
 }
 
+enum MessageFilter { none, read, unread }
+
+enum TabBarState { inbox, outbox }
+
 class MessageState extends Equatable {
   final MessageStatus status;
   final List<Message> messages;
-  final List<bool> toggleBoxStates;
-  final List<String> toggleBoxLabels = const ["Inbox", "Outbox"];
-
-  bool get isInbox {
-    return toggleBoxStates.first == true;
-  }
+  final bool isInbox;
+  final MessageFilter filter;
 
   const MessageState(
       {required this.status,
       this.messages = const [],
-      this.toggleBoxStates = const [true, false]});
+      this.isInbox = true,
+      this.filter = MessageFilter.none});
 
   const MessageState.initial()
       : this(
@@ -29,16 +30,18 @@ class MessageState extends Equatable {
         );
 
   @override
-  List<Object?> get props => [status, messages];
+  List<Object?> get props => [isInbox, messages, filter];
 
-  MessageState copyWith(
-      {MessageStatus? status,
-      List<Message>? messages,
-      List<bool>? toggleBoxStates}) {
+  MessageState copyWith({
+    MessageStatus? status,
+    List<Message>? messages,
+    bool? isInbox,
+    MessageFilter? filter,
+  }) {
     return MessageState(
         status: status ?? this.status,
         messages: messages ?? this.messages,
-        toggleBoxStates: toggleBoxStates ?? this.toggleBoxStates);
+        isInbox: isInbox ?? this.isInbox,
+        filter: filter ?? this.filter);
   }
 }
-
