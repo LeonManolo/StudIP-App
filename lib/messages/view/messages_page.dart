@@ -47,9 +47,7 @@ class _MessagesPageState extends State<MessagesPage>
       authenticationRepository: context.read<AuthenticationRepository>(),
     )..add(RefreshRequested(filter: currentFilter, isInbox: true));
     _controller.addListener(() => {
-         if (_controller.indexIsChanging) {
         fetchMessages()
-      }
         });
   }
 
