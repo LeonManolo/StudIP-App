@@ -23,9 +23,13 @@ class CourseBloc extends Bloc<CourseEvent, CourseState> {
       CoursesRequested event, Emitter<CourseState> emit) async {
     emit(state.copyWith(status: CourseStatus.loading, semesters: []));
 
-    final semesters = (await _courseRepository
-        .getCoursesGroupedBySemester(_authenticationRepository.currentUser.id));
+    try {
+      final semesters = (await _courseRepository.getCoursesGroupedBySemester(
+          _authenticationRepository.currentUser.id));
 
-    emit(CourseState(status: CourseStatus.populated, semesters: semesters));
+      emit(CourseState(status: CourseStatus.populated, semesters: semesters));
+    } catch (e) {
+      emit(const CourseState(status: CourseStatus.failure));
+    }
   }
 }

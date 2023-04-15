@@ -50,9 +50,6 @@ dependencies:
   studip_api_client:
     path: packages/studip_api_client
 
-  token_storage:
-    path: packages/token_storage
-
   app_ui:
     path: packages/app_ui
 

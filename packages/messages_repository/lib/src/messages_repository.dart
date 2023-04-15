@@ -3,10 +3,10 @@ import 'package:studip_api_client/studip_api_client.dart';
 import 'models/models.dart';
 
 class MessageRepository {
-  final StudIpApiClient _apiClient;
+  final StudIPMessagesClient _apiClient;
 
   const MessageRepository({
-    required StudIpApiClient apiClient,
+    required StudIPMessagesClient apiClient,
   }) : _apiClient = apiClient;
 
   Future<List<Message>> getInboxMessages(String userId) async {
