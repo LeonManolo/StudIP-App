@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:messages_repository/messages_repository.dart';
+import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 
 class InboxMessageWidget extends StatelessWidget {
   final Message message;
@@ -9,11 +10,13 @@ class InboxMessageWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     messageUnreadIcon() {
-      return const Icon(Icons.message, color: Colors.blue, size: 24.0);
+      return const Icon(EvaIcons.messageSquare,
+          color: Colors.indigo, size: 24.0);
     }
 
     messageReadIcon() {
-      return const Icon(Icons.message_outlined, color: Colors.blue, size: 24.0);
+      return const Icon(EvaIcons.messageSquareOutline,
+          color: Colors.indigo, size: 24.0);
     }
 
     return ListTile(

@@ -5,8 +5,8 @@ import 'package:messages_repository/messages_repository.dart';
 import 'package:studipadawan/messages/bloc/message_bloc.dart';
 import 'package:studipadawan/messages/bloc/message_event.dart';
 import 'package:studipadawan/messages/bloc/message_state.dart';
-import 'package:studipadawan/messages/view/widgets/InboxMessageWidget.dart';
-import 'package:studipadawan/messages/view/widgets/OutboxMessageWidget.dart';
+import 'package:studipadawan/messages/view/widgets/inbox_messages.dart';
+import 'package:studipadawan/messages/view/widgets/outbox_messages.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 
 import '../../app/bloc/app_bloc.dart';
@@ -35,14 +35,6 @@ class _MessagesPageState extends State<MessagesPage>
     )
   ];
 
-  bool isFilterVisible = true;
-
-  void toggleFilter() {
-    setState(() {
-      isFilterVisible = !isFilterVisible;
-    });
-  }
-
   @override
   void initState() {
     super.initState();
@@ -55,7 +47,6 @@ class _MessagesPageState extends State<MessagesPage>
       authenticationRepository: context.read<AuthenticationRepository>(),
     )..add(RefreshRequested(filter: currentFilter, isInbox: true));
     _controller.addListener(() => {
-          toggleFilter(),
           fetchMessages(),
         });
   }
@@ -85,6 +76,29 @@ class _MessagesPageState extends State<MessagesPage>
     );
   }
 
+  Widget buildFilter(MessageFilter filter, String filterText) {
+    return PopupMenuItem<MessageFilter>(
+      value: filter,
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(filterText),
+          ),
+          if (currentFilter == filter)
+            Container(
+              padding: const EdgeInsets.all(0),
+              margin: const EdgeInsets.all(0),
+              child: const Icon(
+                Icons.check,
+                color: Colors.indigo,
+                size: 20.0,
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
   Row buildFilterRow(BuildContext context) {
     return Row(
       children: [
@@ -95,15 +109,15 @@ class _MessagesPageState extends State<MessagesPage>
             itemBuilder: (context) => [
                   PopupMenuItem<MessageFilter>(
                       value: MessageFilter.none,
-                      child: filter(MessageFilter.none, "Kein Filter")),
+                      child: buildFilter(MessageFilter.none, "Kein Filter")),
                   PopupMenuItem<MessageFilter>(
                       value: MessageFilter.unread,
-                      child: filter(
+                      child: buildFilter(
                           MessageFilter.unread, "Ungelesene Nachrichten")),
                   PopupMenuItem<MessageFilter>(
                       value: MessageFilter.read,
-                      child:
-                          filter(MessageFilter.read, "Gelesene Nachrichten")),
+                      child: buildFilter(
+                          MessageFilter.read, "Gelesene Nachrichten")),
                 ])
       ],
     );
@@ -128,7 +142,7 @@ class _MessagesPageState extends State<MessagesPage>
     return PreferredSize(
       preferredSize: const Size.fromHeight(kToolbarHeight),
       child: Container(
-        color: Colors.blue,
+        color: Colors.white,
         child: SafeArea(
           child: Column(
             children: <Widget>[
@@ -136,6 +150,7 @@ class _MessagesPageState extends State<MessagesPage>
               TabBar(
                 controller: _controller,
                 tabs: messageTabs,
+                labelColor: Colors.indigo,
               ),
             ],
           ),
@@ -176,7 +191,7 @@ class _MessagesPageState extends State<MessagesPage>
   Widget buildInboxWidget(BuildContext context, MessageState state) {
     return Column(
       children: [
-        if (isFilterVisible) buildFilterRow(context),
+        if (_controller.index == 0) buildFilterRow(context),
         Expanded(
             child: state.status != MessageStatus.populated
                 ? const Center(child: CircularProgressIndicator())
@@ -203,27 +218,9 @@ class _MessagesPageState extends State<MessagesPage>
 
   funnelIcon() {
     if (currentFilter != MessageFilter.none) {
-      return const Icon(EvaIcons.funnel, size: 25, color: Colors.blue);
+      return const Icon(EvaIcons.funnel, size: 25, color: Colors.indigo);
     } else {
-      return const Icon(EvaIcons.funnelOutline, size: 25, color: Colors.blue);
-    }
-  }
-
-  filter(MessageFilter filter, String filterText) {
-    if (currentFilter == filter) {
-      return Row(children: [
-        Text(filterText),
-        Container(
-            padding: const EdgeInsets.all(0),
-            margin: const EdgeInsets.all(0),
-            child: const Icon(
-              Icons.check,
-              color: Colors.blue,
-              size: 20.0,
-            ))
-      ]);
-    } else {
-      return Text(filterText);
+      return const Icon(EvaIcons.funnelOutline, size: 25, color: Colors.indigo);
     }
   }
 }

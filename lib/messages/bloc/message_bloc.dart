@@ -23,21 +23,36 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
       RefreshRequested event, Emitter<MessageState> emit) async {
     emit(state.copyWith(status: MessageStatus.loading, messages: []));
 
-    List<Message> messages = await getMessages(event.isInbox);
-    emit(state.copyWith(
-        status: MessageStatus.populated,
-        messages: event.isInbox
-            ? filter(messages, event.filter).toList()
-            : messages));
+    try {
+      List<Message> messages;
+      if (event.isInbox) {
+        messages = await _messageRepository
+            .getInboxMessages(_authenticationRepository.currentUser.id);
+      } else {
+        messages = await _messageRepository
+            .getOutboxMessages(_authenticationRepository.currentUser.id);
+      }
+      emit(state.copyWith(
+          status: MessageStatus.populated,
+          messages: event.isInbox
+              ? filter(messages, event.filter).toList()
+              : messages));
+    } catch (e) {
+      emit(const MessageState(status: MessageStatus.failure));
+    }
   }
 
   getMessages(bool isInbox) async {
-    if (isInbox) {
-      return await _messageRepository
-          .getInboxMessages(_authenticationRepository.currentUser.id);
-    } else {
-      return await _messageRepository
-          .getOutboxMessages(_authenticationRepository.currentUser.id);
+    try {
+      if (isInbox) {
+        return await _messageRepository
+            .getInboxMessages(_authenticationRepository.currentUser.id);
+      } else {
+        return await _messageRepository
+            .getOutboxMessages(_authenticationRepository.currentUser.id);
+      }
+    } catch (e) {
+      emit(const MessageState(status: MessageStatus.failure));
     }
   }
 
