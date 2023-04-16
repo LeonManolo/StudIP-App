@@ -22,11 +22,10 @@ class MessagesPage extends StatefulWidget {
 
 class _MessagesPageState extends State<MessagesPage>
     with SingleTickerProviderStateMixin {
-  MessageFilter currentFilter = MessageFilter.none;
-  late MessageBloc messageBloc;
   late TabController _controller;
+  MessageFilter _currentFilter = MessageFilter.none;
 
-  final List<Tab> messageTabs = [
+  final List<Tab> _messageTabs = [
     const Tab(
       icon: Icon(Icons.all_inbox),
     ),
@@ -39,44 +38,42 @@ class _MessagesPageState extends State<MessagesPage>
   void initState() {
     super.initState();
     _controller = TabController(
-        length: messageTabs.length,
+        length: _messageTabs.length,
         vsync: this,
         animationDuration: Duration.zero);
-    messageBloc = MessageBloc(
-      messageRepository: context.read<MessageRepository>(),
-      authenticationRepository: context.read<AuthenticationRepository>(),
-    )..add(RefreshRequested(filter: currentFilter, isInbox: true));
-    _controller.addListener(() => {
-        fetchMessages()
-        });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: buildAppBar(context),
-      body: BlocBuilder<MessageBloc, MessageState>(
-        bloc: messageBloc,
-        builder: (context, state) {
-          return DefaultTabController(
-            initialIndex: 0,
-            length: messageTabs.length,
-            child: Scaffold(
-              appBar: buildTabBar(context),
-              body: TabBarView(
-                children: <Widget>[
-                  buildInboxWidget(context, state),
-                  buildOutboxWidget(context, state),
-                ],
+      appBar: _buildAppBar(context),
+      body: BlocProvider(
+        create: (context) => MessageBloc(
+          messageRepository: context.read<MessageRepository>(),
+          authenticationRepository: context.read<AuthenticationRepository>(),
+        )..add(RefreshRequested(filter: _currentFilter, isInbox: true)),
+        child: BlocBuilder<MessageBloc, MessageState>(
+          builder: (context, state) {
+            return DefaultTabController(
+              initialIndex: 0,
+              length: _messageTabs.length,
+              child: Scaffold(
+                appBar: _buildTabBar(context),
+                body: TabBarView(
+                  children: <Widget>[
+                    _buildInboxWidget(context, state),
+                    _buildOutboxWidget(context, state),
+                  ],
+                ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }
 
-  Widget buildFilter(MessageFilter filter, String filterText) {
+  Widget _buildFilter(MessageFilter filter, String filterText) {
     return PopupMenuItem<MessageFilter>(
       value: filter,
       child: Row(
@@ -84,7 +81,7 @@ class _MessagesPageState extends State<MessagesPage>
           Expanded(
             child: Text(filterText),
           ),
-          if (currentFilter == filter)
+          if (_currentFilter == filter)
             Container(
               padding: const EdgeInsets.all(0),
               margin: const EdgeInsets.all(0),
@@ -99,31 +96,32 @@ class _MessagesPageState extends State<MessagesPage>
     );
   }
 
-  Row buildFilterRow(BuildContext context) {
+  Row _buildFilterRow(BuildContext context) {
     return Row(
       children: [
         const Spacer(),
         PopupMenuButton<MessageFilter>(
-            icon: funnelIcon(),
-            onSelected: (newFilter) => handleFilterSelection(newFilter),
+            icon: _funnelIcon(),
+            onSelected: (newFilter) =>
+                _handleFilterSelection(context, newFilter),
             itemBuilder: (context) => [
                   PopupMenuItem<MessageFilter>(
                       value: MessageFilter.none,
-                      child: buildFilter(MessageFilter.none, "Kein Filter")),
+                      child: _buildFilter(MessageFilter.none, "Kein Filter")),
                   PopupMenuItem<MessageFilter>(
                       value: MessageFilter.unread,
-                      child: buildFilter(
+                      child: _buildFilter(
                           MessageFilter.unread, "Ungelesene Nachrichten")),
                   PopupMenuItem<MessageFilter>(
                       value: MessageFilter.read,
-                      child: buildFilter(
+                      child: _buildFilter(
                           MessageFilter.read, "Gelesene Nachrichten")),
                 ])
       ],
     );
   }
 
-  AppBar buildAppBar(BuildContext context) {
+  AppBar _buildAppBar(BuildContext context) {
     return AppBar(
       title: const Text('Nachrichten'),
       actions: <Widget>[
@@ -138,7 +136,8 @@ class _MessagesPageState extends State<MessagesPage>
     );
   }
 
-  PreferredSize buildTabBar(BuildContext context) {
+  PreferredSize _buildTabBar(BuildContext context) {
+    _controller.addListener(() => {_fetchMessages(context)});
     return PreferredSize(
       preferredSize: const Size.fromHeight(kToolbarHeight),
       child: Container(
@@ -149,7 +148,7 @@ class _MessagesPageState extends State<MessagesPage>
               Expanded(child: Container()),
               TabBar(
                 controller: _controller,
-                tabs: messageTabs,
+                tabs: _messageTabs,
                 labelColor: Colors.indigo,
               ),
             ],
@@ -159,17 +158,18 @@ class _MessagesPageState extends State<MessagesPage>
     );
   }
 
-  Widget buildRefreshableList({
+  Widget _buildRefreshableList({
+    required BuildContext context,
     required MessageState state,
     required bool inbox,
   }) {
     if (state.messages.isEmpty) {
       return const Center(
-        child: Text('No messages found'),
+        child: Text('Keine Nachrichten vorhanden'),
       );
     }
     return RefreshIndicator(
-      onRefresh: () async => fetchMessages(),
+      onRefresh: () async => _fetchMessages(context),
       child: ListView.separated(
         itemCount: state.messages.length,
         separatorBuilder: (context, index) => const Divider(),
@@ -188,36 +188,37 @@ class _MessagesPageState extends State<MessagesPage>
     );
   }
 
-  Widget buildInboxWidget(BuildContext context, MessageState state) {
+  Widget _buildInboxWidget(BuildContext context, MessageState state) {
     return Column(
       children: [
-        if (_controller.index == 0) buildFilterRow(context),
+        if (_controller.index == 0) _buildFilterRow(context),
         Expanded(
             child: state.status != MessageStatus.populated
                 ? const Center(child: CircularProgressIndicator())
-                : buildRefreshableList(state: state, inbox: true)),
+                : _buildRefreshableList(
+                    context: context, state: state, inbox: true)),
       ],
     );
   }
 
-  Widget buildOutboxWidget(BuildContext context, MessageState state) {
+  Widget _buildOutboxWidget(BuildContext context, MessageState state) {
     return state.status != MessageStatus.populated
         ? const Center(child: CircularProgressIndicator())
-        : buildRefreshableList(state: state, inbox: false);
+        : _buildRefreshableList(context: context, state: state, inbox: false);
   }
 
-  void fetchMessages() {
-    messageBloc.add(RefreshRequested(
-        filter: currentFilter, isInbox: _controller.index == 0));
+  void _fetchMessages(BuildContext context) {
+    BlocProvider.of<MessageBloc>(context).add(RefreshRequested(
+        filter: _currentFilter, isInbox: _controller.index == 0));
   }
 
-  void handleFilterSelection(MessageFilter filter) {
-    currentFilter = filter;
-    fetchMessages();
+  void _handleFilterSelection(BuildContext context, MessageFilter filter) {
+    _currentFilter = filter;
+    _fetchMessages(context);
   }
 
-  Icon funnelIcon() {
-    if (currentFilter != MessageFilter.none) {
+  Icon _funnelIcon() {
+    if (_currentFilter != MessageFilter.none) {
       return const Icon(EvaIcons.funnel, size: 25, color: Colors.indigo);
     } else {
       return const Icon(EvaIcons.funnelOutline, size: 25, color: Colors.indigo);

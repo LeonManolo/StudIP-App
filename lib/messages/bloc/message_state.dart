@@ -10,8 +10,6 @@ enum MessageStatus {
 
 enum MessageFilter { none, read, unread }
 
-enum TabBarState { inbox, outbox }
-
 class MessageState extends Equatable {
   final MessageStatus status;
   final List<Message> messages;
@@ -30,7 +28,7 @@ class MessageState extends Equatable {
         );
 
   @override
-  List<Object?> get props => [isInbox, messages, filter];
+  List<Object?> get props => [isInbox, messages, status, filter];
 
   MessageState copyWith({
     MessageStatus? status,

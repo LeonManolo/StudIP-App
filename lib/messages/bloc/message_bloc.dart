@@ -35,33 +35,19 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
       emit(state.copyWith(
           status: MessageStatus.populated,
           messages: event.isInbox
-              ? filter(messages, event.filter).toList()
+              ? filter(messages, event.filter)
               : messages));
     } catch (e) {
       emit(const MessageState(status: MessageStatus.failure));
     }
   }
 
-  getMessages(bool isInbox) async {
-    try {
-      if (isInbox) {
-        return await _messageRepository
-            .getInboxMessages(_authenticationRepository.currentUser.id);
-      } else {
-        return await _messageRepository
-            .getOutboxMessages(_authenticationRepository.currentUser.id);
-      }
-    } catch (e) {
-      emit(const MessageState(status: MessageStatus.failure));
-    }
-  }
-
-  filter(List<Message> messages, MessageFilter filter) {
+  List<Message> filter(List<Message> messages, MessageFilter filter) {
     switch (filter) {
       case MessageFilter.read:
-        return messages.where((message) => message.isRead);
+        return messages.where((message) => message.isRead).toList();
       case MessageFilter.unread:
-        return messages.where((message) => !message.isRead);
+        return messages.where((message) => !message.isRead).toList();
       default:
         return messages;
     }
