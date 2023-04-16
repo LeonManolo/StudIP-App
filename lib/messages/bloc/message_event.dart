@@ -1,24 +1,17 @@
 import 'package:equatable/equatable.dart';
 
+import 'message_state.dart';
+
 abstract class MessageEvent extends Equatable {
   const MessageEvent();
 }
 
 class RefreshRequested extends MessageEvent {
-  
-  const RefreshRequested();
+  final MessageFilter filter;
+  final bool isInbox;
+
+  const RefreshRequested({required this.filter, required this.isInbox});
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [filter, isInbox];
 }
-
-class InboxOutboxToggleBoxDidChange extends MessageEvent {
-  final int index;
-
-  const InboxOutboxToggleBoxDidChange(
-      {required this.index});
-
-  @override
-  List<Object?> get props => [index];
-}
-
