@@ -13,12 +13,18 @@ class MessageRepository {
     try {
       final response = await _apiClient.getInboxMessages(userId);
       final messages = response.messages;
-      await Future.wait(messages.map((message) async => {
-            await _apiClient
-                .getUser(message.sender.id)
-                .then((user) => message.sender.username = user.username)
-                .onError((error, stackTrace) => message.sender.username = "")
-          }));
+      final Map<String, String> knownUsers = {};
+      
+      for (var message in messages) {
+        if (knownUsers[message.sender.id] != null) {
+          message.sender.username = knownUsers[message.sender.id]!;
+        } else {
+          final user = await _apiClient.getUser(message.sender.id);
+          message.sender.username = user.username;
+          knownUsers[message.sender.id] = user.username;
+        }
+      }
+      
       return messages;
     } catch (error, stackTrace) {
       Error.throwWithStackTrace(error, stackTrace);
@@ -29,16 +35,21 @@ class MessageRepository {
     try {
       final response = await _apiClient.getOutboxMessages(userId);
       final messages = response.messages;
-      await Future.wait(messages.map((message) async => {
-            await Future.wait(message.recipients.map((recipient) async => {
-                  await _apiClient
-                      .getUser(recipient.id)
-                      .then((user) => recipient.username = user.username)
-                      .onError(
-                          (error, stackTrace) => message.sender.username = "")
-                }))
-          }));
-      return response.messages;
+      final Map<String, String> knownUsers = {};
+      
+      for (var message in messages) {
+        for (var recipient in message.recipients) {
+          if (knownUsers[recipient.id] != null) {
+            recipient.username = knownUsers[recipient.id]!;
+          } else {
+            final user = await _apiClient.getUser(recipient.id);
+            recipient.username = user.username;
+            knownUsers[recipient.id] = user.username;
+          }
+        }
+      }
+      
+      return messages;
     } catch (error, stackTrace) {
       Error.throwWithStackTrace(error, stackTrace);
     }

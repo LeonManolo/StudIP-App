@@ -5,9 +5,10 @@ import 'package:messages_repository/messages_repository.dart';
 import 'package:studipadawan/messages/bloc/message_bloc.dart';
 import 'package:studipadawan/messages/bloc/message_event.dart';
 import 'package:studipadawan/messages/bloc/message_state.dart';
-import 'package:studipadawan/messages/view/widgets/inbox_messages.dart';
-import 'package:studipadawan/messages/view/widgets/outbox_messages.dart';
-import 'package:eva_icons_flutter/eva_icons_flutter.dart';
+import 'package:studipadawan/messages/view/widgets/filter_row.dart';
+import 'package:studipadawan/messages/view/widgets/inbox_message_widget.dart';
+import 'package:studipadawan/messages/view/widgets/outbox_message_widget.dart';
+import 'package:studipadawan/messages/view/widgets/tabbar.dart';
 
 import '../../app/bloc/app_bloc.dart';
 
@@ -38,9 +39,15 @@ class _MessagesPageState extends State<MessagesPage>
   void initState() {
     super.initState();
     _controller = TabController(
-        length: _messageTabs.length,
-        vsync: this,
-        animationDuration: Duration.zero);
+      length: _messageTabs.length,
+      vsync: this
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose(); // cleanup
+    super.dispose();
   }
 
   @override
@@ -51,73 +58,34 @@ class _MessagesPageState extends State<MessagesPage>
         create: (context) => MessageBloc(
           messageRepository: context.read<MessageRepository>(),
           authenticationRepository: context.read<AuthenticationRepository>(),
-        )..add(RefreshRequested(filter: _currentFilter, isInbox: true)),
+        )..add(RefreshRequested(filter: _currentFilter)),
         child: BlocBuilder<MessageBloc, MessageState>(
           builder: (context, state) {
-            return DefaultTabController(
-              initialIndex: 0,
-              length: _messageTabs.length,
-              child: Scaffold(
-                appBar: _buildTabBar(context),
-                body: TabBarView(
-                  children: <Widget>[
-                    _buildInboxWidget(context, state),
-                    _buildOutboxWidget(context, state),
-                  ],
-                ),
+            return Scaffold(
+              appBar: PreferredSize(
+                  preferredSize: const Size.fromHeight(kToolbarHeight),
+                  child: MessageTabBar(controller: _controller)),
+              body: TabBarView(
+                controller: _controller,
+                children: [
+                  InboxMessageWidget(
+                    state: state,
+                    filterRow: FilterRow(
+                      currentFilter: _currentFilter,
+                      setFilter: _handleFilterSelection,
+                    ),
+                    currentFilter: _currentFilter,
+                  ),
+                  OutboxMessageWidget(
+                    state: state,
+                    currentFilter: _currentFilter,
+                  ),
+                ],
               ),
             );
           },
         ),
       ),
-    );
-  }
-
-  Widget _buildFilter(MessageFilter filter, String filterText) {
-    return PopupMenuItem<MessageFilter>(
-      value: filter,
-      child: Row(
-        children: [
-          Expanded(
-            child: Text(filterText),
-          ),
-          if (_currentFilter == filter)
-            Container(
-              padding: const EdgeInsets.all(0),
-              margin: const EdgeInsets.all(0),
-              child: const Icon(
-                Icons.check,
-                color: Colors.indigo,
-                size: 20.0,
-              ),
-            ),
-        ],
-      ),
-    );
-  }
-
-  Row _buildFilterRow(BuildContext context) {
-    return Row(
-      children: [
-        const Spacer(),
-        PopupMenuButton<MessageFilter>(
-            icon: _funnelIcon(),
-            onSelected: (newFilter) =>
-                _handleFilterSelection(context, newFilter),
-            itemBuilder: (context) => [
-                  PopupMenuItem<MessageFilter>(
-                      value: MessageFilter.none,
-                      child: _buildFilter(MessageFilter.none, "Kein Filter")),
-                  PopupMenuItem<MessageFilter>(
-                      value: MessageFilter.unread,
-                      child: _buildFilter(
-                          MessageFilter.unread, "Ungelesene Nachrichten")),
-                  PopupMenuItem<MessageFilter>(
-                      value: MessageFilter.read,
-                      child: _buildFilter(
-                          MessageFilter.read, "Gelesene Nachrichten")),
-                ])
-      ],
     );
   }
 
@@ -136,92 +104,15 @@ class _MessagesPageState extends State<MessagesPage>
     );
   }
 
-  PreferredSize _buildTabBar(BuildContext context) {
-    _controller.addListener(() => {_fetchMessages(context)});
-    return PreferredSize(
-      preferredSize: const Size.fromHeight(kToolbarHeight),
-      child: Container(
-        color: Colors.white,
-        child: SafeArea(
-          child: Column(
-            children: <Widget>[
-              Expanded(child: Container()),
-              TabBar(
-                controller: _controller,
-                tabs: _messageTabs,
-                labelColor: Colors.indigo,
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildRefreshableList({
-    required BuildContext context,
-    required MessageState state,
-    required bool inbox,
-  }) {
-    if (state.messages.isEmpty) {
-      return const Center(
-        child: Text('Keine Nachrichten vorhanden'),
-      );
-    }
-    return RefreshIndicator(
-      onRefresh: () async => _fetchMessages(context),
-      child: ListView.separated(
-        itemCount: state.messages.length,
-        separatorBuilder: (context, index) => const Divider(),
-        itemBuilder: (context, index) {
-          if (state.status != MessageStatus.populated) {
-            return const Center(child: CircularProgressIndicator());
-          } else {
-            if (_controller.index == 0) {
-              return InboxMessageWidget(message: state.messages[index]);
-            } else {
-              return OutboxMessageWidget(message: state.messages[index]);
-            }
-          }
-        },
-      ),
-    );
-  }
-
-  Widget _buildInboxWidget(BuildContext context, MessageState state) {
-    return Column(
-      children: [
-        if (_controller.index == 0) _buildFilterRow(context),
-        Expanded(
-            child: state.status != MessageStatus.populated
-                ? const Center(child: CircularProgressIndicator())
-                : _buildRefreshableList(
-                    context: context, state: state, inbox: true)),
-      ],
-    );
-  }
-
-  Widget _buildOutboxWidget(BuildContext context, MessageState state) {
-    return state.status != MessageStatus.populated
-        ? const Center(child: CircularProgressIndicator())
-        : _buildRefreshableList(context: context, state: state, inbox: false);
-  }
-
   void _fetchMessages(BuildContext context) {
-    BlocProvider.of<MessageBloc>(context).add(RefreshRequested(
-        filter: _currentFilter, isInbox: _controller.index == 0));
+    BlocProvider.of<MessageBloc>(context)
+        .add(RefreshRequested(filter: _currentFilter));
   }
 
   void _handleFilterSelection(BuildContext context, MessageFilter filter) {
-    _currentFilter = filter;
-    _fetchMessages(context);
-  }
-
-  Icon _funnelIcon() {
-    if (_currentFilter != MessageFilter.none) {
-      return const Icon(EvaIcons.funnel, size: 25, color: Colors.indigo);
-    } else {
-      return const Icon(EvaIcons.funnelOutline, size: 25, color: Colors.indigo);
-    }
+    setState(() {
+      _currentFilter = filter;
+      _fetchMessages(context);
+    });
   }
 }

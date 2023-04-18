@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:messages_repository/messages_repository.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 
-class OutboxMessageWidget extends StatelessWidget {
+class OutboxMessageItem extends StatelessWidget {
   final Message message;
 
-  const OutboxMessageWidget({Key? key, required this.message})
+  const OutboxMessageItem({Key? key, required this.message})
       : super(key: key);
 
   @override

@@ -21,22 +21,18 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
 
   FutureOr<void> _onRefreshRequested(
       RefreshRequested event, Emitter<MessageState> emit) async {
-    emit(state.copyWith(status: MessageStatus.loading, messages: []));
+    emit(state.copyWith(
+        status: MessageStatus.loading, inboxMessages: [], outboxMessages: []));
 
     try {
-      List<Message> messages;
-      if (event.isInbox) {
-        messages = await _messageRepository
-            .getInboxMessages(_authenticationRepository.currentUser.id);
-      } else {
-        messages = await _messageRepository
-            .getOutboxMessages(_authenticationRepository.currentUser.id);
-      }
+      List<Message> inboxMessages = await _messageRepository
+          .getInboxMessages(_authenticationRepository.currentUser.id);
+      List<Message> outboxMessages = await _messageRepository
+          .getOutboxMessages(_authenticationRepository.currentUser.id);
       emit(state.copyWith(
           status: MessageStatus.populated,
-          messages: event.isInbox
-              ? filter(messages, event.filter)
-              : messages));
+          inboxMessages: filter(inboxMessages, event.filter),
+          outboxMessages: outboxMessages));
     } catch (e) {
       emit(const MessageState(status: MessageStatus.failure));
     }
