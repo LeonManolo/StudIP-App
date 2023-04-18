@@ -12,14 +12,14 @@ enum MessageFilter { none, read, unread }
 
 class MessageState extends Equatable {
   final MessageStatus status;
-  final List<Message> messages;
-  final bool isInbox;
+  final List<Message> inboxMessages;
+  final List<Message> outboxMessages;
   final MessageFilter filter;
 
   const MessageState(
       {required this.status,
-      this.messages = const [],
-      this.isInbox = true,
+      this.inboxMessages = const [],
+      this.outboxMessages = const [],
       this.filter = MessageFilter.none});
 
   const MessageState.initial()
@@ -28,18 +28,18 @@ class MessageState extends Equatable {
         );
 
   @override
-  List<Object?> get props => [isInbox, messages, status, filter];
+  List<Object?> get props => [status, inboxMessages, outboxMessages, filter];
 
   MessageState copyWith({
     MessageStatus? status,
-    List<Message>? messages,
-    bool? isInbox,
+    List<Message>? inboxMessages,
+    List<Message>? outboxMessages,
     MessageFilter? filter,
   }) {
     return MessageState(
         status: status ?? this.status,
-        messages: messages ?? this.messages,
-        isInbox: isInbox ?? this.isInbox,
+        inboxMessages: inboxMessages ?? this.inboxMessages,
+        outboxMessages: outboxMessages ?? this.outboxMessages,
         filter: filter ?? this.filter);
   }
 }

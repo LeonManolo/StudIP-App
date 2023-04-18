@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:messages_repository/messages_repository.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 
-class InboxMessageWidget extends StatelessWidget {
+class InboxMessageItem extends StatelessWidget {
   final Message message;
 
-  const InboxMessageWidget({Key? key, required this.message}) : super(key: key);
+  const InboxMessageItem({Key? key, required this.message}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

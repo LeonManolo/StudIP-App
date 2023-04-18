@@ -8,10 +8,9 @@ abstract class MessageEvent extends Equatable {
 
 class RefreshRequested extends MessageEvent {
   final MessageFilter filter;
-  final bool isInbox;
 
-  const RefreshRequested({required this.filter, required this.isInbox});
+  const RefreshRequested({required this.filter});
 
   @override
-  List<Object?> get props => [filter, isInbox];
+  List<Object?> get props => [filter];
 }
