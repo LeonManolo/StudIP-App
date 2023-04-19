@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:courses_repository/courses_repository.dart';
 import 'package:equatable/equatable.dart';
-import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 
 part 'course_details_event.dart';
@@ -11,8 +11,10 @@ part 'course_details_state.dart';
 class CourseDetailsBloc
     extends Bloc<CourseDetailsSelectTabEvent, CourseDetailsState> {
   final allTabs = CourseDetailsTab.values;
+  final Course course;
 
-  CourseDetailsBloc() : super(const CourseDetailsState.initial()) {
+  CourseDetailsBloc({required this.course})
+      : super(CourseDetailsState.initial(course: course)) {
     on<CourseDetailsSelectTabEvent>(_onTabSelected);
   }
 
@@ -20,6 +22,6 @@ class CourseDetailsBloc
     CourseDetailsSelectTabEvent event,
     Emitter<CourseDetailsState> emit,
   ) {
-    emit(CourseDetailsState(selectedTab: event.selectedTab));
+    emit(CourseDetailsState(selectedTab: event.selectedTab, course: course));
   }
 }

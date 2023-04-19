@@ -14,11 +14,13 @@ enum CourseDetailsTab {
 
 class CourseDetailsState extends Equatable {
   final CourseDetailsTab selectedTab;
+  final Course course;
 
-  const CourseDetailsState({required this.selectedTab});
+  const CourseDetailsState({required this.selectedTab, required this.course});
 
-  const CourseDetailsState.initial() : this(selectedTab: CourseDetailsTab.info);
+  const CourseDetailsState.initial({required Course course})
+      : this(selectedTab: CourseDetailsTab.info, course: course);
 
   @override
-  List<Object> get props => [selectedTab];
+  List<Object> get props => [selectedTab, course];
 }

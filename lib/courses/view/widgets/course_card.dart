@@ -3,15 +3,16 @@ import 'package:flutter/material.dart';
 
 class CourseCard extends StatelessWidget {
   final Course course;
-  final Function? onCourseSelection;
+  final Function(Course) onCourseSelection;
 
-  const CourseCard({Key? key, required this.course, this.onCourseSelection})
+  const CourseCard(
+      {Key? key, required this.course, required this.onCourseSelection})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => onCourseSelection?.call(),
+      onTap: () => onCourseSelection(course),
       child: Container(
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(16),

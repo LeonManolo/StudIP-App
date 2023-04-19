@@ -1,3 +1,4 @@
+import 'package:courses_repository/courses_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:studipadawan/courses/details/bloc/course_details_bloc.dart';
@@ -11,15 +12,19 @@ class CourseDetailsMainContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    switch (context.read<CourseDetailsBloc>().state.selectedTab) {
-      case CourseDetailsTab.info:
-        return CourseInfoPage();
-      case CourseDetailsTab.files:
-        return CourseFilesPage();
-      case CourseDetailsTab.participants:
-        return CourseParticipantsPage();
-      case CourseDetailsTab.forum:
-        return CourseForumPage();
-    }
+    return BlocBuilder<CourseDetailsBloc, CourseDetailsState>(
+      builder: (context, state) {
+        switch (state.selectedTab) {
+          case CourseDetailsTab.info:
+            return const CourseInfoPage();
+          case CourseDetailsTab.files:
+            return const CourseFilesPage();
+          case CourseDetailsTab.participants:
+            return const CourseParticipantsPage();
+          case CourseDetailsTab.forum:
+            return const CourseForumPage();
+        }
+      },
+    );
   }
 }
