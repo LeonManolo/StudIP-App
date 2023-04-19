@@ -33,7 +33,7 @@ class CourseDetailsPage extends StatelessWidget {
 
                       return CourseDetailTabView(
                         tab: tab,
-                        isSelected: bloc.isSelectedTab(tab),
+                        isSelected: bloc.state.selectedTab == tab,
                         onSelection: () => {
                           bloc.add(
                             CourseDetailsSelectTabEvent(selectedTab: tab),

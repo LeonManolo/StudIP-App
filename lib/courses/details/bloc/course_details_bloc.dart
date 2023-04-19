@@ -22,8 +22,4 @@ class CourseDetailsBloc
   ) {
     emit(CourseDetailsState(selectedTab: event.selectedTab));
   }
-
-  bool isSelectedTab(CourseDetailsTab tab) {
-    return state.selectedTab == tab;
-  }
 }
