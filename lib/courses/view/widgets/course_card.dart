@@ -2,18 +2,16 @@ import 'package:courses_repository/courses_repository.dart';
 import 'package:flutter/material.dart';
 
 class CourseCard extends StatelessWidget {
-  final Course _course;
-  final Function? _onCourseSelection;
+  final Course course;
+  final Function? onCourseSelection;
 
-  const CourseCard({Key? key, required course, onCourseSelection})
-      : _course = course,
-        _onCourseSelection = onCourseSelection,
-        super(key: key);
+  const CourseCard({Key? key, required this.course, this.onCourseSelection})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => _onCourseSelection?.call(),
+      onTap: () => onCourseSelection?.call(),
       child: Container(
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(16),
@@ -28,7 +26,7 @@ class CourseCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Text(
-                        _course.courseDetails.title,
+                        course.courseDetails.title,
                       )
                     ],
                   ),
