@@ -7,7 +7,7 @@ class Message {
   MessageUser sender;
   final List<MessageUser> recipients;
   final String mkdate;
-  final bool isRead;
+  bool isRead;
 
   Message(
       {required this.id,
@@ -18,6 +18,10 @@ class Message {
       required this.mkdate,
       required this.isRead});
 
+  void read() {
+    isRead = true;
+  }
+
   factory Message.fromJson(Map<String, dynamic> json) {
     List<dynamic> recipients = json["relationships"]["recipients"]["data"];
     var sender = json["relationships"]["sender"]["data"];
@@ -25,7 +29,7 @@ class Message {
     return Message(
         id: json["id"],
         subject: json["attributes"]["subject"],
-        message: json["attributes"]["message"],
+        message: json["attributes"]["message"].split("<!--HTML-->")[1],
         sender: MessageUser.fromJson(sender),
         recipients: recipients
             .map((recipient) => MessageUser.fromJson(recipient))

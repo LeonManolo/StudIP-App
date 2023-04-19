@@ -1,3 +1,4 @@
+// ignore: implementation_imports
 import 'package:messages_repository/src/models/models.dart';
 
 class MessageListResponse {

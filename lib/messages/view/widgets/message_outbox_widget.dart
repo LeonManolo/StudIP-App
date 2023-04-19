@@ -4,7 +4,7 @@ import 'package:studipadawan/messages/bloc/message_state.dart';
 
 import '../../bloc/message_bloc.dart';
 import '../../bloc/message_event.dart';
-import 'outbox_message_item.dart';
+import 'message_outbox_item.dart';
 
 class OutboxMessageWidget extends StatelessWidget {
   final MessageState state;

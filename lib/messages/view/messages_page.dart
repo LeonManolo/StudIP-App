@@ -6,9 +6,9 @@ import 'package:studipadawan/messages/bloc/message_bloc.dart';
 import 'package:studipadawan/messages/bloc/message_event.dart';
 import 'package:studipadawan/messages/bloc/message_state.dart';
 import 'package:studipadawan/messages/view/widgets/filter_row.dart';
-import 'package:studipadawan/messages/view/widgets/inbox_message_widget.dart';
-import 'package:studipadawan/messages/view/widgets/outbox_message_widget.dart';
-import 'package:studipadawan/messages/view/widgets/tabbar.dart';
+import 'package:studipadawan/messages/view/widgets/message_inbox_widget.dart';
+import 'package:studipadawan/messages/view/widgets/message_outbox_widget.dart';
+import 'package:studipadawan/messages/view/widgets/message_bar.dart';
 
 import '../../app/bloc/app_bloc.dart';
 
@@ -38,10 +38,7 @@ class _MessagesPageState extends State<MessagesPage>
   @override
   void initState() {
     super.initState();
-    _controller = TabController(
-      length: _messageTabs.length,
-      vsync: this
-    );
+    _controller = TabController(length: _messageTabs.length, vsync: this);
   }
 
   @override
@@ -70,6 +67,7 @@ class _MessagesPageState extends State<MessagesPage>
                 children: [
                   InboxMessageWidget(
                     state: state,
+                    readMessage: _readMessage,
                     filterRow: FilterRow(
                       currentFilter: _currentFilter,
                       setFilter: _handleFilterSelection,
@@ -102,6 +100,14 @@ class _MessagesPageState extends State<MessagesPage>
         )
       ],
     );
+  }
+
+  void _readMessage(BuildContext context, Message message) {
+    setState(() {
+      BlocProvider.of<MessageBloc>(context)
+          .add(ReadMessageRequested(messageId: message.id));
+      message.read();
+    });
   }
 
   void _fetchMessages(BuildContext context) {

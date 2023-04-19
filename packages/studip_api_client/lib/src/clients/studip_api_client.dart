@@ -84,6 +84,42 @@ class StudIpApiClient
     return MessageListResponse.fromJson(body);
   }
 
+  @override
+  Future<MessageResponse> getMessage(String messageId) async {
+    final response = await _core.get(endpoint: "/messages/$messageId");
+
+    final body = response.json();
+
+    if (response.statusCode != HttpStatus.ok) {
+      throw StudIpApiRequestFailure(
+        body: body,
+        statusCode: response.statusCode,
+      );
+    }
+    return MessageResponse.fromJson(body);
+  }
+
+  @override
+  Future<void> readMessage(String messageId) async {
+    String params = jsonEncode({
+      'data': {
+        'type': 'messages',
+        'attributes': {
+          'is-read': true,
+        },
+      },
+    });
+    print(params);
+    final response =
+        await _core.patch(endpoint: "messages/$messageId", jsonString: params);
+    final body = response.json();
+    if (response.statusCode != HttpStatus.ok) {
+      print(body);
+      throw StudIpApiRequestFailure(
+          body: body, statusCode: response.statusCode);
+    }
+  }
+
   // **** Courses ****
   @override
   Future<CourseListResponse> getCourses(

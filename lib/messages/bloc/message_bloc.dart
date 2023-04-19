@@ -17,6 +17,18 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
         _authenticationRepository = authenticationRepository,
         super(const MessageState.initial()) {
     on<RefreshRequested>(_onRefreshRequested);
+    on<ReadMessageRequested>(_onReadMessageRequested);
+  }
+
+  FutureOr<void> _onReadMessageRequested(
+      ReadMessageRequested event, Emitter<MessageState> emit) async {
+    print(event.messageId);
+    try {
+      await _messageRepository.readMessage(event.messageId);
+    } catch (e) {
+      print(e.toString());
+      //emit(const MessageState(status: MessageStatus.failure));
+    }
   }
 
   FutureOr<void> _onRefreshRequested(
