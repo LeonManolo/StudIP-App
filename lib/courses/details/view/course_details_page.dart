@@ -1,3 +1,4 @@
+import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:studipadawan/courses/details/bloc/course_details_bloc.dart';
@@ -20,9 +21,9 @@ class CourseDetailsPage extends StatelessWidget {
                 SizedBox(
                   height: 90,
                   child: ListView.separated(
-                    padding: const EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(AppSpacing.md),
                     separatorBuilder: (context, index) => const SizedBox(
-                      width: 20,
+                      width: AppSpacing.lg,
                     ),
                     scrollDirection: Axis.horizontal,
                     itemCount: context.read<CourseDetailsBloc>().allTabs.length,
