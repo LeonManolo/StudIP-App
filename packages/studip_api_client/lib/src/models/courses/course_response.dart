@@ -24,21 +24,44 @@ class CourseListResponse {
 
 class CourseResponse {
   final String id;
-  final String title;
-  final String? subtitle;
+  final CourseDetailsResponse detailsResponse;
   final String semesterId;
 
   const CourseResponse(
       {required this.id,
-      required this.title,
-      required this.subtitle,
+      required this.detailsResponse,
       required this.semesterId});
 
   factory CourseResponse.fromJson(Map<String, dynamic> json) {
     return CourseResponse(
         id: json["id"],
-        title: json["attributes"]["title"],
-        subtitle: json["attributes"]["subtitle"],
+        detailsResponse: CourseDetailsResponse.fromJson(json["attributes"]),
         semesterId: json["relationships"]["start-semester"]["data"]["id"]);
+  }
+}
+
+class CourseDetailsResponse {
+  final String? courseNumber;
+  final String title;
+  final String? subtitle;
+  final String? description;
+  final String? location;
+
+  CourseDetailsResponse({
+    this.courseNumber,
+    required this.title,
+    this.subtitle,
+    this.description,
+    this.location,
+  });
+
+  factory CourseDetailsResponse.fromJson(Map<String, dynamic> json) {
+    return CourseDetailsResponse(
+      courseNumber: json["course-number"],
+      title: json["title"],
+      subtitle: json["subtitle"],
+      description: json["description"],
+      location: json["location"],
+    );
   }
 }
