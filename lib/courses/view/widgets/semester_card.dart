@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:courses_repository/src/models/models.dart';
+import 'package:logger/logger.dart';
+import 'package:studipadawan/courses/details/view/course_details_page.dart';
+import 'package:studipadawan/courses/view/widgets/course_card.dart';
 
 class SemesterCard extends StatelessWidget {
   final Semester semester;
@@ -56,42 +59,20 @@ class SemesterCard extends StatelessWidget {
                 )
               ],
             ),
-            for (Course course in semester.courses) _courseCard(course)
+            for (Course course in semester.courses)
+              CourseCard(
+                course: course,
+                onCourseSelection: () => {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const CourseDetailsPage(),
+                      ))
+                },
+              )
           ],
         ),
       ),
-    );
-  }
-
-  Widget _courseCard(Course course) {
-    return GestureDetector(
-      onTap: () => {},
-      child: Container(
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16),
-              color: Colors.orangeAccent),
-          margin: const EdgeInsets.only(top: 16),
-          child: Padding(
-            padding: const EdgeInsets.all(12),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Text(
-                        course.title,
-                      )
-                    ],
-                  ),
-                ),
-                const Icon(
-                  Icons.arrow_forward_ios_rounded,
-                  size: 18.0,
-                )
-              ],
-            ),
-          )),
     );
   }
 }
