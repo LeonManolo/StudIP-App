@@ -6,8 +6,7 @@ import 'package:studipadawan/app/bloc/app_bloc.dart';
 import 'package:studipadawan/courses/bloc/course_bloc.dart';
 import 'package:studipadawan/courses/bloc/courses_event.dart';
 import 'package:studipadawan/courses/bloc/courses_state.dart';
-import 'package:studipadawan/courses/view/widgets/semester_card.dart';
-import 'package:user_repository/user_repository.dart';
+import 'package:studipadawan/courses/view/widgets/semester_list.dart';
 
 class CoursesPage extends StatelessWidget {
   const CoursesPage({Key? key}) : super(key: key);
@@ -32,7 +31,7 @@ class CoursesPage extends StatelessWidget {
             } else if (state.status == CourseStatus.failure) {
               return _failureWidget(context);
             } else {
-              return _populatedWidget(context, state);
+              return const SemesterList();
             }
           },
         ),
@@ -83,22 +82,6 @@ class CoursesPage extends StatelessWidget {
           )
         ],
       ),
-    );
-  }
-
-  Widget _populatedWidget(BuildContext context, CourseState state) {
-    return RefreshIndicator(
-      onRefresh: () async {
-        BlocProvider.of<CourseBloc>(context).add(CoursesRequested());
-        // courseBloc.add(CoursesRequested());
-      },
-      child: ListView.builder(
-          itemCount: state.semesters.length,
-          itemBuilder: (context, index) {
-            return SemesterCard(
-              semester: state.semesters.elementAt(index),
-            );
-          }),
     );
   }
 }
