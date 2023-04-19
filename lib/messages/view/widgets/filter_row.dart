@@ -1,5 +1,6 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:messages_repository/src/models/message.dart';
 
 import '../../bloc/message_state.dart';
 import 'filter_item.dart';
@@ -28,35 +29,38 @@ class FilterRow extends StatelessWidget {
       children: [
         const Spacer(),
         PopupMenuButton<MessageFilter>(
-            icon: funnelIcon(currentFilter),
-            onSelected: (newFilter) =>
-                {setFilter(context, newFilter)},
-            itemBuilder: (context) => [
-                  PopupMenuItem<MessageFilter>(
-                      value: MessageFilter.none,
-                      child: FilterItem(
-                        currentFilter: currentFilter,
-                        filter: MessageFilter.none,
-                        funnelIcon: funnelIcon(currentFilter),
-                        filterDescription: "Kein Filter",
-                      )),
-                  PopupMenuItem<MessageFilter>(
-                      value: MessageFilter.unread,
-                      child: FilterItem(
-                        currentFilter: currentFilter,
-                        filter: MessageFilter.unread,
-                        funnelIcon: funnelIcon(currentFilter),
-                        filterDescription: "Ungelesene Nachrichten",
-                      )),
-                  PopupMenuItem<MessageFilter>(
-                      value: MessageFilter.read,
-                      child: FilterItem(
-                        currentFilter: currentFilter,
-                        filter: MessageFilter.read,
-                        funnelIcon: funnelIcon(currentFilter),
-                        filterDescription: "Gelesene Nachrichten",
-                      )),
-                ]),
+          icon: funnelIcon(currentFilter),
+          onSelected: (newFilter) => {setFilter(context, newFilter)},
+          itemBuilder: (context) => [
+            PopupMenuItem<MessageFilter>(
+              value: MessageFilter.none,
+              child: FilterItem(
+                currentFilter: currentFilter,
+                filter: MessageFilter.none,
+                funnelIcon: funnelIcon(currentFilter),
+                filterDescription: "Kein Filter",
+              ),
+            ),
+            PopupMenuItem<MessageFilter>(
+              value: MessageFilter.unread,
+              child: FilterItem(
+                currentFilter: currentFilter,
+                filter: MessageFilter.unread,
+                funnelIcon: funnelIcon(currentFilter),
+                filterDescription: "Ungelesene Nachrichten",
+              ),
+            ),
+            PopupMenuItem<MessageFilter>(
+              value: MessageFilter.read,
+              child: FilterItem(
+                currentFilter: currentFilter,
+                filter: MessageFilter.read,
+                funnelIcon: funnelIcon(currentFilter),
+                filterDescription: "Gelesene Nachrichten",
+              ),
+            ),
+          ],
+        ),
       ],
     );
   }

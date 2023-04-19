@@ -31,6 +31,23 @@ class MessageRepository {
     }
   }
 
+  Future<Message> getMessage(String messageId) async {
+    try {
+      final MessageResponse response = await _apiClient.getMessage(messageId);
+     return response.message;
+    } catch (error, stackTrace) {
+      Error.throwWithStackTrace(error, stackTrace);
+    }
+  }
+
+  Future<void> readMessage(String messageId) async {
+    try {
+      await _apiClient.readMessage(messageId);
+    } catch (error, stackTrace) {
+      Error.throwWithStackTrace(error, stackTrace);
+    }
+  }
+
   Future<List<Message>> getOutboxMessages(String userId) async {
     try {
       final response = await _apiClient.getOutboxMessages(userId);
