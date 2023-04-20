@@ -15,7 +15,6 @@ class CalendarWeekData {
       if (weekdayNum != null && weekdayNum > 0 && weekdayNum < 8) {
         final timeframe = _toCalenderTimeframe(scheduleData.attributes);
         if (timeframe != null) {
-          print(timeframe.toString());
           final weekday = Weekdays.indexToWeekday(weekdayNum - 1);
           final entryData = CalendarEntryData(
             id: scheduleData.id,

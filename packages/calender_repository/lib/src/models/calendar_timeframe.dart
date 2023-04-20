@@ -34,7 +34,6 @@ class CalendarTimeframe {
     return "${_start.hours}:$minutesAsStringStart - ${_end.hours}:$minutesAsStringEnd";
   }
 
-  //TODO: Name ändern ist falsch herum
   bool containsHourMinute(HourMinute other) {
     if(_start.equals(other) || _end.equals(other)) {
       return true;
