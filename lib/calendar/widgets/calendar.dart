@@ -1,11 +1,12 @@
 import 'package:app_ui/app_ui.dart';
+import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:calender_repository/calender_repository.dart';
 import 'package:flutter/material.dart';
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:studipadawan/calendar/extensions/list_extesions.dart';
 import 'package:studipadawan/calendar/widgets/calendar_entry.dart';
 import 'package:studipadawan/calendar/widgets/calendar_header.dart';
 import 'package:studipadawan/calendar/widgets/empty_calendar_entry.dart';
-
 
 //TODO: automatic scroll to current time
 class Calendar extends StatefulWidget {
@@ -14,51 +15,39 @@ class Calendar extends StatefulWidget {
   final Map<Weekdays, Map<String, CalendarEntryData>> scheduleData;
   final VoidCallback onPreviousButtonPress;
   final VoidCallback onNextButtonPress;
+  final Function(DateTime) onDaySelected;
 
-  const Calendar(
-      {Key? key,
-      required this.scheduleStructure,
-      required this.scheduleData,
-      required this.date,
-        required this.onPreviousButtonPress,
-        required this.onNextButtonPress})
-      : super(key: key);
+  const Calendar({
+    Key? key,
+    required this.scheduleStructure,
+    required this.scheduleData,
+    required this.date,
+    required this.onPreviousButtonPress,
+    required this.onNextButtonPress,
+    required this.onDaySelected,
+  }) : super(key: key);
 
   @override
   State<Calendar> createState() => _CalendarState();
 }
 
 class _CalendarState extends State<Calendar> {
-  final ScrollController _controller = ScrollController();
-  late final itemKeys =
-      List.generate(widget.scheduleStructure.length, (index) => GlobalObjectKey(index));
-      //List.filled(widget.scheduleStructure.length, GlobalObjectKey());
+  final controller = ItemScrollController();
+  var isFirstBuild = true;
 
   @override
   void initState() {
+    /// Only scrolls to the specific time if the currentDate equals widget.date
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      int index = widget.scheduleStructure.indexWhere((element) {
-        final currentDate = DateTime.now();
-        final currentTime =
-        HourMinute(hours: currentDate.hour, minutes: currentDate.minute);
-        return element.isInBetween(currentTime);
-      });
-      if (index != -1) {
-        print("index is not -1");
-        final renderObject = itemKeys[index].currentContext?.findRenderObject();
-        print(renderObject);
-        if (renderObject != null) {
-          print("Should scroll");
-          _controller.position.ensureVisible(
-            renderObject,
-            alignment: 0.5,
-            // How far into view the item should be scrolled (between 0 and 1).
-            duration: const Duration(seconds: 1),
-          );
-        }
+      if (DateTime.now().isSameDayAs(widget.date)) {
+        final index = _findNearestIndexOfCalendarEntry();
+        print("Nearest index: $index");
+        // Wenn die liste nicht mehr scrollbar ist wird einfach nur bis zum ende gescrollt
+        controller.jumpTo(index: index);
+        //TODO: scrollTo buggt
       }
-    });
 
+    });
     super.initState();
   }
 
@@ -72,36 +61,37 @@ class _CalendarState extends State<Calendar> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         CalendarHeader(
-          dateTime: widget.date,
-          onPreviousButtonPress: widget.onPreviousButtonPress,
-          onNextButtonPress: widget.onNextButtonPress,
+            onDatePress: () => _openDatePicker(context),
+            dateTime: widget.date,
+            onPreviousButtonPress: widget.onPreviousButtonPress,
+            onNextButtonPress: widget.onNextButtonPress,
         ),
         Expanded(
           child: Stack(
             children: [
-              ListView.builder(
-                  controller: _controller,
+              ScrollablePositionedList.builder(
                   itemCount: widget.scheduleStructure.length,
+                  itemScrollController: controller,
                   itemBuilder: (context, index) {
                     final key = widget.scheduleStructure[index].combinedKey();
                     final entry = widget.scheduleData[weekday]?[key];
 
                     if (entry == null) {
                       return EmptyCalendarEntry(
-                        key: itemKeys[index],
                         timeFrame: widget.scheduleStructure[index],
-                        showDivider:
-                            index != (widget.scheduleStructure.length - 1),
+                        showDivider: index != 0,
                       );
                     } else {
                       return CalendarEntry(
-                        key: itemKeys[index],
-                        showDivider:
-                            index != (widget.scheduleStructure.length - 1),
+                        showDivider: index != 0,
                         color: Colors.green,
                         title: widget.scheduleData[weekday]?[key]?.title ?? "",
-                        subtitle: widget.scheduleData[weekday]?[key]?.description ?? "",
-                        location: widget.scheduleData[weekday]?[key]?.locations.firstOrNull() ?? "",
+                        subtitle:
+                            widget.scheduleData[weekday]?[key]?.description ??
+                                "",
+                        location: widget.scheduleData[weekday]?[key]?.locations
+                                .firstOrNull() ??
+                            "",
                         timeFrame: widget.scheduleStructure[index],
                       );
                     }
@@ -141,5 +131,41 @@ class _CalendarState extends State<Calendar> {
         )
       ],
     );
+  }
+
+  Future<void> _openDatePicker(BuildContext context) async {
+    final results = await showCalendarDatePicker2Dialog(
+      context: context,
+      config: CalendarDatePicker2WithActionButtonsConfig(
+        calendarType: CalendarDatePicker2Type.single,
+      ),
+      dialogSize: const Size(325, 400),
+      borderRadius: BorderRadius.circular(15),
+    );
+    if (results?.length == 1) {
+      widget.onDaySelected(results!.first!);
+    }
+  }
+
+  int _findNearestIndexOfCalendarEntry() {
+    final date = DateTime.now(); //DateTime(2023,4,20, 10,00); // 10:00 Uhr
+
+    final currentTime = date.hourMinute;
+    var previousHourMinute = HourMinute(hours: 0, minutes: 0);
+    for (int i = 0; i < widget.scheduleStructure.length; i++) {
+      final currentTimeframe = widget.scheduleStructure[i];
+      final betweenTimeframe = CalendarTimeframe(
+          start: previousHourMinute, end: currentTimeframe.start);
+
+      if (currentTimeframe.containsHourMinute(currentTime)) {
+        return i;
+      }
+      if (betweenTimeframe.containsHourMinute(currentTime)) {
+        return i == 0 ? 0 : i - 1;
+      }
+
+      previousHourMinute = currentTimeframe.end;
+    }
+    return widget.scheduleStructure.length - 1;
   }
 }

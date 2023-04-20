@@ -13,24 +13,26 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
   CalendarBloc({
     required CalenderRepository calendarRepository,
     required AuthenticationRepository authenticationRepository,
-  })  : _calendarRepository = calendarRepository,
+  })
+      : _calendarRepository = calendarRepository,
         _authenticationRepository = authenticationRepository,
         super(const CalendarInitial()) {
     on<CalendarRequested>(_onCalendarRequested);
     on<CalendarNextDayRequested>(_onCalendarNextDayRequested);
     on<CalendarPreviousDayRequested>(_onCalendarPreviousDayRequested);
+    on<CalendarExactDayRequested>(_onCalendarExactDayRequested);
   }
 
-  FutureOr<void> _onCalendarRequested(
-      CalendarRequested event, Emitter<CalendarState> emit) async {
+  FutureOr<void> _onCalendarRequested(CalendarRequested event,
+      Emitter<CalendarState> emit) async {
     final day = event.day;
     emit(const CalendarLoading());
     final calendar = await _fetchCalendar(day);
     emit(CalendarPopulated(calendarWeekData: calendar, currentDay: day));
   }
 
-  FutureOr<void> _onCalendarNextDayRequested(
-      CalendarNextDayRequested event, Emitter<CalendarState> emit) async {
+  FutureOr<void> _onCalendarNextDayRequested(CalendarNextDayRequested event,
+      Emitter<CalendarState> emit) async {
     if (state is CalendarPopulated) {
       try {
         final nextDay = (state as CalendarPopulated)
@@ -70,5 +72,13 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
       userId: _authenticationRepository.currentUser.id,
       dateTime: day,
     );
+  }
+
+  FutureOr<void> _onCalendarExactDayRequested(CalendarExactDayRequested event,
+      Emitter<CalendarState> emit) async {
+    final day = event.exactDay;
+    emit(const CalendarLoading());
+    final calendar = await _fetchCalendar(day);
+    emit(CalendarPopulated(calendarWeekData: calendar, currentDay: day));
   }
 }

@@ -33,6 +33,7 @@ class CalendarEntry extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        if (showDivider) CalendarEntryDivider(paddingLeft: leftSize),
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.max,
@@ -149,7 +150,6 @@ class CalendarEntry extends StatelessWidget {
             ),
           ],
         ),
-        if (showDivider) CalendarEntryDivider(paddingLeft: leftSize)
       ],
     );
   }

@@ -31,6 +31,24 @@ class HourMinute {
     return minutesAway;
   }
 
+  bool isBefore(HourMinute other) {
+    if (other.hours > _hours) {
+      return true;
+    }
+    return other.hours == _hours && other.minutes > _minutes;
+  }
+
+  bool isAfter(HourMinute other) {
+    if (_hours > other.hours) {
+      return true;
+    }
+    return _hours == other._hours && _minutes > other.minutes;
+  }
+
+  bool equals(HourMinute other) {
+    return _hours == other.hours && _minutes == other.minutes;
+  }
+
   @override
   String toString() {
     String hourString = _hours.toString();
