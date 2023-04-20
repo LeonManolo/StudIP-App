@@ -1,4 +1,5 @@
 import 'package:authentication_repository/authentication_repository.dart';
+import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:messages_repository/messages_repository.dart';
@@ -9,7 +10,7 @@ import 'package:studipadawan/messages/view/widgets/filter_row.dart';
 import 'package:studipadawan/messages/view/widgets/message_inbox_widget.dart';
 import 'package:studipadawan/messages/view/widgets/message_outbox_widget.dart';
 import 'package:studipadawan/messages/view/widgets/message_bar.dart';
-
+import 'package:studipadawan/messages/view/send_message/message_send_page.dart';
 import '../../app/bloc/app_bloc.dart';
 
 class MessagesPage extends StatefulWidget {
@@ -59,28 +60,54 @@ class _MessagesPageState extends State<MessagesPage>
         child: BlocBuilder<MessageBloc, MessageState>(
           builder: (context, state) {
             return Scaffold(
-              appBar: PreferredSize(
-                  preferredSize: const Size.fromHeight(kToolbarHeight),
-                  child: MessageTabBar(controller: _controller)),
-              body: TabBarView(
-                controller: _controller,
-                children: [
-                  InboxMessageWidget(
-                    state: state,
-                    readMessage: _readMessage,
-                    filterRow: FilterRow(
+                appBar: PreferredSize(
+                    preferredSize: const Size.fromHeight(kToolbarHeight),
+                    child: MessageTabBar(controller: _controller)),
+                body: TabBarView(
+                  controller: _controller,
+                  children: [
+                    InboxMessageWidget(
+                      state: state,
+                      readMessage: _readMessage,
+                      filterRow: FilterRow(
+                        currentFilter: _currentFilter,
+                        setFilter: _handleFilterSelection,
+                      ),
                       currentFilter: _currentFilter,
-                      setFilter: _handleFilterSelection,
                     ),
-                    currentFilter: _currentFilter,
-                  ),
-                  OutboxMessageWidget(
-                    state: state,
-                    currentFilter: _currentFilter,
-                  ),
-                ],
-              ),
-            );
+                    OutboxMessageWidget(
+                      state: state,
+                      currentFilter: _currentFilter,
+                    ),
+                  ],
+                ),
+                floatingActionButton: Stack(
+                  children: [
+                    const Positioned(
+                      bottom: 4.0,
+                      right: 4.0,
+                      child: Icon(EvaIcons.plusCircleOutline,
+                          color: Colors.white, size: 60),
+                    ),
+                    Positioned(
+                      bottom: 24.0,
+                      right: 24.0,
+                      child: IconButton(
+                        icon: Icon(EvaIcons.plusCircle,
+                            color: Theme.of(context).primaryColor, size: 60),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const MessageSendPage()),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+                floatingActionButtonLocation:
+                    FloatingActionButtonLocation.endFloat);
           },
         ),
       ),

@@ -24,13 +24,6 @@ class InboxMessageWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-    /*void readMessage(BuildContext context, Message message) {
-      BlocProvider.of<MessageBloc>(context)
-          ..add(ReadMessageRequested(messageId: message.id))
-          ..add(RefreshRequested(filter: currentFilter));
-    } */
-
     return Column(
       children: [
         filterRow,

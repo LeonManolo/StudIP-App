@@ -1,12 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:messages_repository/messages_repository.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
-import 'package:studipadawan/messages/bloc/message_state.dart';
 import 'package:studipadawan/messages/view/message_detail_page.dart';
-
-import '../../bloc/message_bloc.dart';
-import '../../bloc/message_event.dart';
 
 class InboxMessageItem extends StatelessWidget {
   final Message message;
@@ -37,7 +32,6 @@ class InboxMessageItem extends StatelessWidget {
               )
             },
         leading: Column(
-          // Center leading
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             message.isRead ? messageReadIcon() : messageUnreadIcon()
