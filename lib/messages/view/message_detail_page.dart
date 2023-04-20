@@ -12,33 +12,33 @@ class MessageDetailpage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _buildAppBar(context),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Betreff:',
-              style: TextStyle(fontWeight: FontWeight.bold),
+        appBar: _buildAppBar(context),
+        body: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Betreff:',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                Text(message.subject),
+                const SizedBox(height: 16.0),
+                const Text(
+                  'Absender:',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                Text(message.sender.username),
+                const SizedBox(height: 16.0),
+                const Text(
+                  'Nachricht:',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                Text(message.message)
+              ],
             ),
-            Text(message.subject),
-            const SizedBox(height: 16.0),
-            const Text(
-              'Absender:',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            Text(message.sender.username),
-            const SizedBox(height: 16.0),
-            const Text(
-              'Nachricht:',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            Text(message.message)
-          ],
-        ),
-      ),
-    );
+          ),
+        );
   }
 
   AppBar _buildAppBar(BuildContext context) {
