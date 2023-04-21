@@ -51,6 +51,20 @@ class StudIpAPICore {
         body: jsonString ?? jsonEncode(bodyParameters));
   }
 
+  Future<http.Response> post(
+      {required String endpoint,
+      Map<String, String>? bodyParameters,
+      String? jsonString}) async {
+    final uri = Uri.parse("$_baseUrl/$_apiBaseUrl/$endpoint");
+
+    return await _oauth2Helper.post(uri.toString(),
+        headers: {
+          HttpHeaders.contentTypeHeader: "application/vnd.api+json",
+          HttpHeaders.acceptHeader: "*/*"
+        },
+        body: jsonString ?? jsonEncode(bodyParameters));
+  }
+
   // ***** AUTHENTICATION *****
 
   Future<String?> restoreUser() async {
