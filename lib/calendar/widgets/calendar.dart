@@ -8,7 +8,6 @@ import 'package:studipadawan/calendar/widgets/calendar_entry.dart';
 import 'package:studipadawan/calendar/widgets/calendar_header.dart';
 import 'package:studipadawan/calendar/widgets/empty_calendar_entry.dart';
 
-//TODO: automatic scroll to current time
 class Calendar extends StatefulWidget {
   final DateTime date;
   final List<CalendarTimeframe> scheduleStructure;
@@ -33,7 +32,6 @@ class Calendar extends StatefulWidget {
 
 class _CalendarState extends State<Calendar> {
   final controller = ItemScrollController();
-  var isFirstBuild = true;
 
   @override
   void initState() {
@@ -41,7 +39,6 @@ class _CalendarState extends State<Calendar> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (DateTime.now().isSameDayAs(widget.date)) {
         final index = _findNearestIndexOfCalendarEntry();
-        print("Nearest index: $index");
         // Wenn die liste nicht mehr scrollbar ist wird einfach nur bis zum ende gescrollt
         controller.jumpTo(index: index);
         //TODO: scrollTo buggt
