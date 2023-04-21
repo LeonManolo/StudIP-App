@@ -26,8 +26,8 @@ class StudIPCourseEvent {
         id: courseEventResponse.id,
         title: courseEventResponse.title,
         description: courseEventResponse.description,
-        startDate: DateTime.parse(courseEventResponse.start),
-        endDate: DateTime.parse(courseEventResponse.end),
+        startDate: DateTime.parse(courseEventResponse.start).toLocal(),
+        endDate: DateTime.parse(courseEventResponse.end).toLocal(),
         categories: courseEventResponse.categories);
   }
 

@@ -21,8 +21,10 @@ class CourseNews {
       id: courseNewsResponse.id,
       title: courseNewsResponse.title,
       content: courseNewsResponse.content,
-      publicationStart: DateTime.parse(courseNewsResponse.publicationStart),
-      publicationEnd: DateTime.parse(courseNewsResponse.publicationEnd),
+      publicationStart:
+          DateTime.parse(courseNewsResponse.publicationStart).toLocal(),
+      publicationEnd:
+          DateTime.parse(courseNewsResponse.publicationEnd).toLocal(),
     );
   }
 }
