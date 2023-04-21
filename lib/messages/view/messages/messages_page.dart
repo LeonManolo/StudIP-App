@@ -3,15 +3,15 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:messages_repository/messages_repository.dart';
-import 'package:studipadawan/messages/bloc/message_bloc.dart';
-import 'package:studipadawan/messages/bloc/message_event.dart';
-import 'package:studipadawan/messages/bloc/message_state.dart';
-import 'package:studipadawan/messages/view/widgets/filter_row.dart';
-import 'package:studipadawan/messages/view/widgets/message_inbox_widget.dart';
-import 'package:studipadawan/messages/view/widgets/message_outbox_widget.dart';
-import 'package:studipadawan/messages/view/widgets/message_bar.dart';
-import 'package:studipadawan/messages/view/send_message/message_send_page.dart';
-import '../../app/bloc/app_bloc.dart';
+import 'package:studipadawan/messages/view/messages/bloc/message_bloc.dart';
+import 'package:studipadawan/messages/view/messages/bloc/message_event.dart';
+import 'package:studipadawan/messages/view/messages/bloc/message_state.dart';
+import 'package:studipadawan/messages/view/message_send/message_send_page.dart';
+import 'package:studipadawan/messages/view/messages/widgets/filter_row.dart';
+import 'package:studipadawan/messages/view/messages/widgets/message_bar.dart';
+import 'package:studipadawan/messages/view/messages/widgets/message_inbox_widget.dart';
+import 'package:studipadawan/messages/view/messages/widgets/message_outbox_widget.dart';
+import '../../../app/bloc/app_bloc.dart';
 
 class MessagesPage extends StatefulWidget {
   const MessagesPage({Key? key}) : super(key: key);

@@ -14,7 +14,6 @@ class MessageState extends Equatable {
   final MessageStatus status;
   final List<Message> inboxMessages;
   final List<Message> outboxMessages;
-  final Message? message;
   final MessageFilter filter;
 
   const MessageState(
@@ -22,7 +21,6 @@ class MessageState extends Equatable {
       this.inboxMessages = const [],
       this.outboxMessages = const [],
       this.filter = MessageFilter.none,
-      this.message
       });
 
   const MessageState.initial()
@@ -31,7 +29,7 @@ class MessageState extends Equatable {
         );
 
   @override
-  List<Object?> get props => [status, message, inboxMessages, outboxMessages, filter];
+  List<Object?> get props => [status, inboxMessages, outboxMessages, filter];
 
   MessageState copyWith({
     MessageStatus? status,
@@ -44,7 +42,6 @@ class MessageState extends Equatable {
         status: status ?? this.status,
         inboxMessages: inboxMessages ?? this.inboxMessages,
         outboxMessages: outboxMessages ?? this.outboxMessages,
-        message: message ?? this.message,
         filter: filter ?? this.filter);
   }
 }

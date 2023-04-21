@@ -100,24 +100,29 @@ class StudIpApiClient
   }
 
   @override
-  Future<void> readMessage(String messageId) async {
-    String params = jsonEncode({
-      'data': {
-        'type': 'messages',
-        'attributes': {
-          'is-read': true,
-        },
-      },
-    });
-    print(params);
+  Future<void> readMessage(String messageId, String message) async {
     final response =
-        await _core.patch(endpoint: "messages/$messageId", jsonString: params);
+        await _core.patch(endpoint: "messages/$messageId", jsonString: message);
     final body = response.json();
     if (response.statusCode != HttpStatus.ok) {
       print(body);
       throw StudIpApiRequestFailure(
           body: body, statusCode: response.statusCode);
     }
+  }
+
+  @override
+  Future<MessageResponse> sendMessage(String message) async {
+    final response =
+        await _core.post(endpoint: "messages", jsonString: message);
+    final body = response.json();
+    if (response.statusCode != HttpStatus.ok) {
+      throw StudIpApiRequestFailure(
+        body: body,
+        statusCode: response.statusCode,
+      );
+    }
+    return MessageResponse.fromJson(body);
   }
 
   // **** Courses ****

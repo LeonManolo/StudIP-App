@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:messages_repository/messages_repository.dart';
 
 import 'message_state.dart';
 
@@ -16,16 +15,6 @@ class RefreshRequested extends MessageEvent {
   List<Object?> get props => [filter];
 }
 
-
-
-class MessageRequested extends MessageEvent {
-  final Message message;
-
-  const MessageRequested({required this.message});
-
-  @override
-  List<Object?> get props => [message];
-}
 
 class ReadMessageRequested extends MessageEvent {
   final String messageId;

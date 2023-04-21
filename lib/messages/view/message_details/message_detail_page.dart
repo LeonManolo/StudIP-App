@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:messages_repository/messages_repository.dart';
 
-import '../../app/bloc/app_bloc.dart';
+import '../../../app/bloc/app_bloc.dart';
 
 class MessageDetailpage extends StatelessWidget {
   final Message message;
