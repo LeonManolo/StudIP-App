@@ -6,8 +6,9 @@ class CalendarHeader extends StatelessWidget {
   final DateTime dateTime;
   final VoidCallback onPreviousButtonPress;
   final VoidCallback onNextButtonPress;
+  final VoidCallback onDatePress;
 
-  const CalendarHeader({Key? key, required this.dateTime, required this.onPreviousButtonPress, required this.onNextButtonPress}) : super(key: key);
+  const CalendarHeader({Key? key, required this.dateTime, required this.onPreviousButtonPress, required this.onNextButtonPress, required this.onDatePress}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -21,9 +22,12 @@ class CalendarHeader extends StatelessWidget {
             icon: const Icon(EvaIcons.arrowIosBackOutline),
             color: Theme.of(context).hintColor,
           ),
-          Text(
-            "${weekday(dateTime.weekday)}, ${dateTime.day}.${dateTime.month}.${dateTime.year}",
-            style: Theme.of(context).textTheme.titleLarge,
+          InkWell(
+            onTap: onDatePress,
+            child: Text(
+              "${weekday(dateTime.weekday)}, ${dateTime.day}.${dateTime.month}.${dateTime.year}",
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
           ),
           IconButton(
             onPressed: onNextButtonPress,

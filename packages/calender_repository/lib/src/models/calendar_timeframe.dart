@@ -34,15 +34,10 @@ class CalendarTimeframe {
     return "${_start.hours}:$minutesAsStringStart - ${_end.hours}:$minutesAsStringEnd";
   }
 
-  //TODO: Name ändern ist falsch herum
-  bool isInBetween(HourMinute hourMinute) {
-    if (hourMinute.hours >= _start.hours &&
-        hourMinute.minutes >= _start.minutes) {
-      if (hourMinute.hours <= _end.hours &&
-          hourMinute.minutes <= _end.minutes) {
-        return true;
-      }
+  bool containsHourMinute(HourMinute other) {
+    if(_start.equals(other) || _end.equals(other)) {
+      return true;
     }
-    return false;
+    return other.isAfter(_start) && other.isBefore(_end);
   }
 }

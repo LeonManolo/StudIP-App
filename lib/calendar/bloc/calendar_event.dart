@@ -30,5 +30,13 @@ class CalendarPreviousDayRequested extends CalendarEvent {
   List<Object?> get props => [];
 }
 
-//TODO: Pull to refresh? CalendarRefreshRequested
+class CalendarExactDayRequested extends CalendarEvent {
+  final DateTime exactDay;
 
+  const CalendarExactDayRequested({required this.exactDay});
+
+  @override
+  List<Object?> get props => [exactDay];
+}
+
+//TODO: Pull to refresh? CalendarRefreshRequested
