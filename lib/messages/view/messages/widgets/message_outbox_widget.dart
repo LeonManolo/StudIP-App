@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:studipadawan/messages/view/messages/bloc/message_outbox_bloc.dart';
 import 'package:studipadawan/messages/view/messages/bloc/message_state.dart';
-
-import '../bloc/message_bloc.dart';
 import '../bloc/message_event.dart';
 import 'message_outbox_item.dart';
 
 class OutboxMessageWidget extends StatelessWidget {
-  final MessageState state;
+  final OutboxMessageState state;
   final MessageFilter currentFilter;
 
   const OutboxMessageWidget({
@@ -22,8 +21,8 @@ class OutboxMessageWidget extends StatelessWidget {
         ? const Center(child: CircularProgressIndicator())
         : RefreshIndicator(
             onRefresh: () async => {
-              BlocProvider.of<MessageBloc>(context)
-                  .add(RefreshRequested(filter: currentFilter))
+              BlocProvider.of<OutboxMessageBloc>(context)
+                  .add(const OutboxMessagesRequested())
             },
             child: ListView.separated(
               itemCount: state.outboxMessages.length,

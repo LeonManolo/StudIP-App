@@ -10,12 +10,13 @@ class OutboxMessageItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    messageIcon() {
-      return const Icon(EvaIcons.messageSquare,
-          color: Colors.indigo, size: 24.0);
+    messageIcon(Color iconColor) {
+
+      return Icon(EvaIcons.messageSquareOutline,
+          color: iconColor, size: 24.0);
     }
 
-    parseRecipients(final List<MessageUser> recipients) {
+    parseRecipients(final List<User> recipients) {
       var buffer = StringBuffer();
       for (int i = 0; i < recipients.length; i++) {
         buffer.write(recipients.elementAt(i).username);
@@ -30,7 +31,7 @@ class OutboxMessageItem extends StatelessWidget {
         leading: Column(
           // Center leading
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[messageIcon()],
+          children: <Widget>[messageIcon(Theme.of(context).primaryColor)],
         ),
         trailing: Text(
             DateTime.parse(message.mkdate).toLocal().toString().split(".")[0]),

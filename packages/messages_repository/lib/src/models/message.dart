@@ -4,8 +4,8 @@ class Message {
   final String id;
   final String subject;
   final String message;
-  MessageUser sender;
-  final List<MessageUser> recipients;
+  final User sender;
+  final List<User> recipients;
   final String mkdate;
   bool isRead;
 
@@ -23,18 +23,17 @@ class Message {
   }
 
   factory Message.fromJson(Map<String, dynamic> json) {
+    print(json);
     List<dynamic> recipients = json["relationships"]["recipients"]["data"];
     var sender = json["relationships"]["sender"]["data"];
-
-    return Message(
-        id: json["id"],
-        subject: json["attributes"]["subject"],
-        message: json["attributes"]["message"].split("<!--HTML-->")[1],
-        sender: MessageUser.fromJson(sender),
-        recipients: recipients
-            .map((recipient) => MessageUser.fromJson(recipient))
-            .toList(),
-        mkdate: json["attributes"]["mkdate"],
-        isRead: json["attributes"]["is-read"]);
+        return Message(
+          id: json["id"],
+          subject: json["attributes"]["subject"],
+          message: json["attributes"]["message"],
+          sender: User(id: sender["id"], username: ""),
+          recipients:
+              recipients.map((recipient) => User(id: recipient["id"], username: "")).toList(),
+          mkdate: json["attributes"]["mkdate"],
+          isRead: json["attributes"]["is-read"]);
   }
 }

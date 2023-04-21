@@ -11,7 +11,7 @@ class MessageSendState extends Equatable {
   final MessageSendStatus status;
 
   const MessageSendState({
-    required this.status,
+    required this.status
   });
 
   const MessageSendState.initial()
@@ -21,10 +21,14 @@ class MessageSendState extends Equatable {
 
   @override
   List<Object?> get props => [
-        status,
+        status
       ];
 
-  MessageSendState copyWith({MessageSendStatus? status}) {
-    return MessageSendState(status: status ?? this.status);
+  MessageSendState copyWith({
+    MessageSendStatus? status
+    }) {
+    return MessageSendState(
+      status: status ?? this.status
+      );
   }
 }

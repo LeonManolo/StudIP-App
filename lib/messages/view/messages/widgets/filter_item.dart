@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-
 import '../bloc/message_state.dart';
-
-
 
 class FilterItem extends StatelessWidget {
   final MessageFilter filter;
@@ -31,9 +28,9 @@ class FilterItem extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(0),
               margin: const EdgeInsets.all(0),
-              child: const Icon(
+              child: Icon(
                 Icons.check,
-                color: Colors.indigo,
+                color: Theme.of(context).primaryColor,
                 size: 20.0,
               ),
             ),

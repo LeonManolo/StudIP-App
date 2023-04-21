@@ -13,13 +13,13 @@ class FilterRow extends StatelessWidget {
     required this.currentFilter,
   }) : super(key: key);
 
-  Icon funnelIcon(MessageFilter filter) {
-    if (currentFilter != MessageFilter.none) {
-      return const Icon(EvaIcons.funnel, size: 25, color: Colors.indigo);
-    } else {
-      return const Icon(EvaIcons.funnelOutline, size: 25, color: Colors.indigo);
-    }
+  Icon funnelIcon(MessageFilter currentFilter, Color iconColor) {
+  if (currentFilter != MessageFilter.none) {
+    return Icon(EvaIcons.funnel, size: 25, color: iconColor);
+  } else {
+    return Icon(EvaIcons.funnelOutline, size: 25, color: iconColor);
   }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +27,7 @@ class FilterRow extends StatelessWidget {
       children: [
         const Spacer(),
         PopupMenuButton<MessageFilter>(
-          icon: funnelIcon(currentFilter),
+          icon: funnelIcon(currentFilter, Theme.of(context).primaryColor),
           onSelected: (newFilter) => {setFilter(context, newFilter)},
           itemBuilder: (context) => [
             PopupMenuItem<MessageFilter>(
@@ -35,7 +35,7 @@ class FilterRow extends StatelessWidget {
               child: FilterItem(
                 currentFilter: currentFilter,
                 filter: MessageFilter.none,
-                funnelIcon: funnelIcon(currentFilter),
+                funnelIcon: funnelIcon(currentFilter, Theme.of(context).primaryColor),
                 filterDescription: "Kein Filter",
               ),
             ),
@@ -44,7 +44,7 @@ class FilterRow extends StatelessWidget {
               child: FilterItem(
                 currentFilter: currentFilter,
                 filter: MessageFilter.unread,
-                funnelIcon: funnelIcon(currentFilter),
+                funnelIcon: funnelIcon(currentFilter, Theme.of(context).primaryColor),
                 filterDescription: "Ungelesene Nachrichten",
               ),
             ),
@@ -53,7 +53,7 @@ class FilterRow extends StatelessWidget {
               child: FilterItem(
                 currentFilter: currentFilter,
                 filter: MessageFilter.read,
-                funnelIcon: funnelIcon(currentFilter),
+                funnelIcon: funnelIcon(currentFilter, Theme.of(context).primaryColor),
                 filterDescription: "Gelesene Nachrichten",
               ),
             ),

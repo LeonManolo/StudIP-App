@@ -53,6 +53,21 @@ class StudIpApiClient
     return UserResponse.fromJson(body);
   }
 
+@override
+  Future<UserListResponse> getUsers() async {
+    final response = await _core.get(endpoint: "users");
+
+    final body = response.json();
+
+    if (response.statusCode != HttpStatus.ok) {
+      throw StudIpApiRequestFailure(
+        body: body,
+        statusCode: response.statusCode,
+      );
+    }
+    return UserListResponse.fromJson(body);
+  }
+
   // **** Messages ****
   @override
   Future<MessageListResponse> getOutboxMessages(String userId) async {
@@ -85,27 +100,11 @@ class StudIpApiClient
   }
 
   @override
-  Future<MessageResponse> getMessage(String messageId) async {
-    final response = await _core.get(endpoint: "/messages/$messageId");
-
-    final body = response.json();
-
-    if (response.statusCode != HttpStatus.ok) {
-      throw StudIpApiRequestFailure(
-        body: body,
-        statusCode: response.statusCode,
-      );
-    }
-    return MessageResponse.fromJson(body);
-  }
-
-  @override
   Future<void> readMessage(String messageId, String message) async {
     final response =
         await _core.patch(endpoint: "messages/$messageId", jsonString: message);
     final body = response.json();
     if (response.statusCode != HttpStatus.ok) {
-      print(body);
       throw StudIpApiRequestFailure(
           body: body, statusCode: response.statusCode);
     }
@@ -116,7 +115,7 @@ class StudIpApiClient
     final response =
         await _core.post(endpoint: "messages", jsonString: message);
     final body = response.json();
-    if (response.statusCode != HttpStatus.ok) {
+    if (response.statusCode != 201) {
       throw StudIpApiRequestFailure(
         body: body,
         statusCode: response.statusCode,

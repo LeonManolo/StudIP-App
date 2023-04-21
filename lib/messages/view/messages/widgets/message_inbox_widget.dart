@@ -2,15 +2,14 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:messages_repository/messages_repository.dart';
+import 'package:studipadawan/messages/view/messages/bloc/message_event.dart';
+import 'package:studipadawan/messages/view/messages/bloc/message_inbox_bloc.dart';
 import 'package:studipadawan/messages/view/messages/bloc/message_state.dart';
-
 import '../../message_details/message_detail_page.dart';
-import '../bloc/message_bloc.dart';
-import '../bloc/message_event.dart';
 import 'filter_row.dart';
 
 class InboxMessageWidget extends StatelessWidget {
-  final MessageState state;
+  final InboxMessageState state;
   final FilterRow filterRow;
   final MessageFilter currentFilter;
   final Function(BuildContext, Message) readMessage;
@@ -25,14 +24,15 @@ class InboxMessageWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    messageUnreadIcon() {
-      return const Icon(EvaIcons.messageSquare,
-          color: Colors.indigo, size: 24.0);
+
+    messageUnreadIcon(Color iconColor) {
+      return Icon(EvaIcons.messageSquare,
+          color: iconColor, size: 24.0);
     }
 
-    messageReadIcon() {
-      return const Icon(EvaIcons.messageSquareOutline,
-          color: Colors.indigo, size: 24.0);
+    messageReadIcon(Color iconColor) {
+      return Icon(EvaIcons.messageSquareOutline,
+          color: iconColor, size: 24.0);
     }
 
     return Column(
@@ -43,8 +43,8 @@ class InboxMessageWidget extends StatelessWidget {
                 ? const Center(child: CircularProgressIndicator())
                 : RefreshIndicator(
                     onRefresh: () async => {
-                      BlocProvider.of<MessageBloc>(context)
-                          .add(RefreshRequested(filter: currentFilter))
+                      BlocProvider.of<InboxMessageBloc>(context)
+                          .add(InboxMessagesRequested(filter: currentFilter))
                     },
                     child: ListView.separated(
                       itemCount: state.inboxMessages.length,
@@ -70,8 +70,8 @@ class InboxMessageWidget extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: <Widget>[
                                   message.isRead
-                                      ? messageReadIcon()
-                                      : messageUnreadIcon()
+                                      ? messageReadIcon(Theme.of(context).primaryColor)
+                                      : messageUnreadIcon(Theme.of(context).primaryColor)
                                 ],
                               ),
                               trailing: Text(DateTime.parse(message.mkdate)

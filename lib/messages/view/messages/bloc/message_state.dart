@@ -10,38 +10,60 @@ enum MessageStatus {
 
 enum MessageFilter { none, read, unread }
 
-class MessageState extends Equatable {
+class InboxMessageState extends Equatable {
   final MessageStatus status;
   final List<Message> inboxMessages;
-  final List<Message> outboxMessages;
   final MessageFilter filter;
 
-  const MessageState(
+  const InboxMessageState(
       {required this.status,
       this.inboxMessages = const [],
-      this.outboxMessages = const [],
       this.filter = MessageFilter.none,
       });
 
-  const MessageState.initial()
+  const InboxMessageState.initial()
       : this(
           status: MessageStatus.initial,
         );
 
   @override
-  List<Object?> get props => [status, inboxMessages, outboxMessages, filter];
+  List<Object?> get props => [status, inboxMessages, filter];
 
-  MessageState copyWith({
+  InboxMessageState copyWith({
     MessageStatus? status,
     List<Message>? inboxMessages,
-    List<Message>? outboxMessages,
     MessageFilter? filter,
-    Message? message
   }) {
-    return MessageState(
+    return InboxMessageState(
         status: status ?? this.status,
         inboxMessages: inboxMessages ?? this.inboxMessages,
-        outboxMessages: outboxMessages ?? this.outboxMessages,
         filter: filter ?? this.filter);
+  }
+}
+
+class OutboxMessageState extends Equatable {
+  final MessageStatus status;
+  final List<Message> outboxMessages;
+
+  const OutboxMessageState(
+      {required this.status,
+      this.outboxMessages = const [],
+      });
+
+  const OutboxMessageState.initial()
+      : this(
+          status: MessageStatus.initial,
+        );
+
+  @override
+  List<Object?> get props => [status, outboxMessages];
+
+  OutboxMessageState copyWith({
+    MessageStatus? status,
+    List<Message>? outboxMessages,
+  }) {
+    return OutboxMessageState(
+        status: status ?? this.status,
+        outboxMessages: outboxMessages ?? this.outboxMessages);
   }
 }

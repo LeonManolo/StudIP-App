@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:messages_repository/src/models/message_out.dart';
 import 'package:studip_api_client/studip_api_client.dart';
 
 import 'models/models.dart';
@@ -37,7 +36,6 @@ class MessageRepository {
   Future<Message> sendMessage(OutgoingMessage outgoingMessage) async {
     var parsedRecipients =
         outgoingMessage.recipients.map((id) => {"type": "users", "id": id}).toList();
-        print("trigger");
     var message = jsonEncode({
       "data": {
         "type": "messages",
@@ -52,15 +50,6 @@ class MessageRepository {
     });
     try {
       final MessageResponse response = await _apiClient.sendMessage(message);
-      return response.message;
-    } catch (error, stackTrace) {
-      Error.throwWithStackTrace(error, stackTrace);
-    }
-  }
-
-  Future<Message> getMessage(String messageId) async {
-    try {
-      final MessageResponse response = await _apiClient.getMessage(messageId);
       return response.message;
     } catch (error, stackTrace) {
       Error.throwWithStackTrace(error, stackTrace);

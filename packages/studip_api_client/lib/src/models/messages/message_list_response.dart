@@ -8,8 +8,8 @@ class MessageListResponse {
 
   factory MessageListResponse.fromJson(Map<String, dynamic> json) {
     List<dynamic> messages = json["data"];
-
     return MessageListResponse(
-        messages: messages.map((j) => Message.fromJson(j)).toList());
+        messages: messages.map((message) => Message.fromJson(message)).toList()
+        );
   }
 }

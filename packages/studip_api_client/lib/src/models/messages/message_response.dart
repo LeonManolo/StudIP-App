@@ -9,7 +9,6 @@ class MessageResponse {
     dynamic message = json["data"];
 
     return MessageResponse(
-        message:
-            message.map((dynamicMessage) => Message.fromJson(dynamicMessage)));
+        message: Message.fromJson(message));
   }
 }

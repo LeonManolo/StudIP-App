@@ -26,7 +26,7 @@ class MessageTabBar extends StatelessWidget {
               TabBar(
                 controller: controller,
                 tabs: messageTabs,
-                labelColor: Colors.indigo,
+                labelColor: Theme.of(context).primaryColor,
               ),
             ],
           ),
