@@ -42,6 +42,11 @@ class CalendarPage extends StatelessWidget {
             }
             if (state is CalendarPopulated) {
               return Calendar(
+                onDaySelected: (day) {
+                  context
+                      .read<CalendarBloc>()
+                      .add(CalendarExactDayRequested(exactDay: day));
+                },
                 onNextButtonPress: () {
                   context
                       .read<CalendarBloc>()
