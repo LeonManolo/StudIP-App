@@ -1,7 +1,7 @@
 name: studip_api_client
 description: A starting point for Dart libraries or applications.
 version: 1.0.0
-# homepage: https://www.example.com
+publish_to: none
 
 environment:
   sdk: ">=2.16.1 <3.0.0"
@@ -9,7 +9,12 @@ environment:
 dependencies:
   equatable: ^2.0.5
   logger: ^1.3.0
-  oauth2_client: ^3.2.1
+
+  oauth2_client:
+    git:
+      url: https://github.com/finebel/oauth2_client
+      ref: 45fa85011457792b34502f52e97b93767c806a2f
+
   jwt_decode: ^0.3.1
 
   messages_repository:
