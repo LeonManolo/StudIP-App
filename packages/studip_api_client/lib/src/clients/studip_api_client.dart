@@ -118,6 +118,45 @@ class StudIpApiClient
     return SemesterResponse.fromJson(body);
   }
 
+  @override
+  Future<CourseNewsListResponse> getCourseNews(
+      {required String courseId, required int limit}) async {
+    final response = await _core.get(
+        endpoint: "courses/$courseId/news",
+        queryParameters: {"page[limit]": "$limit"});
+
+    final body = response.json();
+
+    if (response.statusCode != HttpStatus.ok) {
+      throw StudIpApiRequestFailure(
+          body: body, statusCode: response.statusCode);
+    }
+    return CourseNewsListResponse.fromJson(body);
+  }
+
+  @override
+  Future<CourseEventListResponse> getCourseEvents({
+    required String courseId,
+    required int offset,
+    required int limit,
+  }) async {
+    final response =
+        await _core.get(endpoint: "courses/$courseId/events", queryParameters: {
+      "page[offset]": "$offset",
+      "page[limit]": "$limit",
+    });
+
+    final body = response.json();
+
+    if (response.statusCode != HttpStatus.ok) {
+      throw StudIpApiRequestFailure(
+        body: body,
+        statusCode: response.statusCode,
+      );
+    }
+    return CourseEventListResponse.fromJson(body);
+  }
+
   // **** Calendar ****
   @override
   Future<ScheduleResponse> getSchedule(
