@@ -1,12 +1,15 @@
+import 'package:studip_api_client/studip_api_client.dart';
+
 import '../models/models.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class Message {
   final String id;
   final String subject;
   final String message;
-  final User sender;
-  final List<User> recipients;
-  final String mkdate;
+  final MessageUser sender;
+  final List<MessageUser> recipients;
+  final DateTime mkdate;
   bool isRead;
 
   Message(
@@ -22,17 +25,21 @@ class Message {
     isRead = true;
   }
 
-  factory Message.fromJson(Map<String, dynamic> json) {
-    List<dynamic> recipients = json["relationships"]["recipients"]["data"];
-    var sender = json["relationships"]["sender"]["data"];
-        return Message(
-          id: json["id"],
-          subject: json["attributes"]["subject"],
-          message: json["attributes"]["message"],
-          sender: User(id: sender["id"], username: ""),
-          recipients:
-              recipients.map((recipient) => User(id: recipient["id"], username: "")).toList(),
-          mkdate: json["attributes"]["mkdate"],
-          isRead: json["attributes"]["is-read"]);
+  String getTimeAgo() {
+    timeago.setLocaleMessages('de', timeago.DeMessages());
+    return timeago.format(mkdate, locale: 'de');
+  }
+
+  factory Message.fromMessageResponse(MessageResponse response) {
+    return Message(
+        id: response.id,
+        subject: response.subject,
+        message: response.message,
+        sender: MessageUser(id: response.senderId, username: ""),
+        recipients: response.recipientIds
+            .map((id) => MessageUser(id: id, username: ""))
+            .toList(),
+        mkdate: response.mkdate,
+        isRead: response.isRead);
   }
 }

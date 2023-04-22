@@ -1,15 +1,14 @@
-// ignore: implementation_imports
-import 'package:messages_repository/src/models/models.dart';
+import 'package:studip_api_client/src/models/messages/message_response.dart';
 
 class MessageListResponse {
-  final List<Message> messages;
+  final List<MessageResponse> messageResponses;
 
-  const MessageListResponse({required this.messages});
+  const MessageListResponse({required this.messageResponses});
 
   factory MessageListResponse.fromJson(Map<String, dynamic> json) {
     List<dynamic> messages = json["data"];
     return MessageListResponse(
-        messages: messages.map((message) => Message.fromJson(message)).toList()
+        messageResponses: messages.map((message) => MessageResponse.fromJson(message)).toList()
         );
   }
 }

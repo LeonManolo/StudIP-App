@@ -2,16 +2,18 @@ import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:messages_repository/messages_repository.dart';
-import 'package:studipadawan/messages/bloc/message_inbox_bloc.dart';
-import 'package:studipadawan/messages/bloc/message_event.dart';
-import 'package:studipadawan/messages/bloc/message_outbox_bloc.dart';
-import 'package:studipadawan/messages/bloc/message_state.dart';
-import 'package:studipadawan/messages/view/messages/widgets/message_filter_row.dart';
-import 'package:studipadawan/messages/view/messages/widgets/message_bar.dart';
-import 'package:studipadawan/messages/view/messages/widgets/message_inbox_widget.dart';
-import 'package:studipadawan/messages/view/messages/widgets/message_outbox_widget.dart';
-import 'package:studipadawan/messages/view/messages/widgets/message_add_button.dart';
-import '../../../app/bloc/app_bloc.dart';
+import '../../../../app/bloc/app_bloc.dart';
+import '../message_inbox_bloc /message_inbox_bloc.dart';
+import '../message_inbox_bloc /message_inbox_event.dart';
+import '../message_inbox_bloc /message_inbox_state.dart';
+import '../message_outbox_bloc/message_outbox_bloc.dart';
+import '../message_outbox_bloc/message_outbox_event.dart';
+import '../message_outbox_bloc/message_outbox_state.dart';
+import '../widgets/message_add_button.dart';
+import '../widgets/message_bar.dart';
+import '../widgets/message_filter_row.dart';
+import '../widgets/message_inbox_widget.dart';
+import '../widgets/message_outbox_widget.dart';
 
 class MessagesPage extends StatefulWidget {
   const MessagesPage({Key? key}) : super(key: key);
@@ -25,7 +27,6 @@ class MessagesPage extends StatefulWidget {
 class _MessagesPageState extends State<MessagesPage>
     with TickerProviderStateMixin {
   late TabController _controller;
-  MessageFilter _currentFilter = MessageFilter.none;
 
   late InboxMessageBloc _inboxMessageBloc;
   late OutboxMessageBloc _outboxMessageBloc;
@@ -46,7 +47,7 @@ class _MessagesPageState extends State<MessagesPage>
     _inboxMessageBloc = InboxMessageBloc(
       messageRepository: context.read<MessageRepository>(),
       authenticationRepository: context.read<AuthenticationRepository>(),
-    )..add(InboxMessagesRequested(filter: _currentFilter));
+    )..add(const InboxMessagesRequested(filter: MessageFilter.none));
     _outboxMessageBloc = OutboxMessageBloc(
       messageRepository: context.read<MessageRepository>(),
       authenticationRepository: context.read<AuthenticationRepository>(),
@@ -82,10 +83,9 @@ class _MessagesPageState extends State<MessagesPage>
                         state: state,
                         readMessage: _readMessage,
                         filterRow: FilterRow(
-                          currentFilter: _currentFilter,
+                          currentFilter: state.currentFilter,
                           setFilter: _handleFilterSelection,
                         ),
-                        currentFilter: _currentFilter,
                       );
                     },
                   ),
@@ -96,7 +96,6 @@ class _MessagesPageState extends State<MessagesPage>
                     builder: (context, state) {
                       return OutboxMessageWidget(
                         state: state,
-                        currentFilter: _currentFilter,
                       );
                     },
                   ),
@@ -126,16 +125,12 @@ class _MessagesPageState extends State<MessagesPage>
   void _readMessage(BuildContext context, Message message) {
     setState(() {
       BlocProvider.of<InboxMessageBloc>(context)
-          .add(ReadMessageRequested(messageId: message.id));
-      message.read();
+          .add(ReadMessageRequested(message: message));
     });
   }
 
   void _handleFilterSelection(BuildContext context, MessageFilter filter) {
-    setState(() {
-      _currentFilter = filter;
-      BlocProvider.of<InboxMessageBloc>(context)
-          .add(InboxMessagesRequested(filter: _currentFilter));
-    });
+    BlocProvider.of<InboxMessageBloc>(context)
+        .add(InboxMessagesRequested(filter: filter));
   }
 }

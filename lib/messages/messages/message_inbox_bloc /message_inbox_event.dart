@@ -1,13 +1,10 @@
 import 'package:equatable/equatable.dart';
+import 'package:messages_repository/messages_repository.dart';
 
-import 'message_state.dart';
+import 'message_inbox_state.dart';
 
 abstract class InboxMessageEvent extends Equatable {
   const InboxMessageEvent();
-}
-
-abstract class OutboxMessageEvent extends Equatable {
-  const OutboxMessageEvent();
 }
 
 class InboxMessagesRequested extends InboxMessageEvent {
@@ -20,17 +17,10 @@ class InboxMessagesRequested extends InboxMessageEvent {
 }
 
 class ReadMessageRequested extends InboxMessageEvent {
-  final String messageId;
+  final Message message;
 
-  const ReadMessageRequested({required this.messageId});
-
-  @override
-  List<Object?> get props => [messageId];
-}
-class OutboxMessagesRequested extends OutboxMessageEvent {
-
-  const OutboxMessagesRequested();
+  const ReadMessageRequested({required this.message});
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [message];
 }

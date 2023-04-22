@@ -6,6 +6,10 @@ import 'package:user_repository/user_repository.dart';
 import 'message_send_event.dart';
 import 'message_send_state.dart';
 
+const String unexpectedError = "Ein unerwarteter Fehler ist aufgetreten";
+const String missingSubjectError = "Bitte gebe einen Betreff ein";
+const String missingMessageError = "Bitte gebe eine Nachricht ein";
+
 class MessageSendBloc extends Bloc<MessageSendEvent, MessageSendState> {
   final MessageRepository _messageRepository;
 
@@ -21,12 +25,22 @@ class MessageSendBloc extends Bloc<MessageSendEvent, MessageSendState> {
       SendMessageRequest event, Emitter<MessageSendState> emit) async {
     emit(state.copyWith(status: MessageSendStatus.loading));
 
-    try {
-      await _messageRepository.sendMessage(event.message);
-      emit(state.copyWith(
-          status: MessageSendStatus.populated));
-    } catch (e) {
-      emit(const MessageSendState(status: MessageSendStatus.failure));
+    if (event.message.subject.isEmpty) {
+      emit(const MessageSendState(
+          status: MessageSendStatus.failure,
+          errorMessage: missingSubjectError));
+    } else if (event.message.message.isEmpty) {
+      emit(const MessageSendState(
+          status: MessageSendStatus.failure,
+          errorMessage: missingMessageError));
+    } else {
+      try {
+        await _messageRepository.sendMessage(event.message);
+        emit(state.copyWith(status: MessageSendStatus.populated));
+      } catch (e) {
+        emit(const MessageSendState(
+            status: MessageSendStatus.failure, errorMessage: unexpectedError));
+      }
     }
   }
 }

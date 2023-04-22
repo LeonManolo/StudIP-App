@@ -1,7 +1,5 @@
 import 'dart:convert';
-
 import 'package:studip_api_client/studip_api_client.dart';
-
 import 'models/models.dart';
 
 class MessageRepository {
@@ -14,11 +12,13 @@ class MessageRepository {
   Future<List<Message>> getInboxMessages(String userId) async {
     try {
       final response = await _apiClient.getInboxMessages(userId);
-      final messages = response.messages;
+      final messages = response.messageResponses
+          .map((response) => Message.fromMessageResponse(response))
+          .toList();
       final Map<String, String> knownUsers = {};
       for (var message in messages) {
-        message.sender.username = await _fetchUserName(knownUsers, userId);
-        await _fetchUsernames(knownUsers, message.recipients);
+        message.sender.username = await _fetchUserName(knownUsers, message.sender.id);
+        await _fetchUserNames(knownUsers, message.recipients);
       }
 
       return messages;
@@ -30,11 +30,13 @@ class MessageRepository {
   Future<List<Message>> getOutboxMessages(String userId) async {
     try {
       final response = await _apiClient.getOutboxMessages(userId);
-      final messages = response.messages;
+      final messages = response.messageResponses
+          .map((response) => Message.fromMessageResponse(response))
+          .toList();
       final Map<String, String> knownUsers = {};
       for (var message in messages) {
-        message.sender.username = await _fetchUserName(knownUsers, userId);
-        await _fetchUsernames(knownUsers, message.recipients);
+        message.sender.username = await _fetchUserName(knownUsers, message.sender.id);
+        await _fetchUserNames(knownUsers, message.recipients);
       }
       return messages;
     } catch (error, stackTrace) {
@@ -60,7 +62,7 @@ class MessageRepository {
     });
     try {
       final MessageResponse response = await _apiClient.sendMessage(message);
-      return response.message;
+      return Message.fromMessageResponse(response);
     } catch (error, stackTrace) {
       Error.throwWithStackTrace(error, stackTrace);
     }
@@ -82,8 +84,8 @@ class MessageRepository {
     }
   }
 
-  Future<void> _fetchUsernames(
-      Map<String, String> knownUsers, final List<User> users) async {
+  Future<void> _fetchUserNames(
+      Map<String, String> knownUsers, final List<MessageUser> users) async {
     for (var user in users) {
       if (knownUsers[user.id] == null) {
         final fetchedUser = await _fetchUserName(knownUsers, user.id);

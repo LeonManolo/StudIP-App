@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:messages_repository/messages_repository.dart';
-import 'package:studipadawan/messages/bloc/message_event.dart';
-import 'package:studipadawan/messages/bloc/message_state.dart';
+import 'package:studipadawan/messages/messages/message_outbox_bloc/message_outbox_event.dart';
+import 'package:studipadawan/messages/messages/message_outbox_bloc/message_outbox_state.dart';
 
 class OutboxMessageBloc extends Bloc<OutboxMessageEvent, OutboxMessageState> {
   final MessageRepository _messageRepository;
@@ -21,16 +21,16 @@ class OutboxMessageBloc extends Bloc<OutboxMessageEvent, OutboxMessageState> {
 
   FutureOr<void> _onOutboxMessagesRequested(
       OutboxMessagesRequested event, Emitter<OutboxMessageState> emit) async {
-    emit(state.copyWith(status: MessageStatus.loading, outboxMessages: []));
+    emit(state.copyWith(status: OutboxMessageStatus.loading, outboxMessages: []));
 
     try {
       List<Message> outboxMessages = await _messageRepository
           .getOutboxMessages(_authenticationRepository.currentUser.id);
       emit(state.copyWith(
-          status: MessageStatus.populated,
+          status: OutboxMessageStatus.populated,
           outboxMessages: outboxMessages));
     } catch (e) {
-      emit(const OutboxMessageState(status: MessageStatus.failure));
+      emit(const OutboxMessageState(status: OutboxMessageStatus.failure));
     }
   }
 }

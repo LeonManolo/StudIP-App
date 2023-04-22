@@ -1,10 +1,9 @@
 import 'dart:async';
-
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:messages_repository/messages_repository.dart';
-import 'package:studipadawan/messages/bloc/message_event.dart';
-import 'package:studipadawan/messages/bloc/message_state.dart';
+import 'message_inbox_event.dart';
+import 'message_inbox_state.dart';
 
 class InboxMessageBloc extends Bloc<InboxMessageEvent, InboxMessageState> {
   final MessageRepository _messageRepository;
@@ -22,25 +21,32 @@ class InboxMessageBloc extends Bloc<InboxMessageEvent, InboxMessageState> {
 
   FutureOr<void> _onInboxMessagesRequested(
       InboxMessagesRequested event, Emitter<InboxMessageState> emit) async {
-    emit(state.copyWith(status: MessageStatus.loading, inboxMessages: []));
+    emit(state.copyWith(status: InboxMessageStatus.loading, inboxMessages: [], currentFilter: event.filter));
 
     try {
       List<Message> inboxMessages = await _messageRepository
           .getInboxMessages(_authenticationRepository.currentUser.id);
+          
       emit(state.copyWith(
-          status: MessageStatus.populated,
-          inboxMessages: filter(inboxMessages, event.filter)));
+          status: InboxMessageStatus.populated,
+          currentFilter: event.filter,
+          inboxMessages: _filter(inboxMessages, event.filter)));
     } catch (e) {
-      emit(const InboxMessageState(status: MessageStatus.failure));
+      emit(const InboxMessageState(status: InboxMessageStatus.failure));
     }
   }
 
   FutureOr<void> _onReadMessageRequested(
       ReadMessageRequested event, Emitter<InboxMessageState> emit) async {
-    await _messageRepository.readMessage(event.messageId);
+    await _messageRepository.readMessage(event.message.id);
+    event.message.read();
+     emit(state.copyWith(
+          status: InboxMessageStatus.populated,
+          currentFilter: state.currentFilter,
+          inboxMessages: state.inboxMessages));
   }
 
-  List<Message> filter(List<Message> messages, MessageFilter filter) {
+  List<Message> _filter(List<Message> messages, MessageFilter filter) {
     switch (filter) {
       case MessageFilter.read:
         return messages.where((message) => message.isRead).toList();

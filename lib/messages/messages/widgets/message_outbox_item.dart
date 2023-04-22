@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:messages_repository/messages_repository.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
-import '../../../message_details/view/message_detail_page.dart';
-import 'package:timeago/timeago.dart' as timeago;
+import '../../message_details/view/message_detail_page.dart';
 
 class OutboxMessageItem extends StatelessWidget {
   final Message message;
@@ -11,20 +10,13 @@ class OutboxMessageItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    timeago.setLocaleMessages('de', timeago.DeMessages());
-    messageIcon(Color iconColor) {
+    
+    Icon messageIcon(Color iconColor) {
       return Icon(EvaIcons.messageSquareOutline, color: iconColor, size: 24.0);
     }
 
-    parseRecipients(final List<User> recipients) {
-      var buffer = StringBuffer();
-      for (int i = 0; i < recipients.length; i++) {
-        buffer.write(recipients.elementAt(i).username);
-        if (i < recipients.length - 1) {
-          buffer.write(", ");
-        }
-      }
-      return buffer.toString();
+    String parseRecipients(final Message message) {
+      return message.recipients.map((user) => user.username).join(", ");
     }
 
     return ListTile(
@@ -40,12 +32,9 @@ class OutboxMessageItem extends StatelessWidget {
           children: <Widget>[messageIcon(Theme.of(context).primaryColor)],
         ),
         trailing: Text(
-          timeago.format(
-            DateTime.parse(message.mkdate),
-            locale: 'de',
-          ),
+          message.getTimeAgo()
         ),
         title: Text(message.subject),
-        subtitle: Text(parseRecipients(message.recipients)));
+        subtitle: Text(parseRecipients(message)));
   }
 }

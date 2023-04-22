@@ -10,7 +10,7 @@ enum MessageUserState {
 
 class MessageUsersState extends Equatable {
   final MessageUserState status;
-  final List<User>? users;
+  final List<MessageUser> users;
 
   const MessageUsersState({
     required this.status,
@@ -29,7 +29,7 @@ class MessageUsersState extends Equatable {
 
   MessageUsersState copyWith({
     MessageUserState? status,
-    List<User>? users
+    List<MessageUser>? users
     }) {
     return MessageUsersState(
       status: status ?? this.status,

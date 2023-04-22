@@ -1,16 +1,19 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
-import '../../../bloc/message_state.dart';
+
+import '../message_inbox_bloc /message_inbox_state.dart';
 
 class FilterItem extends StatelessWidget {
   final MessageFilter filter;
-  final MessageFilter currentFilter;
+  final bool isSelected;
   final String filterDescription;
   final Icon funnelIcon;
 
   const FilterItem(
       {Key? key,
       required this.filter,
-      required this.currentFilter,
+      required this.isSelected,
       required this.funnelIcon,
       required this.filterDescription})
       : super(key: key);
@@ -24,7 +27,7 @@ class FilterItem extends StatelessWidget {
           Expanded(
             child: Text(filterDescription),
           ),
-          if (currentFilter == filter)
+          if (isSelected)
             Container(
               padding: const EdgeInsets.all(0),
               margin: const EdgeInsets.all(0),

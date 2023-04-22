@@ -1,7 +1,7 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 
-import '../../../message_send/view/message_send_page.dart';
+import '../../message_send/view/message_send_page.dart';
 
 class MessageAddButton extends StatelessWidget {
   const MessageAddButton({
@@ -27,10 +27,10 @@ class MessageAddButton extends StatelessWidget {
           child: IconButton(
             onPressed: () {
               Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const MessageSendPage()),
-              );
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const MessageSendPage(),
+                      fullscreenDialog: true));
             },
             icon: Icon(
               EvaIcons.plusCircle,

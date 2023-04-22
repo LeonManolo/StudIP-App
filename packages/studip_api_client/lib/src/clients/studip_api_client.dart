@@ -115,7 +115,7 @@ class StudIpApiClient
     final response =
         await _core.post(endpoint: "messages", jsonString: message);
     final body = response.json();
-    if (response.statusCode != 201) {
+    if (response.statusCode != HttpStatus.created) {
       throw StudIpApiRequestFailure(
         body: body,
         statusCode: response.statusCode,

@@ -9,6 +9,7 @@ environment:
 dependencies:
   studip_api_client:
     path: ../studip_api_client
+  timeago: ^3.4.0
 # dependencies:
 #   path: ^1.8.0
 
