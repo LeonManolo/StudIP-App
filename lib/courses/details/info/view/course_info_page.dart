@@ -1,6 +1,13 @@
+import 'package:app_ui/app_ui.dart';
+import 'package:courses_repository/courses_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:studipadawan/courses/details/bloc/course_details_bloc.dart';
 import 'package:studipadawan/courses/details/info/bloc/course_info_bloc.dart';
+import 'package:studipadawan/courses/details/info/view/widgets/events_section.dart';
+import 'package:studipadawan/courses/details/info/view/widgets/news_section.dart';
+
+import 'widgets/general_info_section.dart';
 
 class CourseInfoPage extends StatelessWidget {
   const CourseInfoPage({Key? key}) : super(key: key);
@@ -8,8 +15,60 @@ class CourseInfoPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => CourseInfoBloc(),
-      child: const Text("Info"),
+      create: (context) => CourseInfoBloc(
+        course: context.read<CourseDetailsBloc>().course,
+        courseRepository: context.read<CourseRepository>(),
+      )..add(TriggerInitialLoadEvent()),
+      child: BlocBuilder<CourseInfoBloc, CourseInfoState>(
+        builder: (context, state) {
+          if (state is CourseInfoLoadingState) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (state is CourseInfoPopulatedState) {
+            return ListView.separated(
+              itemBuilder: ((context, index) {
+                final section =
+                    context.read<CourseInfoBloc>().allSections.elementAt(index);
+                switch (section) {
+                  case InfoType.general:
+                    return GeneralInfoSection(
+                        generalInfo: state.generalInfoExpansionModel,
+                        onExpansionChanged: (isExpanded) {
+                          context.read<CourseInfoBloc>().add(ToggleSectionEvent(
+                              type: InfoType.general,
+                              newExpansionState: isExpanded));
+                        });
+                  case InfoType.events:
+                    return EventsSection(
+                        eventExpansionModel: state.eventExpansionModel,
+                        onExpansionChanged: (isExpanded) {
+                          context.read<CourseInfoBloc>().add(ToggleSectionEvent(
+                              type: InfoType.events,
+                              newExpansionState: isExpanded));
+                        });
+                  case InfoType.news:
+                    return NewsSection(
+                        newsExpansionModel: state.newsExpansionModel,
+                        onExpansionChanged: (isExpanded) {
+                          context.read<CourseInfoBloc>().add(ToggleSectionEvent(
+                              type: InfoType.news,
+                              newExpansionState: isExpanded));
+                        });
+                }
+              }),
+              separatorBuilder: (context, index) {
+                return const SizedBox(
+                  height: AppSpacing.lg,
+                );
+              },
+              itemCount: context.read<CourseInfoBloc>().allSections.length,
+            );
+          } else {
+            return const Text("Unexpected State. This shouldn't happen.");
+          }
+        },
+      ),
     );
   }
 }

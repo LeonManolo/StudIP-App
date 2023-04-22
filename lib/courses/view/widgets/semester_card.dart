@@ -62,12 +62,10 @@ class SemesterCard extends StatelessWidget {
             for (Course course in semester.courses)
               CourseCard(
                 course: course,
-                onCourseSelection: () => {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const CourseDetailsPage(),
-                      ))
+                onCourseSelection: (selectedCourse) => {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return CourseDetailsPage(course: selectedCourse);
+                  }))
                 },
               )
           ],

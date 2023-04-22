@@ -29,10 +29,11 @@ class Semester {
     return Semester(
       id: semesterResponse.id,
       title: semesterResponse.title,
-      start: DateTime.parse(semesterResponse.start),
-      end: DateTime.parse(semesterResponse.end),
-      startOfLectures: DateTime.parse(semesterResponse.startOfLectures),
-      endOfLectures: DateTime.parse(semesterResponse.endOfLectures),
+      start: DateTime.parse(semesterResponse.start).toLocal(),
+      end: DateTime.parse(semesterResponse.end).toLocal(),
+      startOfLectures:
+          DateTime.parse(semesterResponse.startOfLectures).toLocal(),
+      endOfLectures: DateTime.parse(semesterResponse.endOfLectures).toLocal(),
       courses: courses,
     );
   }
