@@ -20,12 +20,23 @@ class CourseDetailTabView extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
-            color: isSelected ? Colors.orange : Colors.black12),
+            color:
+                isSelected ? Theme.of(context).primaryColor : Colors.black12),
         width: 100,
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [Icon(tab.icon), Text(tab.title)],
+            children: [
+              Icon(
+                tab.icon,
+                color: isSelected ? Colors.white : Colors.black,
+              ),
+              Text(
+                tab.title,
+                style:
+                    TextStyle(color: isSelected ? Colors.white : Colors.black),
+              )
+            ],
           ),
         ),
       ),
