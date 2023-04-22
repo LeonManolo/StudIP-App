@@ -1,5 +1,4 @@
-import 'package:courses_repository/src/models/semester.dart';
-import 'package:courses_repository/src/models/course.dart';
+import 'package:courses_repository/src/models/models.dart';
 import 'package:studip_api_client/studip_api_client.dart';
 
 class CourseRepository {
@@ -8,6 +7,34 @@ class CourseRepository {
   const CourseRepository({
     required StudIPCoursesClient apiClient,
   }) : _apiClient = apiClient;
+
+  Future<List<StudIPCourseEvent>> getCourseEvents(
+      {required String courseId}) async {
+    try {
+      final eventsResponse =
+          await _getCourseEvents(courseId: courseId, limit: 30, offset: 0);
+      return eventsResponse
+          .map((eventResponse) => StudIPCourseEvent.fromCourseEventResponse(
+              courseEventResponse: eventResponse))
+          .toList();
+    } catch (error, stackTrace) {
+      Error.throwWithStackTrace(error, stackTrace);
+    }
+  }
+
+  Future<List<CourseNews>> getCourseNews(
+      {required String courseId, required int limit}) async {
+    try {
+      final newsResponse =
+          await _apiClient.getCourseNews(courseId: courseId, limit: limit);
+      return newsResponse.news
+          .map((newsResponse) => CourseNews.fromCourseNewsResponse(
+              courseNewsResponse: newsResponse))
+          .toList();
+    } catch (error, stackTrace) {
+      Error.throwWithStackTrace(error, stackTrace);
+    }
+  }
 
   Future<List<Semester>> getCoursesGroupedBySemester(String userId) async {
     try {
@@ -61,6 +88,23 @@ class CourseRepository {
       return courseResponses;
     } else {
       return response.courses;
+    }
+  }
+
+  Future<List<CourseEventResponse>> _getCourseEvents(
+      {required String courseId,
+      required int limit,
+      required int offset}) async {
+    final response = await _apiClient.getCourseEvents(
+        courseId: courseId, offset: offset, limit: limit);
+
+    if (response.total > limit && (response.offset + limit) < response.total) {
+      var eventResponse = response.events;
+      eventResponse.addAll(await _getCourseEvents(
+          courseId: courseId, limit: limit, offset: offset + limit));
+      return eventResponse;
+    } else {
+      return response.events;
     }
   }
 }
