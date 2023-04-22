@@ -16,15 +16,9 @@ class MessageRepository {
       final response = await _apiClient.getInboxMessages(userId);
       final messages = response.messages;
       final Map<String, String> knownUsers = {};
-
       for (var message in messages) {
-        if (knownUsers[message.sender.id] != null) {
-          message.sender.username = knownUsers[message.sender.id]!;
-        } else {
-          final user = await _apiClient.getUser(message.sender.id);
-          message.sender.username = user.username;
-          knownUsers[message.sender.id] = user.username;
-        }
+        message.sender.username = await _fetchUserName(knownUsers, userId);
+        await _fetchUsernames(knownUsers, message.recipients);
       }
 
       return messages;
@@ -33,9 +27,25 @@ class MessageRepository {
     }
   }
 
+  Future<List<Message>> getOutboxMessages(String userId) async {
+    try {
+      final response = await _apiClient.getOutboxMessages(userId);
+      final messages = response.messages;
+      final Map<String, String> knownUsers = {};
+      for (var message in messages) {
+        message.sender.username = await _fetchUserName(knownUsers, userId);
+        await _fetchUsernames(knownUsers, message.recipients);
+      }
+      return messages;
+    } catch (error, stackTrace) {
+      Error.throwWithStackTrace(error, stackTrace);
+    }
+  }
+
   Future<Message> sendMessage(OutgoingMessage outgoingMessage) async {
-    var parsedRecipients =
-        outgoingMessage.recipients.map((id) => {"type": "users", "id": id}).toList();
+    var parsedRecipients = outgoingMessage.recipients
+        .map((id) => {"type": "users", "id": id})
+        .toList();
     var message = jsonEncode({
       "data": {
         "type": "messages",
@@ -72,27 +82,27 @@ class MessageRepository {
     }
   }
 
-  Future<List<Message>> getOutboxMessages(String userId) async {
-    try {
-      final response = await _apiClient.getOutboxMessages(userId);
-      final messages = response.messages;
-      final Map<String, String> knownUsers = {};
-
-      for (var message in messages) {
-        for (var recipient in message.recipients) {
-          if (knownUsers[recipient.id] != null) {
-            recipient.username = knownUsers[recipient.id]!;
-          } else {
-            final user = await _apiClient.getUser(recipient.id);
-            recipient.username = user.username;
-            knownUsers[recipient.id] = user.username;
-          }
-        }
+  Future<void> _fetchUsernames(
+      Map<String, String> knownUsers, final List<User> users) async {
+    for (var user in users) {
+      if (knownUsers[user.id] == null) {
+        final fetchedUser = await _fetchUserName(knownUsers, user.id);
+        user.username = fetchedUser;
+        knownUsers[user.id] = fetchedUser;
+      } else {
+        user.username = knownUsers[user.id]!;
       }
+    }
+  }
 
-      return messages;
-    } catch (error, stackTrace) {
-      Error.throwWithStackTrace(error, stackTrace);
+  Future<String> _fetchUserName(
+      Map<String, String> knownUsers, String userId) async {
+    if (knownUsers[userId] == null) {
+      final fetchedUser = await _apiClient.getUser(userId);
+      knownUsers[userId] = fetchedUser.username;
+      return fetchedUser.username;
+    } else {
+      return knownUsers[userId]!;
     }
   }
 }

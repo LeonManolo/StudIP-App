@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../bloc/message_state.dart';
+import '../../../bloc/message_state.dart';
 
 class FilterItem extends StatelessWidget {
   final MessageFilter filter;

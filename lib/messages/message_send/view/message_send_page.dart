@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:messages_repository/messages_repository.dart';
-import 'package:studipadawan/messages/view/message_send/message_send_bloc/message_send_bloc.dart';
-import 'package:studipadawan/messages/view/message_send/message_send_bloc/message_send_event.dart';
-import 'package:studipadawan/messages/view/message_send/message_send_bloc/message_send_state.dart';
-import 'package:studipadawan/messages/view/message_send/messag_users_bloc/message_users_bloc.dart';
-import 'package:studipadawan/messages/view/message_send/messag_users_bloc/message_users_event.dart';
-import 'package:studipadawan/messages/view/message_send/messag_users_bloc/message_users_state.dart';
+import 'package:studipadawan/messages/message_send/message_send_bloc/message_send_bloc.dart';
+import 'package:studipadawan/messages/message_send/message_send_bloc/message_send_event.dart';
+import 'package:studipadawan/messages/message_send/message_send_bloc/message_send_state.dart';
+import 'package:studipadawan/messages/message_send/message_users_bloc/message_users_bloc.dart';
+import 'package:studipadawan/messages/message_send/message_users_bloc/message_users_event.dart';
+import 'package:studipadawan/messages/message_send/message_users_bloc/message_users_state.dart';
 import 'package:user_repository/user_repository.dart';
 import '../../../app/bloc/app_bloc.dart';
 
@@ -40,12 +40,11 @@ class MessageSendPage extends StatelessWidget {
         child: BlocBuilder<MessageSendBloc, MessageSendState>(
           builder: (context, messageSendState) {
             if (messageSendState.status == MessageSendStatus.populated) {
-                        _buildSnackBar(
-                            context, "Nachricht verschickt", Colors.green);
-                        recipientController.text = "";
-                        subjectController.text = "";
-                        messageController.text = "";
-                      }
+              _buildSnackBar(context, "Nachricht verschickt", Colors.green);
+              recipientController.text = "";
+              subjectController.text = "";
+              messageController.text = "";
+            }
             return SingleChildScrollView(
               child: Column(
                 children: [
@@ -121,10 +120,9 @@ class MessageSendPage extends StatelessWidget {
                                       context, recipientController.text) &&
                                   _assertFieldsAreFilled(
                                       context, subject, message)) {
-                                        _sendMessage(context, subject, message, [
-                                      _getUserId(
-                                          context, recipientController.text)
-                                    ]);
+                                _sendMessage(context, subject, message, [
+                                  _getUserId(context, recipientController.text)
+                                ]);
                               }
                             },
                             child: const Text('Senden'),
@@ -182,7 +180,8 @@ class MessageSendPage extends StatelessWidget {
     });
   }
 
-    void _sendMessage(BuildContext context, String subject, String message, List<String> recipients) {
+  void _sendMessage(BuildContext context, String subject, String message,
+      List<String> recipients) {
     BlocProvider.of<MessageSendBloc>(context).add(
       SendMessageRequest(
         message: OutgoingMessage(

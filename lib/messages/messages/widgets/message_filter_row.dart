@@ -1,7 +1,9 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
-import '../bloc/message_state.dart';
-import 'filter_item.dart';
+
+import '../../bloc/message_state.dart';
+import '../../view/messages/widgets/message_filter_item.dart';
+
 
 class FilterRow extends StatelessWidget {
   final Function(BuildContext, MessageFilter) setFilter;

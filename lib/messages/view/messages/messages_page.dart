@@ -1,18 +1,16 @@
 import 'package:authentication_repository/authentication_repository.dart';
-import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:messages_repository/messages_repository.dart';
-import 'package:studipadawan/messages/view/messages/bloc/message_inbox_bloc.dart';
-import 'package:studipadawan/messages/view/messages/bloc/message_event.dart';
-import 'package:studipadawan/messages/view/messages/bloc/message_outbox_bloc.dart';
-import 'package:studipadawan/messages/view/messages/bloc/message_state.dart';
-import 'package:studipadawan/messages/view/message_send/message_send_page.dart';
-import 'package:studipadawan/messages/view/messages/widgets/filter_row.dart';
+import 'package:studipadawan/messages/bloc/message_inbox_bloc.dart';
+import 'package:studipadawan/messages/bloc/message_event.dart';
+import 'package:studipadawan/messages/bloc/message_outbox_bloc.dart';
+import 'package:studipadawan/messages/bloc/message_state.dart';
+import 'package:studipadawan/messages/view/messages/widgets/message_filter_row.dart';
 import 'package:studipadawan/messages/view/messages/widgets/message_bar.dart';
 import 'package:studipadawan/messages/view/messages/widgets/message_inbox_widget.dart';
 import 'package:studipadawan/messages/view/messages/widgets/message_outbox_widget.dart';
-import 'package:studipadawan/messages/view/messages/widgets/messages_add_button.dart';
+import 'package:studipadawan/messages/view/messages/widgets/message_add_button.dart';
 import '../../../app/bloc/app_bloc.dart';
 
 class MessagesPage extends StatefulWidget {
@@ -67,10 +65,12 @@ class _MessagesPageState extends State<MessagesPage>
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: _buildAppBar(context),
+        key: UniqueKey(),
         body: Scaffold(
             appBar: PreferredSize(
                 preferredSize: const Size.fromHeight(kToolbarHeight),
                 child: MessageTabBar(controller: _controller)),
+            key: UniqueKey(),
             body: TabBarView(
               controller: _controller,
               children: [

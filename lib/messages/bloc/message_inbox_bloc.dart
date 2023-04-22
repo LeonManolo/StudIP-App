@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:messages_repository/messages_repository.dart';
-import 'package:studipadawan/messages/view/messages/bloc/message_event.dart';
-import 'package:studipadawan/messages/view/messages/bloc/message_state.dart';
+import 'package:studipadawan/messages/bloc/message_event.dart';
+import 'package:studipadawan/messages/bloc/message_state.dart';
 
 class InboxMessageBloc extends Bloc<InboxMessageEvent, InboxMessageState> {
   final MessageRepository _messageRepository;

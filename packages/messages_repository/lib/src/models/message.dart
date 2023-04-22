@@ -23,7 +23,6 @@ class Message {
   }
 
   factory Message.fromJson(Map<String, dynamic> json) {
-    print(json);
     List<dynamic> recipients = json["relationships"]["recipients"]["data"];
     var sender = json["relationships"]["sender"]["data"];
         return Message(
