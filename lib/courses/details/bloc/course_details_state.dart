@@ -4,7 +4,7 @@ enum CourseDetailsTab {
   info("Info", Icons.info_outline),
   files("Dateien", Icons.folder_outlined),
   participants("Teilnehmer", Icons.person_outlined),
-  forum("Forum", Icons.message);
+  forum("Forum", Icons.message_outlined);
 
   final String title;
   final IconData icon;
