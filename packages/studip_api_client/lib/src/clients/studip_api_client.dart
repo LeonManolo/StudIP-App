@@ -53,7 +53,7 @@ class StudIpApiClient
     return UserResponse.fromJson(body);
   }
 
-@override
+  @override
   Future<UserListResponse> getUsers() async {
     final response = await _core.get(endpoint: "users");
 
@@ -65,6 +65,7 @@ class StudIpApiClient
         statusCode: response.statusCode,
       );
     }
+    print(body);
     return UserListResponse.fromJson(body);
   }
 

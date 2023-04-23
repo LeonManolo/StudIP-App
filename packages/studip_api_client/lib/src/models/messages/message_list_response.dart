@@ -6,7 +6,7 @@ class MessageListResponse {
   const MessageListResponse({required this.messageResponses});
 
   factory MessageListResponse.fromJson(Map<String, dynamic> json) {
-    List<dynamic> messages = json["data"];
+    final List<dynamic> messages = json["data"];
     return MessageListResponse(
         messageResponses: messages.map((message) => MessageResponse.fromJson(message)).toList()
         );

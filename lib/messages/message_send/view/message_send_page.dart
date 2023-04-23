@@ -46,7 +46,10 @@ class MessageSendPage extends StatelessWidget {
                   context, messageSendState.errorMessage, Colors.red);
             }
             if (messageSendState.status == MessageSendStatus.populated) {
-              Navigator.pop(context);
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  _buildSnackBar(context, "Die Nachricht wurde versendet", Colors.green);
+            Navigator.pop(context);
+          });
             }
             return SingleChildScrollView(
               child: Column(
@@ -112,7 +115,7 @@ class MessageSendPage extends StatelessWidget {
                         children: [
                           const Spacer(),
                           ElevatedButton(
-                            onPressed: () async {
+                            onPressed: () {
                               var subject = subjectController.text;
                               var message = messageController.text;
                               if (_assertUserExists(
@@ -135,7 +138,8 @@ class MessageSendPage extends StatelessWidget {
     );
   }
 
-  List<String> _filterUsernamesByPattern(String pattern, List<MessageUser> users) {
+  List<String> _filterUsernamesByPattern(
+      String pattern, List<MessageUser> users) {
     return users
         .map((user) => user.username)
         .where((recipient) =>

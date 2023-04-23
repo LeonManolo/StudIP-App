@@ -1,13 +1,13 @@
-import 'package:messages_repository/messages_repository.dart';
+import 'package:studip_api_client/src/models/models.dart';
 
 class UserListResponse {
-  final List<MessageUser> users;
+  final List<UserResponse> userResponses;
 
-  UserListResponse({required this.users});
+  UserListResponse({required this.userResponses});
 
   factory UserListResponse.fromJson(Map<String, dynamic> json) {
-    List<dynamic> users = json["data"];
+    final List<dynamic> users = json["data"];
     return UserListResponse(
-        users: users.map((user) => MessageUser.fromJson(user)).toList());
+        userResponses: users.map((user) => UserResponse.fromJson(user)).toList());
   }
 }

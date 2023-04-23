@@ -24,7 +24,7 @@ class UserResponse {
   });
 
   factory UserResponse.fromJson(Map<String, dynamic> json) {
-    final data = json["data"] as Map<String, dynamic>;
+    final data = json["data"] ?? json;
     final attributes = data['attributes'] as Map<String, dynamic>;
     return UserResponse(
       id: data['id'] as String,

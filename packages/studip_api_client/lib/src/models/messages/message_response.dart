@@ -16,16 +16,17 @@ class MessageResponse {
       required this.isRead});
 
   factory MessageResponse.fromJson(Map<String, dynamic> json) {
-    List<dynamic> recipients = json["relationships"]["recipients"]["data"];
-    var sender = json["relationships"]["sender"]["data"];
+    final data = json["data"] ?? json;
+    final List<dynamic> recipients = data["relationships"]["recipients"]["data"];
+    var sender = data["relationships"]["sender"]["data"];
     return MessageResponse(
-        id: json["id"],
-        subject: json["attributes"]["subject"],
-        message: normalizeMessage(json["attributes"]["message"] as String),
+        id: data["id"],
+        subject: data["attributes"]["subject"],
+        message: data["attributes"]["message"],
         senderId: sender["id"],
         recipientIds:
             recipients.map((recipient) => recipient["id"] as String).toList(),
-        mkdate: DateTime.parse(json["attributes"]["mkdate"]).toLocal(),
-        isRead: json["attributes"]["is-read"]);
+        mkdate: DateTime.parse(data["attributes"]["mkdate"]).toLocal(),
+        isRead: data["attributes"]["is-read"]);
   }
 }
