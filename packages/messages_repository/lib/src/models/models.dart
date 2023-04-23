@@ -1,2 +1,3 @@
-export './message_user.dart';
+export 'message_user.dart';
+export './message_out.dart';
 export './message.dart';

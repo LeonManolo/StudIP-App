@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:jwt_decode/jwt_decode.dart';
 import 'package:logger/logger.dart';
 import 'package:oauth2_client/access_token_response.dart';
@@ -33,6 +35,34 @@ class StudIpAPICore {
       HttpHeaders.contentTypeHeader: ContentType.json.value,
       HttpHeaders.acceptHeader: "*/*"
     });
+  }
+
+  Future<http.Response> patch(
+      {required String endpoint,
+      Map<String, String>? bodyParameters,
+      String? jsonString}) async {
+    final uri = Uri.parse("$_baseUrl/$_apiBaseUrl/$endpoint");
+
+    return await _oauth2Helper.patch(uri.toString(),
+        headers: {
+          HttpHeaders.contentTypeHeader: "application/vnd.api+json",
+          HttpHeaders.acceptHeader: "*/*"
+        },
+        body: jsonString ?? jsonEncode(bodyParameters));
+  }
+
+  Future<http.Response> post(
+      {required String endpoint,
+      Map<String, String>? bodyParameters,
+      String? jsonString}) async {
+    final uri = Uri.parse("$_baseUrl/$_apiBaseUrl/$endpoint");
+
+    return await _oauth2Helper.post(uri.toString(),
+        headers: {
+          HttpHeaders.contentTypeHeader: "application/vnd.api+json",
+          HttpHeaders.acceptHeader: "*/*"
+        },
+        body: jsonString ?? jsonEncode(bodyParameters));
   }
 
   // ***** AUTHENTICATION *****

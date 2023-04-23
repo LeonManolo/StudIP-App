@@ -81,6 +81,7 @@ dependencies:
   bloc: ^8.1.1
   flutter_bloc: ^8.1.2
   flow_builder: ^0.0.9
+  flutter_typeahead: ^4.3.7
 
 dev_dependencies:
   flutter_test:

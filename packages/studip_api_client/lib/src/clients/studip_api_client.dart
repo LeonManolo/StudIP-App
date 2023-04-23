@@ -53,6 +53,22 @@ class StudIpApiClient
     return UserResponse.fromJson(body);
   }
 
+  @override
+  Future<UserListResponse> getUsers() async {
+    final response = await _core.get(endpoint: "users");
+
+    final body = response.json();
+
+    if (response.statusCode != HttpStatus.ok) {
+      throw StudIpApiRequestFailure(
+        body: body,
+        statusCode: response.statusCode,
+      );
+    }
+    print(body);
+    return UserListResponse.fromJson(body);
+  }
+
   // **** Messages ****
   @override
   Future<MessageListResponse> getOutboxMessages(String userId) async {
@@ -82,6 +98,31 @@ class StudIpApiClient
       );
     }
     return MessageListResponse.fromJson(body);
+  }
+
+  @override
+  Future<void> readMessage(String messageId, String message) async {
+    final response =
+        await _core.patch(endpoint: "messages/$messageId", jsonString: message);
+    final body = response.json();
+    if (response.statusCode != HttpStatus.ok) {
+      throw StudIpApiRequestFailure(
+          body: body, statusCode: response.statusCode);
+    }
+  }
+
+  @override
+  Future<MessageResponse> sendMessage(String message) async {
+    final response =
+        await _core.post(endpoint: "messages", jsonString: message);
+    final body = response.json();
+    if (response.statusCode != HttpStatus.created) {
+      throw StudIpApiRequestFailure(
+        body: body,
+        statusCode: response.statusCode,
+      );
+    }
+    return MessageResponse.fromJson(body);
   }
 
   // **** Courses ****

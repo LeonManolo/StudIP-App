@@ -1,10 +1,11 @@
+import 'package:studip_api_client/studip_api_client.dart';
+
 class MessageUser {
   final String id;
-  final String type;
   String username;
-  MessageUser({required this.id, required this.type, required this.username});
+  MessageUser({required this.id, required this.username});
 
-  factory MessageUser.fromJson(dynamic json) {
-    return MessageUser(id: json["id"], type: json["type"], username: "");
+  factory MessageUser.fromUserResponse(UserResponse response) {
+    return MessageUser(id: response.id, username: response.username);
   }
 }

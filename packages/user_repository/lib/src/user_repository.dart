@@ -10,4 +10,7 @@ class UserRepository {
   Future<UserResponse> getCurrentUser() async {
     return await _apiClient.getCurrentUser();
   }
+  Future<UserListResponse> getUsers() async {
+    return await _apiClient.getUsers();
+  }
 }
