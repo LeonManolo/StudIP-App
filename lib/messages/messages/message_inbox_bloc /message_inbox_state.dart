@@ -10,8 +10,8 @@ enum InboxMessageStatus {
 
 enum MessageFilter {
   none("Kein Filter"),
-  read("Ungelesene Nachrichten"),
-  unread("Gelesene Nachrichten");
+  read("Gelesene Nachrichten"),
+  unread("Ungelesene Nachrichten");
 
   const MessageFilter(this.description);
   final String description;

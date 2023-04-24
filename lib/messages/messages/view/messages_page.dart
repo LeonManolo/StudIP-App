@@ -123,7 +123,13 @@ class _MessagesPageState extends State<MessagesPage>
   }
 
   void _readMessage(BuildContext context, Message message) {
+    var messageBloc = BlocProvider.of<InboxMessageBloc>(context);
     setState(() {
+      if (messageBloc.state.currentFilter == MessageFilter.unread) {
+        messageBloc.state.inboxMessages.remove(message);
+      } else {
+        message.read();
+      }
       BlocProvider.of<InboxMessageBloc>(context)
           .add(ReadMessageRequested(message: message));
     });

@@ -21,12 +21,15 @@ class InboxMessageBloc extends Bloc<InboxMessageEvent, InboxMessageState> {
 
   FutureOr<void> _onInboxMessagesRequested(
       InboxMessagesRequested event, Emitter<InboxMessageState> emit) async {
-    emit(state.copyWith(status: InboxMessageStatus.loading, inboxMessages: [], currentFilter: event.filter));
+    emit(state.copyWith(
+        status: InboxMessageStatus.loading,
+        inboxMessages: [],
+        currentFilter: event.filter));
 
     try {
       List<Message> inboxMessages = await _messageRepository
           .getInboxMessages(_authenticationRepository.currentUser.id);
-          
+
       emit(state.copyWith(
           status: InboxMessageStatus.populated,
           currentFilter: event.filter,
@@ -39,11 +42,6 @@ class InboxMessageBloc extends Bloc<InboxMessageEvent, InboxMessageState> {
   FutureOr<void> _onReadMessageRequested(
       ReadMessageRequested event, Emitter<InboxMessageState> emit) async {
     await _messageRepository.readMessage(event.message.id);
-    event.message.read();
-     emit(state.copyWith(
-          status: InboxMessageStatus.populated,
-          currentFilter: state.currentFilter,
-          inboxMessages: state.inboxMessages));
   }
 
   List<Message> _filter(List<Message> messages, MessageFilter filter) {
