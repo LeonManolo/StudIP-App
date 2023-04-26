@@ -1,11 +1,15 @@
 class CourseListResponse {
   final List<CourseResponse> courses;
-  final int? offset;
-  final int? limit;
-  final int? total;
+  final int offset;
+  final int limit;
+  final int total;
 
-  const CourseListResponse(
-      {required this.courses, this.offset, this.limit, this.total});
+  const CourseListResponse({
+    required this.courses,
+    required this.offset,
+    required this.limit,
+    required this.total,
+  });
 
   factory CourseListResponse.fromJson(Map<String, dynamic> json) {
     List<dynamic> courses = json["data"];
