@@ -28,6 +28,7 @@ xcuserdata/
 .pub-cache/
 .pub/
 /build/
+**/*.mocks.dart
 
 # Symbolication related
 app.*.symbols
