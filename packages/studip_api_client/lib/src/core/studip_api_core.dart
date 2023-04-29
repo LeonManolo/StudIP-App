@@ -79,8 +79,8 @@ class StudIpAPICore {
       return null;
     }
 
-    final documentsDirectory = await getApplicationDocumentsDirectory();
-    final localStoragePath = "${documentsDirectory.path}/$localFilePath";
+    final tempDir = await getTemporaryDirectory();
+    final localStoragePath = "${tempDir.path}/$localFilePath";
     await _dio.download(
         "$_baseUrl/$_apiBaseUrl/file-refs/$fileId/content", localStoragePath,
         options: Options(headers: {

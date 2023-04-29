@@ -6,7 +6,7 @@ import 'package:equatable/equatable.dart';
 import 'package:dartz/dartz.dart' hide OpenFile;
 import 'package:studipadawan/courses/details/files/models/folder_info.dart';
 import 'package:studipadawan/courses/details/files/models/folder_type.dart';
-import 'package:open_file/open_file.dart';
+import 'package:open_filex/open_filex.dart';
 
 part 'course_files_event.dart';
 part 'course_files_state.dart';
@@ -90,7 +90,7 @@ class CourseFilesBloc extends Bloc<CourseFilesEvent, CourseFilesState> {
         fileId: event.selectedFile.id,
         localFilePath: "${event.selectedFile.id}/${event.selectedFile.name}");
 
-    OpenFile.open(localStoragePath, type: event.selectedFile.mimeType);
+    OpenFilex.open(localStoragePath, type: event.selectedFile.mimeType);
   }
 
   Future<List<Either<Folder, File>>> _loadItems(
