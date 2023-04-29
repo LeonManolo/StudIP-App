@@ -198,6 +198,68 @@ class StudIpApiClient
     return CourseEventListResponse.fromJson(body);
   }
 
+  @override
+  Future<FolderResponse> getCourseRootFolder({required String courseId}) async {
+    final response = await _core
+        .get(endpoint: "courses/$courseId/folders", queryParameters: {
+      "page[limit]": "1",
+    });
+
+    final body = response.json();
+
+    if (response.statusCode != HttpStatus.ok) {
+      throw StudIpApiRequestFailure(
+        body: body,
+        statusCode: response.statusCode,
+      );
+    }
+    return FolderListResponse.fromJson(body).folders.first;
+  }
+
+  @override
+  Future<FileListResponse> getFiles(
+      {required String folderId,
+      required int offset,
+      required int limit}) async {
+    final response = await _core
+        .get(endpoint: "folders/$folderId/file-refs", queryParameters: {
+      "page[offset]": "$offset",
+      "page[limit]": "$limit",
+    });
+
+    final body = response.json();
+
+    if (response.statusCode != HttpStatus.ok) {
+      throw StudIpApiRequestFailure(
+        body: body,
+        statusCode: response.statusCode,
+      );
+    }
+    return FileListResponse.fromJson(body);
+  }
+
+  @override
+  Future<FolderListResponse> getFolders(
+      {required String folderId,
+      required int offset,
+      required int limit}) async {
+    final response = await _core
+        .get(endpoint: "folders/$folderId/folders", queryParameters: {
+      "page[offset]": "$offset",
+      "page[limit]": "$limit",
+    });
+
+    final body = response.json();
+
+    if (response.statusCode != HttpStatus.ok) {
+      throw StudIpApiRequestFailure(
+        body: body,
+        statusCode: response.statusCode,
+      );
+    }
+    return FolderListResponse.fromJson(body);
+  }
+
   // **** Calendar ****
   @override
   Future<ScheduleResponse> getSchedule(

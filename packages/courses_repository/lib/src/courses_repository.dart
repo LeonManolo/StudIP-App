@@ -71,6 +71,44 @@ class CourseRepository {
     }
   }
 
+  Future<List<Folder>> getAllFolders({required String parentFolderId}) async {
+    try {
+      final allFolders = await _getFolders(
+          parentFolderId: parentFolderId, limit: 30, offset: 0);
+      return allFolders
+          .map((folderResponse) =>
+              Folder.fromFolderResponse(folderResponse: folderResponse))
+          .toList();
+    } catch (error, stackTrace) {
+      Error.throwWithStackTrace(error, stackTrace);
+    }
+  }
+
+  Future<List<File>> getAllFiles({required String parentFolderId}) async {
+    try {
+      final allFiles =
+          await _getFiles(parentFolderId: parentFolderId, limit: 30, offset: 0);
+      return allFiles
+          .map((fileResponse) =>
+              File.fromFileResponse(fileResponse: fileResponse))
+          .toList();
+    } catch (error, stackTrace) {
+      Error.throwWithStackTrace(error, stackTrace);
+    }
+  }
+
+  Future<Folder> getCourseRootFolder({required String courseId}) async {
+    try {
+      final rootFolderResponse =
+          await _apiClient.getCourseRootFolder(courseId: courseId);
+      return Folder.fromFolderResponse(folderResponse: rootFolderResponse);
+    } catch (error, stackTrace) {
+      Error.throwWithStackTrace(error, stackTrace);
+    }
+  }
+
+  // ***** Private Helpers *****
+
   Future<List<CourseResponse>> _getCourses({
     required String userId,
     required int limit,
@@ -104,6 +142,40 @@ class CourseRepository {
       return eventResponse;
     } else {
       return response.events;
+    }
+  }
+
+  Future<List<FolderResponse>> _getFolders(
+      {required String parentFolderId,
+      required int limit,
+      required int offset}) async {
+    final response = await _apiClient.getFolders(
+        folderId: parentFolderId, offset: offset, limit: limit);
+
+    if (response.total > limit && (response.offset + limit) < response.total) {
+      var foldersResponse = response.folders;
+      foldersResponse.addAll(await _getFolders(
+          parentFolderId: parentFolderId, limit: limit, offset: offset));
+      return foldersResponse;
+    } else {
+      return response.folders;
+    }
+  }
+
+  Future<List<FileResponse>> _getFiles(
+      {required String parentFolderId,
+      required int limit,
+      required int offset}) async {
+    final response = await _apiClient.getFiles(
+        folderId: parentFolderId, offset: offset, limit: limit);
+
+    if (response.total > limit && (response.offset + limit) < response.total) {
+      var filesResponse = response.files;
+      filesResponse.addAll(await _getFiles(
+          parentFolderId: parentFolderId, limit: limit, offset: offset));
+      return filesResponse;
+    } else {
+      return response.files;
     }
   }
 }

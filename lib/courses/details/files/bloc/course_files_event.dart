@@ -6,3 +6,16 @@ abstract class CourseFilesEvent extends Equatable {
   @override
   List<Object> get props => [];
 }
+
+class LoadRootFolderEvent extends CourseFilesEvent {}
+
+class DidSelectFolderEvent extends CourseFilesEvent {
+  final Folder selectedFolder;
+  final List<FolderInfo> parentFolders;
+
+  const DidSelectFolderEvent(
+      {required this.selectedFolder, required this.parentFolders});
+
+  @override
+  List<Object> get props => [selectedFolder, parentFolders];
+}

@@ -69,13 +69,14 @@ dependencies:
   # A lightweight and customizable calendar picker based on Flutter CalendarDatePicker, with support for single date picker, range picker and multi picker.
   calendar_date_picker2: ^0.5.2
 
-
   # A collection of loading indicators animated with flutter.
   flutter_spinkit: ^5.1.0
 
   intl: ^0.18.0
 
   flutter_html: ^2.2.1
+
+  dartz: ^0.10.1
 
   ######### STATE MANAGEMENT ############
   bloc: ^8.1.1
