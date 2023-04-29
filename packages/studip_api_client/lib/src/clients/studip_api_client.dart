@@ -147,7 +147,7 @@ class StudIpApiClient
   }
 
   @override
-  Future<SemesterResponse> getSemester(String semesterId) async {
+  Future<SemesterResponse> getSemester({required String semesterId}) async {
     final response = await _core.get(endpoint: "semesters/$semesterId");
 
     final body = response.json();

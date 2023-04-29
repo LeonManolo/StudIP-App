@@ -50,7 +50,7 @@ class CourseRepository {
       }
 
       final semestersResponse = await Future.wait(semesterToCourses.keys
-          .map((semesterId) => _apiClient.getSemester(semesterId)));
+          .map((semesterId) => _apiClient.getSemester(semesterId: semesterId)));
 
       final semesters = semestersResponse.map((semesterResponse) {
         return Semester.fromSemesterResponse(
@@ -79,8 +79,7 @@ class CourseRepository {
     final response = await _apiClient.getCourses(
         userId: userId, limit: limit, offset: offset);
 
-    if ((response.total ?? 0) > limit &&
-        (response.offset ?? 0) + limit < (response.total ?? 0)) {
+    if (response.total > limit && (response.offset + limit) < response.total) {
       var courseResponses = response.courses;
       courseResponses.addAll(await _getCourses(
           userId: userId, limit: limit, offset: offset + limit));
