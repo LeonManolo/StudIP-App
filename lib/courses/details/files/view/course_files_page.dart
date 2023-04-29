@@ -72,8 +72,12 @@ class CourseFilesPage extends StatelessWidget {
                         );
                       }, (file) {
                         return ListTile(
-                            title: Text(file.name),
-                            leading: const Icon(EvaIcons.fileOutline));
+                          title: Text(file.name),
+                          leading: const Icon(EvaIcons.fileOutline),
+                          onTap: () => context
+                              .read<CourseFilesBloc>()
+                              .add(DidSelectFileEvent(selectedFile: file)),
+                        );
                       });
                     },
                     itemCount: state.items.length,

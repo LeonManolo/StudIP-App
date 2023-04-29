@@ -107,6 +107,12 @@ class CourseRepository {
     }
   }
 
+  Future<String?> downloadFile(
+      {required String fileId, required String localFilePath}) {
+    return _apiClient.downloadFile(
+        fileId: fileId, localFilePath: localFilePath);
+  }
+
   // ***** Private Helpers *****
 
   Future<List<CourseResponse>> _getCourses({

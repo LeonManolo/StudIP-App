@@ -260,6 +260,12 @@ class StudIpApiClient
     return FolderListResponse.fromJson(body);
   }
 
+  @override
+  Future<String?> downloadFile(
+      {required String fileId, required String localFilePath}) {
+    return _core.downloadFile(fileId: fileId, localFilePath: localFilePath);
+  }
+
   // **** Calendar ****
   @override
   Future<ScheduleResponse> getSchedule(

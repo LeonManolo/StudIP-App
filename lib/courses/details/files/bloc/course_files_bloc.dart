@@ -3,9 +3,10 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:courses_repository/courses_repository.dart';
 import 'package:equatable/equatable.dart';
-import 'package:dartz/dartz.dart';
+import 'package:dartz/dartz.dart' hide OpenFile;
 import 'package:studipadawan/courses/details/files/models/folder_info.dart';
 import 'package:studipadawan/courses/details/files/models/folder_type.dart';
+import 'package:open_file/open_file.dart';
 
 part 'course_files_event.dart';
 part 'course_files_state.dart';
@@ -21,6 +22,7 @@ class CourseFilesBloc extends Bloc<CourseFilesEvent, CourseFilesState> {
         super(CourseFilesLoadedState.inital()) {
     on<LoadRootFolderEvent>(_onLoadRootFolderEvent);
     on<DidSelectFolderEvent>(_onDidSelectFolderEvent);
+    on<DidSelectFileEvent>(_onDidSelectFileEvent);
   }
 
   FutureOr<void> _onLoadRootFolderEvent(
@@ -80,6 +82,15 @@ class CourseFilesBloc extends Bloc<CourseFilesEvent, CourseFilesState> {
           errorMessage:
               "Beim Laden der gewünschten Dateien ist ein Problem aufgetreten."));
     }
+  }
+
+  FutureOr<void> _onDidSelectFileEvent(
+      DidSelectFileEvent event, Emitter<CourseFilesState> emit) async {
+    final localStoragePath = await _courseRepository.downloadFile(
+        fileId: event.selectedFile.id,
+        localFilePath: "${event.selectedFile.id}/${event.selectedFile.name}");
+
+    OpenFile.open(localStoragePath, type: event.selectedFile.mimeType);
   }
 
   Future<List<Either<Folder, File>>> _loadItems(

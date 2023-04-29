@@ -1,9 +1,12 @@
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
 import 'package:jwt_decode/jwt_decode.dart';
 import 'package:logger/logger.dart';
 import 'package:oauth2_client/access_token_response.dart';
 import 'package:oauth2_client/oauth2_helper.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'studip_oauth_client.dart';
 import 'package:http/http.dart' as http;
 import 'dart:io';
@@ -11,11 +14,13 @@ import 'dart:io';
 class StudIpAPICore {
   final String _baseUrl;
   final OAuth2Helper _oauth2Helper;
+  final Dio _dio;
   final _apiBaseUrl = "jsonapi.php/v1";
   static final _defaultBaseUrl = "http://miezhaus.feste-ip.net:55109";
 
-  StudIpAPICore({String? baseUrl, oauth2Helper})
+  StudIpAPICore({String? baseUrl, Dio? dio, OAuth2Helper? oauth2Helper})
       : _baseUrl = baseUrl ?? _defaultBaseUrl,
+        _dio = dio ?? Dio(),
         _oauth2Helper = oauth2Helper ??
             OAuth2Helper(
               StudIpOAuth2Client(baseUrl: _defaultBaseUrl),
@@ -63,6 +68,27 @@ class StudIpAPICore {
           HttpHeaders.acceptHeader: "*/*"
         },
         body: jsonString ?? jsonEncode(bodyParameters));
+  }
+
+  Future<String?> downloadFile(
+      {required String fileId, required String localFilePath}) async {
+    var storagePermission = await Permission.storage.request();
+    final accessToken =
+        (await _oauth2Helper.getTokenFromStorage())?.accessToken;
+    if (!storagePermission.isGranted || accessToken == null) {
+      return null;
+    }
+
+    final documentsDirectory = await getApplicationDocumentsDirectory();
+    final localStoragePath = "${documentsDirectory.path}/$localFilePath";
+    await _dio.download(
+        "$_baseUrl/$_apiBaseUrl/file-refs/$fileId/content", localStoragePath,
+        options: Options(headers: {
+          HttpHeaders.acceptHeader: "*/*",
+          HttpHeaders.authorizationHeader: "Bearer $accessToken"
+        }));
+
+    return localStoragePath;
   }
 
   // ***** AUTHENTICATION *****
