@@ -12,4 +12,14 @@ class FolderInfo {
     required this.folderType,
     required this.folder,
   });
+
+  factory FolderInfo.fromFolder({required Folder folder}) {
+    return FolderInfo(
+      displayName: folder.folderType == "RootFolder" ? "Root" : folder.name,
+      folderType: folder.folderType == "RootFolder"
+          ? FolderType.root
+          : FolderType.normal,
+      folder: folder,
+    );
+  }
 }

@@ -1,44 +1,43 @@
 part of 'course_files_bloc.dart';
 
-abstract class CourseFilesState extends Equatable {
-  const CourseFilesState();
-}
+enum CourseFilesStateType { isLoading, didLoad, error }
 
-class CourseFilesLoadedState extends CourseFilesState {
+class CourseFilesState extends Equatable {
   final List<FolderInfo> parentFolders;
   final List<Either<Folder, File>> items;
+  final String? errorMessage;
+  final CourseFilesStateType type;
 
-  const CourseFilesLoadedState(
-      {required this.parentFolders, required this.items});
+  const CourseFilesState({
+    required this.parentFolders,
+    required this.items,
+    required this.errorMessage,
+    required this.type,
+  });
 
-  factory CourseFilesLoadedState.inital() {
-    return const CourseFilesLoadedState(parentFolders: [], items: []);
-  }
-
-  @override
-  List<Object> get props => [parentFolders, items];
-
-  CourseFilesLoadedState copyWith({
-    List<FolderInfo>? parentFolders,
-    List<Either<Folder, File>>? items,
-  }) {
-    return CourseFilesLoadedState(
-      parentFolders: parentFolders ?? this.parentFolders,
-      items: items ?? this.items,
+  factory CourseFilesState.inital() {
+    return const CourseFilesState(
+      parentFolders: [],
+      items: [],
+      errorMessage: null,
+      type: CourseFilesStateType.isLoading,
     );
   }
-}
-
-class CourseFilesFailureState extends CourseFilesState {
-  final String errorMessage;
-
-  const CourseFilesFailureState({required this.errorMessage});
 
   @override
-  List<Object?> get props => [errorMessage];
-}
+  List<Object> get props => [parentFolders, items, errorMessage ?? "", type];
 
-class CourseFilesLoadingState extends CourseFilesState {
-  @override
-  List<Object?> get props => [];
+  CourseFilesState copyWith({
+    List<FolderInfo>? parentFolders,
+    List<Either<Folder, File>>? items,
+    String? errorMessage,
+    CourseFilesStateType? type,
+  }) {
+    return CourseFilesState(
+      parentFolders: parentFolders ?? this.parentFolders,
+      items: items ?? this.items,
+      errorMessage: errorMessage ?? this.errorMessage,
+      type: type ?? this.type,
+    );
+  }
 }

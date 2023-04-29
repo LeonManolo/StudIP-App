@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:courses_repository/courses_repository.dart';
 import 'package:equatable/equatable.dart';
 import 'package:dartz/dartz.dart' hide OpenFile;
+import 'package:studipadawan/courses/bloc/courses_state.dart';
 import 'package:studipadawan/courses/details/files/models/folder_info.dart';
 import 'package:studipadawan/courses/details/files/models/folder_type.dart';
 import 'package:open_filex/open_filex.dart';
@@ -19,7 +20,7 @@ class CourseFilesBloc extends Bloc<CourseFilesEvent, CourseFilesState> {
   CourseFilesBloc(
       {required this.course, required CourseRepository courseRepository})
       : _courseRepository = courseRepository,
-        super(CourseFilesLoadedState.inital()) {
+        super(CourseFilesState.inital()) {
     on<LoadRootFolderEvent>(_onLoadRootFolderEvent);
     on<DidSelectFolderEvent>(_onDidSelectFolderEvent);
     on<DidSelectFileEvent>(_onDidSelectFileEvent);
@@ -29,31 +30,32 @@ class CourseFilesBloc extends Bloc<CourseFilesEvent, CourseFilesState> {
     LoadRootFolderEvent event,
     Emitter<CourseFilesState> emit,
   ) async {
-    emit(CourseFilesLoadingState());
+    emit(state.copyWith(type: CourseFilesStateType.isLoading));
     try {
       final rootFolder =
           await _courseRepository.getCourseRootFolder(courseId: course.id);
       _courseRootFolderId = rootFolder.id;
 
-      emit(CourseFilesLoadedState(
-        parentFolders: [
-          FolderInfo(
-              folder: rootFolder,
-              folderType: FolderType.root,
-              displayName: "Root")
-        ],
-        items: await _loadItems(parentFolderId: rootFolder.id),
-      ));
+      emit(state.copyWith(
+          parentFolders: [
+            FolderInfo(
+                folder: rootFolder,
+                folderType: FolderType.root,
+                displayName: "Root")
+          ],
+          items: await _loadItems(parentFolderId: rootFolder.id),
+          type: CourseFilesStateType.didLoad));
     } catch (_) {
-      emit(const CourseFilesFailureState(
+      emit(state.copyWith(
           errorMessage:
-              "Beim Laden der gewünschten Dateien ist ein Problem aufgetreten."));
+              "Beim Laden der gewünschten Dateien ist ein Problem aufgetreten.",
+          type: CourseFilesStateType.error));
     }
   }
 
   FutureOr<void> _onDidSelectFolderEvent(
       DidSelectFolderEvent event, Emitter<CourseFilesState> emit) async {
-    emit(CourseFilesLoadingState());
+    emit(state.copyWith(type: CourseFilesStateType.isLoading));
 
     try {
       int selectedFolderIndex = event.parentFolders.indexWhere(
@@ -66,21 +68,20 @@ class CourseFilesBloc extends Bloc<CourseFilesEvent, CourseFilesState> {
       } else {
         // folder isn't present in parentFolders
         newParentFolders = event.parentFolders
-          ..add(FolderInfo(
-              displayName: event.selectedFolder.name,
-              folderType: _courseRootFolderId == event.selectedFolder.id
-                  ? FolderType.root
-                  : FolderType.normal,
-              folder: event.selectedFolder));
+          ..add(FolderInfo.fromFolder(folder: event.selectedFolder));
       }
 
-      emit(CourseFilesLoadedState(
-          parentFolders: newParentFolders,
-          items: await _loadItems(parentFolderId: event.selectedFolder.id)));
+      emit(state.copyWith(
+          parentFolders: newParentFolders)); // immediately update UI
+
+      emit(state.copyWith(
+          items: await _loadItems(parentFolderId: event.selectedFolder.id),
+          type: CourseFilesStateType.didLoad));
     } catch (_) {
-      emit(const CourseFilesFailureState(
+      emit(state.copyWith(
           errorMessage:
-              "Beim Laden der gewünschten Dateien ist ein Problem aufgetreten."));
+              "Beim Laden der gewünschten Dateien ist ein Problem aufgetreten.",
+          type: CourseFilesStateType.error));
     }
   }
 
