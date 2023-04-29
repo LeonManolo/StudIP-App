@@ -1,7 +1,12 @@
-class FileListResponse {
+import 'package:studip_api_client/studip_api_client.dart';
+
+class FileListResponse implements ItemListResponse<FileResponse> {
   final List<FileResponse> files;
+  @override
   final int offset;
+  @override
   final int limit;
+  @override
   final int total;
 
   FileListResponse({
@@ -22,6 +27,9 @@ class FileListResponse {
       total: page["total"],
     );
   }
+
+  @override
+  List<FileResponse> get items => files;
 }
 
 class FileResponse {

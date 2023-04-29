@@ -1,7 +1,12 @@
-class FolderListResponse {
+import 'package:studip_api_client/studip_api_client.dart';
+
+class FolderListResponse implements ItemListResponse<FolderResponse> {
   final List<FolderResponse> folders;
+  @override
   final int offset;
+  @override
   final int limit;
+  @override
   final int total;
 
   FolderListResponse({
@@ -24,6 +29,9 @@ class FolderListResponse {
       total: page["total"],
     );
   }
+
+  @override
+  List<FolderResponse> get items => folders;
 }
 
 class FolderResponse {

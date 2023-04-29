@@ -1,7 +1,12 @@
-class CourseListResponse {
+import 'package:studip_api_client/studip_api_client.dart';
+
+class CourseListResponse implements ItemListResponse<CourseResponse> {
   final List<CourseResponse> courses;
+  @override
   final int offset;
+  @override
   final int limit;
+  @override
   final int total;
 
   const CourseListResponse({
@@ -24,6 +29,9 @@ class CourseListResponse {
         limit: pageInfo["limit"],
         total: pageInfo["total"]);
   }
+
+  @override
+  List<CourseResponse> get items => courses;
 }
 
 class CourseResponse {
