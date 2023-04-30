@@ -1,4 +1,5 @@
 import 'package:authentication_repository/authentication_repository.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:messages_repository/messages_repository.dart';
@@ -40,11 +41,18 @@ class _MessagesPageState extends State<MessagesPage>
   ];
 
   final _inboxScrollController = ScrollController();
+<<<<<<< HEAD:lib/messages/message_overview/view/messages_page.dart
   final _outboxScrollController = ScrollController();
+=======
+  final _outboxPagingController = PagingController<int, ListTile>(
+    firstPageKey: 1,
+  );
+>>>>>>> 21af4e8 (Implemented lazy loading inboxmessages. Needs to be refactored):lib/messages/messages/view/messages_page.dart
 
   @override
   void initState() {
     super.initState();
+<<<<<<< HEAD:lib/messages/message_overview/view/messages_page.dart
     _tabController = TabController(
       length: _messageTabs.length,
       vsync: this,
@@ -52,6 +60,10 @@ class _MessagesPageState extends State<MessagesPage>
       setState(() {
       });
       });
+=======
+    _controller = TabController(length: _messageTabs.length, vsync: this);
+
+>>>>>>> 21af4e8 (Implemented lazy loading inboxmessages. Needs to be refactored):lib/messages/messages/view/messages_page.dart
     _inboxMessageBloc = InboxMessageBloc(
       messageRepository: context.read<MessageRepository>(),
       authenticationRepository: context.read<AuthenticationRepository>(),
@@ -59,16 +71,27 @@ class _MessagesPageState extends State<MessagesPage>
     _outboxMessageBloc = OutboxMessageBloc(
       messageRepository: context.read<MessageRepository>(),
       authenticationRepository: context.read<AuthenticationRepository>(),
+<<<<<<< HEAD:lib/messages/message_overview/view/messages_page.dart
     )..add(const OutboxMessagesRequested(offset: 0));
     _inboxScrollController.addListener(() => _onInboxScroll());
     _outboxScrollController.addListener(() => _onOutboxScroll());
+=======
+    )..add(const OutboxMessagesRequested());
+    _inboxScrollController.addListener(() => _onInboxScroll());
+>>>>>>> 21af4e8 (Implemented lazy loading inboxmessages. Needs to be refactored):lib/messages/messages/view/messages_page.dart
   }
 
   @override
   void dispose() {
+<<<<<<< HEAD:lib/messages/message_overview/view/messages_page.dart
     _tabController.dispose();
     _inboxScrollController.dispose();
     _outboxScrollController.dispose();
+=======
+    _controller.dispose();
+    _inboxScrollController.dispose();
+    _outboxPagingController.dispose();
+>>>>>>> 21af4e8 (Implemented lazy loading inboxmessages. Needs to be refactored):lib/messages/messages/view/messages_page.dart
     _inboxMessageBloc.close();
     _outboxMessageBloc.close();
     super.dispose();
@@ -97,6 +120,12 @@ class _MessagesPageState extends State<MessagesPage>
                         readMessage: _readMessage,
                         refresh: _refreshInboxMessages,
                         scrollController: _inboxScrollController,
+<<<<<<< HEAD:lib/messages/message_overview/view/messages_page.dart
+=======
+                        filterRow: FilterRow(
+                            currentFilter: state.currentFilter,
+                            setFilter: _handleFilterSelection),
+>>>>>>> 21af4e8 (Implemented lazy loading inboxmessages. Needs to be refactored):lib/messages/messages/view/messages_page.dart
                       );
                     },
                   ),
@@ -141,6 +170,7 @@ class _MessagesPageState extends State<MessagesPage>
 
   void _onInboxScroll() {
     final currentState = _inboxMessageBloc.state;
+<<<<<<< HEAD:lib/messages/message_overview/view/messages_page.dart
     if (!currentState.maxReached) {
       _onScroll(
           bloc: _inboxMessageBloc,
@@ -181,6 +211,19 @@ class _MessagesPageState extends State<MessagesPage>
         populated &&
         maxScroll - currentScroll <= threshold) {
       bloc.add(event);
+=======
+    final maxScroll = _inboxScrollController.position.maxScrollExtent;
+    final currentScroll = _inboxScrollController.position.pixels;
+    final threshold = currentState.inboxMessages.length;
+
+    if (!currentState.maxReached &&
+        currentState.status == InboxMessageStatus.populated 
+        && !currentState.paginationLoading
+        && maxScroll - currentScroll <= threshold) {
+      _inboxMessageBloc.add(InboxMessagesRequested(
+          filter: currentState.currentFilter,
+          offset: currentState.inboxMessages.length));
+>>>>>>> 21af4e8 (Implemented lazy loading inboxmessages. Needs to be refactored):lib/messages/messages/view/messages_page.dart
     }
   }
 
@@ -195,6 +238,7 @@ class _MessagesPageState extends State<MessagesPage>
     });
   }
 
+<<<<<<< HEAD:lib/messages/message_overview/view/messages_page.dart
   void _handleFilterSelection(MessageFilter filter) {
     setState(() {
       if (_inboxMessageBloc.state.currentFilter != filter) {
@@ -210,5 +254,13 @@ class _MessagesPageState extends State<MessagesPage>
 
   void _refreshOutboxMessages() {
     _outboxMessageBloc.add(const RefreshOutboxRequested());
+=======
+  void _handleFilterSelection(BuildContext context, MessageFilter filter) {
+    _inboxMessageBloc.add(InboxMessagesRequested(filter: filter, offset: 0));
+  }
+
+  void _refreshInboxMessages() {
+    _inboxMessageBloc.add(const RefreshRequested());
+>>>>>>> 21af4e8 (Implemented lazy loading inboxmessages. Needs to be refactored):lib/messages/messages/view/messages_page.dart
   }
 }
