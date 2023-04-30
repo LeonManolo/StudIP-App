@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
@@ -70,9 +71,11 @@ class StudIpAPICore {
         body: jsonString ?? jsonEncode(bodyParameters));
   }
 
+  /// Downloads a given file and returns the local storage path
   Future<String?> downloadFile({
     required String fileId,
     required String fileName,
+    required List<String> parentFolderIds,
     required DateTime lastModified,
   }) async {
     var storagePermission = await Permission.storage.request();
@@ -81,18 +84,10 @@ class StudIpAPICore {
     }
 
     final localStoragePath = await localFilePath(
-        fileId: fileId, fileName: fileName, lastModified: lastModified);
-
-    var file = File(localStoragePath);
-    if (await isFilePresentAndUpToDate(
-        fileId: fileId, fileName: fileName, lastModified: lastModified)) {
-      // file was already downloaded and is up to date
-      return localStoragePath;
-    } else if (file.existsSync()) {
-      // Remove all old versions of the file (even if fileName and/or content changes,
-      // the fileId stays the same -> therefore file.exsistsSync() should be true)
-      file.parent.deleteSync(recursive: true);
-    }
+      fileId: fileId,
+      fileName: fileName,
+      parentFolderIds: parentFolderIds,
+    );
 
     final accessToken =
         (await _oauth2Helper.getTokenFromStorage())?.accessToken;
@@ -110,29 +105,69 @@ class StudIpAPICore {
     return localStoragePath;
   }
 
+  /// Checks whether File exists and isn't outdated. If [deleteOutdatedVersion] is set to true, outdated file versions are deleted.
   Future<bool> isFilePresentAndUpToDate({
     required String fileId,
     required String fileName,
+    required List<String> parentFolderIds,
     required DateTime lastModified,
+    required bool deleteOutdatedVersion,
   }) async {
     final localStoragePath = await localFilePath(
-        fileId: fileId, fileName: fileName, lastModified: lastModified);
+        fileId: fileId, fileName: fileName, parentFolderIds: parentFolderIds);
 
     var file = File(localStoragePath);
     if (file.existsSync() && file.lastModifiedSync().isAfter(lastModified)) {
-      // file is present and up to date
+      // file was already downloaded and is up to date
       return true;
+    } else if (file.existsSync() && deleteOutdatedVersion) {
+      // Remove all old versions of the file (even if fileName and/or content changes,
+      // the fileId stays the same -> therefore file.exsistsSync() should be true)
+      file.parent.deleteSync(recursive: true);
     }
     return false;
   }
 
   Future<String> localFilePath({
-    required String fileId,
-    required String fileName,
-    required DateTime lastModified,
+    required String? fileId,
+    required String? fileName,
+    required List<String> parentFolderIds,
   }) async {
     final documentsDirectory = await getApplicationDocumentsDirectory();
-    return "${documentsDirectory.path}/studipadawan/$fileId/$fileName";
+    if (fileId != null && fileName != null) {
+      return "${documentsDirectory.path}/studipadawan/${parentFolderIds.join('/')}/$fileId/$fileName";
+    } else {
+      return "${documentsDirectory.path}/studipadawan/${parentFolderIds.join('/')}";
+    }
+  }
+
+  /// This method can be used to automatically delete persisted data which was deleted in the backend
+  FutureOr<void> cleanup({
+    required List<String> parentFolderIds,
+    required List<String> expectedIds,
+  }) async {
+    String localFolderPath = await localFilePath(
+      fileId: null,
+      fileName: null,
+      parentFolderIds: parentFolderIds,
+    );
+
+    if (!Directory(localFolderPath).existsSync()) {
+      // Directory isn't present (no files were downloaded for this directory so far)
+      Logger().d("Directory $localFolderPath not present.");
+      return;
+    }
+
+    try {
+      Directory(localFolderPath).listSync().forEach((fileSystemEntity) {
+        if (!expectedIds.any((id) => fileSystemEntity.path.contains(id))) {
+          // ressource can be deleted, because it's not present in expectedIds
+          fileSystemEntity.deleteSync(recursive: true);
+        }
+      });
+    } catch (e) {
+      Logger().e(e);
+    }
   }
 
   // ***** AUTHENTICATION *****

@@ -34,15 +34,12 @@ class CourseFilesBloc extends Bloc<CourseFilesEvent, CourseFilesState> {
     try {
       final rootFolder =
           await _filesRepository.getCourseRootFolder(courseId: course.id);
+      var parentFolderInfo = FolderInfo(
+          folder: rootFolder, folderType: FolderType.root, displayName: "Root");
 
       emit(state.copyWith(
-          parentFolders: [
-            FolderInfo(
-                folder: rootFolder,
-                folderType: FolderType.root,
-                displayName: "Root")
-          ],
-          items: await _loadItems(parentFolderId: rootFolder.id),
+          parentFolders: [parentFolderInfo],
+          items: await _loadItems(parentFolders: [parentFolderInfo]),
           type: CourseFilesStateType.didLoad));
     } catch (_) {
       emit(state.copyWith(
@@ -74,7 +71,7 @@ class CourseFilesBloc extends Bloc<CourseFilesEvent, CourseFilesState> {
           parentFolders: newParentFolders)); // immediately update UI
 
       emit(state.copyWith(
-          items: await _loadItems(parentFolderId: event.selectedFolder.id),
+          items: await _loadItems(parentFolders: newParentFolders),
           type: CourseFilesStateType.didLoad));
     } catch (_) {
       emit(state.copyWith(
@@ -100,8 +97,8 @@ class CourseFilesBloc extends Bloc<CourseFilesEvent, CourseFilesState> {
       emit(state.copyWith(items: updatedItems));
     }
 
-    final localStoragePath =
-        await _filesRepository.downloadFile(file: selectedFile);
+    final localStoragePath = await _filesRepository.downloadFile(
+        file: selectedFile, parentFolderIds: state.parentFolderIds);
 
     if (selectedFileInfoIndex >= 0 &&
         state.items[selectedFileInfoIndex].isRight()) {
@@ -119,17 +116,22 @@ class CourseFilesBloc extends Bloc<CourseFilesEvent, CourseFilesState> {
       DidSelectOpenFileEvent event, Emitter<CourseFilesState> emit) async {
     final selectedFile = event.selectedFileInfo.file;
 
-    final localStoragePath =
-        await _filesRepository.localFilePath(file: selectedFile);
+    final localStoragePath = await _filesRepository.localFilePath(
+        file: selectedFile, parentFolderIds: state.parentFolderIds);
 
     OpenFilex.open(localStoragePath, type: selectedFile.mimeType);
   }
 
   Future<List<Either<Folder, FileInfo>>> _loadItems(
-      {required String parentFolderId}) async {
+      {required List<FolderInfo> parentFolders}) async {
+    final String directParentFolderId = parentFolders.last.folder.id;
+    final List<String> parentFolderIds =
+        parentFolders.map((folderInfo) => folderInfo.folder.id).toList();
+
     final result = await Future.wait([
-      _filesRepository.getAllVisibleFolders(parentFolderId: parentFolderId),
-      _filesRepository.getAllFiles(parentFolderId: parentFolderId)
+      _filesRepository.getAllVisibleFolders(
+          parentFolderId: directParentFolderId),
+      _filesRepository.getAllFiles(parentFolderId: directParentFolderId)
     ]);
 
     final folders = result[0]
@@ -139,10 +141,10 @@ class CourseFilesBloc extends Bloc<CourseFilesEvent, CourseFilesState> {
 
     final files = result[1].cast<File>().toList();
     List<FileInfo> fileInfos = await Future.wait(files.map((file) async {
-      FileType fileType =
-          (await _filesRepository.isFilePresentAndUpToDate(file: file))
-              ? FileType.downloaded
-              : FileType.remote;
+      FileType fileType = (await _filesRepository.isFilePresentAndUpToDate(
+              file: file, parentFolderIds: parentFolderIds))
+          ? FileType.downloaded
+          : FileType.remote;
       return FileInfo(fileType: fileType, file: file);
     }));
 
@@ -150,6 +152,20 @@ class CourseFilesBloc extends Bloc<CourseFilesEvent, CourseFilesState> {
         .map<Either<Folder, FileInfo>>((fileInfo) => right(fileInfo))
         .toList();
 
-    return folders..addAll(fileInfosMapped);
+    final List<Either<Folder, FileInfo>> newItems = folders
+      ..addAll(fileInfosMapped);
+    List<String> itemIds = newItems.map<String>(
+      (item) {
+        return item.fold((folder) => folder.id, (fileInfo) => fileInfo.file.id);
+      },
+    ).toList();
+
+    // Delete obsolete ressources from disk
+    await _filesRepository.cleanup(
+      parentFolderIds: parentFolderIds,
+      expectedIds: itemIds,
+    );
+
+    return newItems;
   }
 }

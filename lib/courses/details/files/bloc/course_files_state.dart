@@ -40,4 +40,7 @@ class CourseFilesState extends Equatable {
       type: type ?? this.type,
     );
   }
+
+  List<String> get parentFolderIds =>
+      parentFolders.map((folderInfo) => folderInfo.folder.id).toList();
 }

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import '../models/models.dart';
 
 abstract class StudIPFilesClient {
@@ -18,18 +20,26 @@ abstract class StudIPFilesClient {
   Future<String?> downloadFile({
     required String fileId,
     required String fileName,
+    required List<String> parentFolderIds,
     required DateTime lastModified,
   });
 
   Future<bool> isFilePresentAndUpToDate({
     required String fileId,
     required String fileName,
+    required List<String> parentFolderIds,
     required DateTime lastModified,
+    required bool deleteOutdatedVersion,
   });
 
   Future<String> localFilePath({
     required String fileId,
     required String fileName,
-    required DateTime lastModified,
+    required List<String> parentFolderIds,
+  });
+
+  FutureOr<void> cleanup({
+    required List<String> parentFolderIds,
+    required List<String> expectedIds,
   });
 }

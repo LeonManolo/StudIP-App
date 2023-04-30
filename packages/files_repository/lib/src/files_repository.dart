@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'models/models.dart';
 import 'package:studip_api_client/studip_api_client.dart';
 
@@ -55,25 +57,44 @@ class FilesRepository {
     }
   }
 
-  Future<String?> downloadFile({required File file}) {
+  Future<String?> downloadFile(
+      {required File file, required List<String> parentFolderIds}) {
     return _apiClient.downloadFile(
       fileId: file.id,
       fileName: file.name,
+      parentFolderIds: parentFolderIds,
       lastModified: file.lastUpdatedAt,
     );
   }
 
-  Future<bool> isFilePresentAndUpToDate({required File file}) async {
+  Future<bool> isFilePresentAndUpToDate(
+      {required File file, required List<String> parentFolderIds}) async {
     return await _apiClient.isFilePresentAndUpToDate(
       fileId: file.id,
       fileName: file.name,
+      parentFolderIds: parentFolderIds,
       lastModified: file.lastUpdatedAt,
+      deleteOutdatedVersion: true,
     );
   }
 
-  Future<String> localFilePath({required File file}) {
+  Future<String> localFilePath(
+      {required File file, required List<String> parentFolderIds}) {
     return _apiClient.localFilePath(
-        fileId: file.id, fileName: file.name, lastModified: file.lastUpdatedAt);
+      fileId: file.id,
+      fileName: file.name,
+      parentFolderIds: parentFolderIds,
+    );
+  }
+
+  FutureOr<void> cleanup({
+    required List<String> parentFolderIds,
+    required List<String> expectedIds,
+  }) {
+    return _apiClient.cleanup(
+      parentFolderIds: parentFolderIds,
+      expectedIds: expectedIds,
+    );
   }
 
   // ***** Private Helpers *****

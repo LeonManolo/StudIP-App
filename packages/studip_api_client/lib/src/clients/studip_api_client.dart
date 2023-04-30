@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
@@ -268,30 +269,49 @@ class StudIpApiClient
   Future<String?> downloadFile(
       {required String fileId,
       required String fileName,
+      required List<String> parentFolderIds,
       required DateTime lastModified}) {
     return _core.downloadFile(
-        fileId: fileId, fileName: fileName, lastModified: lastModified);
+        fileId: fileId,
+        fileName: fileName,
+        parentFolderIds: parentFolderIds,
+        lastModified: lastModified);
   }
 
   @override
-  Future<bool> isFilePresentAndUpToDate(
-      {required String fileId,
-      required String fileName,
-      required DateTime lastModified}) {
+  Future<bool> isFilePresentAndUpToDate({
+    required String fileId,
+    required String fileName,
+    required List<String> parentFolderIds,
+    required DateTime lastModified,
+    bool deleteOutdatedVersion = true,
+  }) {
     return _core.isFilePresentAndUpToDate(
       fileId: fileId,
       fileName: fileName,
+      parentFolderIds: parentFolderIds,
       lastModified: lastModified,
+      deleteOutdatedVersion: deleteOutdatedVersion,
     );
   }
 
-  Future<String> localFilePath({
-    required String fileId,
-    required String fileName,
-    required DateTime lastModified,
-  }) async {
+  @override
+  Future<String> localFilePath(
+      {required String fileId,
+      required String fileName,
+      required List<String> parentFolderIds}) async {
     return _core.localFilePath(
-        fileId: fileId, fileName: fileName, lastModified: lastModified);
+        fileId: fileId, fileName: fileName, parentFolderIds: parentFolderIds);
+  }
+
+  @override
+  FutureOr<void> cleanup(
+      {required List<String> parentFolderIds,
+      required List<String> expectedIds}) {
+    return _core.cleanup(
+      parentFolderIds: parentFolderIds,
+      expectedIds: expectedIds,
+    );
   }
 
   // **** Calendar ****
