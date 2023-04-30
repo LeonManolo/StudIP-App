@@ -1,6 +1,7 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:studipadawan/courses/details/files/view/widgets/course_files_file_row.dart';
 
 import '../../bloc/course_files_bloc.dart';
 
@@ -35,12 +36,8 @@ class CourseFilesItemsList extends StatelessWidget {
                           )),
                     );
                   }, (file) {
-                    return ListTile(
-                      title: Text(file.name),
-                      leading: const Icon(EvaIcons.fileOutline),
-                      onTap: () => context
-                          .read<CourseFilesBloc>()
-                          .add(DidSelectFileEvent(selectedFile: file)),
+                    return CourseFilesFileRow(
+                      file: file,
                     );
                   });
                 },

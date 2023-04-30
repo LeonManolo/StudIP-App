@@ -1,3 +1,4 @@
+import 'package:intl/intl.dart';
 import 'package:studip_api_client/src/models/models.dart' as APIModels;
 
 class File {
@@ -43,4 +44,10 @@ class File {
       downloadUrl: fileResponse.downloadUrl,
     );
   }
+
+  String get createdAtFormatted =>
+      DateFormat("dd.MM.yy (HH:mm)").format(createdAt);
+
+  String get lastUpdatedAtFormatted =>
+      DateFormat("dd.MM.yy (HH:mm)").format(lastUpdatedAt);
 }

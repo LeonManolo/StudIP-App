@@ -4,7 +4,6 @@ import 'package:bloc/bloc.dart';
 import 'package:courses_repository/courses_repository.dart';
 import 'package:equatable/equatable.dart';
 import 'package:dartz/dartz.dart' hide OpenFile;
-import 'package:studipadawan/courses/bloc/courses_state.dart';
 import 'package:studipadawan/courses/details/files/models/folder_info.dart';
 import 'package:studipadawan/courses/details/files/models/folder_type.dart';
 import 'package:open_filex/open_filex.dart';
