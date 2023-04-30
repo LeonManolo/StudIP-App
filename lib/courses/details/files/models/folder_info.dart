@@ -1,6 +1,6 @@
 import 'package:files_repository/files_repository.dart';
 
-import 'folder_type.dart';
+enum FolderType { root, normal }
 
 class FolderInfo {
   final String displayName;

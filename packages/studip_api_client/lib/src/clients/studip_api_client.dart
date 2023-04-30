@@ -266,8 +266,32 @@ class StudIpApiClient
 
   @override
   Future<String?> downloadFile(
-      {required String fileId, required String localFilePath}) {
-    return _core.downloadFile(fileId: fileId, localFilePath: localFilePath);
+      {required String fileId,
+      required String fileName,
+      required DateTime lastModified}) {
+    return _core.downloadFile(
+        fileId: fileId, fileName: fileName, lastModified: lastModified);
+  }
+
+  @override
+  Future<bool> isFilePresentAndUpToDate(
+      {required String fileId,
+      required String fileName,
+      required DateTime lastModified}) {
+    return _core.isFilePresentAndUpToDate(
+      fileId: fileId,
+      fileName: fileName,
+      lastModified: lastModified,
+    );
+  }
+
+  Future<String> localFilePath({
+    required String fileId,
+    required String fileName,
+    required DateTime lastModified,
+  }) async {
+    return _core.localFilePath(
+        fileId: fileId, fileName: fileName, lastModified: lastModified);
   }
 
   // **** Calendar ****

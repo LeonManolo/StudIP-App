@@ -70,17 +70,36 @@ class StudIpAPICore {
         body: jsonString ?? jsonEncode(bodyParameters));
   }
 
-  Future<String?> downloadFile(
-      {required String fileId, required String localFilePath}) async {
+  Future<String?> downloadFile({
+    required String fileId,
+    required String fileName,
+    required DateTime lastModified,
+  }) async {
     var storagePermission = await Permission.storage.request();
-    final accessToken =
-        (await _oauth2Helper.getTokenFromStorage())?.accessToken;
-    if (!storagePermission.isGranted || accessToken == null) {
+    if (!storagePermission.isGranted) {
       return null;
     }
 
-    final tempDir = await getTemporaryDirectory();
-    final localStoragePath = "${tempDir.path}/$localFilePath";
+    final localStoragePath = await localFilePath(
+        fileId: fileId, fileName: fileName, lastModified: lastModified);
+
+    var file = File(localStoragePath);
+    if (await isFilePresentAndUpToDate(
+        fileId: fileId, fileName: fileName, lastModified: lastModified)) {
+      // file was already downloaded and is up to date
+      return localStoragePath;
+    } else if (file.existsSync()) {
+      // Remove all old versions of the file (even if fileName and/or content changes,
+      // the fileId stays the same -> therefore file.exsistsSync() should be true)
+      file.parent.deleteSync(recursive: true);
+    }
+
+    final accessToken =
+        (await _oauth2Helper.getTokenFromStorage())?.accessToken;
+    if (accessToken == null) {
+      return null;
+    }
+
     await _dio.download(
         "$_baseUrl/$_apiBaseUrl/file-refs/$fileId/content", localStoragePath,
         options: Options(headers: {
@@ -89,6 +108,31 @@ class StudIpAPICore {
         }));
 
     return localStoragePath;
+  }
+
+  Future<bool> isFilePresentAndUpToDate({
+    required String fileId,
+    required String fileName,
+    required DateTime lastModified,
+  }) async {
+    final localStoragePath = await localFilePath(
+        fileId: fileId, fileName: fileName, lastModified: lastModified);
+
+    var file = File(localStoragePath);
+    if (file.existsSync() && file.lastModifiedSync().isAfter(lastModified)) {
+      // file is present and up to date
+      return true;
+    }
+    return false;
+  }
+
+  Future<String> localFilePath({
+    required String fileId,
+    required String fileName,
+    required DateTime lastModified,
+  }) async {
+    final documentsDirectory = await getApplicationDocumentsDirectory();
+    return "${documentsDirectory.path}/studipadawan/$fileId/$fileName";
   }
 
   // ***** AUTHENTICATION *****

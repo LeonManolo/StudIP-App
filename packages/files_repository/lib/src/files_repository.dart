@@ -55,10 +55,25 @@ class FilesRepository {
     }
   }
 
-  Future<String?> downloadFile(
-      {required String fileId, required String localFilePath}) {
+  Future<String?> downloadFile({required File file}) {
     return _apiClient.downloadFile(
-        fileId: fileId, localFilePath: localFilePath);
+      fileId: file.id,
+      fileName: file.name,
+      lastModified: file.lastUpdatedAt,
+    );
+  }
+
+  Future<bool> isFilePresentAndUpToDate({required File file}) async {
+    return await _apiClient.isFilePresentAndUpToDate(
+      fileId: file.id,
+      fileName: file.name,
+      lastModified: file.lastUpdatedAt,
+    );
+  }
+
+  Future<String> localFilePath({required File file}) {
+    return _apiClient.localFilePath(
+        fileId: file.id, fileName: file.name, lastModified: file.lastUpdatedAt);
   }
 
   // ***** Private Helpers *****

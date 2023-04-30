@@ -1,6 +1,5 @@
 import 'package:intl/intl.dart';
 import 'package:studip_api_client/src/models/models.dart' as APIModels;
-import 'package:studip_api_client/studip_api_client.dart';
 
 class File {
   final String id;
@@ -13,7 +12,6 @@ class File {
   final String mimeType;
   final bool isReadable;
   final bool isDownloadable;
-  final String downloadUrl;
 
   File({
     required this.id,
@@ -26,11 +24,11 @@ class File {
     required this.mimeType,
     required this.isReadable,
     required this.isDownloadable,
-    required this.downloadUrl,
   });
 
-  factory File.fromFileResponse(
-      {required APIModels.FileResponse fileResponse}) {
+  factory File.fromFileResponse({
+    required APIModels.FileResponse fileResponse,
+  }) {
     return File(
       id: fileResponse.id,
       name: fileResponse.name,
@@ -42,7 +40,6 @@ class File {
       mimeType: fileResponse.mimeType,
       isReadable: fileResponse.isReadable,
       isDownloadable: fileResponse.isDownloadable,
-      downloadUrl: fileResponse.downloadUrl,
     );
   }
 

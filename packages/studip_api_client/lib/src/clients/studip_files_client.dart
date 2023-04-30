@@ -17,6 +17,19 @@ abstract class StudIPFilesClient {
 
   Future<String?> downloadFile({
     required String fileId,
-    required String localFilePath,
+    required String fileName,
+    required DateTime lastModified,
+  });
+
+  Future<bool> isFilePresentAndUpToDate({
+    required String fileId,
+    required String fileName,
+    required DateTime lastModified,
+  });
+
+  Future<String> localFilePath({
+    required String fileId,
+    required String fileName,
+    required DateTime lastModified,
   });
 }

@@ -5,8 +5,8 @@ import 'package:courses_repository/courses_repository.dart';
 import 'package:equatable/equatable.dart';
 import 'package:dartz/dartz.dart' hide OpenFile;
 import 'package:files_repository/files_repository.dart';
+import 'package:studipadawan/courses/details/files/models/file_info.dart';
 import 'package:studipadawan/courses/details/files/models/folder_info.dart';
-import 'package:studipadawan/courses/details/files/models/folder_type.dart';
 import 'package:open_filex/open_filex.dart';
 
 part 'course_files_event.dart';
@@ -22,7 +22,8 @@ class CourseFilesBloc extends Bloc<CourseFilesEvent, CourseFilesState> {
         super(CourseFilesState.inital()) {
     on<LoadRootFolderEvent>(_onLoadRootFolderEvent);
     on<DidSelectFolderEvent>(_onDidSelectFolderEvent);
-    on<DidSelectFileEvent>(_onDidSelectFileEvent);
+    on<DidSelectDownloadFileEvent>(_onDidSelectDownloadFileEvent);
+    on<DidSelectOpenFileEvent>(_onDidSelectOpenFileEvent);
   }
 
   FutureOr<void> _onLoadRootFolderEvent(
@@ -83,16 +84,48 @@ class CourseFilesBloc extends Bloc<CourseFilesEvent, CourseFilesState> {
     }
   }
 
-  FutureOr<void> _onDidSelectFileEvent(
-      DidSelectFileEvent event, Emitter<CourseFilesState> emit) async {
-    final localStoragePath = await _filesRepository.downloadFile(
-        fileId: event.selectedFile.id,
-        localFilePath: "${event.selectedFile.id}/${event.selectedFile.name}");
+  FutureOr<void> _onDidSelectDownloadFileEvent(
+      DidSelectDownloadFileEvent event, Emitter<CourseFilesState> emit) async {
+    final selectedFile = event.selectedFileInfo.file;
 
-    OpenFilex.open(localStoragePath, type: event.selectedFile.mimeType);
+    int selectedFileInfoIndex =
+        state.items.indexOf(right(event.selectedFileInfo));
+
+    if (selectedFileInfoIndex >= 0 &&
+        state.items[selectedFileInfoIndex].isRight()) {
+      var updatedItems = List.of(state.items);
+      updatedItems[selectedFileInfoIndex] =
+          right(FileInfo(fileType: FileType.isDownloading, file: selectedFile));
+
+      emit(state.copyWith(items: updatedItems));
+    }
+
+    final localStoragePath =
+        await _filesRepository.downloadFile(file: selectedFile);
+
+    if (selectedFileInfoIndex >= 0 &&
+        state.items[selectedFileInfoIndex].isRight()) {
+      var updatedItems = List.of(state.items);
+      updatedItems[selectedFileInfoIndex] = right(FileInfo(
+          fileType:
+              localStoragePath != null ? FileType.downloaded : FileType.remote,
+          file: selectedFile));
+
+      emit(state.copyWith(items: updatedItems));
+    }
   }
 
-  Future<List<Either<Folder, File>>> _loadItems(
+  FutureOr<void> _onDidSelectOpenFileEvent(
+      DidSelectOpenFileEvent event, Emitter<CourseFilesState> emit) async {
+    final selectedFile = event.selectedFileInfo.file;
+
+    final localStoragePath =
+        await _filesRepository.localFilePath(file: selectedFile);
+
+    OpenFilex.open(localStoragePath, type: selectedFile.mimeType);
+  }
+
+  Future<List<Either<Folder, FileInfo>>> _loadItems(
       {required String parentFolderId}) async {
     final result = await Future.wait([
       _filesRepository.getAllVisibleFolders(parentFolderId: parentFolderId),
@@ -101,13 +134,22 @@ class CourseFilesBloc extends Bloc<CourseFilesEvent, CourseFilesState> {
 
     final folders = result[0]
         .cast()
-        .map<Either<Folder, File>>((folder) => left(folder))
-        .toList();
-    final files = result[1]
-        .cast()
-        .map<Either<Folder, File>>((file) => right(file))
+        .map<Either<Folder, FileInfo>>((folder) => left(folder))
         .toList();
 
-    return folders..addAll(files);
+    final files = result[1].cast<File>().toList();
+    List<FileInfo> fileInfos = await Future.wait(files.map((file) async {
+      FileType fileType =
+          (await _filesRepository.isFilePresentAndUpToDate(file: file))
+              ? FileType.downloaded
+              : FileType.remote;
+      return FileInfo(fileType: fileType, file: file);
+    }));
+
+    List<Either<Folder, FileInfo>> fileInfosMapped = fileInfos
+        .map<Either<Folder, FileInfo>>((fileInfo) => right(fileInfo))
+        .toList();
+
+    return folders..addAll(fileInfosMapped);
   }
 }

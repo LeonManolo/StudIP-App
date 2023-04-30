@@ -4,7 +4,7 @@ enum CourseFilesStateType { isLoading, didLoad, error }
 
 class CourseFilesState extends Equatable {
   final List<FolderInfo> parentFolders;
-  final List<Either<Folder, File>> items;
+  final List<Either<Folder, FileInfo>> items;
   final String? errorMessage;
   final CourseFilesStateType type;
 
@@ -29,7 +29,7 @@ class CourseFilesState extends Equatable {
 
   CourseFilesState copyWith({
     List<FolderInfo>? parentFolders,
-    List<Either<Folder, File>>? items,
+    List<Either<Folder, FileInfo>>? items,
     String? errorMessage,
     CourseFilesStateType? type,
   }) {
