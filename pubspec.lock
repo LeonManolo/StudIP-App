@@ -181,6 +181,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.1.4"
+  files_repository:
+    dependency: "direct main"
+    description:
+      path: "packages/files_repository"
+      relative: true
+    source: path
+    version: "1.0.0"
   flow_builder:
     dependency: "direct main"
     description:
@@ -993,5 +1000,5 @@ packages:
     source: hosted
     version: "5.4.1"
 sdks:
-  dart: ">=2.19.4 <3.0.0"
+  dart: ">=2.19.6 <3.0.0"
   flutter: ">=3.3.0"

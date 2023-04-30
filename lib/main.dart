@@ -1,6 +1,7 @@
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:calender_repository/calender_repository.dart';
 import 'package:courses_repository/courses_repository.dart';
+import 'package:files_repository/files_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:messages_repository/messages_repository.dart';
 import 'package:studip_api_client/studip_api_client.dart';
@@ -22,11 +23,14 @@ Future<void> main() async {
 
   final calenderRepository = CalenderRepository(apiClient: apiClient);
 
+  final filesRepository = FilesRepository(apiClient: apiClient);
+
   runApp(App(
     authenticationRepository: authenticationRepository,
     calenderRepository: calenderRepository,
     userRepository: userRepository,
     coursesRepository: coursesRepository,
     messageRepository: messagesRepository,
+    filesRepository: filesRepository,
   ));
 }

@@ -47,6 +47,9 @@ dependencies:
   calender_repository:
     path: packages/calender_repository
 
+  files_repository:
+    path: packages/files_repository
+
   studip_api_client:
     path: packages/studip_api_client
 

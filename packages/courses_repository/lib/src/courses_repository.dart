@@ -83,57 +83,6 @@ class CourseRepository {
     }
   }
 
-  Future<List<Folder>> getAllFolders({required String parentFolderId}) async {
-    try {
-      final List<FolderResponse> allFolders = await _getResponse(
-          id: parentFolderId,
-          loadItems: ({required id, required limit, required offset}) async {
-            return _apiClient.getFolders(
-                folderId: id, offset: offset, limit: limit);
-          });
-
-      return allFolders
-          .map((folderResponse) =>
-              Folder.fromFolderResponse(folderResponse: folderResponse))
-          .toList();
-    } catch (error, stackTrace) {
-      Error.throwWithStackTrace(error, stackTrace);
-    }
-  }
-
-  Future<List<File>> getAllFiles({required String parentFolderId}) async {
-    try {
-      final List<FileResponse> allFiles = await _getResponse(
-          id: parentFolderId,
-          loadItems: ({required id, required limit, required offset}) async {
-            return _apiClient.getFiles(
-                folderId: id, offset: offset, limit: limit);
-          });
-      return allFiles
-          .map((fileResponse) =>
-              File.fromFileResponse(fileResponse: fileResponse))
-          .toList();
-    } catch (error, stackTrace) {
-      Error.throwWithStackTrace(error, stackTrace);
-    }
-  }
-
-  Future<Folder> getCourseRootFolder({required String courseId}) async {
-    try {
-      final rootFolderResponse =
-          await _apiClient.getCourseRootFolder(courseId: courseId);
-      return Folder.fromFolderResponse(folderResponse: rootFolderResponse);
-    } catch (error, stackTrace) {
-      Error.throwWithStackTrace(error, stackTrace);
-    }
-  }
-
-  Future<String?> downloadFile(
-      {required String fileId, required String localFilePath}) {
-    return _apiClient.downloadFile(
-        fileId: fileId, localFilePath: localFilePath);
-  }
-
   // ***** Private Helpers *****
 
   /// This method can be used to recursively fetch all items.

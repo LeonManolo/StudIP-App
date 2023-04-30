@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
+import 'package:studip_api_client/src/clients/studip_files_client.dart';
 import 'package:studip_api_client/src/core/studip_api_core.dart';
 import 'package:studip_api_client/studip_api_client.dart';
 import 'package:logger/logger.dart';
@@ -12,7 +13,8 @@ class StudIpApiClient
         StudIPMessagesClient,
         StudIPCoursesClient,
         StudIPCalendarClient,
-        StudIPUserClient {
+        StudIPUserClient,
+        StudIPFilesClient {
   StudIpApiClient._({
     StudIpAPICore? core,
   }) : _core = core ?? StudIpAPICore();
@@ -197,6 +199,8 @@ class StudIpApiClient
     }
     return CourseEventListResponse.fromJson(body);
   }
+
+  // **** Files ****
 
   @override
   Future<FolderResponse> getCourseRootFolder({required String courseId}) async {

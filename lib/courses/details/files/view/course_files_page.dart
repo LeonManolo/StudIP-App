@@ -1,4 +1,4 @@
-import 'package:courses_repository/courses_repository.dart';
+import 'package:files_repository/files_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:studipadawan/courses/details/files/bloc/course_files_bloc.dart';
@@ -15,7 +15,7 @@ class CourseFilesPage extends StatelessWidget {
     return BlocProvider(
       create: (context) => CourseFilesBloc(
         course: context.read<CourseDetailsBloc>().course,
-        courseRepository: context.read<CourseRepository>(),
+        filesRepository: context.read<FilesRepository>(),
       )..add(LoadRootFolderEvent()),
       child: BlocBuilder<CourseFilesBloc, CourseFilesState>(
         builder: (context, state) {

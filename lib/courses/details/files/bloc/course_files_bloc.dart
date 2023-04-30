@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:courses_repository/courses_repository.dart';
 import 'package:equatable/equatable.dart';
 import 'package:dartz/dartz.dart' hide OpenFile;
+import 'package:files_repository/files_repository.dart';
 import 'package:studipadawan/courses/details/files/models/folder_info.dart';
 import 'package:studipadawan/courses/details/files/models/folder_type.dart';
 import 'package:open_filex/open_filex.dart';
@@ -12,13 +13,12 @@ part 'course_files_event.dart';
 part 'course_files_state.dart';
 
 class CourseFilesBloc extends Bloc<CourseFilesEvent, CourseFilesState> {
-  final CourseRepository _courseRepository;
+  final FilesRepository _filesRepository;
   final Course course;
-  String _courseRootFolderId = "";
 
   CourseFilesBloc(
-      {required this.course, required CourseRepository courseRepository})
-      : _courseRepository = courseRepository,
+      {required this.course, required FilesRepository filesRepository})
+      : _filesRepository = filesRepository,
         super(CourseFilesState.inital()) {
     on<LoadRootFolderEvent>(_onLoadRootFolderEvent);
     on<DidSelectFolderEvent>(_onDidSelectFolderEvent);
@@ -32,8 +32,7 @@ class CourseFilesBloc extends Bloc<CourseFilesEvent, CourseFilesState> {
     emit(state.copyWith(type: CourseFilesStateType.isLoading));
     try {
       final rootFolder =
-          await _courseRepository.getCourseRootFolder(courseId: course.id);
-      _courseRootFolderId = rootFolder.id;
+          await _filesRepository.getCourseRootFolder(courseId: course.id);
 
       emit(state.copyWith(
           parentFolders: [
@@ -86,7 +85,7 @@ class CourseFilesBloc extends Bloc<CourseFilesEvent, CourseFilesState> {
 
   FutureOr<void> _onDidSelectFileEvent(
       DidSelectFileEvent event, Emitter<CourseFilesState> emit) async {
-    final localStoragePath = await _courseRepository.downloadFile(
+    final localStoragePath = await _filesRepository.downloadFile(
         fileId: event.selectedFile.id,
         localFilePath: "${event.selectedFile.id}/${event.selectedFile.name}");
 
@@ -96,8 +95,8 @@ class CourseFilesBloc extends Bloc<CourseFilesEvent, CourseFilesState> {
   Future<List<Either<Folder, File>>> _loadItems(
       {required String parentFolderId}) async {
     final result = await Future.wait([
-      _courseRepository.getAllFolders(parentFolderId: parentFolderId),
-      _courseRepository.getAllFiles(parentFolderId: parentFolderId)
+      _filesRepository.getAllFolders(parentFolderId: parentFolderId),
+      _filesRepository.getAllFiles(parentFolderId: parentFolderId)
     ]);
 
     final folders = result[0]

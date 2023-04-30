@@ -1,4 +1,4 @@
-import 'package:courses_repository/courses_repository.dart';
+import 'package:files_repository/files_repository.dart';
 import 'package:flutter/material.dart';
 
 class CourseFilesFileInfoAlert extends StatelessWidget {
