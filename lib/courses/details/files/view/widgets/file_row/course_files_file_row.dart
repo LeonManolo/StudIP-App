@@ -50,9 +50,7 @@ class CourseFilesFileRow extends StatelessWidget {
 
   List<PopupMenuEntry<FilePopupMenuOption>> _popupItems(
       {required FileInfo fileInfo}) {
-    if (fileInfo.file.isDownloadable &&
-        fileInfo.file.isReadable &&
-        fileInfo.fileType == FileType.remote) {
+    if (fileInfo.fileType == FileType.remote) {
       return [
         const PopupMenuItem(
             value: FilePopupMenuOption.info, child: Text("Info")),

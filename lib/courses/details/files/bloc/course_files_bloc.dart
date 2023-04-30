@@ -131,7 +131,8 @@ class CourseFilesBloc extends Bloc<CourseFilesEvent, CourseFilesState> {
     final result = await Future.wait([
       _filesRepository.getAllVisibleFolders(
           parentFolderId: directParentFolderId),
-      _filesRepository.getAllFiles(parentFolderId: directParentFolderId)
+      _filesRepository.getAllDownloadableFiles(
+          parentFolderId: directParentFolderId)
     ]);
 
     final folders = result[0]

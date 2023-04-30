@@ -30,7 +30,8 @@ class FilesRepository {
     }
   }
 
-  Future<List<File>> getAllFiles({required String parentFolderId}) async {
+  Future<List<File>> getAllDownloadableFiles(
+      {required String parentFolderId}) async {
     try {
       final List<FileResponse> allFiles = await _getResponse(
           id: parentFolderId,
@@ -39,6 +40,8 @@ class FilesRepository {
                 folderId: id, offset: offset, limit: limit);
           });
       return allFiles
+          .where((fileResponse) =>
+              fileResponse.isDownloadable && fileResponse.isReadable)
           .map((fileResponse) =>
               File.fromFileResponse(fileResponse: fileResponse))
           .toList();
