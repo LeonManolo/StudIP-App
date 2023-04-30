@@ -7,7 +7,8 @@ class FilesRepository {
   const FilesRepository({required StudIPFilesClient apiClient})
       : _apiClient = apiClient;
 
-  Future<List<Folder>> getAllFolders({required String parentFolderId}) async {
+  Future<List<Folder>> getAllVisibleFolders(
+      {required String parentFolderId}) async {
     try {
       final List<FolderResponse> allFolders = await _getResponse(
           id: parentFolderId,
@@ -17,6 +18,8 @@ class FilesRepository {
           });
 
       return allFolders
+          .where((folderResponse) =>
+              folderResponse.isVisible && folderResponse.isReadable)
           .map((folderResponse) =>
               Folder.fromFolderResponse(folderResponse: folderResponse))
           .toList();

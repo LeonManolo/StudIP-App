@@ -1,5 +1,6 @@
 import 'package:intl/intl.dart';
 import 'package:studip_api_client/src/models/models.dart' as APIModels;
+import 'package:studip_api_client/studip_api_client.dart';
 
 class File {
   final String id;

@@ -95,7 +95,7 @@ class CourseFilesBloc extends Bloc<CourseFilesEvent, CourseFilesState> {
   Future<List<Either<Folder, File>>> _loadItems(
       {required String parentFolderId}) async {
     final result = await Future.wait([
-      _filesRepository.getAllFolders(parentFolderId: parentFolderId),
+      _filesRepository.getAllVisibleFolders(parentFolderId: parentFolderId),
       _filesRepository.getAllFiles(parentFolderId: parentFolderId)
     ]);
 
