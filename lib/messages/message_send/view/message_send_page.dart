@@ -15,13 +15,14 @@ const double smallMargin = AppSpacing.sm;
 const double bigMargin = AppSpacing.lg;
 
 class MessageSendPage extends StatelessWidget {
-  const MessageSendPage({Key? key}) : super(key: key);
+  const MessageSendPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     final TextEditingController recipientController = TextEditingController();
     final TextEditingController subjectController = TextEditingController();
     final TextEditingController messageController = TextEditingController();
+
     return Scaffold(
       key: UniqueKey(),
       appBar: AppBar(title: const Text('Senden')),
@@ -36,7 +37,7 @@ class MessageSendPage extends StatelessWidget {
           BlocProvider<MessageUsersBloc>(
             create: (context) => MessageUsersBloc(
               userRepository: context.read<UserRepository>(),
-            )..add(const MessageUsersRequested()),
+            )..add(const MessageUsersRequested(null)),
           ),
         ],
         child: BlocBuilder<MessageSendBloc, MessageSendState>(
@@ -46,10 +47,11 @@ class MessageSendPage extends StatelessWidget {
                   context, messageSendState.errorMessage, Colors.red);
             }
             if (messageSendState.status == MessageSendStatus.populated) {
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  _buildSnackBar(context, "Die Nachricht wurde versendet", Colors.green);
-            Navigator.pop(context);
-          });
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                _buildSnackBar(
+                    context, "Die Nachricht wurde versendet", Colors.green);
+                Navigator.pop(context);
+              });
             }
             return SingleChildScrollView(
               child: Column(
@@ -71,8 +73,12 @@ class MessageSendPage extends StatelessWidget {
                               ),
                             ),
                             suggestionsCallback: (pattern) async {
-                              if (recipientController.text.isEmpty) {
+                              if (recipientController.text.isEmpty ||
+                                  pattern.isEmpty) {
                                 return List.empty();
+                              }
+                              if (pattern.length % 3 == 0) {
+                                _fetchUsers(context, pattern);
                               }
                               return _filterUsernamesByPattern(
                                   pattern, messageUsersState.users);
@@ -136,6 +142,11 @@ class MessageSendPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void _fetchUsers(BuildContext context, String searchParams) async {
+    BlocProvider.of<MessageUsersBloc>(context)
+        .add(MessageUsersRequested(searchParams));
   }
 
   List<String> _filterUsernamesByPattern(

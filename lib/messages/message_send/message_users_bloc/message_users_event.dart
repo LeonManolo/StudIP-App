@@ -5,9 +5,9 @@ abstract class MessageUsersEvent extends Equatable {
 }
 
 class MessageUsersRequested extends MessageUsersEvent {
-
-  const MessageUsersRequested();
+  final String? searchParams;
+  const MessageUsersRequested(this.searchParams);
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [searchParams];
 }

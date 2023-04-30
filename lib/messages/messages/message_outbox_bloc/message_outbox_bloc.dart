@@ -25,7 +25,7 @@ class OutboxMessageBloc extends Bloc<OutboxMessageEvent, OutboxMessageState> {
 
     try {
       List<Message> outboxMessages = await _messageRepository
-          .getOutboxMessages(_authenticationRepository.currentUser.id);
+          .getOutboxMessages(userId: _authenticationRepository.currentUser.id, offset: 0);
       emit(state.copyWith(
           status: OutboxMessageStatus.populated,
           outboxMessages: outboxMessages));

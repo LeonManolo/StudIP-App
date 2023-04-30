@@ -23,7 +23,7 @@ class StudIpApiClient
 
   // **** Shared **** (aktuell nur in StudIPMessagesClient benutzt aber in Zukunft sicherlich auch an anderen Stellen benötigt)
   @override
-  Future<UserResponse> getUser(String userId) async {
+  Future<UserResponse> getUser({required String userId}) async {
     final response = await _core.get(endpoint: "users/$userId");
 
     final body = response.json();
@@ -54,8 +54,14 @@ class StudIpApiClient
   }
 
   @override
-  Future<UserListResponse> getUsers() async {
-    final response = await _core.get(endpoint: "users");
+  Future<UserListResponse> getUsers(String? searchParam) async {
+    Map<String, String> queryParameters = {};
+    if (searchParam != null) {
+      queryParameters["filter[search]"] = searchParam;
+    }
+
+    final response =
+        await _core.get(endpoint: "users", queryParameters: queryParameters);
 
     final body = response.json();
 
@@ -71,7 +77,8 @@ class StudIpApiClient
 
   // **** Messages ****
   @override
-  Future<MessageListResponse> getOutboxMessages(String userId) async {
+  Future<MessageListResponse> getOutboxMessages(
+      {required String userId}) async {
     final response = await _core.get(endpoint: "users/$userId/outbox");
 
     final body = response.json();
@@ -86,8 +93,20 @@ class StudIpApiClient
   }
 
   @override
-  Future<MessageListResponse> getInboxMessages(String userId) async {
-    final response = await _core.get(endpoint: "users/$userId/inbox");
+  Future<MessageListResponse> getInboxMessages(
+      {required String userId,
+      required int offset,
+      required int limit,
+      required bool filterUnread}) async {
+    Map<String, String> queryParameters = {};
+    if (filterUnread) {
+      queryParameters["filter[unread]"] = "dieseApiNervt";
+    }
+    queryParameters["page[offset]"] = offset.toString();
+    queryParameters["page[limit]"] = limit.toString();
+
+    final response = await _core.get(
+        endpoint: "users/$userId/inbox", queryParameters: queryParameters);
 
     final body = response.json();
 
@@ -101,7 +120,8 @@ class StudIpApiClient
   }
 
   @override
-  Future<void> readMessage(String messageId, String message) async {
+  Future<void> readMessage(
+      {required String messageId, required String message}) async {
     final response =
         await _core.patch(endpoint: "messages/$messageId", jsonString: message);
     final body = response.json();
@@ -112,7 +132,7 @@ class StudIpApiClient
   }
 
   @override
-  Future<MessageResponse> sendMessage(String message) async {
+  Future<MessageResponse> sendMessage({required String message}) async {
     final response =
         await _core.post(endpoint: "messages", jsonString: message);
     final body = response.json();

@@ -1,4 +1,5 @@
 import 'package:authentication_repository/authentication_repository.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:messages_repository/messages_repository.dart';
@@ -40,23 +41,32 @@ class _MessagesPageState extends State<MessagesPage>
     )
   ];
 
+  final _inboxScrollController = ScrollController();
+  final _outboxPagingController = PagingController<int, ListTile>(
+    firstPageKey: 1,
+  );
+
   @override
   void initState() {
     super.initState();
     _controller = TabController(length: _messageTabs.length, vsync: this);
+
     _inboxMessageBloc = InboxMessageBloc(
       messageRepository: context.read<MessageRepository>(),
       authenticationRepository: context.read<AuthenticationRepository>(),
-    )..add(const InboxMessagesRequested(filter: MessageFilter.none));
+    )..add(const InboxMessagesRequested(filter: MessageFilter.none, offset: 0));
     _outboxMessageBloc = OutboxMessageBloc(
       messageRepository: context.read<MessageRepository>(),
       authenticationRepository: context.read<AuthenticationRepository>(),
     )..add(const OutboxMessagesRequested());
+    _inboxScrollController.addListener(() => _onInboxScroll());
   }
 
   @override
   void dispose() {
     _controller.dispose();
+    _inboxScrollController.dispose();
+    _outboxPagingController.dispose();
     _inboxMessageBloc.close();
     _outboxMessageBloc.close();
     super.dispose();
@@ -82,10 +92,11 @@ class _MessagesPageState extends State<MessagesPage>
                       return InboxMessageWidget(
                         state: state,
                         readMessage: _readMessage,
+                        refresh: _refreshInboxMessages,
+                        scrollController: _inboxScrollController,
                         filterRow: FilterRow(
-                          currentFilter: state.currentFilter,
-                          setFilter: _handleFilterSelection,
-                        ),
+                            currentFilter: state.currentFilter,
+                            setFilter: _handleFilterSelection),
                       );
                     },
                   ),
@@ -122,21 +133,38 @@ class _MessagesPageState extends State<MessagesPage>
     );
   }
 
-  void _readMessage(BuildContext context, Message message) {
-    var messageBloc = BlocProvider.of<InboxMessageBloc>(context);
+  void _onInboxScroll() {
+    final currentState = _inboxMessageBloc.state;
+    final maxScroll = _inboxScrollController.position.maxScrollExtent;
+    final currentScroll = _inboxScrollController.position.pixels;
+    final threshold = currentState.inboxMessages.length;
+
+    if (!currentState.maxReached &&
+        currentState.status == InboxMessageStatus.populated 
+        && !currentState.paginationLoading
+        && maxScroll - currentScroll <= threshold) {
+      _inboxMessageBloc.add(InboxMessagesRequested(
+          filter: currentState.currentFilter,
+          offset: currentState.inboxMessages.length));
+    }
+  }
+
+  void _readMessage(Message message) {
     setState(() {
-      if (messageBloc.state.currentFilter == MessageFilter.unread) {
-        messageBloc.state.inboxMessages.remove(message);
+      if (_inboxMessageBloc.state.currentFilter == MessageFilter.unread) {
+        _inboxMessageBloc.state.inboxMessages.remove(message);
       } else {
         message.read();
       }
-      BlocProvider.of<InboxMessageBloc>(context)
-          .add(ReadMessageRequested(message: message));
+      _inboxMessageBloc.add(ReadMessageRequested(message: message));
     });
   }
 
   void _handleFilterSelection(BuildContext context, MessageFilter filter) {
-    BlocProvider.of<InboxMessageBloc>(context)
-        .add(InboxMessagesRequested(filter: filter));
+    _inboxMessageBloc.add(InboxMessagesRequested(filter: filter, offset: 0));
+  }
+
+  void _refreshInboxMessages() {
+    _inboxMessageBloc.add(const RefreshRequested());
   }
 }

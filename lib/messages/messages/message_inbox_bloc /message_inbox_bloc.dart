@@ -16,24 +16,66 @@ class InboxMessageBloc extends Bloc<InboxMessageEvent, InboxMessageState> {
         _authenticationRepository = authenticationRepository,
         super(const InboxMessageState.initial()) {
     on<InboxMessagesRequested>(_onInboxMessagesRequested);
+    on<RefreshRequested>(_onRefreshRequested);
     on<ReadMessageRequested>(_onReadMessageRequested);
   }
 
   FutureOr<void> _onInboxMessagesRequested(
       InboxMessagesRequested event, Emitter<InboxMessageState> emit) async {
-    emit(state.copyWith(
-        status: InboxMessageStatus.loading,
-        inboxMessages: [],
-        currentFilter: event.filter));
-
+    if (state.inboxMessages.isEmpty || event.filter != state.currentFilter) {
+      emit(state.copyWith(
+          status: InboxMessageStatus.loading,
+          inboxMessages: [],
+          currentFilter: event.filter));
+    } else {
+      emit(state.copyWith(
+          status: InboxMessageStatus.paginationLoading,
+          inboxMessages: state.inboxMessages,
+          paginationLoading: true,
+          currentFilter: event.filter));
+    }
     try {
-      List<Message> inboxMessages = await _messageRepository
-          .getInboxMessages(_authenticationRepository.currentUser.id);
+      List<Message> inboxMessages = await _messageRepository.getInboxMessages(
+          userId: _authenticationRepository.currentUser.id,
+          offset: event.offset,
+          limit: 20,
+          filterUnread: event.filter == MessageFilter.unread);
+
+      if (event.filter == MessageFilter.read) {
+        _filterRead(inboxMessages);
+      }
 
       emit(state.copyWith(
           status: InboxMessageStatus.populated,
           currentFilter: event.filter,
-          inboxMessages: _filter(inboxMessages, event.filter)));
+          maxReached: inboxMessages.isEmpty,
+          paginationLoading: false,
+          inboxMessages: [...state.inboxMessages, ...inboxMessages]));
+    } catch (e) {
+      emit(const InboxMessageState(status: InboxMessageStatus.failure));
+    }
+  }
+
+  FutureOr<void> _onRefreshRequested(
+      RefreshRequested event, Emitter<InboxMessageState> emit) async {
+    emit(state.copyWith(
+        status: InboxMessageStatus.loading,
+        inboxMessages: [],
+        currentFilter: state.currentFilter));
+    try {
+      List<Message> inboxMessages = await _messageRepository.getInboxMessages(
+          userId: _authenticationRepository.currentUser.id,
+          offset: 0,
+          limit: 20,
+          filterUnread: state.currentFilter == MessageFilter.unread);
+      if (state.currentFilter == MessageFilter.read) {
+        _filterRead(inboxMessages);
+      }
+      emit(state.copyWith(
+          status: InboxMessageStatus.populated,
+          currentFilter: state.currentFilter,
+          maxReached: inboxMessages.isEmpty,
+          inboxMessages: inboxMessages));
     } catch (e) {
       emit(const InboxMessageState(status: InboxMessageStatus.failure));
     }
@@ -41,17 +83,10 @@ class InboxMessageBloc extends Bloc<InboxMessageEvent, InboxMessageState> {
 
   FutureOr<void> _onReadMessageRequested(
       ReadMessageRequested event, Emitter<InboxMessageState> emit) async {
-    await _messageRepository.readMessage(event.message.id);
+    await _messageRepository.readMessage(messageId: event.message.id);
   }
 
-  List<Message> _filter(List<Message> messages, MessageFilter filter) {
-    switch (filter) {
-      case MessageFilter.read:
-        return messages.where((message) => message.isRead).toList();
-      case MessageFilter.unread:
-        return messages.where((message) => !message.isRead).toList();
-      default:
-        return messages;
-    }
+  void _filterRead(List<Message> messages) {
+    messages = messages.where((message) => message.isRead).toList();
   }
 }

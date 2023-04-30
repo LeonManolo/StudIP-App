@@ -9,11 +9,20 @@ abstract class InboxMessageEvent extends Equatable {
 
 class InboxMessagesRequested extends InboxMessageEvent {
   final MessageFilter filter;
+  final int offset;
 
-  const InboxMessagesRequested({required this.filter});
+  const InboxMessagesRequested({required this.filter, required this.offset});
 
   @override
-  List<Object?> get props => [filter];
+  List<Object?> get props => [filter, offset];
+}
+class RefreshRequested extends InboxMessageEvent {
+
+
+  const RefreshRequested();
+
+  @override
+  List<Object?> get props => [];
 }
 
 class ReadMessageRequested extends InboxMessageEvent {

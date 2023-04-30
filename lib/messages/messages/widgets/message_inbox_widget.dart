@@ -1,24 +1,26 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:messages_repository/messages_repository.dart';
 import 'package:studipadawan/messages/messages/message_inbox_bloc%20/message_inbox_state.dart';
 import '../../message_details/view/message_detail_page.dart';
-import '../message_inbox_bloc /message_inbox_bloc.dart';
-import '../message_inbox_bloc /message_inbox_event.dart';
+
 import 'message_filter_row.dart';
 
 class InboxMessageWidget extends StatelessWidget {
   final InboxMessageState state;
   final FilterRow filterRow;
-  final Function(BuildContext, Message) readMessage;
+  final Function() refresh;
+  final Function(Message) readMessage;
+  final ScrollController scrollController;
 
-  const InboxMessageWidget({
-    Key? key,
-    required this.state,
-    required this.filterRow,
-    required this.readMessage,
-  }) : super(key: key);
+  const InboxMessageWidget(
+      {Key? key,
+      required this.state,
+      required this.filterRow,
+      required this.readMessage,
+      required this.refresh,
+      required this.scrollController})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -32,62 +34,69 @@ class InboxMessageWidget extends StatelessWidget {
       }
     }
 
+    if (state.status == InboxMessageStatus.loading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+    if (state.status == InboxMessageStatus.failure) {
+      return _buildRefreshableMessage(
+          "Ein unbekannter Fehler ist aufgetreten, bitte versuche es erneut");
+    }
+    if (state.inboxMessages.isEmpty) {
+      _buildRefreshableMessage("Es sind keine Nachrichten vorhanden");
+    }
     return Column(
       children: [
         filterRow,
         Expanded(
-            child: state.status != InboxMessageStatus.populated
-                ? const Center(child: CircularProgressIndicator())
-                : RefreshIndicator(
-                    onRefresh: () async => {
-                      BlocProvider.of<InboxMessageBloc>(context)
-                          .add(InboxMessagesRequested(filter: state.currentFilter))
-                    },
-                    child: state.inboxMessages.isEmpty
-                        ? const CustomScrollView(slivers: [
-                            SliverFillRemaining(
-                              child: Center(
-                                  child: Text(
-                                      "Es sind keine Nachrichten vorhanden")),
-                            )
-                          ])
-                        : ListView.separated(
-                            itemCount: state.inboxMessages.length,
-                            separatorBuilder: (context, index) =>
-                                const Divider(),
-                            itemBuilder: (context, index) {
-                              if (state.status !=
-                                  InboxMessageStatus.populated) {
-                                return const Center(
-                                    child: CircularProgressIndicator());
-                              } else {
-                                var message = state.inboxMessages[index];
-                                return ListTile(
-                                    onTap: () => {
-                                          readMessage(context, message),
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    MessageDetailpage(
-                                                        message: message)),
-                                          )
-                                        },
-                                    leading: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: <Widget>[
-                                        messageIcon(context, message.isRead)
-                                      ],
-                                    ),
-                                    trailing: Text(message.getTimeAgo()),
-                                    title: Text(message.subject),
-                                    subtitle: Text(message.sender.username));
-                              }
-                            },
-                          ),
-                  )),
+            child: RefreshIndicator(
+          onRefresh: () async => {refresh()},
+          child: ListView.separated(
+            itemCount: state.inboxMessages.length,
+            separatorBuilder: (context, index) => const Divider(),
+            itemBuilder: (context, index) {
+              var message = state.inboxMessages[index];
+              return ListTile(
+                  onTap: () => {
+                        readMessage(message),
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  MessageDetailpage(message: message)),
+                        )
+                      },
+                  leading: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[messageIcon(context, message.isRead)],
+                  ),
+                  trailing: Text(message.getTimeAgo()),
+                  title: Text(message.subject),
+                  subtitle: Text(message.sender.username));
+            },
+            controller: scrollController,
+          ),
+        )),
+        Visibility(
+          visible: state.status == InboxMessageStatus.paginationLoading,
+          child: const SizedBox(
+            height: 48,
+            child: Center(
+              child: CircularProgressIndicator(),
+            ),
+          ),
+        ),
       ],
     );
+  }
+
+  _buildRefreshableMessage(String message) {
+    return Expanded(
+        child: RefreshIndicator(
+            onRefresh: () async => {refresh()},
+            child: CustomScrollView(slivers: [
+              SliverFillRemaining(
+                child: Center(child: Text(message)),
+              )
+            ])));
   }
 }
