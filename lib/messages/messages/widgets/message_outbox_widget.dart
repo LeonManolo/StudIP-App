@@ -58,7 +58,7 @@ class OutboxMessageWidget extends StatelessWidget {
           child: ListView.separated(
             itemCount: state.outboxMessages.length + 1,
             separatorBuilder: (context, index) => const Divider(
-              height: 0
+              height: 0.5
               ),
             itemBuilder: (context, index) {
               if (index == state.outboxMessages.length) {

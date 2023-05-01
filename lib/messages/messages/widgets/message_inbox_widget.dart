@@ -68,7 +68,7 @@ class InboxMessageWidget extends StatelessWidget {
           child: ListView.separated(
             itemCount: state.inboxMessages.length + 1,
             separatorBuilder: (context, index) => const Divider(
-              height: 0,
+              height: 0.5,
             ),
             itemBuilder: (context, index) {
               if (index == state.inboxMessages.length) {
