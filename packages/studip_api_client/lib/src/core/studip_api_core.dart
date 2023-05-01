@@ -7,7 +7,6 @@ import 'package:logger/logger.dart';
 import 'package:oauth2_client/access_token_response.dart';
 import 'package:oauth2_client/oauth2_helper.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'studip_oauth_client.dart';
 import 'package:http/http.dart' as http;
 import 'dart:io';
@@ -78,11 +77,6 @@ class StudIpAPICore {
     required List<String> parentFolderIds,
     required DateTime lastModified,
   }) async {
-    var storagePermission = await Permission.storage.request();
-    if (!storagePermission.isGranted) {
-      return null;
-    }
-
     final localStoragePath = await localFilePath(
       fileId: fileId,
       fileName: fileName,
