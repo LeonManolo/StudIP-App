@@ -1,73 +1,63 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:messages_repository/messages_repository.dart';
-import 'package:studipadawan/messages/messages/message_inbox_bloc%20/message_inbox_state.dart';
-import 'package:studipadawan/messages/messages/widgets/message_pagination_loading.dart';
+import 'package:studipadawan/messages/messages/message_outbox_bloc/message_outbox_state.dart';
 import '../../message_details/view/message_detail_page.dart';
-
-import 'message_filter_row.dart';
+import 'message_pagination_loading.dart';
 import 'message_refreshable.dart';
 
-class InboxMessageWidget extends StatelessWidget {
-  final InboxMessageState state;
-  final FilterRow filterRow;
+class OutboxMessageWidget extends StatelessWidget {
+  final OutboxMessageState state;
   final Function() refresh;
-  final Function(Message) readMessage;
   final ScrollController scrollController;
 
-  const InboxMessageWidget(
+  const OutboxMessageWidget(
       {Key? key,
       required this.state,
-      required this.filterRow,
-      required this.readMessage,
       required this.refresh,
       required this.scrollController})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    Icon messageIcon(BuildContext context, bool isRead) {
-      if (isRead) {
-        return Icon(EvaIcons.messageSquareOutline,
-            color: Theme.of(context).primaryColor, size: 24.0);
-      } else {
-        return Icon(EvaIcons.messageSquare,
-            color: Theme.of(context).primaryColor, size: 24.0);
-      }
+    Icon messageIcon(Color iconColor) {
+      return Icon(EvaIcons.messageSquareOutline, color: iconColor, size: 24.0);
     }
 
-    if (state.status == InboxMessageStatus.inboxMessagesLoading) {
+    String parseRecipients(final Message message) {
+      return message.recipients.map((user) => user.username).join(", ");
+    }
+
+    if (state.status == OutboxMessageStatus.outboxMessagesLoading) {
       return const Center(child: CircularProgressIndicator());
     }
-    if (state.status == InboxMessageStatus.failure) {
+    if (state.status == OutboxMessageStatus.failure) {
       return RefreshableMessage(
           text:
               "Ein unbekannter Fehler ist aufgetreten, bitte versuche es erneut",
           callback: refresh);
     }
-    if (state.inboxMessages.isEmpty) {
+    if (state.outboxMessages.isEmpty) {
       RefreshableMessage(
           text: "Es sind keine Nachrichten vorhanden", callback: refresh);
     }
     return Column(
       children: [
-        filterRow,
         Expanded(
             child: RefreshIndicator(
           onRefresh: () async => {refresh()},
           child: ListView.separated(
-            itemCount: state.inboxMessages.length + 1,
+            itemCount: state.outboxMessages.length + 1,
             separatorBuilder: (context, index) => const Divider(),
             itemBuilder: (context, index) {
-              if (index == state.inboxMessages.length) {
+              if (index == state.outboxMessages.length) {
                 return PaginationLoading(
                     visible:
-                        state.status == InboxMessageStatus.paginationLoading);
+                        state.status == OutboxMessageStatus.paginationLoading);
               } else {
-                var message = state.inboxMessages[index];
+                var message = state.outboxMessages[index];
                 return ListTile(
                     onTap: () => {
-                          readMessage(message),
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -77,11 +67,13 @@ class InboxMessageWidget extends StatelessWidget {
                         },
                     leading: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[messageIcon(context, message.isRead)],
+                      children: <Widget>[
+                        messageIcon(Theme.of(context).primaryColor)
+                      ],
                     ),
                     trailing: Text(message.getTimeAgo()),
                     title: Text(message.subject),
-                    subtitle: Text(message.sender.username));
+                    subtitle: Text(parseRecipients(message)));
               }
             },
             controller: scrollController,

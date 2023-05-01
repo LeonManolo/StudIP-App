@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import '../message_inbox_bloc /message_inbox_state.dart';
 import 'message_filter_item.dart';
 
-class MessageFilterIcon extends StatelessWidget {
+class FilterRow extends StatelessWidget {
   final Function(MessageFilter) setFilter;
   final MessageFilter currentFilter;
 
-  const MessageFilterIcon({
+  const FilterRow({
     Key? key,
     required this.setFilter,
     required this.currentFilter,
@@ -23,7 +23,10 @@ class MessageFilterIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return PopupMenuButton<MessageFilter>(
+    return Row(
+      children: [
+        const Spacer(),
+        PopupMenuButton<MessageFilter>(
           icon: funnelIcon(currentFilter, Theme.of(context).primaryColor),
           onSelected: (newFilter) => {setFilter(newFilter)},
           itemBuilder: (context) => [
@@ -48,6 +51,8 @@ class MessageFilterIcon extends StatelessWidget {
               ),
             )
           ],
-        );
+        ),
+      ],
+    );
   }
 }
