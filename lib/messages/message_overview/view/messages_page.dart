@@ -88,6 +88,8 @@ class _MessagesPageState extends State<MessagesPage>
                       return InboxMessageWidget(
                         state: state,
                         readMessage: _readMessage,
+                        markMessage: _markMessage,
+                        unmarkMessage: _unmarkMessage,
                         refresh: _refreshInboxMessages,
                         scrollController: _inboxScrollController,
                         filterRow: FilterRow(
@@ -174,6 +176,18 @@ class _MessagesPageState extends State<MessagesPage>
         maxScroll - currentScroll <= threshold) {
       bloc.add(event);
     }
+  }
+
+  void _markMessage(List<int> markedMessages, int index) {
+    setState(() {
+      markedMessages.add(index);
+    });
+  }
+
+  void _unmarkMessage(List<int> markedMessages, int index) {
+    setState(() {
+      markedMessages.removeWhere((idx) => idx == index);
+    });
   }
 
   void _readMessage(Message message) {
