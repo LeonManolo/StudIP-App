@@ -14,10 +14,12 @@ class MessageRepository {
       required int offset,
       required int limit,
       required bool filterUnread}) async {
-        print(offset);
     try {
       final response = await _apiClient.getInboxMessages(
-          userId: userId, offset: offset, limit: limit, filterUnread: filterUnread);
+          userId: userId,
+          offset: offset,
+          limit: limit,
+          filterUnread: filterUnread);
       final messages = response.messageResponses
           .map((response) => Message.fromMessageResponse(response))
           .toList();
@@ -33,10 +35,14 @@ class MessageRepository {
     }
   }
 
-  Future<List<Message>> getOutboxMessages(
-      {required String userId, required int offset}) async {
+  Future<List<Message>> getOutboxMessages({
+    required String userId,
+    required int offset,
+    required int limit,
+  }) async {
     try {
-      final response = await _apiClient.getOutboxMessages(userId: userId);
+      final response = await _apiClient.getOutboxMessages(
+          userId: userId, offset: offset, limit: limit);
       final messages = response.messageResponses
           .map((response) => Message.fromMessageResponse(response))
           .toList();
@@ -52,7 +58,8 @@ class MessageRepository {
     }
   }
 
-  Future<Message> sendMessage({required OutgoingMessage outgoingMessage}) async {
+  Future<Message> sendMessage(
+      {required OutgoingMessage outgoingMessage}) async {
     var parsedRecipients = outgoingMessage.recipients
         .map((id) => {"type": "users", "id": id})
         .toList();

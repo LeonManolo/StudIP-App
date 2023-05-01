@@ -3,7 +3,8 @@ import 'package:messages_repository/messages_repository.dart';
 
 enum OutboxMessageStatus {
   initial,
-  loading,
+  outboxMessagesLoading,
+  paginationLoading,
   populated,
   failure,
 }
@@ -11,11 +12,16 @@ enum OutboxMessageStatus {
 class OutboxMessageState extends Equatable {
   final OutboxMessageStatus status;
   final List<Message> outboxMessages;
+  final int currentOffset;
+  final bool maxReached;
+  final bool paginationLoading;
 
   const OutboxMessageState(
       {required this.status,
       this.outboxMessages = const [],
-      });
+      this.currentOffset = 0,
+      this.maxReached = false,
+      this.paginationLoading = false});
 
   const OutboxMessageState.initial()
       : this(
@@ -25,12 +31,17 @@ class OutboxMessageState extends Equatable {
   @override
   List<Object?> get props => [status, outboxMessages];
 
-  OutboxMessageState copyWith({
-    OutboxMessageStatus? status,
-    List<Message>? outboxMessages,
-  }) {
+  OutboxMessageState copyWith(
+      {OutboxMessageStatus? status,
+      List<Message>? outboxMessages,
+      int? currentOffset,
+      bool? maxReached,
+      bool? paginationLoading}) {
     return OutboxMessageState(
         status: status ?? this.status,
-        outboxMessages: outboxMessages ?? this.outboxMessages);
+        outboxMessages: outboxMessages ?? this.outboxMessages,
+        currentOffset: currentOffset ?? this.currentOffset,
+        maxReached: maxReached ?? this.maxReached,
+        paginationLoading: paginationLoading ?? this.paginationLoading);
   }
 }

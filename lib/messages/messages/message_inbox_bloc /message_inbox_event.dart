@@ -16,10 +16,9 @@ class InboxMessagesRequested extends InboxMessageEvent {
   @override
   List<Object?> get props => [filter, offset];
 }
-class RefreshRequested extends InboxMessageEvent {
 
-
-  const RefreshRequested();
+class RefreshInboxRequested extends InboxMessageEvent {
+  const RefreshInboxRequested();
 
   @override
   List<Object?> get props => [];

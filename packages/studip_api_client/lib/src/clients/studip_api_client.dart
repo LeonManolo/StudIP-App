@@ -77,9 +77,16 @@ class StudIpApiClient
 
   // **** Messages ****
   @override
-  Future<MessageListResponse> getOutboxMessages(
-      {required String userId}) async {
-    final response = await _core.get(endpoint: "users/$userId/outbox");
+  Future<MessageListResponse> getOutboxMessages({
+    required String userId,
+    required int offset,
+    required int limit,
+  }) async {
+    Map<String, String> queryParameters = {};
+    queryParameters["page[offset]"] = offset.toString();
+    queryParameters["page[limit]"] = limit.toString();
+    final response = await _core.get(
+        endpoint: "users/$userId/outbox", queryParameters: queryParameters);
 
     final body = response.json();
 
@@ -100,7 +107,7 @@ class StudIpApiClient
       required bool filterUnread}) async {
     Map<String, String> queryParameters = {};
     if (filterUnread) {
-      queryParameters["filter[unread]"] = "dieseApiNervt";
+      queryParameters["filter[unread]"] = "true";
     }
     queryParameters["page[offset]"] = offset.toString();
     queryParameters["page[limit]"] = limit.toString();

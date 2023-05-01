@@ -1,5 +1,4 @@
 import 'package:authentication_repository/authentication_repository.dart';
-import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:messages_repository/messages_repository.dart';
@@ -28,7 +27,6 @@ class MessagesPage extends StatefulWidget {
 class _MessagesPageState extends State<MessagesPage>
     with TickerProviderStateMixin {
   late TabController _controller;
-
   late InboxMessageBloc _inboxMessageBloc;
   late OutboxMessageBloc _outboxMessageBloc;
 
@@ -42,15 +40,12 @@ class _MessagesPageState extends State<MessagesPage>
   ];
 
   final _inboxScrollController = ScrollController();
-  final _outboxPagingController = PagingController<int, ListTile>(
-    firstPageKey: 1,
-  );
+  final _outboxScrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
     _controller = TabController(length: _messageTabs.length, vsync: this);
-
     _inboxMessageBloc = InboxMessageBloc(
       messageRepository: context.read<MessageRepository>(),
       authenticationRepository: context.read<AuthenticationRepository>(),
@@ -58,15 +53,16 @@ class _MessagesPageState extends State<MessagesPage>
     _outboxMessageBloc = OutboxMessageBloc(
       messageRepository: context.read<MessageRepository>(),
       authenticationRepository: context.read<AuthenticationRepository>(),
-    )..add(const OutboxMessagesRequested());
+    )..add(const OutboxMessagesRequested(offset: 0));
     _inboxScrollController.addListener(() => _onInboxScroll());
+    _outboxScrollController.addListener(() => _onOutboxScroll());
   }
 
   @override
   void dispose() {
     _controller.dispose();
     _inboxScrollController.dispose();
-    _outboxPagingController.dispose();
+    _outboxScrollController.dispose();
     _inboxMessageBloc.close();
     _outboxMessageBloc.close();
     super.dispose();
@@ -107,6 +103,8 @@ class _MessagesPageState extends State<MessagesPage>
                     builder: (context, state) {
                       return OutboxMessageWidget(
                         state: state,
+                        refresh: _refreshOutboxMessages,
+                        scrollController: _outboxScrollController,
                       );
                     },
                   ),
@@ -135,17 +133,46 @@ class _MessagesPageState extends State<MessagesPage>
 
   void _onInboxScroll() {
     final currentState = _inboxMessageBloc.state;
-    final maxScroll = _inboxScrollController.position.maxScrollExtent;
-    final currentScroll = _inboxScrollController.position.pixels;
-    final threshold = currentState.inboxMessages.length;
+    if (!currentState.maxReached) {
+      _onScroll(
+          bloc: _inboxMessageBloc,
+          event: InboxMessagesRequested(
+              filter: currentState.currentFilter,
+              offset: currentState.inboxMessages.length),
+          scrollController: _inboxScrollController,
+          threshold: currentState.inboxMessages.length,
+          paginationLoading: currentState.paginationLoading,
+          populated: currentState.status == InboxMessageStatus.populated);
+    }
+  }
 
-    if (!currentState.maxReached &&
-        currentState.status == InboxMessageStatus.populated 
-        && !currentState.paginationLoading
-        && maxScroll - currentScroll <= threshold) {
-      _inboxMessageBloc.add(InboxMessagesRequested(
-          filter: currentState.currentFilter,
-          offset: currentState.inboxMessages.length));
+  void _onOutboxScroll() {
+    final currentState = _outboxMessageBloc.state;
+    if (!currentState.maxReached) {
+      _onScroll(
+          bloc: _outboxMessageBloc,
+          event: OutboxMessagesRequested(
+              offset: currentState.outboxMessages.length),
+          scrollController: _outboxScrollController,
+          threshold: currentState.outboxMessages.length,
+          paginationLoading: currentState.paginationLoading,
+          populated: currentState.status == OutboxMessageStatus.populated);
+    }
+  }
+
+  void _onScroll(
+      {required Bloc bloc,
+      required dynamic event,
+      required ScrollController scrollController,
+      required int threshold,
+      required bool paginationLoading,
+      required bool populated}) {
+    final maxScroll = scrollController.position.maxScrollExtent;
+    final currentScroll = scrollController.position.pixels;
+    if (!paginationLoading &&
+        populated &&
+        maxScroll - currentScroll <= threshold) {
+      bloc.add(event);
     }
   }
 
@@ -160,11 +187,17 @@ class _MessagesPageState extends State<MessagesPage>
     });
   }
 
-  void _handleFilterSelection(BuildContext context, MessageFilter filter) {
-    _inboxMessageBloc.add(InboxMessagesRequested(filter: filter, offset: 0));
+  void _handleFilterSelection(MessageFilter filter) {
+    if (_inboxMessageBloc.state.currentFilter != filter) {
+      _inboxMessageBloc.add(InboxMessagesRequested(filter: filter, offset: 0));
+    }
   }
 
   void _refreshInboxMessages() {
-    _inboxMessageBloc.add(const RefreshRequested());
+    _inboxMessageBloc.add(const RefreshInboxRequested());
+  }
+
+  void _refreshOutboxMessages() {
+    _outboxMessageBloc.add(const RefreshOutboxRequested());
   }
 }

@@ -4,7 +4,7 @@ import '../message_inbox_bloc /message_inbox_state.dart';
 import 'message_filter_item.dart';
 
 class FilterRow extends StatelessWidget {
-  final Function(BuildContext, MessageFilter) setFilter;
+  final Function(MessageFilter) setFilter;
   final MessageFilter currentFilter;
 
   const FilterRow({
@@ -28,7 +28,7 @@ class FilterRow extends StatelessWidget {
         const Spacer(),
         PopupMenuButton<MessageFilter>(
           icon: funnelIcon(currentFilter, Theme.of(context).primaryColor),
-          onSelected: (newFilter) => {setFilter(context, newFilter)},
+          onSelected: (newFilter) => {setFilter(newFilter)},
           itemBuilder: (context) => [
             PopupMenuItem<MessageFilter>(
               value: MessageFilter.none,
@@ -49,17 +49,7 @@ class FilterRow extends StatelessWidget {
                     funnelIcon(currentFilter, Theme.of(context).primaryColor),
                 filterDescription: MessageFilter.unread.description,
               ),
-            ),
-            PopupMenuItem<MessageFilter>(
-              value: MessageFilter.read,
-              child: FilterItem(
-                isSelected: currentFilter == MessageFilter.read,
-                filter: MessageFilter.read,
-                funnelIcon:
-                    funnelIcon(currentFilter, Theme.of(context).primaryColor),
-                filterDescription: MessageFilter.read.description,
-              ),
-            ),
+            )
           ],
         ),
       ],
