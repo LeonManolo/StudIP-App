@@ -5,6 +5,7 @@ import 'package:bloc/bloc.dart';
 import 'package:messages_repository/messages_repository.dart';
 import 'package:studipadawan/messages/messages/message_outbox_bloc/message_outbox_event.dart';
 import 'package:studipadawan/messages/messages/message_outbox_bloc/message_outbox_state.dart';
+import 'package:studipadawan/messages/messages/widgets/message_pagination_loading.dart';
 
 class OutboxMessageBloc extends Bloc<OutboxMessageEvent, OutboxMessageState> {
   final MessageRepository _messageRepository;
@@ -64,6 +65,7 @@ class OutboxMessageBloc extends Bloc<OutboxMessageEvent, OutboxMessageState> {
 
       emit(state.copyWith(
           status: OutboxMessageStatus.populated,
+          paginationLoading: false,
           outboxMessages: outboxMessages));
     } catch (e) {
       emit(const OutboxMessageState(status: OutboxMessageStatus.failure));
