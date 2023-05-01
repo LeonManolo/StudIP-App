@@ -25,8 +25,8 @@ class MessagesPage extends StatefulWidget {
 }
 
 class _MessagesPageState extends State<MessagesPage>
-    with TickerProviderStateMixin {
-  late TabController _controller;
+    with TickerProviderStateMixin, AutomaticKeepAliveClientMixin {
+  late TabController _tabController;
   late InboxMessageBloc _inboxMessageBloc;
   late OutboxMessageBloc _outboxMessageBloc;
 
@@ -42,10 +42,16 @@ class _MessagesPageState extends State<MessagesPage>
   final _inboxScrollController = ScrollController();
   final _outboxScrollController = ScrollController();
 
+  List<int> _markedInboxMessages = [];
+  List<int> _markedOutboxMessages = [];
+
   @override
   void initState() {
     super.initState();
-    _controller = TabController(length: _messageTabs.length, vsync: this);
+    _tabController = TabController(length: _messageTabs.length, vsync: this)
+      ..addListener(() {
+        _onTabChanged(_tabController.index);
+      });
     _inboxMessageBloc = InboxMessageBloc(
       messageRepository: context.read<MessageRepository>(),
       authenticationRepository: context.read<AuthenticationRepository>(),
@@ -60,7 +66,7 @@ class _MessagesPageState extends State<MessagesPage>
 
   @override
   void dispose() {
-    _controller.dispose();
+    _tabController.dispose();
     _inboxScrollController.dispose();
     _outboxScrollController.dispose();
     _inboxMessageBloc.close();
@@ -69,17 +75,21 @@ class _MessagesPageState extends State<MessagesPage>
   }
 
   @override
+  bool get wantKeepAlive => true;
+
+  @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
         appBar: _buildAppBar(context),
         key: UniqueKey(),
         body: Scaffold(
             appBar: PreferredSize(
                 preferredSize: const Size.fromHeight(kToolbarHeight),
-                child: MessageTabBar(controller: _controller)),
+                child: MessageTabBar(controller: _tabController)),
             key: UniqueKey(),
             body: TabBarView(
-              controller: _controller,
+              controller: _tabController,
               children: [
                 BlocProvider.value(
                   value: _inboxMessageBloc,
@@ -90,6 +100,7 @@ class _MessagesPageState extends State<MessagesPage>
                         readMessage: _readMessage,
                         markMessage: _markMessage,
                         unmarkMessage: _unmarkMessage,
+                        markedMessages: _markedInboxMessages,
                         refresh: _refreshInboxMessages,
                         scrollController: _inboxScrollController,
                         filterRow: FilterRow(
@@ -105,6 +116,9 @@ class _MessagesPageState extends State<MessagesPage>
                     builder: (context, state) {
                       return OutboxMessageWidget(
                         state: state,
+                        markMessage: _markMessage,
+                        unmarkMessage: _unmarkMessage,
+                        markedMessages: _markedOutboxMessages,
                         refresh: _refreshOutboxMessages,
                         scrollController: _outboxScrollController,
                       );
@@ -148,6 +162,14 @@ class _MessagesPageState extends State<MessagesPage>
     }
   }
 
+  void _onTabChanged(int index) {
+    _tabController.animateTo(index);
+    setState(() {
+      _markedInboxMessages = [];
+      _markedOutboxMessages = [];
+    });
+  }
+
   void _onOutboxScroll() {
     final currentState = _outboxMessageBloc.state;
     if (!currentState.maxReached) {
@@ -178,15 +200,27 @@ class _MessagesPageState extends State<MessagesPage>
     }
   }
 
-  void _markMessage(List<int> markedMessages, int index) {
+  void _markMessage(bool isInbox, int index) {
+    var offsetBefore = _inboxScrollController.offset;
     setState(() {
-      markedMessages.add(index);
+      if (isInbox) {
+        _markedInboxMessages.add(index);
+        _inboxScrollController.jumpTo(offsetBefore);
+        print(offsetBefore);
+      } else {
+        _markedOutboxMessages.add(index);
+      }
+      _inboxScrollController.jumpTo(offsetBefore);
     });
   }
 
-  void _unmarkMessage(List<int> markedMessages, int index) {
+  void _unmarkMessage(bool isInbox, int index) {
     setState(() {
-      markedMessages.removeWhere((idx) => idx == index);
+      if (isInbox) {
+        _markedInboxMessages.removeWhere((idx) => idx == index);
+      } else {
+        _markedOutboxMessages.removeWhere((idx) => idx == index);
+      }
     });
   }
 

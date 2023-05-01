@@ -8,14 +8,17 @@ import '../../message_details/view/message_detail_page.dart';
 import 'message_filter_row.dart';
 import 'message_refreshable.dart';
 
+final _inboxWidgetKey = GlobalKey<ScaffoldState>();
+
 class InboxMessageWidget extends StatelessWidget {
   final InboxMessageState state;
   final FilterRow filterRow;
   final Function() refresh;
-  final Function(List<int>, int) markMessage;
-  final Function(List<int>, int) unmarkMessage;
+  final Function(bool, int) markMessage;
+  final Function(bool, int) unmarkMessage;
   final Function(Message) readMessage;
   final ScrollController scrollController;
+  final List<int> markedMessages;
 
   const InboxMessageWidget(
       {Key? key,
@@ -25,13 +28,12 @@ class InboxMessageWidget extends StatelessWidget {
       required this.refresh,
       required this.markMessage,
       required this.unmarkMessage,
+      required this.markedMessages,
       required this.scrollController})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    List<int> markedMessages = [];
-
     Icon messageIcon(BuildContext context, bool isRead) {
       if (isRead) {
         return Icon(EvaIcons.messageSquareOutline,
@@ -55,7 +57,9 @@ class InboxMessageWidget extends StatelessWidget {
       RefreshableMessage(
           text: "Es sind keine Nachrichten vorhanden", callback: refresh);
     }
+
     return Column(
+      key: _inboxWidgetKey,
       children: [
         filterRow,
         Expanded(
@@ -63,7 +67,9 @@ class InboxMessageWidget extends StatelessWidget {
           onRefresh: () async => {refresh()},
           child: ListView.separated(
             itemCount: state.inboxMessages.length + 1,
-            separatorBuilder: (context, index) => const Divider(),
+            separatorBuilder: (context, index) => const Divider(
+              height: 0,
+            ),
             itemBuilder: (context, index) {
               if (index == state.inboxMessages.length) {
                 return PaginationLoading(
@@ -72,36 +78,43 @@ class InboxMessageWidget extends StatelessWidget {
               } else {
                 var message = state.inboxMessages[index];
 
-                return 
-                Container(
-                  color: (markedMessages.contains(index)) ?  Theme.of(context).primaryColor.withOpacity(0.5) : Colors.transparent,
-                  child: ListTile(
-                    onTap: () => {
-                          if (markedMessages.contains(index))
-                            markMessage(markedMessages, index)
-                          else
-                            {
-                              readMessage(message),
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        MessageDetailpage(message: message)),
-                              )
-                            }
-                        },
-                    onLongPress: () => {
-                          if (!markedMessages.contains(index))
-                            markMessage(markedMessages, index)
-                        },
-                    leading: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[messageIcon(context, message.isRead)],
-                    ),
-                    trailing: Text(message.getTimeAgo()),
-                    title: Text(message.subject),
-                    subtitle: Text(message.sender.username))
-                );
+                return Container(
+                    color: (markedMessages.contains(index))
+                        ? Theme.of(context).primaryColor.withOpacity(0.5)
+                        : Colors.transparent,
+                    child: ListTile(
+                        onTap: () => {
+                              if (markedMessages.isNotEmpty)
+                                {
+                                  if (markedMessages.contains(index))
+                                    unmarkMessage(true, index)
+                                  else
+                                    markMessage(true, index)
+                                }
+                              else
+                                {
+                                  readMessage(message),
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => MessageDetailpage(
+                                            message: message)),
+                                  )
+                                }
+                            },
+                        onLongPress: () => {
+                              if (!markedMessages.contains(index))
+                                markMessage(true, index)
+                            },
+                        leading: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            messageIcon(context, message.isRead)
+                          ],
+                        ),
+                        trailing: Text(message.getTimeAgo()),
+                        title: Text(message.subject),
+                        subtitle: Text(message.sender.username)));
               }
             },
             controller: scrollController,

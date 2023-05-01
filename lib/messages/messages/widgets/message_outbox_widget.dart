@@ -6,15 +6,23 @@ import '../../message_details/view/message_detail_page.dart';
 import 'message_pagination_loading.dart';
 import 'message_refreshable.dart';
 
+final _outboxWidgetKey = GlobalKey<ScaffoldState>();
+
 class OutboxMessageWidget extends StatelessWidget {
   final OutboxMessageState state;
+  final Function(bool, int) markMessage;
+  final Function(bool, int) unmarkMessage;
   final Function() refresh;
   final ScrollController scrollController;
+  final List<int> markedMessages;
 
   const OutboxMessageWidget(
       {Key? key,
       required this.state,
       required this.refresh,
+      required this.markMessage,
+      required this.unmarkMessage,
+      required this.markedMessages,
       required this.scrollController})
       : super(key: key);
 
@@ -42,13 +50,16 @@ class OutboxMessageWidget extends StatelessWidget {
           text: "Es sind keine Nachrichten vorhanden", callback: refresh);
     }
     return Column(
+      key: _outboxWidgetKey,
       children: [
         Expanded(
             child: RefreshIndicator(
           onRefresh: () async => {refresh()},
           child: ListView.separated(
             itemCount: state.outboxMessages.length + 1,
-            separatorBuilder: (context, index) => const Divider(),
+            separatorBuilder: (context, index) => const Divider(
+              height: 0
+              ),
             itemBuilder: (context, index) {
               if (index == state.outboxMessages.length) {
                 return PaginationLoading(
@@ -58,12 +69,26 @@ class OutboxMessageWidget extends StatelessWidget {
                 var message = state.outboxMessages[index];
                 return ListTile(
                     onTap: () => {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    MessageDetailpage(message: message)),
-                          )
+                          if (markedMessages.isNotEmpty)
+                            {
+                              if (markedMessages.contains(index))
+                                unmarkMessage(false, index)
+                              else
+                                markMessage(false, index)
+                            }
+                          else
+                            {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        MessageDetailpage(message: message)),
+                              )
+                            }
+                        },
+                    onLongPress: () => {
+                          if (!markedMessages.contains(index))
+                            markMessage(false, index)
                         },
                     leading: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
