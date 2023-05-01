@@ -16,59 +16,21 @@ class CourseFilesFileRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return PopupMenuButton(
-      position: PopupMenuPosition.under,
-      onSelected: (selectedOption) {
-        switch (selectedOption) {
-          case FilePopupMenuOption.info:
-            showDialog(
-                context: context,
-                builder: (context) =>
-                    CourseFilesFileInfoAlert(file: fileInfo.file));
-            break;
-
-          case FilePopupMenuOption.download:
-            context
-                .read<CourseFilesBloc>()
-                .add(DidSelectDownloadFileEvent(selectedFileInfo: fileInfo));
-            break;
-          case FilePopupMenuOption.display:
-            context
-                .read<CourseFilesBloc>()
-                .add(DidSelectOpenFileEvent(selectedFileInfo: fileInfo));
-            break;
-        }
+    return ListTile(
+      title: Text(fileInfo.file.name),
+      leading: const Icon(EvaIcons.fileOutline),
+      trailing: CourseFilesFileRowTrailling(fileInfo: fileInfo),
+      onTap: () {
+        context
+            .read<CourseFilesBloc>()
+            .add(DidSelectFileEvent(selectedFileInfo: fileInfo));
       },
-      child: ListTile(
-        title: Text(fileInfo.file.name),
-        leading: const Icon(EvaIcons.fileOutline),
-        trailing: CourseFilesFileRowTrailling(fileInfo: fileInfo),
-      ),
-      itemBuilder: (context) => _popupItems(fileInfo: fileInfo),
+      onLongPress: () {
+        showDialog(
+            context: context,
+            builder: (context) =>
+                CourseFilesFileInfoAlert(file: fileInfo.file));
+      },
     );
-  }
-
-  List<PopupMenuEntry<FilePopupMenuOption>> _popupItems(
-      {required FileInfo fileInfo}) {
-    if (fileInfo.fileType == FileType.remote) {
-      return [
-        const PopupMenuItem(
-            value: FilePopupMenuOption.info, child: Text("Info")),
-        const PopupMenuItem(
-            value: FilePopupMenuOption.download, child: Text("Herunterladen"))
-      ];
-    } else if (fileInfo.fileType == FileType.downloaded) {
-      return [
-        const PopupMenuItem(
-            value: FilePopupMenuOption.info, child: Text("Info")),
-        const PopupMenuItem(
-            value: FilePopupMenuOption.display, child: Text("Anzeigen"))
-      ];
-    } else {
-      return [
-        const PopupMenuItem(
-            value: FilePopupMenuOption.info, child: Text("Info"))
-      ];
-    }
   }
 }

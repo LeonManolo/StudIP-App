@@ -20,19 +20,10 @@ class DidSelectFolderEvent extends CourseFilesEvent {
   List<Object> get props => [selectedFolder, parentFolders];
 }
 
-class DidSelectDownloadFileEvent extends CourseFilesEvent {
+class DidSelectFileEvent extends CourseFilesEvent {
   final FileInfo selectedFileInfo;
 
-  const DidSelectDownloadFileEvent({required this.selectedFileInfo});
-
-  @override
-  List<Object?> get props => [selectedFileInfo];
-}
-
-class DidSelectOpenFileEvent extends CourseFilesEvent {
-  final FileInfo selectedFileInfo;
-
-  const DidSelectOpenFileEvent({required this.selectedFileInfo});
+  const DidSelectFileEvent({required this.selectedFileInfo});
 
   @override
   List<Object?> get props => [selectedFileInfo];

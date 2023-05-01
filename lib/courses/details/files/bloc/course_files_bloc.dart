@@ -22,8 +22,7 @@ class CourseFilesBloc extends Bloc<CourseFilesEvent, CourseFilesState> {
         super(CourseFilesState.inital()) {
     on<LoadRootFolderEvent>(_onLoadRootFolderEvent);
     on<DidSelectFolderEvent>(_onDidSelectFolderEvent);
-    on<DidSelectDownloadFileEvent>(_onDidSelectDownloadFileEvent);
-    on<DidSelectOpenFileEvent>(_onDidSelectOpenFileEvent);
+    on<DidSelectFileEvent>(_onDidSelectFileEvent);
   }
 
   FutureOr<void> _onLoadRootFolderEvent(
@@ -81,24 +80,44 @@ class CourseFilesBloc extends Bloc<CourseFilesEvent, CourseFilesState> {
     }
   }
 
-  FutureOr<void> _onDidSelectDownloadFileEvent(
-      DidSelectDownloadFileEvent event, Emitter<CourseFilesState> emit) async {
-    final selectedFile = event.selectedFileInfo.file;
+  void _onDidSelectFileEvent(
+      DidSelectFileEvent event, Emitter<CourseFilesState> emit) async {
+    final selectedFileInfo = event.selectedFileInfo;
 
-    int selectedFileInfoIndex =
-        state.items.indexOf(right(event.selectedFileInfo));
+    if (selectedFileInfo.fileType == FileType.remote) {
+      String? localStoragePath = await _downloadFile(selectedFileInfo, emit);
+
+      if (localStoragePath != null) {
+        OpenFilex.open(localStoragePath, type: selectedFileInfo.file.mimeType);
+      }
+    } else if (selectedFileInfo.fileType == FileType.downloaded) {
+      final localStoragePath = await _filesRepository.localFilePath(
+        file: selectedFileInfo.file,
+        parentFolderIds: state.parentFolderIds,
+      );
+
+      OpenFilex.open(localStoragePath, type: selectedFileInfo.file.mimeType);
+    }
+  }
+
+  /// If download was successful, returns the local storage path of the downloaded file
+  Future<String?> _downloadFile(
+      FileInfo fileInfo, Emitter<CourseFilesState> emit) async {
+    File fileToDownload = fileInfo.file;
+
+    int selectedFileInfoIndex = state.items.indexOf(right(fileInfo));
 
     if (selectedFileInfoIndex >= 0 &&
         state.items[selectedFileInfoIndex].isRight()) {
       var updatedItems = List.of(state.items);
-      updatedItems[selectedFileInfoIndex] =
-          right(FileInfo(fileType: FileType.isDownloading, file: selectedFile));
+      updatedItems[selectedFileInfoIndex] = right(
+          FileInfo(fileType: FileType.isDownloading, file: fileToDownload));
 
       emit(state.copyWith(items: updatedItems));
     }
 
     final localStoragePath = await _filesRepository.downloadFile(
-        file: selectedFile, parentFolderIds: state.parentFolderIds);
+        file: fileToDownload, parentFolderIds: state.parentFolderIds);
 
     if (selectedFileInfoIndex >= 0 &&
         state.items[selectedFileInfoIndex].isRight()) {
@@ -106,20 +125,12 @@ class CourseFilesBloc extends Bloc<CourseFilesEvent, CourseFilesState> {
       updatedItems[selectedFileInfoIndex] = right(FileInfo(
           fileType:
               localStoragePath != null ? FileType.downloaded : FileType.remote,
-          file: selectedFile));
+          file: fileToDownload));
 
       emit(state.copyWith(items: updatedItems));
     }
-  }
 
-  FutureOr<void> _onDidSelectOpenFileEvent(
-      DidSelectOpenFileEvent event, Emitter<CourseFilesState> emit) async {
-    final selectedFile = event.selectedFileInfo.file;
-
-    final localStoragePath = await _filesRepository.localFilePath(
-        file: selectedFile, parentFolderIds: state.parentFolderIds);
-
-    OpenFilex.open(localStoragePath, type: selectedFile.mimeType);
+    return localStoragePath;
   }
 
   Future<List<Either<Folder, FileInfo>>> _loadItems(
