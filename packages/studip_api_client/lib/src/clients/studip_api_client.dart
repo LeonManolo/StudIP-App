@@ -1,6 +1,8 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
+import 'package:studip_api_client/src/clients/studip_files_client.dart';
 import 'package:studip_api_client/src/core/studip_api_core.dart';
 import 'package:studip_api_client/studip_api_client.dart';
 import 'package:logger/logger.dart';
@@ -12,7 +14,8 @@ class StudIpApiClient
         StudIPMessagesClient,
         StudIPCoursesClient,
         StudIPCalendarClient,
-        StudIPUserClient {
+        StudIPUserClient,
+        StudIPFilesClient {
   StudIpApiClient._({
     StudIpAPICore? core,
   }) : _core = core ?? StudIpAPICore();
@@ -223,6 +226,119 @@ class StudIpApiClient
       );
     }
     return CourseEventListResponse.fromJson(body);
+  }
+
+  // **** Files ****
+
+  @override
+  Future<FolderResponse> getCourseRootFolder({required String courseId}) async {
+    final response = await _core
+        .get(endpoint: "courses/$courseId/folders", queryParameters: {
+      "page[limit]": "1",
+    });
+
+    final body = response.json();
+
+    if (response.statusCode != HttpStatus.ok) {
+      throw StudIpApiRequestFailure(
+        body: body,
+        statusCode: response.statusCode,
+      );
+    }
+    return FolderListResponse.fromJson(body).folders.first;
+  }
+
+  @override
+  Future<FileListResponse> getFiles(
+      {required String folderId,
+      required int offset,
+      required int limit}) async {
+    final response = await _core
+        .get(endpoint: "folders/$folderId/file-refs", queryParameters: {
+      "page[offset]": "$offset",
+      "page[limit]": "$limit",
+    });
+
+    final body = response.json();
+
+    if (response.statusCode != HttpStatus.ok) {
+      throw StudIpApiRequestFailure(
+        body: body,
+        statusCode: response.statusCode,
+      );
+    }
+    return FileListResponse.fromJson(body);
+  }
+
+  @override
+  Future<FolderListResponse> getFolders(
+      {required String folderId,
+      required int offset,
+      required int limit}) async {
+    final response = await _core
+        .get(endpoint: "folders/$folderId/folders", queryParameters: {
+      "page[offset]": "$offset",
+      "page[limit]": "$limit",
+    });
+
+    final body = response.json();
+
+    if (response.statusCode != HttpStatus.ok) {
+      throw StudIpApiRequestFailure(
+        body: body,
+        statusCode: response.statusCode,
+      );
+    }
+    return FolderListResponse.fromJson(body);
+  }
+
+  @override
+  Future<String?> downloadFile(
+      {required String fileId,
+      required String fileName,
+      required List<String> parentFolderIds,
+      required DateTime lastModified}) {
+    return _core.downloadFile(
+        fileId: fileId,
+        fileName: fileName,
+        parentFolderIds: parentFolderIds,
+        lastModified: lastModified);
+  }
+
+  @override
+  Future<bool> isFilePresentAndUpToDate({
+    required String fileId,
+    required String fileName,
+    required List<String> parentFolderIds,
+    required DateTime lastModified,
+    bool deleteOutdatedVersion = true,
+  }) {
+    return _core.isFilePresentAndUpToDate(
+      fileId: fileId,
+      fileName: fileName,
+      parentFolderIds: parentFolderIds,
+      lastModified: lastModified,
+      deleteOutdatedVersion: deleteOutdatedVersion,
+    );
+  }
+
+  @override
+  Future<String> localFilePath(
+      {required String fileId,
+      required String fileName,
+      required List<String> parentFolderIds}) async {
+    return _core.localFilePath(
+        fileId: fileId, fileName: fileName, parentFolderIds: parentFolderIds);
+  }
+
+  @override
+  FutureOr<void> cleanup(
+      {required List<String> parentFolderIds,
+      required List<String> expectedIds}) {
+    return _core.cleanup(
+      parentFolderIds: parentFolderIds,
+      expectedIds: expectedIds,
+    );
   }
 
   // **** Calendar ****

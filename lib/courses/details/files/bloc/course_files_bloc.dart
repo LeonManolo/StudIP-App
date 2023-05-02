@@ -1,13 +1,183 @@
+import 'dart:async';
+
 import 'package:bloc/bloc.dart';
+import 'package:courses_repository/courses_repository.dart';
 import 'package:equatable/equatable.dart';
+import 'package:dartz/dartz.dart' hide OpenFile;
+import 'package:files_repository/files_repository.dart';
+import 'package:studipadawan/courses/details/files/models/file_info.dart';
+import 'package:studipadawan/courses/details/files/models/folder_info.dart';
+import 'package:open_filex/open_filex.dart';
 
 part 'course_files_event.dart';
 part 'course_files_state.dart';
 
 class CourseFilesBloc extends Bloc<CourseFilesEvent, CourseFilesState> {
-  CourseFilesBloc() : super(CourseFilesInitial()) {
-    on<CourseFilesEvent>((event, emit) {
-      // TODO: implement event handler
-    });
+  final FilesRepository _filesRepository;
+  final Course course;
+
+  CourseFilesBloc(
+      {required this.course, required FilesRepository filesRepository})
+      : _filesRepository = filesRepository,
+        super(CourseFilesState.inital()) {
+    on<LoadRootFolderEvent>(_onLoadRootFolderEvent);
+    on<DidSelectFolderEvent>(_onDidSelectFolderEvent);
+    on<DidSelectFileEvent>(_onDidSelectFileEvent);
+  }
+
+  FutureOr<void> _onLoadRootFolderEvent(
+    LoadRootFolderEvent event,
+    Emitter<CourseFilesState> emit,
+  ) async {
+    emit(state.copyWith(type: CourseFilesStateType.isLoading));
+    try {
+      final rootFolder =
+          await _filesRepository.getCourseRootFolder(courseId: course.id);
+      var parentFolderInfo = FolderInfo(
+          folder: rootFolder, folderType: FolderType.root, displayName: "Root");
+
+      emit(state.copyWith(
+          parentFolders: [parentFolderInfo],
+          items: await _loadItems(parentFolders: [parentFolderInfo]),
+          type: CourseFilesStateType.didLoad));
+    } catch (_) {
+      emit(state.copyWith(
+          errorMessage:
+              "Beim Laden der gewünschten Dateien ist ein Problem aufgetreten.",
+          type: CourseFilesStateType.error));
+    }
+  }
+
+  FutureOr<void> _onDidSelectFolderEvent(
+      DidSelectFolderEvent event, Emitter<CourseFilesState> emit) async {
+    emit(state.copyWith(type: CourseFilesStateType.isLoading));
+
+    try {
+      int selectedFolderIndex = event.parentFolders.indexWhere(
+          (parentFolder) => parentFolder.folder.id == event.selectedFolder.id);
+
+      List<FolderInfo> newParentFolders = [];
+      if (selectedFolderIndex >= 0) {
+        newParentFolders =
+            event.parentFolders.getRange(0, selectedFolderIndex + 1).toList();
+      } else {
+        // folder isn't present in parentFolders
+        newParentFolders = event.parentFolders
+          ..add(FolderInfo.fromFolder(folder: event.selectedFolder));
+      }
+
+      emit(state.copyWith(
+          parentFolders: newParentFolders)); // immediately update UI
+
+      emit(state.copyWith(
+          items: await _loadItems(parentFolders: newParentFolders),
+          type: CourseFilesStateType.didLoad));
+    } catch (_) {
+      emit(state.copyWith(
+          errorMessage:
+              "Beim Laden der gewünschten Dateien ist ein Problem aufgetreten.",
+          type: CourseFilesStateType.error));
+    }
+  }
+
+  void _onDidSelectFileEvent(
+      DidSelectFileEvent event, Emitter<CourseFilesState> emit) async {
+    final selectedFileInfo = event.selectedFileInfo;
+
+    if (selectedFileInfo.fileType == FileType.remote) {
+      String? localStoragePath = await _downloadFile(selectedFileInfo, emit);
+
+      if (localStoragePath != null) {
+        OpenFilex.open(localStoragePath, type: selectedFileInfo.file.mimeType);
+      }
+    } else if (selectedFileInfo.fileType == FileType.downloaded) {
+      final localStoragePath = await _filesRepository.localFilePath(
+        file: selectedFileInfo.file,
+        parentFolderIds: state.parentFolderIds,
+      );
+
+      OpenFilex.open(localStoragePath, type: selectedFileInfo.file.mimeType);
+    }
+  }
+
+  /// If download was successful, returns the local storage path of the downloaded file
+  Future<String?> _downloadFile(
+      FileInfo fileInfo, Emitter<CourseFilesState> emit) async {
+    File fileToDownload = fileInfo.file;
+
+    int selectedFileInfoIndex = state.items.indexOf(right(fileInfo));
+
+    if (selectedFileInfoIndex >= 0 &&
+        state.items[selectedFileInfoIndex].isRight()) {
+      var updatedItems = List.of(state.items);
+      updatedItems[selectedFileInfoIndex] = right(
+          FileInfo(fileType: FileType.isDownloading, file: fileToDownload));
+
+      emit(state.copyWith(items: updatedItems));
+    }
+
+    final localStoragePath = await _filesRepository.downloadFile(
+        file: fileToDownload, parentFolderIds: state.parentFolderIds);
+
+    if (selectedFileInfoIndex >= 0 &&
+        state.items[selectedFileInfoIndex].isRight()) {
+      var updatedItems = List.of(state.items);
+      updatedItems[selectedFileInfoIndex] = right(FileInfo(
+          fileType:
+              localStoragePath != null ? FileType.downloaded : FileType.remote,
+          file: fileToDownload));
+
+      emit(state.copyWith(items: updatedItems));
+    }
+
+    return localStoragePath;
+  }
+
+  Future<List<Either<Folder, FileInfo>>> _loadItems(
+      {required List<FolderInfo> parentFolders}) async {
+    final String directParentFolderId = parentFolders.last.folder.id;
+    final List<String> parentFolderIds =
+        parentFolders.map((folderInfo) => folderInfo.folder.id).toList();
+
+    final result = await Future.wait([
+      _filesRepository.getAllVisibleFolders(
+          parentFolderId: directParentFolderId),
+      _filesRepository.getAllDownloadableFiles(
+          parentFolderId: directParentFolderId)
+    ]);
+
+    final folders = result[0]
+        .cast()
+        .map<Either<Folder, FileInfo>>((folder) => left(folder))
+        .toList();
+
+    final files = result[1].cast<File>().toList();
+    List<FileInfo> fileInfos = await Future.wait(files.map((file) async {
+      FileType fileType = (await _filesRepository.isFilePresentAndUpToDate(
+              file: file, parentFolderIds: parentFolderIds))
+          ? FileType.downloaded
+          : FileType.remote;
+      return FileInfo(fileType: fileType, file: file);
+    }));
+
+    List<Either<Folder, FileInfo>> fileInfosMapped = fileInfos
+        .map<Either<Folder, FileInfo>>((fileInfo) => right(fileInfo))
+        .toList();
+
+    final List<Either<Folder, FileInfo>> newItems = folders
+      ..addAll(fileInfosMapped);
+    List<String> itemIds = newItems.map<String>(
+      (item) {
+        return item.fold((folder) => folder.id, (fileInfo) => fileInfo.file.id);
+      },
+    ).toList();
+
+    // Delete obsolete ressources from disk
+    await _filesRepository.cleanup(
+      parentFolderIds: parentFolderIds,
+      expectedIds: itemIds,
+    );
+
+    return newItems;
   }
 }
