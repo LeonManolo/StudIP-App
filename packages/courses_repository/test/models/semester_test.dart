@@ -1,11 +1,10 @@
 import 'package:courses_repository/courses_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:studip_api_client/src/models/models.dart' as APIModels;
-import 'package:studip_api_client/studip_api_client.dart';
+import 'package:studip_api_client/studip_api_client.dart' as studip_api_client;
 
 void main() {
   group("test semester date conversion", () {
-    final semesterResponse = APIModels.SemesterResponse.fromJson({
+    final semesterResponse = studip_api_client.SemesterResponse.fromJson({
       "data": {
         "type": "semesters",
         "id": "c3361be2abf51c4e36701f84b42c09e7",

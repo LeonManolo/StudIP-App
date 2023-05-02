@@ -1,4 +1,3 @@
-import 'dart:math';
 
 /// meta : {"semester":"/jsonapi.php/v1/semesters/322f640f3f4643ebe514df65f1163eb1"}
 /// links : {"self":"/jsonapi.php/v1/users/4924eb9d441c495ebeaf237567f17aa2/schedule?filter%5Btimestamp%5D=1680300000"}

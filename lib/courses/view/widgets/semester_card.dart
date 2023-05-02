@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:courses_repository/src/models/models.dart';
+import 'package:courses_repository/courses_repository.dart';
 import 'package:studipadawan/courses/details/view/course_details_page.dart';
 import 'package:studipadawan/courses/view/widgets/course_card.dart';
 

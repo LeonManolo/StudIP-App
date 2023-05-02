@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import '../../../../packages/calender_repository/lib/src/models/hour_minute.dart';
+import 'package:calender_repository/src/models/hour_minute.dart';
 
 void main() {
   group("constructor tests", () {

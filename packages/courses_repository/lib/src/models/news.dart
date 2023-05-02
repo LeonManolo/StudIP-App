@@ -1,4 +1,4 @@
-import 'package:studip_api_client/src/models/models.dart' as APIModels;
+import 'package:studip_api_client/studip_api_client.dart' as studip_api_client;
 
 class CourseNews {
   final String id;
@@ -16,7 +16,7 @@ class CourseNews {
   });
 
   factory CourseNews.fromCourseNewsResponse(
-      {required APIModels.CourseNewsResponse courseNewsResponse}) {
+      {required studip_api_client.CourseNewsResponse courseNewsResponse}) {
     return CourseNews(
       id: courseNewsResponse.id,
       title: courseNewsResponse.title,

@@ -1,6 +1,6 @@
 import 'course.dart';
 import 'package:intl/intl.dart';
-import 'package:studip_api_client/src/models/models.dart' as APIModels;
+import 'package:studip_api_client/studip_api_client.dart' as studip_api_client;
 
 class Semester {
   final String id;
@@ -24,7 +24,7 @@ class Semester {
   });
 
   factory Semester.fromSemesterResponse(
-      {required APIModels.SemesterResponse semesterResponse,
+      {required studip_api_client.SemesterResponse semesterResponse,
       required List<Course> courses}) {
     return Semester(
       id: semesterResponse.id,

@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:courses_repository/src/models/models.dart';
+import 'package:courses_repository/courses_repository.dart';
 
 enum CourseStatus {
   initial,

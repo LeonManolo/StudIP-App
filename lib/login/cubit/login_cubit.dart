@@ -14,7 +14,7 @@ class LoginCubit extends Cubit<LoginState> {
     try {
       await _authenticationRepository.loginWithStudIp();
       emit(LoginState.success);
-    } on Exception catch (e) { // LogInWithGoogleFailure
+    } on Exception { // LogInWithGoogleFailure
       emit(
         LoginState.failure,
       );

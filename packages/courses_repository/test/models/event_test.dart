@@ -1,10 +1,10 @@
 import 'package:courses_repository/courses_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:studip_api_client/src/models/models.dart' as APIModels;
+import 'package:studip_api_client/studip_api_client.dart' as studip_api_client;
 
 void main() {
   group("test event date conversion", () {
-    final courseEventResponse = APIModels.CourseEventResponse.fromJson({
+    final courseEventResponse = studip_api_client.CourseEventResponse.fromJson({
       "type": "course-events",
       "id": "015e133e3ac12de8e63520a92c355ba2",
       "attributes": {

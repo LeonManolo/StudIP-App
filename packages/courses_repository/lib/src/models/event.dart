@@ -1,4 +1,4 @@
-import 'package:studip_api_client/src/models/models.dart' as APIModels;
+import 'package:studip_api_client/studip_api_client.dart' as studip_api_client;
 import 'package:intl/intl.dart';
 
 class StudIPCourseEvent {
@@ -21,7 +21,7 @@ class StudIPCourseEvent {
   });
 
   factory StudIPCourseEvent.fromCourseEventResponse(
-      {required APIModels.CourseEventResponse courseEventResponse}) {
+      {required studip_api_client.CourseEventResponse courseEventResponse}) {
     return StudIPCourseEvent(
         id: courseEventResponse.id,
         title: courseEventResponse.title,
