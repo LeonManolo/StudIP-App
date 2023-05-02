@@ -9,33 +9,24 @@ class MessageRepository {
     required StudIPMessagesClient apiClient,
   }) : _apiClient = apiClient;
 
-  Future<List<Message>> getInboxMessages(String userId) async {
+  Future<List<Message>> getInboxMessages(
+      {required String userId,
+      required int offset,
+      required int limit,
+      required bool filterUnread}) async {
     try {
-      final response = await _apiClient.getInboxMessages(userId);
+      final response = await _apiClient.getInboxMessages(
+          userId: userId,
+          offset: offset,
+          limit: limit,
+          filterUnread: filterUnread);
       final messages = response.messageResponses
           .map((response) => Message.fromMessageResponse(response))
           .toList();
       final Map<String, String> knownUsers = {};
       for (var message in messages) {
-        message.sender.username = await _fetchUserName(knownUsers, message.sender.id);
-        await _fetchUserNames(knownUsers, message.recipients);
-      }
-
-      return messages;
-    } catch (error, stackTrace) {
-      Error.throwWithStackTrace(error, stackTrace);
-    }
-  }
-
-  Future<List<Message>> getOutboxMessages(String userId) async {
-    try {
-      final response = await _apiClient.getOutboxMessages(userId);
-      final messages = response.messageResponses
-          .map((response) => Message.fromMessageResponse(response))
-          .toList();
-      final Map<String, String> knownUsers = {};
-      for (var message in messages) {
-        message.sender.username = await _fetchUserName(knownUsers, message.sender.id);
+        message.sender.username =
+            await _fetchUserName(knownUsers, message.sender.id);
         await _fetchUserNames(knownUsers, message.recipients);
       }
       return messages;
@@ -44,7 +35,31 @@ class MessageRepository {
     }
   }
 
-  Future<Message> sendMessage(OutgoingMessage outgoingMessage) async {
+  Future<List<Message>> getOutboxMessages({
+    required String userId,
+    required int offset,
+    required int limit,
+  }) async {
+    try {
+      final response = await _apiClient.getOutboxMessages(
+          userId: userId, offset: offset, limit: limit);
+      final messages = response.messageResponses
+          .map((response) => Message.fromMessageResponse(response))
+          .toList();
+      final Map<String, String> knownUsers = {};
+      for (var message in messages) {
+        message.sender.username =
+            await _fetchUserName(knownUsers, message.sender.id);
+        await _fetchUserNames(knownUsers, message.recipients);
+      }
+      return messages;
+    } catch (error, stackTrace) {
+      Error.throwWithStackTrace(error, stackTrace);
+    }
+  }
+
+  Future<Message> sendMessage(
+      {required OutgoingMessage outgoingMessage}) async {
     var parsedRecipients = outgoingMessage.recipients
         .map((id) => {"type": "users", "id": id})
         .toList();
@@ -61,15 +76,16 @@ class MessageRepository {
       }
     });
     try {
-      final MessageResponse response = await _apiClient.sendMessage(message);
+      final MessageResponse response =
+          await _apiClient.sendMessage(message: message);
       return Message.fromMessageResponse(response);
     } catch (error, stackTrace) {
       Error.throwWithStackTrace(error, stackTrace);
     }
   }
 
-  Future<void> readMessage(String messageId) async {
-    String params = jsonEncode({
+  Future<void> readMessage({required String messageId}) async {
+    String message = jsonEncode({
       'data': {
         'type': 'messages',
         'attributes': {
@@ -78,7 +94,7 @@ class MessageRepository {
       },
     });
     try {
-      await _apiClient.readMessage(messageId, params);
+      await _apiClient.readMessage(messageId: messageId, message: message);
     } catch (error, stackTrace) {
       Error.throwWithStackTrace(error, stackTrace);
     }
@@ -100,7 +116,7 @@ class MessageRepository {
   Future<String> _fetchUserName(
       Map<String, String> knownUsers, String userId) async {
     if (knownUsers[userId] == null) {
-      final fetchedUser = await _apiClient.getUser(userId);
+      final fetchedUser = await _apiClient.getUser(userId: userId);
       knownUsers[userId] = fetchedUser.username;
       return fetchedUser.username;
     } else {

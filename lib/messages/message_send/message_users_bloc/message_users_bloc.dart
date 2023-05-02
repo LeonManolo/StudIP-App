@@ -19,7 +19,7 @@ class MessageUsersBloc extends Bloc<MessageUsersEvent, MessageUsersState> {
     emit(state.copyWith(status: MessageUserState.loading));
 
     try {
-      final users = await _userRepository.getUsers();
+      final users = await _userRepository.getUsers(event.searchParams);
       emit(state.copyWith(
           status: MessageUserState.populated,
           users: users.userResponses

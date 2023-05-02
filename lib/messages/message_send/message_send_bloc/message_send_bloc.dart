@@ -35,7 +35,7 @@ class MessageSendBloc extends Bloc<MessageSendEvent, MessageSendState> {
           errorMessage: missingMessageError));
     } else {
       try {
-        await _messageRepository.sendMessage(event.message);
+        await _messageRepository.sendMessage(outgoingMessage: event.message);
         emit(state.copyWith(status: MessageSendStatus.populated));
       } catch (e) {
         emit(const MessageSendState(

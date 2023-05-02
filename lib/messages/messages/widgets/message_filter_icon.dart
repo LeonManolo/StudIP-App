@@ -1,13 +1,15 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
-import '../message_inbox_bloc /message_inbox_state.dart';
-import 'message_filter_item.dart';
 
-class FilterRow extends StatelessWidget {
-  final Function(BuildContext, MessageFilter) setFilter;
+import '../../message_overview/message_inbox_bloc /message_inbox_state.dart';
+import '../../message_overview/widgets/message_filter_item.dart';
+
+
+class MessageFilterIcon extends StatelessWidget {
+  final Function(MessageFilter) setFilter;
   final MessageFilter currentFilter;
 
-  const FilterRow({
+  const MessageFilterIcon({
     Key? key,
     required this.setFilter,
     required this.currentFilter,
@@ -23,12 +25,9 @@ class FilterRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        const Spacer(),
-        PopupMenuButton<MessageFilter>(
+    return PopupMenuButton<MessageFilter>(
           icon: funnelIcon(currentFilter, Theme.of(context).primaryColor),
-          onSelected: (newFilter) => {setFilter(context, newFilter)},
+          onSelected: (newFilter) => {setFilter(newFilter)},
           itemBuilder: (context) => [
             PopupMenuItem<MessageFilter>(
               value: MessageFilter.none,
@@ -49,20 +48,8 @@ class FilterRow extends StatelessWidget {
                     funnelIcon(currentFilter, Theme.of(context).primaryColor),
                 filterDescription: MessageFilter.unread.description,
               ),
-            ),
-            PopupMenuItem<MessageFilter>(
-              value: MessageFilter.read,
-              child: FilterItem(
-                isSelected: currentFilter == MessageFilter.read,
-                filter: MessageFilter.read,
-                funnelIcon:
-                    funnelIcon(currentFilter, Theme.of(context).primaryColor),
-                filterDescription: MessageFilter.read.description,
-              ),
-            ),
+            )
           ],
-        ),
-      ],
-    );
+        );
   }
 }

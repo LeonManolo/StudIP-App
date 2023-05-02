@@ -2,5 +2,5 @@ import '../models/models.dart';
 
 abstract class StudIPUserClient {
   Future<UserResponse> getCurrentUser();
-  Future<UserListResponse> getUsers();
+  Future<UserListResponse> getUsers(String? searchparam);
 }
