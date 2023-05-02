@@ -1,4 +1,3 @@
-import 'package:courses_repository/courses_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:studipadawan/courses/details/bloc/course_details_bloc.dart';

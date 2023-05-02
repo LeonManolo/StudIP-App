@@ -11,8 +11,15 @@ class CourseRepository {
   Future<List<StudIPCourseEvent>> getCourseEvents(
       {required String courseId}) async {
     try {
-      final eventsResponse =
-          await _getCourseEvents(courseId: courseId, limit: 30, offset: 0);
+      final List<CourseEventResponse> eventsResponse =
+          await _getResponse<CourseEventResponse>(
+        id: courseId,
+        loadItems: ({required id, required limit, required offset}) async {
+          return _apiClient.getCourseEvents(
+              courseId: id, offset: offset, limit: limit);
+        },
+      );
+
       return eventsResponse
           .map((eventResponse) => StudIPCourseEvent.fromCourseEventResponse(
               courseEventResponse: eventResponse))
@@ -38,7 +45,12 @@ class CourseRepository {
 
   Future<List<Semester>> getCoursesGroupedBySemester(String userId) async {
     try {
-      final courses = await _getCourses(userId: userId, limit: 30, offset: 0);
+      final List<CourseResponse> courses = await _getResponse(
+          id: userId,
+          loadItems: ({required id, required limit, required offset}) async {
+            return _apiClient.getCourses(
+                userId: id, offset: offset, limit: limit);
+          });
 
       Map<String, List<CourseResponse>> semesterToCourses = {};
       for (var course in courses) {
@@ -71,39 +83,32 @@ class CourseRepository {
     }
   }
 
-  Future<List<CourseResponse>> _getCourses({
-    required String userId,
-    required int limit,
-    required int offset,
-  }) async {
-    final response = await _apiClient.getCourses(
-        userId: userId, limit: limit, offset: offset);
+  // ***** Private Helpers *****
 
-    if (response.total > limit && (response.offset + limit) < response.total) {
-      var courseResponses = response.courses;
-      courseResponses.addAll(await _getCourses(
-          userId: userId, limit: limit, offset: offset + limit));
-
-      return courseResponses;
-    } else {
-      return response.courses;
-    }
-  }
-
-  Future<List<CourseEventResponse>> _getCourseEvents(
-      {required String courseId,
+  /// This method can be used to recursively fetch all items.
+  Future<List<I>> _getResponse<I>({
+    required String id,
+    int limit = 30,
+    int offset = 0,
+    required Future<ItemListResponse<I>> Function({
+      required String id,
       required int limit,
-      required int offset}) async {
-    final response = await _apiClient.getCourseEvents(
-        courseId: courseId, offset: offset, limit: limit);
-
+      required int offset,
+    })
+        loadItems,
+  }) async {
+    final response = await loadItems(id: id, limit: limit, offset: offset);
     if (response.total > limit && (response.offset + limit) < response.total) {
-      var eventResponse = response.events;
-      eventResponse.addAll(await _getCourseEvents(
-          courseId: courseId, limit: limit, offset: offset + limit));
-      return eventResponse;
+      var itemsResponse = response.items;
+      itemsResponse.addAll(await _getResponse(
+        id: id,
+        limit: limit,
+        offset: offset + limit,
+        loadItems: loadItems,
+      ));
+      return itemsResponse;
     } else {
-      return response.events;
+      return response.items;
     }
   }
 }

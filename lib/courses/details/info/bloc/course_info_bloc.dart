@@ -3,8 +3,6 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:courses_repository/courses_repository.dart';
 import 'package:equatable/equatable.dart';
-import 'package:studipadawan/courses/details/info/models/course_event_expansion_model.dart';
-import 'package:studipadawan/courses/details/info/models/news_expansion_model.dart';
 import '../models/models.dart';
 
 part 'course_info_event.dart';
