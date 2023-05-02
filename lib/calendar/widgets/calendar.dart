@@ -10,6 +10,7 @@ import 'package:studipadawan/calendar/widgets/empty_calendar_entry.dart';
 
 class Calendar extends StatefulWidget {
   final DateTime date;
+  final HourMinute currentHourMinute;
   final List<CalendarTimeframe> scheduleStructure;
   final Map<Weekdays, Map<String, CalendarEntryData>> scheduleData;
   final VoidCallback onPreviousButtonPress;
@@ -18,6 +19,7 @@ class Calendar extends StatefulWidget {
 
   const Calendar({
     Key? key,
+    required this.currentHourMinute,
     required this.scheduleStructure,
     required this.scheduleData,
     required this.date,
@@ -43,7 +45,6 @@ class _CalendarState extends State<Calendar> {
         controller.jumpTo(index: index);
         //TODO: scrollTo buggt
       }
-
     });
     super.initState();
   }
@@ -58,10 +59,10 @@ class _CalendarState extends State<Calendar> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         CalendarHeader(
-            onDatePress: () => _openDatePicker(context),
-            dateTime: widget.date,
-            onPreviousButtonPress: widget.onPreviousButtonPress,
-            onNextButtonPress: widget.onNextButtonPress,
+          onDatePress: () => _openDatePicker(context),
+          dateTime: widget.date,
+          onPreviousButtonPress: widget.onPreviousButtonPress,
+          onNextButtonPress: widget.onNextButtonPress,
         ),
         Expanded(
           child: Stack(

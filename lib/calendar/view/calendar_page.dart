@@ -59,6 +59,7 @@ class CalendarPage extends StatelessWidget {
                 },
                 date: state.currentDay,
                 scheduleData: state.calendarWeekData.data,
+                currentHourMinute: HourMinute(hours: 8, minutes: 45),
                 scheduleStructure: [
                   CalendarTimeframe(
                     start: HourMinute(hours: 8, minutes: 15),

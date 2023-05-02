@@ -35,9 +35,19 @@ class CalendarTimeframe {
   }
 
   bool containsHourMinute(HourMinute other) {
-    if(_start.equals(other) || _end.equals(other)) {
+    if (_start.equals(other) || _end.equals(other)) {
       return true;
     }
     return other.isAfter(_start) && other.isBefore(_end);
+  }
+
+  double determinePercentageElapsedByHourMinute(HourMinute hourMinute) {
+    if (!containsHourMinute(hourMinute)) {
+      return 0;
+    }
+    final totalMinutes = _start.minutesAwayFrom(_end);
+    final minutesUntilReachingEnd = hourMinute.minutesAwayFrom(_end);
+
+    return 1 - minutesUntilReachingEnd / totalMinutes;
   }
 }

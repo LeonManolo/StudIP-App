@@ -15,6 +15,10 @@ class HourMinute {
     }
   }
 
+  HourMinute.fromDateTime({required DateTime dateTime})
+      : _hours = dateTime.hour,
+        _minutes = dateTime.minute;
+
   int get minutes {
     return _minutes;
   }
