@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:studipadawan/calendar/widgets/calendar_entry.dart';
 import 'package:studipadawan/calendar/widgets/calendar_entry_divider.dart';
 
+import 'calendar_current_time_overlay.dart';
 import 'empty_calendar_entry.dart';
 
 class CalendarEntryLayout extends StatelessWidget {
@@ -25,11 +26,16 @@ class CalendarEntryLayout extends StatelessWidget {
             color: Colors.green,
             calendarEntryData: calendarEntryData,
             timeFrame: timeframe),
-        // SizedBox(
-        //   height: 50,
-        //   width: double.infinity,
-        //   child: CalendarEntryDivider(paddingLeft: leftSize),
-        // ),
+        CalendarCurrentTimeOverlay(
+          timeframe: CalendarTimeframe(start: HourMinute(hours: 9, minutes: 45), end: HourMinute(hours: 10, minutes: 0)),
+          currentTime: HourMinute(hours: 9, minutes: 55),
+          child: Container(
+            color: Colors.amber.withOpacity(0.2),
+            height: 50,
+            width: double.infinity,
+            //child: CalendarEntryDivider(paddingLeft: leftSize),
+          ),
+        ),
       ],
     );
   }

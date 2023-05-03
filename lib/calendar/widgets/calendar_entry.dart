@@ -26,7 +26,7 @@ class CalendarEntry extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final leftSize = MediaQuery.of(context).size.width * 0.2;
-    final testHourMinute = HourMinute(hours: 9, minutes: 45);
+    final testHourMinute = HourMinute(hours: 9, minutes: 0);
 
     return CalendarCurrentTimeOverlay(
       timeframe: timeFrame,
