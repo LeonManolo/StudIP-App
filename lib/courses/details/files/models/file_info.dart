@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
 import 'package:files_repository/files_repository.dart';
-import 'package:flutter/material.dart';
 
 enum FileType { remote, downloaded, isDownloading }
 

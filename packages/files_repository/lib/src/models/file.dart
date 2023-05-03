@@ -1,5 +1,5 @@
 import 'package:intl/intl.dart';
-import 'package:studip_api_client/src/models/models.dart' as APIModels;
+import 'package:studip_api_client/studip_api_client.dart' as studip_api_client;
 
 class File {
   final String id;
@@ -27,7 +27,7 @@ class File {
   });
 
   factory File.fromFileResponse({
-    required APIModels.FileResponse fileResponse,
+    required studip_api_client.FileResponse fileResponse,
   }) {
     return File(
       id: fileResponse.id,
