@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import '../message_inbox_bloc /message_inbox_state.dart';
 import 'message_filter_item.dart';
 
-class FilterRow extends StatelessWidget {
+class MessageFilterIcon extends StatelessWidget {
   final Function(MessageFilter) setFilter;
   final MessageFilter currentFilter;
 
-  const FilterRow({
+  const MessageFilterIcon({
     Key? key,
     required this.setFilter,
     required this.currentFilter,
@@ -23,35 +23,30 @@ class FilterRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        const Spacer(),
-        PopupMenuButton<MessageFilter>(
-          icon: funnelIcon(currentFilter, Theme.of(context).primaryColor),
-          onSelected: (newFilter) => {setFilter(newFilter)},
-          itemBuilder: (context) => [
-            PopupMenuItem<MessageFilter>(
-              value: MessageFilter.none,
-              child: FilterItem(
-                isSelected: currentFilter == MessageFilter.none,
-                filter: MessageFilter.none,
-                funnelIcon:
-                    funnelIcon(currentFilter, Theme.of(context).primaryColor),
-                filterDescription: MessageFilter.none.description,
-              ),
-            ),
-            PopupMenuItem<MessageFilter>(
-              value: MessageFilter.unread,
-              child: FilterItem(
-                isSelected: currentFilter == MessageFilter.unread,
-                filter: MessageFilter.unread,
-                funnelIcon:
-                    funnelIcon(currentFilter, Theme.of(context).primaryColor),
-                filterDescription: MessageFilter.unread.description,
-              ),
-            )
-          ],
+    return PopupMenuButton<MessageFilter>(
+      icon: funnelIcon(currentFilter, Theme.of(context).primaryColor),
+      onSelected: (newFilter) => {setFilter(newFilter)},
+      itemBuilder: (context) => [
+        PopupMenuItem<MessageFilter>(
+          value: MessageFilter.none,
+          child: FilterItem(
+            isSelected: currentFilter == MessageFilter.none,
+            filter: MessageFilter.none,
+            funnelIcon:
+                funnelIcon(currentFilter, Theme.of(context).primaryColor),
+            filterDescription: MessageFilter.none.description,
+          ),
         ),
+        PopupMenuItem<MessageFilter>(
+          value: MessageFilter.unread,
+          child: FilterItem(
+            isSelected: currentFilter == MessageFilter.unread,
+            filter: MessageFilter.unread,
+            funnelIcon:
+                funnelIcon(currentFilter, Theme.of(context).primaryColor),
+            filterDescription: MessageFilter.unread.description,
+          ),
+        )
       ],
     );
   }

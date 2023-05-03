@@ -140,6 +140,18 @@ class StudIpApiClient
           body: body, statusCode: response.statusCode);
     }
   }
+  
+  @override
+  Future<void> deleteMessage(
+      {required String messageId}) async {
+    final response =
+        await _core.delete(endpoint: "messages/$messageId");
+    final body = response.json();
+    if (response.statusCode != HttpStatus.created) {
+      throw StudIpApiRequestFailure(
+          body: body, statusCode: response.statusCode);
+    }
+  }
 
   @override
   Future<MessageResponse> sendMessage({required String message}) async {

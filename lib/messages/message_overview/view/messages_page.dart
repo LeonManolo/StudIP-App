@@ -11,7 +11,7 @@ import '../message_outbox_bloc/message_outbox_event.dart';
 import '../message_outbox_bloc/message_outbox_state.dart';
 import '../widgets/message_add_button.dart';
 import '../widgets/message_bar.dart';
-import '../widgets/message_filter_row.dart';
+import '../widgets/message_filter_icon.dart';
 import '../widgets/message_inbox_widget.dart';
 import '../widgets/message_outbox_widget.dart';
 
@@ -25,7 +25,7 @@ class MessagesPage extends StatefulWidget {
 }
 
 class _MessagesPageState extends State<MessagesPage>
-    with TickerProviderStateMixin, AutomaticKeepAliveClientMixin {
+    with TickerProviderStateMixin {
   late TabController _tabController;
   late InboxMessageBloc _inboxMessageBloc;
   late OutboxMessageBloc _outboxMessageBloc;
@@ -48,9 +48,13 @@ class _MessagesPageState extends State<MessagesPage>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: _messageTabs.length, vsync: this)
-      ..addListener(() {
+    _tabController = TabController(
+      length: _messageTabs.length,
+      vsync: this,
+    )..addListener(() {
+      setState(() {
         _onTabChanged(_tabController.index);
+      });
       });
     _inboxMessageBloc = InboxMessageBloc(
       messageRepository: context.read<MessageRepository>(),
@@ -74,14 +78,11 @@ class _MessagesPageState extends State<MessagesPage>
     super.dispose();
   }
 
-  @override
-  bool get wantKeepAlive => true;
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
     return Scaffold(
-        appBar: _buildAppBar(context),
+        appBar: _buildAppBar(context, _tabController.index),
         key: UniqueKey(),
         body: Scaffold(
             appBar: PreferredSize(
@@ -90,6 +91,7 @@ class _MessagesPageState extends State<MessagesPage>
             key: UniqueKey(),
             body: TabBarView(
               controller: _tabController,
+              physics: const ScrollPhysics(),
               children: [
                 BlocProvider.value(
                   value: _inboxMessageBloc,
@@ -102,10 +104,7 @@ class _MessagesPageState extends State<MessagesPage>
                         unmarkMessage: _unmarkMessage,
                         markedMessages: _markedInboxMessages,
                         refresh: _refreshInboxMessages,
-                        scrollController: _inboxScrollController,
-                        filterRow: FilterRow(
-                            currentFilter: state.currentFilter,
-                            setFilter: _handleFilterSelection),
+                        scrollController: _inboxScrollController
                       );
                     },
                   ),
@@ -132,10 +131,14 @@ class _MessagesPageState extends State<MessagesPage>
                 FloatingActionButtonLocation.endFloat));
   }
 
-  AppBar _buildAppBar(BuildContext context) {
+  AppBar _buildAppBar(BuildContext context, int tab) {
     return AppBar(
       title: const Text('Nachrichten'),
       actions: <Widget>[
+          if (tab == 0)
+          MessageFilterIcon(
+              setFilter: _handleFilterSelection,
+              currentFilter: _inboxMessageBloc.state.currentFilter),
         IconButton(
           key: const Key('homePage_logout_iconButton'),
           icon: const Icon(Icons.exit_to_app),
@@ -206,7 +209,6 @@ class _MessagesPageState extends State<MessagesPage>
       if (isInbox) {
         _markedInboxMessages.add(index);
         _inboxScrollController.jumpTo(offsetBefore);
-        print(offsetBefore);
       } else {
         _markedOutboxMessages.add(index);
       }

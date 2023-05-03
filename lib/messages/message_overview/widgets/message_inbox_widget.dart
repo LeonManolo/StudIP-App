@@ -1,22 +1,31 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:messages_repository/messages_repository.dart';
-import 'package:studipadawan/messages/message_overview/message_inbox_bloc%20/message_inbox_state.dart';
-import 'package:studipadawan/messages/message_overview/widgets/message_pagination_loading.dart';
 import '../../message_details/view/message_detail_page.dart';
+
+import '../message_inbox_bloc /message_inbox_state.dart';
+import 'message_pagination_loading copy.dart';
 import 'message_refreshable.dart';
+
+final _inboxWidgetKey = GlobalKey<ScaffoldState>();
 
 class InboxMessageWidget extends StatelessWidget {
   final InboxMessageState state;
   final Function() refresh;
+  final Function(bool, int) markMessage;
+  final Function(bool, int) unmarkMessage;
   final Function(Message) readMessage;
   final ScrollController scrollController;
+  final List<int> markedMessages;
 
   const InboxMessageWidget(
       {Key? key,
       required this.state,
       required this.readMessage,
       required this.refresh,
+      required this.markMessage,
+      required this.unmarkMessage,
+      required this.markedMessages,
       required this.scrollController})
       : super(key: key);
 
@@ -45,16 +54,19 @@ class InboxMessageWidget extends StatelessWidget {
       RefreshableMessage(
           text: "Es sind keine Nachrichten vorhanden", callback: refresh);
     }
+
     return Column(
+      key: _inboxWidgetKey,
       children: [
         Expanded(
             child: RefreshIndicator(
           onRefresh: () async => {refresh()},
           child: ListView.separated(
             physics: const AlwaysScrollableScrollPhysics(),
-            controller: scrollController,
             itemCount: state.inboxMessages.length + 1,
-            separatorBuilder: (context, index) => const Divider(),
+            separatorBuilder: (context, index) => const Divider(
+              height: 0.5,
+            ),
             itemBuilder: (context, index) {
               if (index == state.inboxMessages.length) {
                 return PaginationLoading(
@@ -62,25 +74,47 @@ class InboxMessageWidget extends StatelessWidget {
                         state.status == InboxMessageStatus.paginationLoading);
               } else {
                 var message = state.inboxMessages[index];
-                return ListTile(
-                    onTap: () => {
-                          readMessage(message),
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    MessageDetailpage(message: message)),
-                          )
-                        },
-                    leading: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[messageIcon(context, message.isRead)],
-                    ),
-                    trailing: Text(message.getTimeAgo()),
-                    title: Text(message.subject),
-                    subtitle: Text(message.sender.username));
+
+                return Container(
+                    color: (markedMessages.contains(index))
+                        ? Theme.of(context).primaryColor.withOpacity(0.5)
+                        : Colors.transparent,
+                    child: ListTile(
+                        onTap: () => {
+                              if (markedMessages.isNotEmpty)
+                                {
+                                  if (markedMessages.contains(index))
+                                    unmarkMessage(true, index)
+                                  else
+                                    markMessage(true, index)
+                                }
+                              else
+                                {
+                                  readMessage(message),
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => MessageDetailpage(
+                                            message: message)),
+                                  )
+                                }
+                            },
+                        onLongPress: () => {
+                              if (!markedMessages.contains(index))
+                                markMessage(true, index)
+                            },
+                        leading: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            messageIcon(context, message.isRead)
+                          ],
+                        ),
+                        trailing: Text(message.getTimeAgo()),
+                        title: Text(message.subject),
+                        subtitle: Text(message.sender.username)));
               }
             },
+            controller: scrollController,
           ),
         ))
       ],
