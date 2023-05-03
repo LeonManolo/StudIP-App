@@ -53,6 +53,16 @@ class HourMinute {
     return _hours == other.hours && _minutes == other.minutes;
   }
 
+  //TODO: addMinutes tests schreiben
+  HourMinute addMinutes(int minutesToAdd) {
+    int totalMinutes = _minutes + minutesToAdd;
+    int extraHours = totalMinutes ~/ 60;
+    int newMinutes = totalMinutes % 60;
+    int newHours = (_hours + extraHours) % 24;
+
+    return HourMinute(hours: newHours, minutes: newMinutes);
+  }
+
   @override
   String toString() {
     String hourString = _hours.toString();

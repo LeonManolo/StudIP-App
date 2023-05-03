@@ -41,18 +41,14 @@ class CalendarTimeframe {
     return other.isAfter(_start) && other.isBefore(_end);
   }
 
+  //TODO: tests schreiben
   double determinePercentageElapsedByHourMinute(HourMinute hourMinute) {
     if (!containsHourMinute(hourMinute)) {
       return 0;
     }
     final totalMinutes = _start.minutesAwayFrom(_end);
     final minutesUntilReachingEnd = hourMinute.minutesAwayFrom(_end);
-    print(this);
-    print(hourMinute);
-    print(minutesUntilReachingEnd);
 
-    final result = (1 - minutesUntilReachingEnd / totalMinutes);
-    print("result: $result");
     return 1 - minutesUntilReachingEnd / totalMinutes;
   }
 }

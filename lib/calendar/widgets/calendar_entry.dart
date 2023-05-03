@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:app_ui/app_ui.dart';
 import 'package:calender_repository/calender_repository.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
@@ -9,28 +7,40 @@ import 'package:studipadawan/calendar/widgets/calendar_current_time_overlay.dart
 
 import 'calendar_entry_divider.dart';
 
-class CalendarEntry extends StatelessWidget {
+class CalendarEntry extends StatefulWidget {
   final CalendarEntryData? calendarEntryData;
   final bool showDivider;
   final Color color;
   final CalendarTimeframe timeFrame;
+  final double opacity;
+  final HourMinute currentTime;
+
+  final GlobalKey rowKey;
+  final GlobalKey textKey;
 
   const CalendarEntry(
       {Key? key,
       required this.timeFrame,
       this.showDivider = true,
       this.calendarEntryData,
-      required this.color})
+      required this.color, required this.rowKey, required this.textKey, required this.opacity, required this.currentTime})
       : super(key: key);
+
+  @override
+  State<CalendarEntry> createState() => _CalendarEntryState();
+}
+
+class _CalendarEntryState extends State<CalendarEntry> {
+
 
   @override
   Widget build(BuildContext context) {
     final leftSize = MediaQuery.of(context).size.width * 0.2;
-    final testHourMinute = HourMinute(hours: 9, minutes: 0);
 
     return CalendarCurrentTimeOverlay(
-      timeframe: timeFrame,
-      currentTime: testHourMinute,
+      rowKey: widget.rowKey,
+      timeframe: widget.timeFrame,
+      currentTime: widget.currentTime,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
@@ -56,9 +66,13 @@ class CalendarEntry extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        timeFrame.start.toString(),
-                        style: const TextStyle(
+                        widget.timeFrame.start.toString(),
+                        key: widget.textKey,
+                        style: TextStyle(
                             //color: Theme.of(context).disabledColor,
+                          color: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(
+                            widget.opacity, // hier muss geprüft werden ob die widgets overlappen
+                          ),
                             fontWeight: FontWeight.bold),
                       )
                     ],
@@ -67,7 +81,7 @@ class CalendarEntry extends StatelessWidget {
               ),
               Expanded(
                 child: Opacity(
-                  opacity: calendarEntryData == null ? 0 : 1,
+                  opacity: widget.calendarEntryData == null ? 0 : 1,
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -76,10 +90,10 @@ class CalendarEntry extends StatelessWidget {
                         padding: const EdgeInsets.all(AppSpacing.sm),
                         margin: const EdgeInsets.only(right: AppSpacing.lg),
                         decoration: BoxDecoration(
-                          color: color.withOpacity(0.15),
+                          color: widget.color.withOpacity(0.15),
                           boxShadow: [
                             BoxShadow(
-                              color: color.withOpacity(0.1),
+                              color: widget.color.withOpacity(0.1),
                               blurRadius: 5,
                               spreadRadius: 5,
                               offset: const Offset(2, 4),
@@ -88,7 +102,7 @@ class CalendarEntry extends StatelessWidget {
                           border: Border(
                               left: BorderSide(
                             width: 3,
-                            color: color,
+                            color: widget.color,
                           )),
                         ),
                         child: Column(
@@ -99,7 +113,7 @@ class CalendarEntry extends StatelessWidget {
                               padding: const EdgeInsets.only(
                                   bottom: AppSpacing.lg),
                               child: Text(
-                                calendarEntryData?.title ?? "",
+                                widget.calendarEntryData?.title ?? "",
                                 style: Theme.of(context)
                                     .textTheme
                                     .titleMedium
@@ -108,7 +122,7 @@ class CalendarEntry extends StatelessWidget {
                                     ),
                               ),
                             ),
-                            Text(calendarEntryData?.description ?? ""),
+                            Text(widget.calendarEntryData?.description ?? ""),
                             Padding(
                               padding:
                                   const EdgeInsets.only(top: AppSpacing.lg),
@@ -118,35 +132,35 @@ class CalendarEntry extends StatelessWidget {
                                   Icon(
                                     EvaIcons.pinOutline,
                                     size: 20,
-                                    color: color,
+                                    color: widget.color,
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.only(
                                         left: AppSpacing.xs,
                                         right: AppSpacing.lg),
                                     child: Text(
-                                      calendarEntryData?.locations
+                                      widget.calendarEntryData?.locations
                                               .firstOrNull() ??
                                           "",
                                       style: TextStyle(
                                         fontWeight: FontWeight.w600,
-                                        color: color,
+                                        color: widget.color,
                                       ),
                                     ),
                                   ),
                                   Icon(
                                     EvaIcons.clockOutline,
                                     size: 20,
-                                    color: color,
+                                    color: widget.color,
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.only(
                                         left: AppSpacing.xs),
                                     child: Text(
-                                      timeFrame.toString(),
+                                      widget.timeFrame.toString(),
                                       style: TextStyle(
                                         fontWeight: FontWeight.w500,
-                                        color: color,
+                                        color: widget.color,
                                       ),
                                     ),
                                   )

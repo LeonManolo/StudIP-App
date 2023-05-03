@@ -8,11 +8,13 @@ class CalendarCurrentTimeOverlay extends StatelessWidget {
   final CalendarTimeframe timeframe;
   final HourMinute currentTime;
 
+  final GlobalKey rowKey;
+
   const CalendarCurrentTimeOverlay(
       {Key? key,
         required this.child,
         required this.currentTime,
-        required this.timeframe})
+        required this.timeframe, required this.rowKey})
       : super(key: key);
 
   @override
@@ -43,7 +45,8 @@ class CalendarCurrentTimeOverlay extends StatelessWidget {
                       border: const Border(
                         bottom: BorderSide(),
                       )),
-                  child: Row(
+                  child: Row( // Prüfen ob es mit dieser Row Kollidiert!
+                    key: rowKey,
                     children: [
                       Container(
                         padding: const EdgeInsets.symmetric(
