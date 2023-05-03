@@ -47,7 +47,12 @@ class CalendarTimeframe {
     }
     final totalMinutes = _start.minutesAwayFrom(_end);
     final minutesUntilReachingEnd = hourMinute.minutesAwayFrom(_end);
+    print(this);
+    print(hourMinute);
+    print(minutesUntilReachingEnd);
 
+    final result = (1 - minutesUntilReachingEnd / totalMinutes);
+    print("result: $result");
     return 1 - minutesUntilReachingEnd / totalMinutes;
   }
 }

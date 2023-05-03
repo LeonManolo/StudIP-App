@@ -8,6 +8,8 @@ import 'package:studipadawan/calendar/widgets/calendar_entry.dart';
 import 'package:studipadawan/calendar/widgets/calendar_header.dart';
 import 'package:studipadawan/calendar/widgets/empty_calendar_entry.dart';
 
+import 'calendar_entry_layout.dart';
+
 class Calendar extends StatefulWidget {
   final DateTime date;
   final HourMinute currentHourMinute;
@@ -74,56 +76,41 @@ class _CalendarState extends State<Calendar> {
                     final key = widget.scheduleStructure[index].combinedKey();
                     final entry = widget.scheduleData[weekday]?[key];
 
-                    if (entry == null) {
-                      return EmptyCalendarEntry(
-                        timeFrame: widget.scheduleStructure[index],
-                        showDivider: index != 0,
-                      );
-                    } else {
-                      return CalendarEntry(
-                        showDivider: index != 0,
-                        color: Colors.green,
-                        title: widget.scheduleData[weekday]?[key]?.title ?? "",
-                        subtitle:
-                            widget.scheduleData[weekday]?[key]?.description ??
-                                "",
-                        location: widget.scheduleData[weekday]?[key]?.locations
-                                .firstOrNull() ??
-                            "",
-                        timeFrame: widget.scheduleStructure[index],
-                      );
-                    }
+                    return CalendarEntryLayout(
+                      timeframe: widget.scheduleStructure[index],
+                      calendarEntryData: entry,
+                    );
                   }),
-              Padding(
-                padding: const EdgeInsets.only(top: AppSpacing.sm),
-                child: Row(
-                  children: [
-                    Container(
-                      padding:
-                          const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
-                      width: MediaQuery.of(context).size.width * 0.2 - 3,
-                      child: const Text(
-                        "8:00",
-                        style: TextStyle(
-                          color: Colors.red,
-                        ),
-                      ),
-                    ),
-                    const CircleAvatar(
-                      radius: 5,
-                      backgroundColor: Colors.red,
-                      foregroundColor: Colors.red,
-                    ),
-                    Expanded(
-                      child: Container(
-                        color: Colors.red.withOpacity(0.8),
-                        height: 1.5,
-                        alignment: Alignment.center,
-                      ),
-                    ),
-                  ],
-                ),
-              )
+              // Padding(
+              //   padding: const EdgeInsets.only(top: AppSpacing.sm),
+              //   child: Row(
+              //     children: [
+              //       Container(
+              //         padding:
+              //             const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+              //         width: MediaQuery.of(context).size.width * 0.2 - 3,
+              //         child: const Text(
+              //           "8:00",
+              //           style: TextStyle(
+              //             color: Colors.red,
+              //           ),
+              //         ),
+              //       ),
+              //       const CircleAvatar(
+              //         radius: 5,
+              //         backgroundColor: Colors.red,
+              //         foregroundColor: Colors.red,
+              //       ),
+              //       Expanded(
+              //         child: Container(
+              //           color: Colors.red.withOpacity(0.8),
+              //           height: 1.5,
+              //           alignment: Alignment.center,
+              //         ),
+              //       ),
+              //     ],
+              //   ),
+              // ),
             ],
           ),
         )
