@@ -1,18 +1,16 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:messages_repository/messages_repository.dart';
-import 'package:studipadawan/messages/messages/message_inbox_bloc%20/message_inbox_state.dart';
-import 'package:studipadawan/messages/messages/widgets/message_pagination_loading.dart';
 import '../../message_details/view/message_detail_page.dart';
 
-import 'message_filter_row.dart';
+import '../message_inbox_bloc /message_inbox_state.dart';
+import 'message_pagination_loading copy.dart';
 import 'message_refreshable.dart';
 
 final _inboxWidgetKey = GlobalKey<ScaffoldState>();
 
 class InboxMessageWidget extends StatelessWidget {
   final InboxMessageState state;
-  final FilterRow filterRow;
   final Function() refresh;
   final Function(bool, int) markMessage;
   final Function(bool, int) unmarkMessage;
@@ -23,7 +21,6 @@ class InboxMessageWidget extends StatelessWidget {
   const InboxMessageWidget(
       {Key? key,
       required this.state,
-      required this.filterRow,
       required this.readMessage,
       required this.refresh,
       required this.markMessage,
@@ -61,11 +58,11 @@ class InboxMessageWidget extends StatelessWidget {
     return Column(
       key: _inboxWidgetKey,
       children: [
-        filterRow,
         Expanded(
             child: RefreshIndicator(
           onRefresh: () async => {refresh()},
           child: ListView.separated(
+            physics: const AlwaysScrollableScrollPhysics(),
             itemCount: state.inboxMessages.length + 1,
             separatorBuilder: (context, index) => const Divider(
               height: 0.5,

@@ -1,9 +1,9 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:messages_repository/messages_repository.dart';
-import 'package:studipadawan/messages/messages/message_outbox_bloc/message_outbox_state.dart';
 import '../../message_details/view/message_detail_page.dart';
-import 'message_pagination_loading.dart';
+import '../message_outbox_bloc/message_outbox_state.dart';
+import 'message_pagination_loading copy.dart';
 import 'message_refreshable.dart';
 
 final _outboxWidgetKey = GlobalKey<ScaffoldState>();

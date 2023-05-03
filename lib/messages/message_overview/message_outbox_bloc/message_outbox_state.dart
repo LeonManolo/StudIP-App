@@ -29,7 +29,8 @@ class OutboxMessageState extends Equatable {
         );
 
   @override
-  List<Object?> get props => [status, outboxMessages];
+  List<Object?> get props =>
+      [status, outboxMessages, currentOffset, maxReached, paginationLoading];
 
   OutboxMessageState copyWith(
       {OutboxMessageStatus? status,

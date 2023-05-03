@@ -79,7 +79,7 @@ class InboxMessageBloc extends Bloc<InboxMessageEvent, InboxMessageState> {
       final inboxMessages = await _messageRepository.getInboxMessages(
         userId: _authenticationRepository.currentUser.id,
         offset: 0,
-        limit: 20,
+        limit: limit,
         filterUnread: state.currentFilter == MessageFilter.unread,
       );
 

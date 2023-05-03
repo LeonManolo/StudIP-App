@@ -4,7 +4,7 @@ import 'package:studipadawan/calendar/view/calendar_page.dart';
 import 'package:studipadawan/courses/view/courses_page.dart';
 import 'package:studipadawan/home/view/home_page.dart';
 
-import '../../messages/messages/view/messages_page.dart';
+import '../../messages/message_overview/view/messages_page.dart';
 
 
 class AuthenticatedPage extends StatefulWidget {

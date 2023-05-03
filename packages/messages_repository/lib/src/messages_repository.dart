@@ -100,6 +100,14 @@ class MessageRepository {
     }
   }
 
+  Future<void> deleteMassge({required String messageId}) async {
+    try {
+      await _apiClient.deleteMessage(messageId: messageId);
+    } catch (error, stackTrace) {
+      Error.throwWithStackTrace(error, stackTrace);
+    }
+  }
+
   Future<void> _fetchUserNames(
       Map<String, String> knownUsers, final List<MessageUser> users) async {
     for (var user in users) {

@@ -10,8 +10,9 @@ enum InboxMessageStatus {
 }
 
 enum MessageFilter {
-  none("Kein Filter"),
+  none("Alle Nachrichten"),
   unread("Ungelesene Nachrichten");
+
   const MessageFilter(this.description);
   final String description;
 }
@@ -38,8 +39,14 @@ class InboxMessageState extends Equatable {
         );
 
   @override
-  List<Object?> get props =>
-      [status, inboxMessages, currentFilter, paginationLoading];
+  List<Object?> get props => [
+        status,
+        inboxMessages,
+        currentFilter,
+        currentOffset,
+        maxReached,
+        paginationLoading
+      ];
 
   InboxMessageState copyWith(
       {InboxMessageStatus? status,
