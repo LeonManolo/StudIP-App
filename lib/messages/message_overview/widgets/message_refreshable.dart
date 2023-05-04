@@ -10,13 +10,13 @@ class RefreshableMessage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-        child: RefreshIndicator(
+    return 
+        RefreshIndicator(
             onRefresh: () async => {callback()},
             child: CustomScrollView(slivers: [
               SliverFillRemaining(
                 child: Center(child: Text(text)),
               )
-            ])));
+            ]));
   }
 }

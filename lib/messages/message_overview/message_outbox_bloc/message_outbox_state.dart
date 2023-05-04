@@ -3,8 +3,10 @@ import 'package:messages_repository/messages_repository.dart';
 
 enum OutboxMessageStatus {
   initial,
-  outboxMessagesLoading,
+  loading,
   paginationLoading,
+  deleteOutboxMessagesSucceed,
+  deleteOutboxMessagesFailure,
   populated,
   failure,
 }

@@ -147,7 +147,7 @@ class StudIpApiClient
     final response =
         await _core.delete(endpoint: "messages/$messageId");
     final body = response.json();
-    if (response.statusCode != HttpStatus.created) {
+    if (response.statusCode != HttpStatus.noContent) {
       throw StudIpApiRequestFailure(
           body: body, statusCode: response.statusCode);
     }
