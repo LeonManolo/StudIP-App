@@ -313,8 +313,8 @@ class _MessagesPageState extends State<MessagesPage>
             .where((message) => !(_markedInboxMessages.contains(message.id)))
             .map((message) => message.id));
       } else {
-        _markedInboxMessages.addAll(_outboxMessageBloc.state.outboxMessages
-            .where((message) => !(_markedInboxMessages.contains(message.id)))
+        _markedOutboxMessages.addAll(_outboxMessageBloc.state.outboxMessages
+            .where((message) => !(_markedOutboxMessages.contains(message.id)))
             .map((message) => message.id));
       }
     });
@@ -343,9 +343,11 @@ class _MessagesPageState extends State<MessagesPage>
 
   void _refreshInboxMessages() {
     _inboxMessageBloc.add(const RefreshInboxRequested());
+    _unmarkAll();
   }
 
   void _refreshOutboxMessages() {
     _outboxMessageBloc.add(const RefreshOutboxRequested());
+    _unmarkAll();
   }
 }

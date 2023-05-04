@@ -44,13 +44,10 @@ class InboxMessageBloc extends Bloc<InboxMessageEvent, InboxMessageState> {
     }
 
     try {
-      final inboxMessages = await _messageRepository.getInboxMessages(
-        userId: _authenticationRepository.currentUser.id,
-        offset: event.offset,
-        limit: limit,
-        filterUnread: event.filter == MessageFilter.unread,
-      );
 
+
+      final inboxMessages = await fetchInboxMessages(offset: event.offset, filter: event.filter);
+      
       emit(state.copyWith(
         status: InboxMessageStatus.populated,
         currentFilter: event.filter,
@@ -78,12 +75,7 @@ class InboxMessageBloc extends Bloc<InboxMessageEvent, InboxMessageState> {
     ));
 
     try {
-      final inboxMessages = await _messageRepository.getInboxMessages(
-        userId: _authenticationRepository.currentUser.id,
-        offset: 0,
-        limit: limit,
-        filterUnread: state.currentFilter == MessageFilter.unread,
-      );
+      final inboxMessages = await fetchInboxMessages(offset: 0, filter: state.currentFilter)
 
       emit(state.copyWith(
         status: InboxMessageStatus.populated,
@@ -127,6 +119,15 @@ class InboxMessageBloc extends Bloc<InboxMessageEvent, InboxMessageState> {
   FutureOr<void> _onReadMessageRequested(
       ReadMessageRequested event, Emitter<InboxMessageState> emit) async {
     await _messageRepository.readMessage(messageId: event.message.id);
+  }
+
+   Future<List<Message>> fetchInboxMessages({required int offset, required MessageFilter filter}) async {
+    return await _messageRepository.getInboxMessages(
+      userId: _authenticationRepository.currentUser.id,
+      offset: offset,
+      limit: limit,
+      filterUnread: filter == MessageFilter.unread
+    );
   }
   
 }
