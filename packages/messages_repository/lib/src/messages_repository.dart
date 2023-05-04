@@ -100,12 +100,18 @@ class MessageRepository {
     }
   }
 
-  Future<void> deleteMassge({required String messageId}) async {
+  Future<void> deleteMessages({required List<String> messageIds}) async {
     try {
-      await _apiClient.deleteMessage(messageId: messageId);
+      for (var messageId in messageIds) {
+        await deleteMessage(messageId: messageId);
+      }
     } catch (error, stackTrace) {
       Error.throwWithStackTrace(error, stackTrace);
     }
+  }
+
+  Future<void> deleteMessage({required String messageId}) async {
+    await _apiClient.deleteMessage(messageId: messageId);
   }
 
   Future<void> _fetchUserNames(

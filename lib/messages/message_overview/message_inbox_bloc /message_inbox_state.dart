@@ -3,8 +3,10 @@ import 'package:messages_repository/messages_repository.dart';
 
 enum InboxMessageStatus {
   initial,
-  inboxMessagesLoading,
+  loading,
   paginationLoading,
+  deleteInboxMessagesSucceed,
+  deleteInboxMessagesFailure,
   populated,
   failure
 }
@@ -24,7 +26,7 @@ class InboxMessageState extends Equatable {
   final int currentOffset;
   final bool maxReached;
   final bool paginationLoading;
-
+  
   const InboxMessageState(
       {required this.status,
       this.inboxMessages = const [],
@@ -45,7 +47,7 @@ class InboxMessageState extends Equatable {
         currentFilter,
         currentOffset,
         maxReached,
-        paginationLoading
+        paginationLoading,
       ];
 
   InboxMessageState copyWith(
@@ -54,6 +56,7 @@ class InboxMessageState extends Equatable {
       MessageFilter? currentFilter,
       int? currentOffset,
       bool? maxReached,
+      bool? showFilterIcon,
       bool? paginationLoading}) {
     return InboxMessageState(
         status: status ?? this.status,

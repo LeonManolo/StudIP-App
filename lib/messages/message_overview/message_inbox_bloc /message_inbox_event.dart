@@ -24,6 +24,15 @@ class RefreshInboxRequested extends InboxMessageEvent {
   List<Object?> get props => [];
 }
 
+class DeleteInboxMessagesRequested extends InboxMessageEvent {
+  final List<String> messageIds;
+
+  const DeleteInboxMessagesRequested({required this.messageIds});
+
+  @override
+  List<Object?> get props => [messageIds];
+}
+
 class ReadMessageRequested extends InboxMessageEvent {
   final Message message;
 

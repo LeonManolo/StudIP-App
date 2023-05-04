@@ -4,7 +4,7 @@ import 'package:messages_repository/messages_repository.dart';
 import '../../message_details/view/message_detail_page.dart';
 
 import '../message_inbox_bloc /message_inbox_state.dart';
-import 'message_pagination_loading copy.dart';
+import 'message_pagination_loading.dart';
 import 'message_refreshable.dart';
 
 final _inboxWidgetKey = GlobalKey<ScaffoldState>();
@@ -12,11 +12,11 @@ final _inboxWidgetKey = GlobalKey<ScaffoldState>();
 class InboxMessageWidget extends StatelessWidget {
   final InboxMessageState state;
   final Function() refresh;
-  final Function(bool, int) markMessage;
-  final Function(bool, int) unmarkMessage;
+  final Function(String) markMessage;
+  final Function(String) unmarkMessage;
   final Function(Message) readMessage;
   final ScrollController scrollController;
-  final List<int> markedMessages;
+  final List<String> markedMessages;
 
   const InboxMessageWidget(
       {Key? key,
@@ -41,9 +41,10 @@ class InboxMessageWidget extends StatelessWidget {
       }
     }
 
-    if (state.status == InboxMessageStatus.inboxMessagesLoading) {
+    if (state.status == InboxMessageStatus.loading) {
       return const Center(child: CircularProgressIndicator());
     }
+
     if (state.status == InboxMessageStatus.failure) {
       return RefreshableMessage(
           text:
@@ -51,7 +52,7 @@ class InboxMessageWidget extends StatelessWidget {
           callback: refresh);
     }
     if (state.inboxMessages.isEmpty) {
-      RefreshableMessage(
+      return RefreshableMessage(
           text: "Es sind keine Nachrichten vorhanden", callback: refresh);
     }
 
@@ -59,34 +60,34 @@ class InboxMessageWidget extends StatelessWidget {
       key: _inboxWidgetKey,
       children: [
         Expanded(
-            child: RefreshIndicator(
-          onRefresh: () async => {refresh()},
-          child: ListView.separated(
-            physics: const AlwaysScrollableScrollPhysics(),
-            itemCount: state.inboxMessages.length + 1,
-            separatorBuilder: (context, index) => const Divider(
-              height: 0.5,
-            ),
-            itemBuilder: (context, index) {
-              if (index == state.inboxMessages.length) {
-                return PaginationLoading(
-                    visible:
-                        state.status == InboxMessageStatus.paginationLoading);
-              } else {
-                var message = state.inboxMessages[index];
+          child: RefreshIndicator(
+            onRefresh: () async => {refresh()},
+            child: ListView.separated(
+              physics: const AlwaysScrollableScrollPhysics(),
+              itemCount: state.inboxMessages.length + 1,
+              separatorBuilder: (context, index) => const Divider(
+                height: 0.5,
+              ),
+              itemBuilder: (context, index) {
+                if (index == state.inboxMessages.length) {
+                  return PaginationLoading(
+                      visible:
+                          state.status == InboxMessageStatus.paginationLoading);
+                } else {
+                  var message = state.inboxMessages[index];
 
-                return Container(
-                    color: (markedMessages.contains(index))
+                  return Container(
+                    color: (markedMessages.contains(message.id))
                         ? Theme.of(context).primaryColor.withOpacity(0.5)
                         : Colors.transparent,
                     child: ListTile(
                         onTap: () => {
                               if (markedMessages.isNotEmpty)
                                 {
-                                  if (markedMessages.contains(index))
-                                    unmarkMessage(true, index)
+                                  if (markedMessages.contains(message.id))
+                                    unmarkMessage(message.id)
                                   else
-                                    markMessage(true, index)
+                                    markMessage(message.id)
                                 }
                               else
                                 {
@@ -100,8 +101,7 @@ class InboxMessageWidget extends StatelessWidget {
                                 }
                             },
                         onLongPress: () => {
-                              if (!markedMessages.contains(index))
-                                markMessage(true, index)
+                              {markMessage(message.id)}
                             },
                         leading: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -111,12 +111,14 @@ class InboxMessageWidget extends StatelessWidget {
                         ),
                         trailing: Text(message.getTimeAgo()),
                         title: Text(message.subject),
-                        subtitle: Text(message.sender.username)));
-              }
-            },
-            controller: scrollController,
+                        subtitle: Text(message.sender.username)),
+                  );
+                }
+              },
+              controller: scrollController,
+            ),
           ),
-        ))
+        )
       ],
     );
   }
