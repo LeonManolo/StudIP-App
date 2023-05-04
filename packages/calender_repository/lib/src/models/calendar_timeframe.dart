@@ -41,6 +41,12 @@ class CalendarTimeframe {
     return other.isAfter(_start) && other.isBefore(_end);
   }
 
+  bool containsHourMinuteExclusive(HourMinute hourMinute) {
+    return containsHourMinute(hourMinute) &&
+        !_start.equals(hourMinute) &&
+        !_end.equals(hourMinute);
+  }
+
   //TODO: tests schreiben
   double determinePercentageElapsedByHourMinute(HourMinute hourMinute) {
     if (!containsHourMinute(hourMinute)) {

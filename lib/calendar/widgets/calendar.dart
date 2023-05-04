@@ -1,12 +1,8 @@
-import 'package:app_ui/app_ui.dart';
 import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:calender_repository/calender_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
-import 'package:studipadawan/calendar/extensions/list_extesions.dart';
-import 'package:studipadawan/calendar/widgets/calendar_entry.dart';
 import 'package:studipadawan/calendar/widgets/calendar_header.dart';
-import 'package:studipadawan/calendar/widgets/empty_calendar_entry.dart';
 
 import 'calendar_entry_layout.dart';
 
@@ -67,53 +63,25 @@ class _CalendarState extends State<Calendar> {
           onNextButtonPress: widget.onNextButtonPress,
         ),
         Expanded(
-          child: Stack(
-            children: [
-              ScrollablePositionedList.builder(
-                  itemCount: widget.scheduleStructure.length,
-                  itemScrollController: controller,
-                  itemBuilder: (context, index) {
-                    final key = widget.scheduleStructure[index].combinedKey();
-                    final entry = widget.scheduleData[weekday]?[key];
+          child: ScrollablePositionedList.builder(
+              itemCount: widget.scheduleStructure.length,
+              itemScrollController: controller,
+              itemBuilder: (context, index) {
+                final key = widget.scheduleStructure[index].combinedKey();
+                final entry = widget.scheduleData[weekday]?[key];
+                final nextTimeframe =
+                    index + 1 < widget.scheduleStructure.length
+                        ? widget.scheduleStructure[index + 1]
+                        : null;
 
-                    return CalendarEntryLayout(
-                      timeframe: widget.scheduleStructure[index],
-                      calendarEntryData: entry,
-                    );
-                  }),
-              // Padding(
-              //   padding: const EdgeInsets.only(top: AppSpacing.sm),
-              //   child: Row(
-              //     children: [
-              //       Container(
-              //         padding:
-              //             const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
-              //         width: MediaQuery.of(context).size.width * 0.2 - 3,
-              //         child: const Text(
-              //           "8:00",
-              //           style: TextStyle(
-              //             color: Colors.red,
-              //           ),
-              //         ),
-              //       ),
-              //       const CircleAvatar(
-              //         radius: 5,
-              //         backgroundColor: Colors.red,
-              //         foregroundColor: Colors.red,
-              //       ),
-              //       Expanded(
-              //         child: Container(
-              //           color: Colors.red.withOpacity(0.8),
-              //           height: 1.5,
-              //           alignment: Alignment.center,
-              //         ),
-              //       ),
-              //     ],
-              //   ),
-              // ),
-            ],
-          ),
-        )
+                return CalendarEntryLayout(
+                  timeframe: widget.scheduleStructure[index],
+                  nextTimeframe: nextTimeframe,
+                  calendarEntryData: entry,
+                  showDivider: index != 0,
+                );
+              }),
+        ),
       ],
     );
   }

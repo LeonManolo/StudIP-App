@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:app_ui/app_ui.dart';
 import 'package:calender_repository/calender_repository.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
@@ -46,7 +47,6 @@ class _CalendarEntryState extends State<CalendarEntry> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          //if (showDivider) CalendarEntryDivider(paddingLeft: leftSize),
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.max,
@@ -103,7 +103,8 @@ class _CalendarEntryState extends State<CalendarEntry> {
                               left: BorderSide(
                             width: 3,
                             color: widget.color,
-                          )),
+                          ),
+                          ),
                         ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -129,23 +130,31 @@ class _CalendarEntryState extends State<CalendarEntry> {
                               child: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  Icon(
-                                    EvaIcons.pinOutline,
-                                    size: 20,
-                                    color: widget.color,
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: AppSpacing.xs,
-                                        right: AppSpacing.lg),
-                                    child: Text(
-                                      widget.calendarEntryData?.locations
-                                              .firstOrNull() ??
-                                          "",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        color: widget.color,
-                                      ),
+                                  Visibility(
+                                    visible: widget.calendarEntryData?.locations
+                                        .firstOrNull() != null,
+                                    child: Row(
+                                      children: [
+                                        Icon(
+                                          EvaIcons.pinOutline,
+                                          size: 20,
+                                          color: widget.color,
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              left: AppSpacing.xs,
+                                              right: AppSpacing.lg),
+                                          child: Text(
+                                            widget.calendarEntryData?.locations
+                                                .firstOrNull() ??
+                                                "",
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.w600,
+                                              color: widget.color,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                   Icon(
@@ -176,6 +185,7 @@ class _CalendarEntryState extends State<CalendarEntry> {
               ),
             ],
           ),
+          if (widget.showDivider) CalendarEntryDivider(paddingLeft: leftSize),
         ],
       ),
     );
