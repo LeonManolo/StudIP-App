@@ -18,7 +18,7 @@ class MessageDetailsMenuButton extends StatelessWidget {
       icon: const Icon(EvaIcons.menu2Outline, size: 25, color: Colors.black),
       onSelected: (index) => {
         if (index == 0)
-          {}
+          {answerMessage()}
         else
           {
             showDialog(

@@ -8,6 +8,8 @@ import 'package:studipadawan/messages/message_details/bloc/message_details_event
 import 'package:studipadawan/messages/message_details/bloc/message_details_state.dart';
 import 'package:studipadawan/messages/message_details/widgets/message_details_menu_button.dart';
 
+import '../../message_send/view/message_send_page.dart';
+
 class MessageDetailpage extends StatelessWidget {
   final Message message;
   final bool isInbox;
@@ -48,7 +50,12 @@ class MessageDetailpage extends StatelessWidget {
                 MessageDetailsMenuButton(
                     isInbox: isInbox,
                     answerMessage: () {
-                      print("Answer");
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  MessageSendPage(message: message),
+                              fullscreenDialog: true));
                     },
                     deleteMessage: () {
                       context

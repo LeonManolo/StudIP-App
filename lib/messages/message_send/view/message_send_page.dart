@@ -12,7 +12,8 @@ const double smallMargin = AppSpacing.sm;
 const double bigMargin = AppSpacing.lg;
 
 class MessageSendPage extends StatelessWidget {
-  const MessageSendPage({super.key});
+  final Message? message;
+  const MessageSendPage({super.key, this.message});
 
   @override
   Widget build(BuildContext context) {
@@ -21,22 +22,11 @@ class MessageSendPage extends StatelessWidget {
     final TextEditingController messageController = TextEditingController();
     List<MessageUser> userSuggestions = [];
 
-    bool assertUserExists(String username) {
-      var userExists = userSuggestions
-          .map((recipient) => recipient.username)
-          .toList()
-          .contains(username);
-      if (!userExists) {
-        _buildSnackBar(context, "Bitte wähle einen Empfänger", Colors.red);
-      }
-      return userExists;
-    }
-
-    String getUserId(String username) {
-      return userSuggestions
-          .where((user) => user.username == username)
-          .single
-          .id;
+    if (message != null) {
+      recipientController.text = message!.sender.username;
+      subjectController.text = "RE: ${message!.subject}";
+      messageController.text =
+          "\n\n\n<-------Vorherige Nachricht-------->\n${message!.message}";
     }
 
     return Scaffold(
@@ -53,7 +43,6 @@ class MessageSendPage extends StatelessWidget {
               _buildSnackBar(context, state.message, Colors.red);
             }
             if (state.status == MessageSendStatus.populated) {
-              _buildSnackBar(context, state.message, Colors.green);
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 _buildSnackBar(context, state.message, Colors.green);
                 Navigator.pop(context);
@@ -132,11 +121,20 @@ class MessageSendPage extends StatelessWidget {
                           const Spacer(),
                           ElevatedButton(
                             onPressed: () {
-                              var subject = subjectController.text;
-                              var message = messageController.text;
-                              if (assertUserExists(recipientController.text)) {
-                                _sendMessage(context, subject, message,
-                                    [getUserId(recipientController.text)]);
+                              String recipient = recipientController.text;
+                              String subject = subjectController.text;
+                              String text = messageController.text;
+                              if (recipient == message?.sender.username) {
+                                _sendMessage(context, subject, text,
+                                    [message!.sender.id]);
+                              } else {
+                                if (_assertUserExists(
+                                    context, recipient, userSuggestions)) {
+                                  _sendMessage(context, subject, text, [
+                                    _getUserId(recipientController.text,
+                                        userSuggestions)
+                                  ]);
+                                }
                               }
                             },
                             child: const Text('Senden'),
@@ -150,6 +148,22 @@ class MessageSendPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  bool _assertUserExists(BuildContext context, String username,
+      List<MessageUser> userSuggestions) {
+    var userExists = userSuggestions
+        .map((recipient) => recipient.username)
+        .toList()
+        .contains(username);
+    if (!userExists) {
+      _buildSnackBar(context, "Bitte wähle einen Empfänger", Colors.red);
+    }
+    return userExists;
+  }
+
+  String _getUserId(String username, List<MessageUser> userSuggestions) {
+    return userSuggestions.where((user) => user.username == username).single.id;
   }
 
   Future<List<MessageUser>> _fetchUsers(
@@ -175,6 +189,7 @@ class MessageSendPage extends StatelessWidget {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(message),
+          duration: const Duration(seconds: 1),
           backgroundColor: color,
           behavior: SnackBarBehavior.floating,
         ),

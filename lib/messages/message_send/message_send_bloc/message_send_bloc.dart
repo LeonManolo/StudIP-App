@@ -9,6 +9,7 @@ import 'message_send_state.dart';
 const String unexpectedErrorMessage = "Es ist ein unbekannter Fehler aufgetreten, bitte versuche es erneut";
 const String missingSubjectErrorMessage = "Bitte gebe einen Betreff ein";
 const String missingMessageErrorMessage = "Bitte gebe eine Nachricht ein";
+const String messageSentMessage = "Die Nachricht wurde versendet";
 
 class MessageSendBloc extends Bloc<MessageSendEvent, MessageSendState> {
   final MessageRepository _messageRepository;
@@ -36,7 +37,7 @@ class MessageSendBloc extends Bloc<MessageSendEvent, MessageSendState> {
     } else {
       try {
         await _messageRepository.sendMessage(outgoingMessage: event.message);
-        emit(state.copyWith(status: MessageSendStatus.populated));
+        emit(state.copyWith(status: MessageSendStatus.populated, message: messageSentMessage));
       } catch (e) {
         emit(const MessageSendState(
             status: MessageSendStatus.failure, message: unexpectedErrorMessage));
