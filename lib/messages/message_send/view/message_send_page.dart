@@ -47,19 +47,20 @@ class MessageSendPage extends StatelessWidget {
           messageRepository: context.read<MessageRepository>(),
           userRepository: context.read<UserRepository>(),
         ),
-        child: BlocBuilder<MessageSendBloc, MessageSendState>(
-          builder: (context, messageSendState) {
-            if (messageSendState.status == MessageSendStatus.failure) {
-              _buildSnackBar(
-                  context, messageSendState.message, Colors.red);
+        child: BlocConsumer<MessageSendBloc, MessageSendState>(
+          listener: (context, state) {
+            if (state.status == MessageSendStatus.failure) {
+              _buildSnackBar(context, state.message, Colors.red);
             }
-            if (messageSendState.status == MessageSendStatus.populated) {
+            if (state.status == MessageSendStatus.populated) {
+              _buildSnackBar(context, state.message, Colors.green);
               WidgetsBinding.instance.addPostFrameCallback((_) {
-                _buildSnackBar(
-                    context, "Die Nachricht wurde versendet", Colors.green);
+                _buildSnackBar(context, state.message, Colors.green);
                 Navigator.pop(context);
               });
             }
+          },
+          builder: (context, state) {
             return SingleChildScrollView(
               child: Column(
                 children: [

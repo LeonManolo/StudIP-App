@@ -95,7 +95,10 @@ class InboxMessageWidget extends StatelessWidget {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) => MessageDetailpage(
-                                            message: message)),
+                                            isInbox: true,
+                                            message: message,
+                                            refreshMessages: refresh
+                                            )),
                                   )
                                 }
                             },

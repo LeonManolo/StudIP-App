@@ -114,11 +114,11 @@ class _MessagesPageState extends State<MessagesPage>
                       listener: (context, state) {
                         if (state.status ==
                             InboxMessageStatus.deleteInboxMessagesSucceed) {
-                          buildSnackBar(context, state.message, Colors.green);
+                          _buildSnackBar(context, state.message, Colors.green);
                         }
                         if (state.status ==
                             InboxMessageStatus.deleteInboxMessagesFailure) {
-                          buildSnackBar(context, state.message, Colors.red);
+                          _buildSnackBar(context, state.message, Colors.red);
                         }
                       },
                       builder: (context, state) {
@@ -138,11 +138,11 @@ class _MessagesPageState extends State<MessagesPage>
                       listener: (context, state) {
                         if (state.status ==
                             OutboxMessageStatus.deleteOutboxMessagesSucceed) {
-                          buildSnackBar(context, state.message, Colors.green);
+                          _buildSnackBar(context, state.message, Colors.green);
                         }
                         if (state.status ==
                             OutboxMessageStatus.deleteOutboxMessagesFailure) {
-                          buildSnackBar(context, state.message, Colors.red);
+                          _buildSnackBar(context, state.message, Colors.red);
                         }
                       },
                       builder: (context, state) {
@@ -196,7 +196,7 @@ class _MessagesPageState extends State<MessagesPage>
     );
   }
 
-  void buildSnackBar(BuildContext context, String message, Color color) {
+  void _buildSnackBar(BuildContext context, String message, Color color) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -268,7 +268,9 @@ class _MessagesPageState extends State<MessagesPage>
       _outboxMessageBloc.add(
           DeleteOutboxMessagesRequested(messageIds: _markedOutboxMessages));
     }
-    _unmarkAll();
+    setState(() {
+      _unmarkAll();
+    });
   }
 
   void _markMessage(String messageId) {

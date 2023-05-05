@@ -86,7 +86,9 @@ class OutboxMessageWidget extends StatelessWidget {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) => MessageDetailpage(
-                                            message: message)),
+                                            isInbox: false,
+                                            message: message,
+                                            refreshMessages: refresh)),
                                   )
                                 }
                             },
