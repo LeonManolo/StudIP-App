@@ -6,6 +6,12 @@ import 'package:messages_repository/messages_repository.dart';
 import 'package:studipadawan/messages/message_overview/message_outbox_bloc/message_outbox_event.dart';
 import 'package:studipadawan/messages/message_overview/message_outbox_bloc/message_outbox_state.dart';
 
+const String unexpectedErrorMessage =
+    "Es ist ein unbekannter Fehler aufgetreten, bitte versuche es erneut";
+const String messagedDeleteErrorMessage =
+    "Es konnten nicht alle Nachrichten gelöscht werden";
+const String messagesDeleteSucceedMessage = "Die Nachrichten wurden gelöscht";
+
 class OutboxMessageBloc extends Bloc<OutboxMessageEvent, OutboxMessageState> {
   final MessageRepository _messageRepository;
   final AuthenticationRepository _authenticationRepository;
@@ -47,13 +53,20 @@ class OutboxMessageBloc extends Bloc<OutboxMessageEvent, OutboxMessageState> {
           paginationLoading: false,
           outboxMessages: [...state.outboxMessages, ...outboxMessages]));
     } catch (e) {
-      emit(const OutboxMessageState(status: OutboxMessageStatus.failure));
+      emit(const OutboxMessageState(
+          status: OutboxMessageStatus.failure, message: unexpectedErrorMessage));
     }
   }
 
   FutureOr<void> _onDeleteOutboxMessagesRequested(
       DeleteOutboxMessagesRequested event,
       Emitter<OutboxMessageState> emit) async {
+    emit(state.copyWith(
+        status: OutboxMessageStatus.loading,
+        paginationLoading: false,
+        maxReached: state.maxReached,
+        currentOffset: state.currentOffset,
+        outboxMessages: state.outboxMessages));
 
     List<String> deletedMessages = [];
     try {
@@ -61,18 +74,28 @@ class OutboxMessageBloc extends Bloc<OutboxMessageEvent, OutboxMessageState> {
         await _messageRepository.deleteMessage(messageId: messageId);
         deletedMessages.add(messageId);
       }
+      List<Message> outboxMessages = await _messageRepository.getOutboxMessages(
+        userId: _authenticationRepository.currentUser.id,
+        offset: state.currentOffset,
+        limit: limit,
+      );
       emit(state.copyWith(
           status: OutboxMessageStatus.deleteOutboxMessagesSucceed,
-          maxReached: state.maxReached,
+          maxReached: outboxMessages.length < limit,
           paginationLoading: false,
-          outboxMessages: state.outboxMessages
-              .where((message) => !event.messageIds.contains(message.id))
-              .toList()));
+          message: messagesDeleteSucceedMessage,
+          outboxMessages: [
+            ...state.outboxMessages
+                .where((message) => !event.messageIds.contains(message.id))
+                .toList(),
+            ...outboxMessages
+          ]));
     } catch (_) {
       emit(state.copyWith(
           status: OutboxMessageStatus.deleteOutboxMessagesFailure,
           maxReached: state.maxReached,
           paginationLoading: false,
+          message: messagedDeleteErrorMessage,
           outboxMessages: state.outboxMessages
               .where((message) => !deletedMessages.contains(message.id))
               .toList()));
@@ -99,7 +122,8 @@ class OutboxMessageBloc extends Bloc<OutboxMessageEvent, OutboxMessageState> {
           paginationLoading: false,
           outboxMessages: outboxMessages));
     } catch (e) {
-      emit(const OutboxMessageState(status: OutboxMessageStatus.failure));
+      emit(const OutboxMessageState(
+          status: OutboxMessageStatus.failure, message: unexpectedErrorMessage));
     }
   }
 

@@ -114,15 +114,11 @@ class _MessagesPageState extends State<MessagesPage>
                       listener: (context, state) {
                         if (state.status ==
                             InboxMessageStatus.deleteInboxMessagesSucceed) {
-                          buildSnackBar(context,
-                              "Die Nachrichten wurden gelöscht", Colors.green);
+                          buildSnackBar(context, state.message, Colors.green);
                         }
                         if (state.status ==
                             InboxMessageStatus.deleteInboxMessagesFailure) {
-                          buildSnackBar(
-                              context,
-                              "Es konnten nicht alle Nachrichten gelöscht werden",
-                              Colors.red);
+                          buildSnackBar(context, state.message, Colors.red);
                         }
                       },
                       builder: (context, state) {
@@ -142,15 +138,11 @@ class _MessagesPageState extends State<MessagesPage>
                       listener: (context, state) {
                         if (state.status ==
                             OutboxMessageStatus.deleteOutboxMessagesSucceed) {
-                          buildSnackBar(context,
-                              "Die Nachrichten wurden gelöscht", Colors.green);
+                          buildSnackBar(context, state.message, Colors.green);
                         }
                         if (state.status ==
                             OutboxMessageStatus.deleteOutboxMessagesFailure) {
-                          buildSnackBar(
-                              context,
-                              "Es konnten nicht alle Nachrichten gelöscht werden",
-                              Colors.red);
+                          buildSnackBar(context, state.message, Colors.red);
                         }
                       },
                       builder: (context, state) {

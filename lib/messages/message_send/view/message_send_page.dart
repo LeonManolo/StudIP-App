@@ -51,7 +51,7 @@ class MessageSendPage extends StatelessWidget {
           builder: (context, messageSendState) {
             if (messageSendState.status == MessageSendStatus.failure) {
               _buildSnackBar(
-                  context, messageSendState.errorMessage, Colors.red);
+                  context, messageSendState.message, Colors.red);
             }
             if (messageSendState.status == MessageSendStatus.populated) {
               WidgetsBinding.instance.addPostFrameCallback((_) {

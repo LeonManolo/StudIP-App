@@ -47,8 +47,7 @@ class InboxMessageWidget extends StatelessWidget {
 
     if (state.status == InboxMessageStatus.failure) {
       return RefreshableMessage(
-          text:
-              "Ein unbekannter Fehler ist aufgetreten, bitte versuche es erneut",
+          text: state.message,
           callback: refresh);
     }
     if (state.inboxMessages.isEmpty) {
