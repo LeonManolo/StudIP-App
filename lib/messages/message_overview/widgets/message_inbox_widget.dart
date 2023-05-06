@@ -113,7 +113,7 @@ class InboxMessageWidget extends StatelessWidget {
                         ),
                         trailing: Text(message.getTimeAgo()),
                         title: Text(message.subject),
-                        subtitle: Text(message.sender.username)),
+                        subtitle: Text(_parseUsername(message.sender))),
                   );
                 }
               },
@@ -123,5 +123,9 @@ class InboxMessageWidget extends StatelessWidget {
         )
       ],
     );
+  }
+
+  String _parseUsername(MessageUser user) {
+    return "${user.firstName} ${user.lastName}";
   }
 }

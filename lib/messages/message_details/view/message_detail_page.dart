@@ -43,6 +43,18 @@ class MessageDetailpage extends StatelessWidget {
             _buildSnackBar(context, state.message, Colors.red);
           }
         }, builder: (context, state) {
+          if (state.status == MessageDetailsStatus.loading) {
+            return Container(
+                color: Theme.of(context).scaffoldBackgroundColor,
+                child: Column(
+                  children: const [
+                    Expanded(
+                        child: Center(
+                      child: CircularProgressIndicator(),
+                    ))
+                  ],
+                ));
+          }
           return Scaffold(
             appBar: AppBar(
               title: const Text('Nachrichten'),
@@ -75,7 +87,7 @@ class MessageDetailpage extends StatelessWidget {
                         fontWeight: FontWeight.bold, fontSize: headlineSize),
                   ),
                   const SizedBox(height: smallMargin),
-                  Text(message.sender.username),
+                  Text(_parseUser(message.sender)),
                   const SizedBox(height: bigMargin),
                   const Text(
                     'An:',
@@ -116,10 +128,15 @@ class MessageDetailpage extends StatelessWidget {
   }
 
   String _parseRecipients(final Message message) {
-    return message.recipients.map((user) => user.username).join(", ");
+    return message.recipients.map((user) => _parseUser(user)).join("\n");
   }
 
-  void _buildSnackBar(BuildContext context, String message, Color color) {
+  String _parseUser(final MessageUser user) {
+    return "${user.firstName} ${user.lastName}";
+  }
+
+  void _buildSnackBar(
+      final BuildContext context, final String message, final Color color) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(

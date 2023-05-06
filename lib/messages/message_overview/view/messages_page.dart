@@ -51,8 +51,6 @@ class _MessagesPageState extends State<MessagesPage>
   List<String> _markedInboxMessages = [];
   List<String> _markedOutboxMessages = [];
 
-  int _tab = 0;
-
   @override
   void initState() {
     super.initState();
@@ -76,8 +74,7 @@ class _MessagesPageState extends State<MessagesPage>
       })
       ..animation!.addListener(() {
         int currentIndex = _tabController.animation!.value.round();
-        if (_tab != currentIndex) {
-          _tab = currentIndex;
+        if (_tabBarBloc.state.currentTabIndex != currentIndex) {
           _tabBarBloc.add(TabIndexChanged(index: currentIndex));
         }
       });
@@ -168,7 +165,7 @@ class _MessagesPageState extends State<MessagesPage>
                 FloatingActionButtonLocation.endFloat));
   }
 
-  AppBar _buildAppBar(BuildContext context) {
+  AppBar _buildAppBar(final BuildContext context) {
     return AppBar(
       title: const Text('Nachrichten'),
       actions: <Widget>[
@@ -196,7 +193,8 @@ class _MessagesPageState extends State<MessagesPage>
     );
   }
 
-  void _buildSnackBar(BuildContext context, String message, Color color) {
+  void _buildSnackBar(
+      final BuildContext context, final String message, final Color color) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -273,7 +271,7 @@ class _MessagesPageState extends State<MessagesPage>
     });
   }
 
-  void _markMessage(String messageId) {
+  void _markMessage(final String messageId) {
     setState(() {
       if (_tabController.index == 0) {
         _markedInboxMessages.add(messageId);
@@ -283,7 +281,7 @@ class _MessagesPageState extends State<MessagesPage>
     });
   }
 
-  void _unmarkMessage(String messageId) {
+  void _unmarkMessage(final String messageId) {
     setState(() {
       if (_tabController.index == 0) {
         _markedInboxMessages.removeWhere((id) => id == messageId);
@@ -314,7 +312,7 @@ class _MessagesPageState extends State<MessagesPage>
     });
   }
 
-  void _readMessage(Message message) {
+  void _readMessage(final Message message) {
     setState(() {
       if (_inboxMessageBloc.state.currentFilter == MessageFilter.unread) {
         _inboxMessageBloc.state.inboxMessages.remove(message);
@@ -325,7 +323,7 @@ class _MessagesPageState extends State<MessagesPage>
     });
   }
 
-  void _handleFilterSelection(MessageFilter filter) {
+  void _handleFilterSelection(final MessageFilter filter) {
     setState(() => {
           if (_inboxMessageBloc.state.currentFilter != filter)
             {

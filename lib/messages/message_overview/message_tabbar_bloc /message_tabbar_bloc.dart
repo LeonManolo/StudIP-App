@@ -15,6 +15,7 @@ class TabBarBloc extends Bloc<TabBarEvent, TabBarState> {
     emit(state.copyWith(
         status: event.index == 0
             ? TabBarStatus.filterIconVisible
-            : TabBarStatus.filterIconHidden));
+            : TabBarStatus.filterIconHidden,
+            currentTabIndex: event.index));
   }
 }

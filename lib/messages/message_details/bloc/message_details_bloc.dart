@@ -1,12 +1,10 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:messages_repository/messages_repository.dart';
+import '../../message_overview/message_inbox_bloc /message_inbox_bloc.dart';
 import 'message_details_event.dart';
 import 'message_details_state.dart';
 
-const String messageDeleteErrorMessage =
-    "Es konnten nicht alle Nachrichten gelöscht werden";
-const String messageDeleteSucceedMessage = "Die Nachrichten wurde gelöscht";
 
 class MessageDetailsBloc
     extends Bloc<MessageDetailsEvent, MessageDetailsState> {
@@ -27,11 +25,11 @@ class MessageDetailsBloc
 
       emit(const MessageDetailsState(
           status: MessageDetailsStatus.deleteMessageSucceed,
-          message: messageDeleteSucceedMessage));
+          message: messageDeleteSucceed));
     } catch (_) {
       emit(const MessageDetailsState(
           status: MessageDetailsStatus.deleteMessageFailure,
-          message: messageDeleteSucceedMessage));
+          message: messageDeleteSucceed));
     }
   }
 }

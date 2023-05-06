@@ -7,8 +7,11 @@ import 'message_inbox_state.dart';
 
 const String unexpectedErrorMessage =
     "Es ist ein unbekannter Fehler aufgetreten, bitte versuche es erneut";
-const String messagedDeleteErrorMessage = "Es konnten nicht alle Nachrichten gelöscht werden";
-const String messagesDeleteSucceedMessage = "Die Nachrichten wurden gelöscht";
+const String messagesDeleteError =
+    "Es konnten nicht alle Nachrichten gelöscht werden";
+const String messageDeleteError = "Die Nachricht konnte nicht gelöscht werden";
+const String messagesDeleteSucceed = "Die Nachrichten wurden gelöscht";
+const String messageDeleteSucceed = "Die Nachricht wurde gelöscht";
 
 class InboxMessageBloc extends Bloc<InboxMessageEvent, InboxMessageState> {
   final MessageRepository _messageRepository;
@@ -91,9 +94,7 @@ class InboxMessageBloc extends Bloc<InboxMessageEvent, InboxMessageState> {
       ));
     } catch (_) {
       emit(const InboxMessageState(
-          status: InboxMessageStatus.failure,
-          message:
-              unexpectedErrorMessage));
+          status: InboxMessageStatus.failure, message: unexpectedErrorMessage));
     }
   }
 
@@ -109,32 +110,25 @@ class InboxMessageBloc extends Bloc<InboxMessageEvent, InboxMessageState> {
         currentFilter: state.currentFilter,
         inboxMessages: state.inboxMessages));
     try {
-      for (var messageId in event.messageIds) {
-        await _messageRepository.deleteMessage(messageId: messageId);
-        deletedMessages.add(messageId);
-      }
+      await _messageRepository.deleteMessages(messageIds: event.messageIds);
       final inboxMessages = await fetchInboxMessages(
-          offset: state.currentOffset, filter: state.currentFilter);
+          offset: 0, filter: state.currentFilter);
 
       emit(state.copyWith(
           status: InboxMessageStatus.deleteInboxMessagesSucceed,
           currentFilter: state.currentFilter,
           maxReached: state.maxReached,
           paginationLoading: false,
-          message: messagesDeleteSucceedMessage,
-          inboxMessages: [
-            ...state.inboxMessages
-                .where((message) => !event.messageIds.contains(message.id))
-                .toList(),
-            ...inboxMessages
-          ]));
+          message: event.messageIds.length == 1 ? messageDeleteSucceed : messagesDeleteSucceed,
+          inboxMessages: inboxMessages
+          ));
     } catch (_) {
       emit(state.copyWith(
           status: InboxMessageStatus.deleteInboxMessagesFailure,
           currentFilter: state.currentFilter,
           maxReached: state.maxReached,
           paginationLoading: false,
-          message: messagedDeleteErrorMessage,
+          message: event.messageIds.length == 1 ? messageDeleteError : messagesDeleteError,
           inboxMessages: state.inboxMessages
               .where((message) => !deletedMessages.contains(message.id))
               .toList()));

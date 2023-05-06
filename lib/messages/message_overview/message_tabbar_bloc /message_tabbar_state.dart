@@ -5,8 +5,8 @@ enum TabBarStatus { filterIconVisible, filterIconHidden }
 
 class TabBarState extends Equatable {
   final TabBarStatus status;
-
-  const TabBarState({required this.status});
+  final int currentTabIndex;
+  const TabBarState({required this.status, this.currentTabIndex = 0});
 
   const TabBarState.initial()
       : this(
@@ -15,10 +15,13 @@ class TabBarState extends Equatable {
 
   @override
   List<Object?> get props => [
-        status,
+        status, currentTabIndex
       ];
 
-  TabBarState copyWith({TabBarStatus? status, List<Message>? inboxMessages}) {
-    return TabBarState(status: status ?? this.status);
+  TabBarState copyWith({TabBarStatus? status, List<Message>? inboxMessages, int? currentTabIndex}) {
+    return TabBarState(
+      status: status ?? this.status,
+      currentTabIndex: currentTabIndex ?? this.currentTabIndex,
+      );
   }
 }

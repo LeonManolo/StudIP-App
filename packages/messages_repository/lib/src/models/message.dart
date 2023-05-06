@@ -7,10 +7,10 @@ class Message {
   final String id;
   final String subject;
   final String message;
-  final MessageUser sender;
-  final List<MessageUser> recipients;
-  final DateTime mkdate;
+  MessageUser sender;
+  List<MessageUser> recipients;
   bool isRead;
+  final DateTime mkdate;
 
   Message(
       {required this.id,
@@ -30,14 +30,20 @@ class Message {
     return timeago.format(mkdate, locale: 'de');
   }
 
-  factory Message.fromMessageResponse(MessageResponse response) {
+  factory Message.fromMessageResponse(final MessageResponse response) {
     return Message(
         id: response.id,
         subject: response.subject,
         message: response.message,
-        sender: MessageUser(id: response.senderId, username: ""),
+        sender: MessageUser(
+            id: response.senderId,
+            username: "",
+            firstName: "",
+            lastName: "",
+            role: ""),
         recipients: response.recipientIds
-            .map((id) => MessageUser(id: id, username: ""))
+            .map((id) => MessageUser(
+                id: id, username: "", firstName: "", lastName: "", role: ""))
             .toList(),
         mkdate: response.mkdate,
         isRead: response.isRead);

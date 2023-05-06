@@ -32,19 +32,10 @@ class OutboxMessageWidget extends StatelessWidget {
       return Icon(EvaIcons.messageSquareOutline, color: iconColor, size: 24.0);
     }
 
-    String parseRecipients(final Message message) {
-      return message.recipients.map((user) => user.username).join(", ");
-    }
-
     if (state.status == OutboxMessageStatus.loading) {
       return const Center(child: CircularProgressIndicator());
     }
-    if (state.status == OutboxMessageStatus.failure) {
-      return RefreshableMessage(
-          text:
-              "Ein unbekannter Fehler ist aufgetreten, bitte versuche es erneut",
-          callback: refresh);
-    }
+
     if (state.outboxMessages.isEmpty) {
       return RefreshableMessage(
           text: "Es sind keine Nachrichten vorhanden", callback: refresh);
@@ -103,7 +94,7 @@ class OutboxMessageWidget extends StatelessWidget {
                         ),
                         trailing: Text(message.getTimeAgo()),
                         title: Text(message.subject),
-                        subtitle: Text(parseRecipients(message))));
+                        subtitle: Text(_parseRecipients(message))));
               }
             },
             controller: scrollController,
@@ -111,5 +102,13 @@ class OutboxMessageWidget extends StatelessWidget {
         ))
       ],
     );
+  }
+
+  String _parseRecipients(final Message message) {
+    return message.recipients.map((user) => _parseUsername(user)).join(", ");
+  }
+
+  String _parseUsername(MessageUser user) {
+    return "${user.firstName} ${user.lastName}";
   }
 }
