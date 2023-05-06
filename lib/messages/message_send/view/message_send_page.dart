@@ -25,12 +25,13 @@ class MessageSendPage extends StatelessWidget {
 
     if (message != null) {
       var builder = StringBuffer();
-      recipientController.text = message!.sender.username;
-      subjectController.text = subjectController.text.contains("RE")
+      var subject = message!.subject.contains("RE:")
           ? message!.subject
           : "RE: ${message!.subject}";
+      recipientController.text = message!.sender.username;
+      subjectController.text = subject;
       builder.writeln("\n. . . ursprüngliche Nachricht . . .");
-      builder.writeln("Betreff: ${message!.subject}");
+      builder.writeln("Betreff: $subject");
       builder.writeln(
           "Datum: ${DateFormat("dd/MM/yyyy hh:mm:ss").format(message!.mkdate)}");
       builder.writeln(
