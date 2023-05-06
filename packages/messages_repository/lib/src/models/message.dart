@@ -34,7 +34,9 @@ class Message {
     return Message(
         id: response.id,
         subject: response.subject,
-        message: response.message,
+        message: response.message
+            .replaceAll("<!--HTML-->", "")
+            .replaceAll("<br />", ""),
         sender: MessageUser(
             id: response.senderId,
             username: "",
