@@ -135,7 +135,7 @@ class CourseFilesBloc extends Bloc<CourseFilesEvent, CourseFilesState> {
     FileInfo fileInfo,
     Emitter<CourseFilesState> emit,
   ) async {
-    File fileToDownload = fileInfo.file;
+    final File fileToDownload = fileInfo.file;
 
     final int selectedFileInfoIndex = state.items.indexOf(right(fileInfo));
 

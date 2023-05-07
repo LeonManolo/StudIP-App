@@ -1,14 +1,12 @@
+import 'package:calender_repository/src/models/models.dart';
 import 'package:studip_api_client/studip_api_client.dart';
 
-import 'models.dart';
-
 class CalendarWeekData {
-  final Map<Weekdays, Map<String, CalendarEntryData>> data;
 
   CalendarWeekData({required this.data});
 
   factory CalendarWeekData.fromScheduleResponse(
-      ScheduleResponse scheduleResponse) {
+      ScheduleResponse scheduleResponse,) {
     final Map<Weekdays, Map<String, CalendarEntryData>> data = {};
     for (final scheduleData in scheduleResponse.data) {
       final weekdayNum = scheduleData.attributes?.weekday;
@@ -35,10 +33,11 @@ class CalendarWeekData {
     }
     return CalendarWeekData(data: data);
   }
+  final Map<Weekdays, Map<String, CalendarEntryData>> data;
 
   static CalendarTimeframe? _toCalenderTimeframe(Attributes? attributes) {
-    final start = attributes?.start?.split(":");
-    final end = attributes?.end?.split(":");
+    final start = attributes?.start?.split(':');
+    final end = attributes?.end?.split(':');
     if (start?.length == 2 && end?.length == 2) {
       final startHours = num.tryParse(start![0])?.toInt();
       final startMinutes = num.tryParse(start[1])?.toInt();
