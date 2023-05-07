@@ -5,6 +5,8 @@ abstract class StudIPMessagesClient {
       {required String userId, required int limit, required int offset});
   Future<void> readMessage(
       {required String messageId, required String message});
+  Future<void> deleteMessage(
+      {required String messageId});
   Future<MessageResponse> sendMessage({required String message});
   Future<MessageListResponse> getInboxMessages(
       {required String userId,

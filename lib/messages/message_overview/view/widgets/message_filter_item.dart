@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../message_inbox_bloc /message_inbox_state.dart';
+import '../../message_inbox_bloc /message_inbox_state.dart';
 
 class FilterItem extends StatelessWidget {
   final MessageFilter filter;

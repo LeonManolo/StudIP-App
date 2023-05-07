@@ -23,11 +23,11 @@ class MessageRepository {
       final messages = response.messageResponses
           .map((response) => Message.fromMessageResponse(response))
           .toList();
-      final Map<String, String> knownUsers = {};
+      final Map<String, MessageUser> knownUsers = {};
       for (var message in messages) {
-        message.sender.username =
-            await _fetchUserName(knownUsers, message.sender.id);
-        await _fetchUserNames(knownUsers, message.recipients);
+        message.sender = await _fetchUser(knownUsers, message.sender.id);
+        message.recipients =
+            await _fetchUsers(knownUsers, message.recipients);
       }
       return messages;
     } catch (error, stackTrace) {
@@ -46,11 +46,10 @@ class MessageRepository {
       final messages = response.messageResponses
           .map((response) => Message.fromMessageResponse(response))
           .toList();
-      final Map<String, String> knownUsers = {};
+      final Map<String, MessageUser> knownUsers = {};
       for (var message in messages) {
-        message.sender.username =
-            await _fetchUserName(knownUsers, message.sender.id);
-        await _fetchUserNames(knownUsers, message.recipients);
+        message.sender = await _fetchUser(knownUsers, message.sender.id);
+        message.recipients = await _fetchUsers(knownUsers, message.recipients);
       }
       return messages;
     } catch (error, stackTrace) {
@@ -100,25 +99,41 @@ class MessageRepository {
     }
   }
 
-  Future<void> _fetchUserNames(
-      Map<String, String> knownUsers, final List<MessageUser> users) async {
-    for (var user in users) {
-      if (knownUsers[user.id] == null) {
-        final fetchedUser = await _fetchUserName(knownUsers, user.id);
-        user.username = fetchedUser;
-        knownUsers[user.id] = fetchedUser;
-      } else {
-        user.username = knownUsers[user.id]!;
+  Future<void> deleteMessages({required List<String> messageIds}) async {
+    try {
+      for (var messageId in messageIds) {
+        await deleteMessage(messageId: messageId);
       }
+    } catch (error, stackTrace) {
+      Error.throwWithStackTrace(error, stackTrace);
     }
   }
 
-  Future<String> _fetchUserName(
-      Map<String, String> knownUsers, String userId) async {
+  Future<void> deleteMessage({required String messageId}) async {
+    await _apiClient.deleteMessage(messageId: messageId);
+  }
+
+  Future<List<MessageUser>> _fetchUsers(Map<String, MessageUser> knownUsers,
+      final List<MessageUser> users) async {
+    final List<MessageUser> messageUsers = [];
+    for (var user in users) {
+      if (knownUsers[user.id] == null) {
+        user = await _fetchUser(knownUsers, user.id);
+        knownUsers[user.id] = user;
+        messageUsers.add(user);
+      } else {
+        messageUsers.add(knownUsers[user.id]!);
+      }
+    }
+    return messageUsers;
+  }
+
+  Future<MessageUser> _fetchUser(
+      Map<String, MessageUser> knownUsers, String userId) async {
     if (knownUsers[userId] == null) {
-      final fetchedUser = await _apiClient.getUser(userId: userId);
-      knownUsers[userId] = fetchedUser.username;
-      return fetchedUser.username;
+      final userResponse = await _apiClient.getUser(userId: userId);
+      knownUsers[userId] = MessageUser.fromUserResponse(userResponse);
+      return knownUsers[userId]!;
     } else {
       return knownUsers[userId]!;
     }

@@ -41,6 +41,19 @@ class StudIpAPICore {
       HttpHeaders.acceptHeader: "*/*"
     });
   }
+  
+  Future<http.Response> delete({
+    required String endpoint,
+    Map<String, String>? queryParameters,
+  }) async {
+    final uri = Uri.parse("$_baseUrl/$_apiBaseUrl/$endpoint")
+        .replace(queryParameters: queryParameters);
+
+    return await _oauth2Helper.delete(uri.toString(), headers: {
+      HttpHeaders.contentTypeHeader: ContentType.json.value,
+      HttpHeaders.acceptHeader: "*/*"
+    });
+  }
 
   Future<http.Response> patch(
       {required String endpoint,

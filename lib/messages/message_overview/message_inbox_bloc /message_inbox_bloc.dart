@@ -5,6 +5,14 @@ import 'package:messages_repository/messages_repository.dart';
 import 'message_inbox_event.dart';
 import 'message_inbox_state.dart';
 
+const String unexpectedErrorMessage =
+    "Es ist ein unbekannter Fehler aufgetreten, bitte versuche es erneut";
+const String messagesDeleteError =
+    "Es konnten nicht alle Nachrichten gelöscht werden";
+const String messageDeleteError = "Die Nachricht konnte nicht gelöscht werden";
+const String messagesDeleteSucceed = "Die Nachrichten wurden gelöscht";
+const String messageDeleteSucceed = "Die Nachricht wurde gelöscht";
+
 class InboxMessageBloc extends Bloc<InboxMessageEvent, InboxMessageState> {
   final MessageRepository _messageRepository;
   final AuthenticationRepository _authenticationRepository;
@@ -19,6 +27,7 @@ class InboxMessageBloc extends Bloc<InboxMessageEvent, InboxMessageState> {
     on<InboxMessagesRequested>(_onInboxMessagesRequested);
     on<RefreshInboxRequested>(_onRefreshRequested);
     on<ReadMessageRequested>(_onReadMessageRequested);
+    on<DeleteInboxMessagesRequested>(_onDeleteInboxMessagesRequested);
   }
 
   Future<void> _onInboxMessagesRequested(
@@ -27,7 +36,7 @@ class InboxMessageBloc extends Bloc<InboxMessageEvent, InboxMessageState> {
   ) async {
     if (state.inboxMessages.isEmpty || event.filter != state.currentFilter) {
       emit(state.copyWith(
-        status: InboxMessageStatus.inboxMessagesLoading,
+        status: InboxMessageStatus.loading,
         inboxMessages: [],
         paginationLoading: false,
         currentFilter: event.filter,
@@ -42,12 +51,8 @@ class InboxMessageBloc extends Bloc<InboxMessageEvent, InboxMessageState> {
     }
 
     try {
-      final inboxMessages = await _messageRepository.getInboxMessages(
-        userId: _authenticationRepository.currentUser.id,
-        offset: event.offset,
-        limit: limit,
-        filterUnread: event.filter == MessageFilter.unread,
-      );
+      final inboxMessages =
+          await _fetchInboxMessages(offset: event.offset, filter: event.filter);
 
       emit(state.copyWith(
         status: InboxMessageStatus.populated,
@@ -60,7 +65,8 @@ class InboxMessageBloc extends Bloc<InboxMessageEvent, InboxMessageState> {
         ],
       ));
     } catch (_) {
-      emit(const InboxMessageState(status: InboxMessageStatus.failure));
+      emit(const InboxMessageState(
+          status: InboxMessageStatus.failure, message: unexpectedErrorMessage));
     }
   }
 
@@ -69,34 +75,68 @@ class InboxMessageBloc extends Bloc<InboxMessageEvent, InboxMessageState> {
     Emitter<InboxMessageState> emit,
   ) async {
     emit(state.copyWith(
-      status: InboxMessageStatus.inboxMessagesLoading,
+      status: InboxMessageStatus.loading,
       inboxMessages: [],
       paginationLoading: false,
       currentFilter: state.currentFilter,
     ));
 
     try {
-      final inboxMessages = await _messageRepository.getInboxMessages(
-        userId: _authenticationRepository.currentUser.id,
-        offset: 0,
-        limit: limit,
-        filterUnread: state.currentFilter == MessageFilter.unread,
-      );
+      final inboxMessages =
+          await _fetchInboxMessages(offset: 0, filter: state.currentFilter);
 
       emit(state.copyWith(
         status: InboxMessageStatus.populated,
         currentFilter: state.currentFilter,
-        maxReached: inboxMessages.isEmpty,
+        maxReached: inboxMessages.length < limit,
         paginationLoading: false,
         inboxMessages: inboxMessages,
       ));
     } catch (_) {
-      emit(const InboxMessageState(status: InboxMessageStatus.failure));
+      emit(const InboxMessageState(
+          status: InboxMessageStatus.failure, message: unexpectedErrorMessage));
+    }
+  }
+
+  FutureOr<void> _onDeleteInboxMessagesRequested(
+      DeleteInboxMessagesRequested event,
+      Emitter<InboxMessageState> emit) async {
+    emit(state.copyWith(
+        status: InboxMessageStatus.loading,
+        paginationLoading: false,));
+    try {
+      await _messageRepository.deleteMessages(messageIds: event.messageIds);
+      final inboxMessages =
+          await _fetchInboxMessages(offset: 0, filter: state.currentFilter);
+
+      emit(state.copyWith(
+          status: InboxMessageStatus.deleteInboxMessagesSucceed,
+          paginationLoading: false,
+          message: event.messageIds.length == 1
+              ? messageDeleteSucceed
+              : messagesDeleteSucceed,
+          inboxMessages: inboxMessages));
+    } catch (_) {
+      emit(state.copyWith(
+          status: InboxMessageStatus.deleteInboxMessagesFailure,
+          paginationLoading: false,
+          message: event.messageIds.length == 1
+              ? messageDeleteError
+              : messagesDeleteError));
     }
   }
 
   FutureOr<void> _onReadMessageRequested(
       ReadMessageRequested event, Emitter<InboxMessageState> emit) async {
     await _messageRepository.readMessage(messageId: event.message.id);
+  }
+
+  Future<List<Message>> _fetchInboxMessages(
+      {required int offset, required MessageFilter filter}) async {
+    return await _messageRepository.getInboxMessages(
+        userId: _authenticationRepository.currentUser.id,
+        offset: offset,
+        limit: limit,
+        filterUnread: filter == MessageFilter.unread);
   }
 }
