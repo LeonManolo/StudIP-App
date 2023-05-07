@@ -1,33 +1,34 @@
 import 'dart:convert';
+
+import 'package:messages_repository/src/models/models.dart';
 import 'package:studip_api_client/studip_api_client.dart';
-import 'models/models.dart';
 
 class MessageRepository {
-  final StudIPMessagesClient _apiClient;
-
   const MessageRepository({
     required StudIPMessagesClient apiClient,
   }) : _apiClient = apiClient;
+  final StudIPMessagesClient _apiClient;
 
-  Future<List<Message>> getInboxMessages(
-      {required String userId,
-      required int offset,
-      required int limit,
-      required bool filterUnread}) async {
+  Future<List<Message>> getInboxMessages({
+    required String userId,
+    required int offset,
+    required int limit,
+    required bool filterUnread,
+  }) async {
     try {
       final response = await _apiClient.getInboxMessages(
-          userId: userId,
-          offset: offset,
-          limit: limit,
-          filterUnread: filterUnread);
-      final messages = response.messageResponses
-          .map((response) => Message.fromMessageResponse(response))
-          .toList();
+        userId: userId,
+        offset: offset,
+        limit: limit,
+        filterUnread: filterUnread,
+      );
+      final messages =
+          response.messageResponses.map(Message.fromMessageResponse).toList();
       final Map<String, MessageUser> knownUsers = {};
-      for (var message in messages) {
+      for (final message in messages) {
         message.sender = await _fetchUser(knownUsers, message.sender.id);
-        message.recipients =
-            await _fetchUsers(knownUsers, message.recipients);
+        // ignore: cascade_invocations
+        message.recipients = await _fetchUsers(knownUsers, message.recipients);
       }
       return messages;
     } catch (error, stackTrace) {
@@ -42,13 +43,16 @@ class MessageRepository {
   }) async {
     try {
       final response = await _apiClient.getOutboxMessages(
-          userId: userId, offset: offset, limit: limit);
-      final messages = response.messageResponses
-          .map((response) => Message.fromMessageResponse(response))
-          .toList();
+        userId: userId,
+        offset: offset,
+        limit: limit,
+      );
+      final messages =
+          response.messageResponses.map(Message.fromMessageResponse).toList();
       final Map<String, MessageUser> knownUsers = {};
-      for (var message in messages) {
+      for (final message in messages) {
         message.sender = await _fetchUser(knownUsers, message.sender.id);
+        // ignore: cascade_invocations
         message.recipients = await _fetchUsers(knownUsers, message.recipients);
       }
       return messages;
@@ -57,20 +61,21 @@ class MessageRepository {
     }
   }
 
-  Future<Message> sendMessage(
-      {required OutgoingMessage outgoingMessage}) async {
-    var parsedRecipients = outgoingMessage.recipients
-        .map((id) => {"type": "users", "id": id})
+  Future<Message> sendMessage({
+    required OutgoingMessage outgoingMessage,
+  }) async {
+    final parsedRecipients = outgoingMessage.recipients
+        .map((id) => {'type': 'users', 'id': id})
         .toList();
-    var message = jsonEncode({
-      "data": {
-        "type": "messages",
-        "attributes": {
-          "subject": outgoingMessage.subject,
-          "message": outgoingMessage.message
+    final message = jsonEncode({
+      'data': {
+        'type': 'messages',
+        'attributes': {
+          'subject': outgoingMessage.subject,
+          'message': outgoingMessage.message
         },
-        "relationships": {
-          "recipients": {"data": parsedRecipients}
+        'relationships': {
+          'recipients': {'data': parsedRecipients}
         }
       }
     });
@@ -84,7 +89,7 @@ class MessageRepository {
   }
 
   Future<void> readMessage({required String messageId}) async {
-    String message = jsonEncode({
+    final String message = jsonEncode({
       'data': {
         'type': 'messages',
         'attributes': {
@@ -101,7 +106,7 @@ class MessageRepository {
 
   Future<void> deleteMessages({required List<String> messageIds}) async {
     try {
-      for (var messageId in messageIds) {
+      for (final messageId in messageIds) {
         await deleteMessage(messageId: messageId);
       }
     } catch (error, stackTrace) {
@@ -113,8 +118,10 @@ class MessageRepository {
     await _apiClient.deleteMessage(messageId: messageId);
   }
 
-  Future<List<MessageUser>> _fetchUsers(Map<String, MessageUser> knownUsers,
-      final List<MessageUser> users) async {
+  Future<List<MessageUser>> _fetchUsers(
+    Map<String, MessageUser> knownUsers,
+    List<MessageUser> users,
+  ) async {
     final List<MessageUser> messageUsers = [];
     for (var user in users) {
       if (knownUsers[user.id] == null) {
@@ -129,7 +136,9 @@ class MessageRepository {
   }
 
   Future<MessageUser> _fetchUser(
-      Map<String, MessageUser> knownUsers, String userId) async {
+    Map<String, MessageUser> knownUsers,
+    String userId,
+  ) async {
     if (knownUsers[userId] == null) {
       final userResponse = await _apiClient.getUser(userId: userId);
       knownUsers[userId] = MessageUser.fromUserResponse(userResponse);
