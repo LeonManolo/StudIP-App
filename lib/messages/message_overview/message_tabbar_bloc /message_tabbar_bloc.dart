@@ -25,8 +25,9 @@ class TabBarBloc extends Bloc<TabBarEvent, TabBarState> {
     Emitter<TabBarState> emit,
   ) {
     emit(state.copyWith(
-        filterIconVisible: false,
-        menuIconVisible: true,));
+      filterIconVisible: false,
+      menuIconVisible: true,
+    ));
   }
 
   void _onHideMenuIcon(
@@ -34,7 +35,8 @@ class TabBarBloc extends Bloc<TabBarEvent, TabBarState> {
     Emitter<TabBarState> emit,
   ) {
     emit(state.copyWith(
-        filterIconVisible: state.currentTabIndex == 0,
-        menuIconVisible: false,));
+      filterIconVisible: state.currentTabIndex == 0,
+      menuIconVisible: false,
+    ));
   }
 }
