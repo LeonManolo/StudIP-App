@@ -1,14 +1,6 @@
 import 'package:studip_api_client/studip_api_client.dart' as studip_api_client;
 
 class Folder {
-  final String id;
-  final String folderType;
-  final String name;
-  final String? description;
-  final DateTime createdAt;
-  final DateTime lastUpdatedAt;
-  final bool isVisible;
-  final bool isReadable;
 
   Folder({
     required this.id,
@@ -22,7 +14,7 @@ class Folder {
   });
 
   factory Folder.fromFolderResponse(
-      {required studip_api_client.FolderResponse folderResponse}) {
+      {required studip_api_client.FolderResponse folderResponse,}) {
     return Folder(
       id: folderResponse.id,
       folderType: folderResponse.folderType,
@@ -33,4 +25,12 @@ class Folder {
       isReadable: folderResponse.isReadable,
     );
   }
+  final String id;
+  final String folderType;
+  final String name;
+  final String? description;
+  final DateTime createdAt;
+  final DateTime lastUpdatedAt;
+  final bool isVisible;
+  final bool isReadable;
 }
