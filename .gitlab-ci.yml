@@ -1,0 +1,9 @@
+image: docker:latest
+
+stages:
+  - Test
+
+repository-tests:
+  stage: Test
+  image: ghcr.io/cirruslabs/flutter:latest
+  script: bash ./scripts/run_tests.sh
