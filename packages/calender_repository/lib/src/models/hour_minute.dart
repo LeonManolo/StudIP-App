@@ -15,6 +15,10 @@ class HourMinute {
     }
   }
 
+  HourMinute.fromDateTime({required DateTime dateTime})
+      : _hours = dateTime.hour,
+        _minutes = dateTime.minute;
+
   int get minutes {
     return _minutes;
   }
@@ -47,6 +51,16 @@ class HourMinute {
 
   bool equals(HourMinute other) {
     return _hours == other.hours && _minutes == other.minutes;
+  }
+
+  //TODO: addMinutes tests schreiben
+  HourMinute addMinutes(int minutesToAdd) {
+    int totalMinutes = _minutes + minutesToAdd;
+    int extraHours = totalMinutes ~/ 60;
+    int newMinutes = totalMinutes % 60;
+    int newHours = (_hours + extraHours) % 24;
+
+    return HourMinute(hours: newHours, minutes: newMinutes);
   }
 
   @override
