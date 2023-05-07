@@ -6,53 +6,74 @@ import 'package:messages_repository/messages_repository.dart';
 import 'package:studipadawan/messages/message_send/message_send_bloc/message_send_bloc.dart';
 import 'package:studipadawan/messages/message_send/message_send_bloc/message_send_event.dart';
 import 'package:studipadawan/messages/message_send/message_send_bloc/message_send_state.dart';
-import 'package:studipadawan/messages/message_send/message_users_bloc/message_users_bloc.dart';
-import 'package:studipadawan/messages/message_send/message_users_bloc/message_users_event.dart';
-import 'package:studipadawan/messages/message_send/message_users_bloc/message_users_state.dart';
 import 'package:user_repository/user_repository.dart';
 
 const double smallMargin = AppSpacing.sm;
 const double bigMargin = AppSpacing.lg;
 
-class MessageSendPage extends StatelessWidget {
-  const MessageSendPage({super.key});
+class MessageSendPage extends StatefulWidget {
+  final Message? message;
+  const MessageSendPage({super.key, this.message});
+
+  @override
+  State<MessageSendPage> createState() => _MessageSendPageState();
+}
+
+class _MessageSendPageState extends State<MessageSendPage> {
+  late TextEditingController recipientController;
+  late TextEditingController subjectController;
+  late TextEditingController messageController;
+
+  @override
+  void initState() {
+    super.initState();
+    recipientController = TextEditingController();
+    subjectController = TextEditingController();
+    messageController = TextEditingController();
+
+    if (widget.message != null) {
+      var subject = widget.message!.subject.contains("RE:")
+          ? widget.message!.subject
+          : "RE: ${widget.message!.subject}";
+      recipientController.text = widget.message!.sender.username;
+      subjectController.text = subject;
+      messageController.text = widget.message!.getPreviouseMessageString();
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    recipientController.dispose();
+    subjectController.dispose();
+    messageController.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final TextEditingController recipientController = TextEditingController();
-    final TextEditingController subjectController = TextEditingController();
-    final TextEditingController messageController = TextEditingController();
+    List<MessageUser> userSuggestions = [];
 
     return Scaffold(
       key: UniqueKey(),
       appBar: AppBar(title: const Text('Senden')),
-      body: MultiBlocProvider(
-        providers: [
-          BlocProvider<MessageSendBloc>(
-            create: (context) => MessageSendBloc(
-              messageRepository: context.read<MessageRepository>(),
-              userRepository: context.read<UserRepository>(),
-            ),
-          ),
-          BlocProvider<MessageUsersBloc>(
-            create: (context) => MessageUsersBloc(
-              userRepository: context.read<UserRepository>(),
-            )..add(const MessageUsersRequested(null)),
-          ),
-        ],
-        child: BlocBuilder<MessageSendBloc, MessageSendState>(
-          builder: (context, messageSendState) {
-            if (messageSendState.status == MessageSendStatus.failure) {
-              _buildSnackBar(
-                  context, messageSendState.errorMessage, Colors.red);
+      body: BlocProvider<MessageSendBloc>(
+        create: (context) => MessageSendBloc(
+          messageRepository: context.read<MessageRepository>(),
+          userRepository: context.read<UserRepository>(),
+        ),
+        child: BlocConsumer<MessageSendBloc, MessageSendState>(
+          listener: (context, state) {
+            if (state.status == MessageSendStatus.failure) {
+              _buildSnackBar(context, state.message, Colors.red);
             }
-            if (messageSendState.status == MessageSendStatus.populated) {
+            if (state.status == MessageSendStatus.populated) {
               WidgetsBinding.instance.addPostFrameCallback((_) {
-                _buildSnackBar(
-                    context, "Die Nachricht wurde versendet", Colors.green);
+                _buildSnackBar(context, state.message, Colors.green);
                 Navigator.pop(context);
               });
             }
+          },
+          builder: (context, state) {
             return SingleChildScrollView(
               child: Column(
                 children: [
@@ -63,41 +84,54 @@ class MessageSendPage extends StatelessWidget {
                       children: [
                         const Text('Empfänger'),
                         const SizedBox(height: 8.0),
-                        BlocBuilder<MessageUsersBloc, MessageUsersState>(
-                            builder: (context, messageUsersState) {
-                          return TypeAheadField(
-                            textFieldConfiguration: TextFieldConfiguration(
-                              controller: recipientController,
-                              decoration: const InputDecoration(
-                                border: OutlineInputBorder(),
-                              ),
+                        TypeAheadField(
+                          hideOnEmpty: true,
+                          hideOnLoading: true,
+                          textFieldConfiguration: TextFieldConfiguration(
+                            controller: recipientController,
+                            enabled: widget.message == null,
+                            decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
                             ),
-                            suggestionsCallback: (pattern) async {
-                              if (recipientController.text.isEmpty ||
-                                  pattern.isEmpty) {
-                                return List.empty();
-                              }
-                              if (pattern.length % 3 == 0) {
-                                _fetchUsers(context, pattern);
+                          ),
+                          suggestionsCallback: (pattern) async {
+                            if (recipientController.text.isEmpty ||
+                                pattern.isEmpty) {
+                              userSuggestions.clear();
+                              return List.empty();
+                            }
+
+                            if (pattern.length >= 3) {
+                              var flilteredUsers = _filterUsernamesByPattern(
+                                  pattern, userSuggestions);
+                              if (flilteredUsers.isEmpty) {
+                                userSuggestions =
+                                    await _fetchUsers(context, pattern);
                               }
                               return _filterUsernamesByPattern(
-                                  pattern, messageUsersState.users);
-                            },
-                            itemBuilder: (context, suggestion) {
-                              return ListTile(
-                                title: Text(suggestion),
-                              );
-                            },
-                            onSuggestionSelected: (suggestion) {
-                              recipientController.text = suggestion;
-                            },
-                          );
-                        }),
+                                  pattern, userSuggestions);
+                            } else {
+                              return [];
+                            }
+                          },
+                          itemBuilder: (context, user) {
+                            var messageUser = user as MessageUser;
+                            return ListTile(
+                              title: Text(_parseUser(messageUser)),
+                              subtitle: Text(messageUser.role),
+                            );
+                          },
+                          onSuggestionSelected: (suggestion) {
+                            var user = suggestion as MessageUser;
+                            recipientController.text = _parseUser(user);
+                          },
+                        ),
                         const SizedBox(height: bigMargin),
                         const Text('Betreff'),
                         const SizedBox(height: smallMargin),
                         TextField(
                           controller: subjectController,
+                          enabled: widget.message == null,
                           decoration: const InputDecoration(
                             border: OutlineInputBorder(),
                           ),
@@ -122,13 +156,22 @@ class MessageSendPage extends StatelessWidget {
                           const Spacer(),
                           ElevatedButton(
                             onPressed: () {
-                              var subject = subjectController.text;
-                              var message = messageController.text;
-                              if (_assertUserExists(
-                                  context, recipientController.text)) {
-                                _sendMessage(context, subject, message, [
-                                  _getUserId(context, recipientController.text)
-                                ]);
+                              String recipient = recipientController.text;
+                              String subject = subjectController.text;
+                              String text = messageController.text;
+                              if (widget.message != null) {
+                                _sendMessage(context, subject, text,
+                                    [widget.message!.sender.id]);
+                              } else {
+                                var user = _getUser(
+                                    context, recipient, userSuggestions);
+                                if (user != null) {
+                                  _sendMessage(
+                                      context, subject, text, [user.id]);
+                                } else {
+                                  _buildSnackBar(context,
+                                      missingRecipientErrorMessage, Colors.red);
+                                }
                               }
                             },
                             child: const Text('Senden'),
@@ -144,42 +187,43 @@ class MessageSendPage extends StatelessWidget {
     );
   }
 
-  void _fetchUsers(BuildContext context, String searchParams) async {
-    BlocProvider.of<MessageUsersBloc>(context)
-        .add(MessageUsersRequested(searchParams));
+  MessageUser? _getUser(
+      BuildContext context, String input, List<MessageUser> userSuggestions) {
+    var user = userSuggestions.where((user) => _parseUser(user) == input);
+    if (user.isEmpty) {
+      return null;
+    }
+    return user.first;
   }
 
-  List<String> _filterUsernamesByPattern(
-      String pattern, List<MessageUser> users) {
-    return users
-        .map((user) => user.username)
-        .where((recipient) =>
-            recipient.toLowerCase().contains(pattern.toLowerCase()))
+  String _parseUser(MessageUser user) {
+    return "${user.parseUsername()} (${user.username})";
+  }
+
+  Future<List<MessageUser>> _fetchUsers(
+      BuildContext context, String searchParams) async {
+    final usersResponse =
+        await context.read<UserRepository>().getUsers(searchParams);
+    return usersResponse.userResponses
+        .map((response) => MessageUser.fromUserResponse(response))
         .toList();
   }
 
-  bool _assertUserExists(BuildContext context, String username) {
-    var users = BlocProvider.of<MessageUsersBloc>(context).state.users;
-    var userExists = users
-        .map((recipient) => recipient.username)
-        .toList()
-        .contains(username);
-    if (!userExists) {
-      _buildSnackBar(context, "Bitte wähle einen Empfänger", Colors.red);
-    }
-    return userExists;
+  List<MessageUser> _filterUsernamesByPattern(
+      String pattern, List<MessageUser> users) {
+    return users
+        .where((user) =>
+            _parseUser(user).toLowerCase().contains(pattern.toLowerCase()))
+        .toList();
   }
 
-  String _getUserId(BuildContext context, String username) {
-    var users = BlocProvider.of<MessageUsersBloc>(context).state.users;
-    return users.where((user) => user.username == username).single.id;
-  }
-
-  void _buildSnackBar(BuildContext context, String message, Color color) {
+  void _buildSnackBar(
+      final BuildContext context, final String message, final Color color) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(message),
+          duration: const Duration(seconds: 1),
           backgroundColor: color,
           behavior: SnackBarBehavior.floating,
         ),
@@ -187,16 +231,16 @@ class MessageSendPage extends StatelessWidget {
     });
   }
 
-  void _sendMessage(BuildContext context, String subject, String message,
-      List<String> recipients) {
-    BlocProvider.of<MessageSendBloc>(context).add(
-      SendMessageRequest(
-        message: OutgoingMessage(
-          subject: subject,
-          message: message,
-          recipients: recipients,
-        ),
-      ),
-    );
+  void _sendMessage(final BuildContext context, final String subject,
+      final String message, List<String> recipients) {
+    context.read<MessageSendBloc>().add(
+          SendMessageRequest(
+            message: OutgoingMessage(
+              subject: subject,
+              message: message,
+              recipients: recipients,
+            ),
+          ),
+        );
   }
 }

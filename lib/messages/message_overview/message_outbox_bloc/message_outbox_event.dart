@@ -12,6 +12,15 @@ class OutboxMessagesRequested extends OutboxMessageEvent {
   List<Object?> get props => [offset];
 }
 
+class DeleteOutboxMessagesRequested extends OutboxMessageEvent {
+  final List<String> messageIds;
+
+  const DeleteOutboxMessagesRequested({required this.messageIds});
+
+  @override
+  List<Object?> get props => [messageIds];
+}
+
 class RefreshOutboxRequested extends OutboxMessageEvent {
   const RefreshOutboxRequested();
 

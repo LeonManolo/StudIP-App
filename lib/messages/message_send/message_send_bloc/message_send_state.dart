@@ -10,11 +10,11 @@ enum MessageSendStatus {
 
 class MessageSendState extends Equatable {
   final MessageSendStatus status;
-  final String errorMessage;
+  final String message;
 
   const MessageSendState({
     required this.status,
-    this.errorMessage = ""
+    this.message = ""
   });
 
   const MessageSendState.initial()
@@ -24,16 +24,16 @@ class MessageSendState extends Equatable {
 
   @override
   List<Object?> get props => [
-        status, errorMessage
+        status, message
       ];
 
   MessageSendState copyWith({
     MessageSendStatus? status,
-    String? errorMessage
+    String? message
     }) {
     return MessageSendState(
       status: status ?? this.status,
-      errorMessage: errorMessage ?? this.errorMessage
+      message: message ?? this.message
       );
   }
 }
