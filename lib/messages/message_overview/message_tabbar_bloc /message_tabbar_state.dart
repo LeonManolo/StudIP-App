@@ -1,27 +1,28 @@
 import 'package:equatable/equatable.dart';
-import 'package:messages_repository/messages_repository.dart';
 
-enum TabBarStatus { filterIconVisible, filterIconHidden }
 
 class TabBarState extends Equatable {
-  final TabBarStatus status;
   final int currentTabIndex;
-  const TabBarState({required this.status, this.currentTabIndex = 0});
+  final bool filterIconVisible;
+  final bool menuIconVisible;
+  const TabBarState({this.currentTabIndex = 0, this.filterIconVisible = true, this.menuIconVisible = false});
 
   const TabBarState.initial()
       : this(
-          status: TabBarStatus.filterIconVisible,
+          filterIconVisible: true,
+
         );
 
   @override
   List<Object?> get props => [
-        status, currentTabIndex
+       filterIconVisible, menuIconVisible,  currentTabIndex
       ];
 
-  TabBarState copyWith({TabBarStatus? status, List<Message>? inboxMessages, int? currentTabIndex}) {
+  TabBarState copyWith({int? currentTabIndex, bool? filterIconVisible, bool? menuIconVisible}) {
     return TabBarState(
-      status: status ?? this.status,
       currentTabIndex: currentTabIndex ?? this.currentTabIndex,
+      filterIconVisible: filterIconVisible ?? this.filterIconVisible,
+      menuIconVisible: menuIconVisible ?? this.menuIconVisible,
       );
   }
 }

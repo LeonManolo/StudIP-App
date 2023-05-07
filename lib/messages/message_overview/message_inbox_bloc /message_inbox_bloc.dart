@@ -52,7 +52,7 @@ class InboxMessageBloc extends Bloc<InboxMessageEvent, InboxMessageState> {
 
     try {
       final inboxMessages =
-          await fetchInboxMessages(offset: event.offset, filter: event.filter);
+          await _fetchInboxMessages(offset: event.offset, filter: event.filter);
 
       emit(state.copyWith(
         status: InboxMessageStatus.populated,
@@ -83,7 +83,7 @@ class InboxMessageBloc extends Bloc<InboxMessageEvent, InboxMessageState> {
 
     try {
       final inboxMessages =
-          await fetchInboxMessages(offset: 0, filter: state.currentFilter);
+          await _fetchInboxMessages(offset: 0, filter: state.currentFilter);
 
       emit(state.copyWith(
         status: InboxMessageStatus.populated,
@@ -101,37 +101,28 @@ class InboxMessageBloc extends Bloc<InboxMessageEvent, InboxMessageState> {
   FutureOr<void> _onDeleteInboxMessagesRequested(
       DeleteInboxMessagesRequested event,
       Emitter<InboxMessageState> emit) async {
-    List<String> deletedMessages = [];
     emit(state.copyWith(
         status: InboxMessageStatus.loading,
-        maxReached: state.maxReached,
-        paginationLoading: false,
-        currentOffset: state.currentOffset,
-        currentFilter: state.currentFilter,
-        inboxMessages: state.inboxMessages));
+        paginationLoading: false,));
     try {
       await _messageRepository.deleteMessages(messageIds: event.messageIds);
-      final inboxMessages = await fetchInboxMessages(
-          offset: 0, filter: state.currentFilter);
+      final inboxMessages =
+          await _fetchInboxMessages(offset: 0, filter: state.currentFilter);
 
       emit(state.copyWith(
           status: InboxMessageStatus.deleteInboxMessagesSucceed,
-          currentFilter: state.currentFilter,
-          maxReached: state.maxReached,
           paginationLoading: false,
-          message: event.messageIds.length == 1 ? messageDeleteSucceed : messagesDeleteSucceed,
-          inboxMessages: inboxMessages
-          ));
+          message: event.messageIds.length == 1
+              ? messageDeleteSucceed
+              : messagesDeleteSucceed,
+          inboxMessages: inboxMessages));
     } catch (_) {
       emit(state.copyWith(
           status: InboxMessageStatus.deleteInboxMessagesFailure,
-          currentFilter: state.currentFilter,
-          maxReached: state.maxReached,
           paginationLoading: false,
-          message: event.messageIds.length == 1 ? messageDeleteError : messagesDeleteError,
-          inboxMessages: state.inboxMessages
-              .where((message) => !deletedMessages.contains(message.id))
-              .toList()));
+          message: event.messageIds.length == 1
+              ? messageDeleteError
+              : messagesDeleteError));
     }
   }
 
@@ -140,7 +131,7 @@ class InboxMessageBloc extends Bloc<InboxMessageEvent, InboxMessageState> {
     await _messageRepository.readMessage(messageId: event.message.id);
   }
 
-  Future<List<Message>> fetchInboxMessages(
+  Future<List<Message>> _fetchInboxMessages(
       {required int offset, required MessageFilter filter}) async {
     return await _messageRepository.getInboxMessages(
         userId: _authenticationRepository.currentUser.id,

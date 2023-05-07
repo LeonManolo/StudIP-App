@@ -1,13 +1,13 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
-import '../message_inbox_bloc /message_inbox_state.dart';
+import '../../message_inbox_bloc /message_inbox_state.dart';
 import 'message_filter_item.dart';
 
-class MessageFilterIcon extends StatelessWidget {
+class MessageFilterButton extends StatelessWidget {
   final Function(MessageFilter) setFilter;
   final MessageFilter currentFilter;
 
-  const MessageFilterIcon({
+  const MessageFilterButton({
     Key? key,
     required this.setFilter,
     required this.currentFilter,

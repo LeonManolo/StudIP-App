@@ -2,7 +2,6 @@ import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
-import 'package:intl/intl.dart';
 import 'package:messages_repository/messages_repository.dart';
 import 'package:studipadawan/messages/message_send/message_send_bloc/message_send_bloc.dart';
 import 'package:studipadawan/messages/message_send/message_send_bloc/message_send_event.dart';
@@ -12,35 +11,47 @@ import 'package:user_repository/user_repository.dart';
 const double smallMargin = AppSpacing.sm;
 const double bigMargin = AppSpacing.lg;
 
-class MessageSendPage extends StatelessWidget {
+class MessageSendPage extends StatefulWidget {
   final Message? message;
   const MessageSendPage({super.key, this.message});
 
   @override
-  Widget build(BuildContext context) {
-    final TextEditingController recipientController = TextEditingController();
-    final TextEditingController subjectController = TextEditingController();
-    final TextEditingController messageController = TextEditingController();
-    List<MessageUser> userSuggestions = [];
+  State<MessageSendPage> createState() => _MessageSendPageState();
+}
 
-    if (message != null) {
-      var builder = StringBuffer();
-      var subject = message!.subject.contains("RE:")
-          ? message!.subject
-          : "RE: ${message!.subject}";
-      recipientController.text = message!.sender.username;
+class _MessageSendPageState extends State<MessageSendPage> {
+  late TextEditingController recipientController;
+  late TextEditingController subjectController;
+  late TextEditingController messageController;
+
+  @override
+  void initState() {
+    super.initState();
+    recipientController = TextEditingController();
+    subjectController = TextEditingController();
+    messageController = TextEditingController();
+
+    if (widget.message != null) {
+      var subject = widget.message!.subject.contains("RE:")
+          ? widget.message!.subject
+          : "RE: ${widget.message!.subject}";
+      recipientController.text = widget.message!.sender.username;
       subjectController.text = subject;
-      builder.writeln("\n. . . ursprüngliche Nachricht . . .");
-      builder.writeln("Betreff: $subject");
-      builder.writeln(
-          "Datum: ${DateFormat("dd/MM/yyyy hh:mm:ss").format(message!.mkdate)}");
-      builder.writeln(
-          "Von: ${message!.sender.firstName} ${message!.sender.lastName}");
-      builder.writeln("An: ${_parseRecipients(message!)}");
-      builder.writeln(message!.message);
-
-      messageController.text = builder.toString();
+      messageController.text = widget.message!.getPreviouseMessageString();
     }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    recipientController.dispose();
+    subjectController.dispose();
+    messageController.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    List<MessageUser> userSuggestions = [];
 
     return Scaffold(
       key: UniqueKey(),
@@ -78,7 +89,7 @@ class MessageSendPage extends StatelessWidget {
                           hideOnLoading: true,
                           textFieldConfiguration: TextFieldConfiguration(
                             controller: recipientController,
-                            enabled: message == null,
+                            enabled: widget.message == null,
                             decoration: const InputDecoration(
                               border: OutlineInputBorder(),
                             ),
@@ -86,7 +97,7 @@ class MessageSendPage extends StatelessWidget {
                           suggestionsCallback: (pattern) async {
                             if (recipientController.text.isEmpty ||
                                 pattern.isEmpty) {
-                              userSuggestions = [];
+                              userSuggestions.clear();
                               return List.empty();
                             }
 
@@ -106,13 +117,13 @@ class MessageSendPage extends StatelessWidget {
                           itemBuilder: (context, user) {
                             var messageUser = user as MessageUser;
                             return ListTile(
-                              title: Text(_parseUsername(messageUser)),
+                              title: Text(_parseUser(messageUser)),
                               subtitle: Text(messageUser.role),
                             );
                           },
                           onSuggestionSelected: (suggestion) {
                             var user = suggestion as MessageUser;
-                            recipientController.text = _parseUsername(user);
+                            recipientController.text = _parseUser(user);
                           },
                         ),
                         const SizedBox(height: bigMargin),
@@ -120,7 +131,7 @@ class MessageSendPage extends StatelessWidget {
                         const SizedBox(height: smallMargin),
                         TextField(
                           controller: subjectController,
-                          enabled: message == null,
+                          enabled: widget.message == null,
                           decoration: const InputDecoration(
                             border: OutlineInputBorder(),
                           ),
@@ -148,9 +159,9 @@ class MessageSendPage extends StatelessWidget {
                               String recipient = recipientController.text;
                               String subject = subjectController.text;
                               String text = messageController.text;
-                              if (message != null) {
+                              if (widget.message != null) {
                                 _sendMessage(context, subject, text,
-                                    [message!.sender.id]);
+                                    [widget.message!.sender.id]);
                               } else {
                                 var user = _getUser(
                                     context, recipient, userSuggestions);
@@ -178,21 +189,15 @@ class MessageSendPage extends StatelessWidget {
 
   MessageUser? _getUser(
       BuildContext context, String input, List<MessageUser> userSuggestions) {
-    var user = userSuggestions.where((user) => _parseUsername(user) == input);
+    var user = userSuggestions.where((user) => _parseUser(user) == input);
     if (user.isEmpty) {
       return null;
     }
     return user.first;
   }
 
-  String _parseUsername(MessageUser user) {
-    return "${user.lastName}, ${user.firstName} (${user.username})";
-  }
-
-  String _parseRecipients(final Message message) {
-    return message.recipients
-        .map((user) => "${user.firstName} ${user.lastName}")
-        .join(",");
+  String _parseUser(MessageUser user) {
+    return "${user.parseUsername()} (${user.username})";
   }
 
   Future<List<MessageUser>> _fetchUsers(
@@ -208,7 +213,7 @@ class MessageSendPage extends StatelessWidget {
       String pattern, List<MessageUser> users) {
     return users
         .where((user) =>
-            _parseUsername(user).toLowerCase().contains(pattern.toLowerCase()))
+            _parseUser(user).toLowerCase().contains(pattern.toLowerCase()))
         .toList();
   }
 
@@ -228,14 +233,14 @@ class MessageSendPage extends StatelessWidget {
 
   void _sendMessage(final BuildContext context, final String subject,
       final String message, List<String> recipients) {
-    BlocProvider.of<MessageSendBloc>(context).add(
-      SendMessageRequest(
-        message: OutgoingMessage(
-          subject: subject,
-          message: message,
-          recipients: recipients,
-        ),
-      ),
-    );
+    context.read<MessageSendBloc>().add(
+          SendMessageRequest(
+            message: OutgoingMessage(
+              subject: subject,
+              message: message,
+              recipients: recipients,
+            ),
+          ),
+        );
   }
 }

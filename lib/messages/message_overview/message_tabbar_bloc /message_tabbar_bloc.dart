@@ -6,16 +6,35 @@ import 'message_tabbar_state.dart';
 class TabBarBloc extends Bloc<TabBarEvent, TabBarState> {
   TabBarBloc() : super(const TabBarState.initial()) {
     on<TabIndexChanged>(_onTabIndexChanged);
+    on<ShowMenuIcon>(_onShowMenuIcon);
+    on<HideMenuicon>(_onHideMenuIcon);
   }
 
-  Future<void> _onTabIndexChanged(
+  void _onTabIndexChanged(
     TabIndexChanged event,
     Emitter<TabBarState> emit,
-  ) async {
+  ) {
     emit(state.copyWith(
-        status: event.index == 0
-            ? TabBarStatus.filterIconVisible
-            : TabBarStatus.filterIconHidden,
-            currentTabIndex: event.index));
+        filterIconVisible: event.index == 0,
+        menuIconVisible: false,
+        currentTabIndex: event.index));
+  }
+
+  void _onShowMenuIcon(
+    ShowMenuIcon event,
+    Emitter<TabBarState> emit,
+  ) {
+    emit(state.copyWith(
+        filterIconVisible: false,
+        menuIconVisible: true,));
+  }
+
+  void _onHideMenuIcon(
+    HideMenuicon event,
+    Emitter<TabBarState> emit,
+  ) {
+    emit(state.copyWith(
+        filterIconVisible: state.currentTabIndex == 0,
+        menuIconVisible: false,));
   }
 }

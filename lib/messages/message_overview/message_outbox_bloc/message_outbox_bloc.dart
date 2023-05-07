@@ -41,7 +41,7 @@ class OutboxMessageBloc extends Bloc<OutboxMessageEvent, OutboxMessageState> {
 
     try {
       List<Message> outboxMessages =
-          await fetchOutboxMessages(offset: event.offset);
+          await _fetchOutboxMessages(offset: event.offset);
 
       emit(state.copyWith(
           status: OutboxMessageStatus.populated,
@@ -60,13 +60,10 @@ class OutboxMessageBloc extends Bloc<OutboxMessageEvent, OutboxMessageState> {
       Emitter<OutboxMessageState> emit) async {
     emit(state.copyWith(
         status: OutboxMessageStatus.loading,
-        paginationLoading: false,
-        maxReached: state.maxReached,
-        currentOffset: state.currentOffset,
-        outboxMessages: state.outboxMessages));
+        paginationLoading: false));
     try {
       await _messageRepository.deleteMessages(messageIds: event.messageIds);
-      List<Message> outboxMessages = await fetchOutboxMessages(offset: 0);
+      List<Message> outboxMessages = await _fetchOutboxMessages(offset: 0);
       
       emit(state.copyWith(
           status: OutboxMessageStatus.deleteOutboxMessagesSucceed,
@@ -77,10 +74,8 @@ class OutboxMessageBloc extends Bloc<OutboxMessageEvent, OutboxMessageState> {
     } catch (_) {
       emit(state.copyWith(
           status: OutboxMessageStatus.deleteOutboxMessagesFailure,
-          maxReached: state.maxReached,
           paginationLoading: false,
-          message: event.messageIds.length == 1 ? messageDeleteError: messagesDeleteError,
-          outboxMessages: state.outboxMessages));
+          message: event.messageIds.length == 1 ? messageDeleteError: messagesDeleteError,));
     }
   }
 
@@ -110,7 +105,7 @@ class OutboxMessageBloc extends Bloc<OutboxMessageEvent, OutboxMessageState> {
     }
   }
 
-  Future<List<Message>> fetchOutboxMessages({required int offset}) async {
+  Future<List<Message>> _fetchOutboxMessages({required int offset}) async {
     return await _messageRepository.getOutboxMessages(
       userId: _authenticationRepository.currentUser.id,
       offset: offset,

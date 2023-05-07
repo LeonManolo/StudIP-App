@@ -1,6 +1,14 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 
+enum MessageDetailsMenuOption {
+  answer("Antworten"),
+  delete("Nachricht löschen");
+
+  const MessageDetailsMenuOption(this.description);
+  final String description;
+}
+
 class MessageDetailsMenuButton extends StatelessWidget {
   final bool isInbox;
   final Function() answerMessage;
@@ -14,10 +22,10 @@ class MessageDetailsMenuButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return PopupMenuButton<int>(
+    return PopupMenuButton<MessageDetailsMenuOption>(
       icon: const Icon(EvaIcons.menu2Outline, size: 25, color: Colors.black),
-      onSelected: (index) => {
-        if (index == 0)
+      onSelected: (state) => {
+        if (state == MessageDetailsMenuOption.answer)
           {answerMessage()}
         else
           {
@@ -50,8 +58,12 @@ class MessageDetailsMenuButton extends StatelessWidget {
       },
       itemBuilder: (context) => [
         if (isInbox)
-          const PopupMenuItem<int>(value: 0, child: Text("Antworten")),
-        const PopupMenuItem<int>(value: 1, child: Text("Nachricht löschen")),
+          PopupMenuItem<MessageDetailsMenuOption>(
+              value: MessageDetailsMenuOption.answer,
+              child: Text(MessageDetailsMenuOption.answer.description)),
+        PopupMenuItem<MessageDetailsMenuOption>(
+            value: MessageDetailsMenuOption.delete,
+            child: Text(MessageDetailsMenuOption.delete.description)),
       ],
     );
   }

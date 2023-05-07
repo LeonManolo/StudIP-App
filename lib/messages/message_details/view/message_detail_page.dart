@@ -6,7 +6,7 @@ import 'package:messages_repository/messages_repository.dart';
 import 'package:studipadawan/messages/message_details/bloc/message_details_bloc.dart';
 import 'package:studipadawan/messages/message_details/bloc/message_details_event.dart';
 import 'package:studipadawan/messages/message_details/bloc/message_details_state.dart';
-import 'package:studipadawan/messages/message_details/widgets/message_details_menu_button.dart';
+import 'package:studipadawan/messages/message_details/view/widgets/message_details_menu_button.dart';
 
 import '../../message_send/view/message_send_page.dart';
 

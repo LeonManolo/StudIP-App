@@ -21,15 +21,6 @@ class DeleteOutboxMessagesRequested extends OutboxMessageEvent {
   List<Object?> get props => [messageIds];
 }
 
-class TabChanged extends OutboxMessageEvent {
-  final int index;
-
-  const TabChanged({required this.index});
-
-  @override
-  List<Object?> get props => [index];
-}
-
 class RefreshOutboxRequested extends OutboxMessageEvent {
   const RefreshOutboxRequested();
 

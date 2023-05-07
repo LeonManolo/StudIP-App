@@ -1,6 +1,6 @@
 import 'package:studip_api_client/studip_api_client.dart';
-
 import '../models/models.dart';
+import 'package:intl/intl.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 class Message {
@@ -30,12 +30,30 @@ class Message {
     return timeago.format(mkdate, locale: 'de');
   }
 
+  String getPreviouseMessageString() {
+    var builder = StringBuffer();
+    builder.writeln("\n. . . ursprüngliche Nachricht . . .");
+    builder.writeln("Betreff: $subject");
+    builder
+        .writeln("Datum: ${DateFormat("dd/MM/yyyy hh:mm:ss").format(mkdate)}");
+    builder.writeln("Von: ${sender.firstName} ${sender.lastName}");
+    builder.writeln("An: ${parseRecipients()}");
+    builder.writeln(message);
+    return builder.toString();
+  }
+
+  String parseRecipients() {
+    return recipients
+        .map((user) => "${user.firstName} ${user.lastName}")
+        .join(",");
+  }
+
   factory Message.fromMessageResponse(final MessageResponse response) {
     return Message(
         id: response.id,
         subject: response.subject,
         message: response.message
-            .replaceAll("<!--HTML-->", "")
+            .replaceAll("<!--HTML-->", "") // TODO: Format Html
             .replaceAll("<br />", ""),
         sender: MessageUser(
             id: response.senderId,

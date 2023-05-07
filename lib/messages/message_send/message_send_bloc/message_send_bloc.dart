@@ -7,6 +7,7 @@ import '../../message_overview/message_inbox_bloc /message_inbox_bloc.dart';
 import 'message_send_event.dart';
 import 'message_send_state.dart';
 
+
 const String missingSubjectErrorMessage = "Bitte gebe einen Betreff ein";
 const String missingMessageErrorMessage = "Bitte gebe eine Nachricht ein";
 const String missingRecipientErrorMessage = "Bitte wähle einen Benutzer";

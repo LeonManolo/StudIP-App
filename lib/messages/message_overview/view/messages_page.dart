@@ -5,8 +5,8 @@ import 'package:messages_repository/messages_repository.dart';
 import 'package:studipadawan/messages/message_overview/message_tabbar_bloc%20/message_tabbar_bloc.dart';
 import 'package:studipadawan/messages/message_overview/message_tabbar_bloc%20/message_tabbar_event.dart';
 import 'package:studipadawan/messages/message_overview/message_tabbar_bloc%20/message_tabbar_state.dart';
-import 'package:studipadawan/messages/message_overview/widgets/message_delete_button.dart';
-import 'package:studipadawan/messages/message_overview/widgets/message_menu_button.dart';
+import 'package:studipadawan/messages/message_overview/view/widgets/message_delete_button.dart';
+import 'package:studipadawan/messages/message_overview/view/widgets/message_menu_button.dart';
 import '../../../../app/bloc/app_bloc.dart';
 import '../message_inbox_bloc /message_inbox_bloc.dart';
 import '../message_inbox_bloc /message_inbox_event.dart';
@@ -14,11 +14,14 @@ import '../message_inbox_bloc /message_inbox_state.dart';
 import '../message_outbox_bloc/message_outbox_bloc.dart';
 import '../message_outbox_bloc/message_outbox_event.dart';
 import '../message_outbox_bloc/message_outbox_state.dart';
-import '../widgets/message_add_button.dart';
-import '../widgets/message_bar.dart';
-import '../widgets/message_filter_icon.dart';
-import '../widgets/message_inbox_widget.dart';
-import '../widgets/message_outbox_widget.dart';
+import 'widgets/message_add_button.dart';
+import 'widgets/message_bar.dart';
+import 'widgets/message_filter_button.dart';
+import 'widgets/message_inbox_widget.dart';
+import 'widgets/message_outbox_widget.dart';
+
+final _outboxWidgetKey = GlobalKey<OutboxMessageWidgetState>();
+final _inboxWidgetKey = GlobalKey<InboxMessageWidgetState>();
 
 class MessagesPage extends StatefulWidget {
   const MessagesPage({Key? key}) : super(key: key);
@@ -47,9 +50,6 @@ class _MessagesPageState extends State<MessagesPage>
 
   final _inboxScrollController = ScrollController();
   final _outboxScrollController = ScrollController();
-
-  List<String> _markedInboxMessages = [];
-  List<String> _markedOutboxMessages = [];
 
   @override
   void initState() {
@@ -94,101 +94,131 @@ class _MessagesPageState extends State<MessagesPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: _buildAppBar(context),
+        appBar: _buildAppBar(),
         key: UniqueKey(),
-        body: Scaffold(
-            appBar: PreferredSize(
-                preferredSize: const Size.fromHeight(kToolbarHeight),
-                child: MessageTabBar(controller: _tabController)),
-            key: UniqueKey(),
-            body: TabBarView(
-              controller: _tabController,
-              physics: const ScrollPhysics(),
-              children: [
-                BlocProvider.value(
-                    value: _inboxMessageBloc,
-                    child: BlocConsumer<InboxMessageBloc, InboxMessageState>(
-                      listener: (context, state) {
-                        if (state.status ==
-                            InboxMessageStatus.deleteInboxMessagesSucceed) {
-                          _buildSnackBar(context, state.message, Colors.green);
-                        }
-                        if (state.status ==
-                            InboxMessageStatus.deleteInboxMessagesFailure) {
-                          _buildSnackBar(context, state.message, Colors.red);
-                        }
-                      },
-                      builder: (context, state) {
-                        return InboxMessageWidget(
-                            state: state,
-                            readMessage: _readMessage,
-                            markMessage: _markMessage,
-                            unmarkMessage: _unmarkMessage,
-                            markedMessages: _markedInboxMessages,
-                            refresh: _refreshInboxMessages,
-                            scrollController: _inboxScrollController);
-                      },
-                    )),
-                BlocProvider.value(
-                    value: _outboxMessageBloc,
-                    child: BlocConsumer<OutboxMessageBloc, OutboxMessageState>(
-                      listener: (context, state) {
-                        if (state.status ==
-                            OutboxMessageStatus.deleteOutboxMessagesSucceed) {
-                          _buildSnackBar(context, state.message, Colors.green);
-                        }
-                        if (state.status ==
-                            OutboxMessageStatus.deleteOutboxMessagesFailure) {
-                          _buildSnackBar(context, state.message, Colors.red);
-                        }
-                      },
-                      builder: (context, state) {
-                        return OutboxMessageWidget(
-                          state: state,
-                          markMessage: _markMessage,
-                          unmarkMessage: _unmarkMessage,
-                          markedMessages: _markedOutboxMessages,
-                          refresh: _refreshOutboxMessages,
-                          scrollController: _outboxScrollController,
-                        );
-                      },
-                    ))
-              ],
-            ),
-            floatingActionButton:
-                _markedInboxMessages.isEmpty && _markedOutboxMessages.isEmpty
-                    ? const MessageAddButton()
-                    : MessageDeleteButton(
-                        deleteMessages: _deleteMessages,
-                      ),
-            floatingActionButtonLocation:
-                FloatingActionButtonLocation.endFloat));
+        body: BlocProvider.value(
+            value: _tabBarBloc,
+            child: Scaffold(
+                appBar: PreferredSize(
+                    preferredSize: const Size.fromHeight(kToolbarHeight),
+                    child: MessageTabBar(controller: _tabController)),
+                key: UniqueKey(),
+                body: TabBarView(
+                  controller: _tabController,
+                  physics: const ScrollPhysics(),
+                  children: [
+                    BlocProvider.value(
+                        value: _inboxMessageBloc,
+                        child:
+                            BlocConsumer<InboxMessageBloc, InboxMessageState>(
+                          listener: (context, state) {
+                            if (state.status ==
+                                InboxMessageStatus.deleteInboxMessagesSucceed) {
+                              _buildSnackBar(
+                                  context, state.message, Colors.green);
+                            }
+                            if (state.status ==
+                                InboxMessageStatus.deleteInboxMessagesFailure) {
+                              _buildSnackBar(
+                                  context, state.message, Colors.red);
+                            }
+                          },
+                          builder: (context, state) {
+                            return InboxMessageWidget(
+                                key: _inboxWidgetKey,
+                                state: state,
+                                unmarkAll: _unmarkAll,
+                                scrollController: _inboxScrollController);
+                          },
+                        )),
+                    BlocProvider.value(
+                        value: _outboxMessageBloc,
+                        child:
+                            BlocConsumer<OutboxMessageBloc, OutboxMessageState>(
+                          listener: (context, state) {
+                            if (state.status ==
+                                OutboxMessageStatus
+                                    .deleteOutboxMessagesSucceed) {
+                              _buildSnackBar(
+                                  context, state.message, Colors.green);
+                            }
+                            if (state.status ==
+                                OutboxMessageStatus
+                                    .deleteOutboxMessagesFailure) {
+                              _buildSnackBar(
+                                  context, state.message, Colors.red);
+                            }
+                          },
+                          builder: (context, state) {
+                            return OutboxMessageWidget(
+                              key: _outboxWidgetKey,
+                              unmarkAll: _unmarkAll,
+                              state: state,
+                              scrollController: _outboxScrollController,
+                            );
+                          },
+                        ))
+                  ],
+                ),
+                floatingActionButton: Row(
+                  children: [
+                    const Spacer(),
+                    BlocProvider.value(
+                        value: _tabBarBloc,
+                        child: BlocBuilder<TabBarBloc, TabBarState>(
+                            builder: (context, state) {
+                          return Row(
+                            children: [
+                              Visibility(
+                                visible: !state.menuIconVisible,
+                                child: const MessageAddButton(),
+                              ),
+                              Visibility(
+                                visible: state.menuIconVisible,
+                                child: MessageDeleteButton(
+                                  deleteMessages: _deleteMessages,
+                                ),
+                              )
+                            ],
+                          );
+                        }))
+                  ],
+                ),
+                floatingActionButtonLocation:
+                    FloatingActionButtonLocation.endFloat)));
   }
 
-  AppBar _buildAppBar(final BuildContext context) {
+  AppBar _buildAppBar() {
     return AppBar(
       title: const Text('Nachrichten'),
       actions: <Widget>[
         BlocProvider.value(
             value: _tabBarBloc,
-            child:
-                BlocBuilder<TabBarBloc, TabBarState>(builder: (context, state) {
-              return Visibility(
-                  visible: state.status == TabBarStatus.filterIconVisible &&
-                      _markedInboxMessages.isEmpty,
-                  child: MessageFilterIcon(
-                      setFilter: _handleFilterSelection,
-                      currentFilter: _inboxMessageBloc.state.currentFilter));
-            })),
-        if (_markedInboxMessages.isNotEmpty || _markedOutboxMessages.isNotEmpty)
-          MessageMenuButton(markAll: _markAll, unmarkAll: _unmarkAll),
-        IconButton(
-          key: const Key('homePage_logout_iconButton'),
-          icon: const Icon(Icons.exit_to_app),
-          onPressed: () {
-            context.read<AppBloc>().add(const AppLogoutRequested());
-          },
-        )
+            child: BlocBuilder<TabBarBloc, TabBarState>(
+              builder: (context, state) {
+                return Row(
+                  children: [
+                    Visibility(
+                        visible: state.filterIconVisible,
+                        child: MessageFilterButton(
+                            setFilter: _handleFilterSelection,
+                            currentFilter:
+                                _inboxMessageBloc.state.currentFilter)),
+                    Visibility(
+                        visible: state.menuIconVisible,
+                        child: MessageMenuButton(
+                            markAll: _markAll, unmarkAll: _unmarkAll)),
+                    IconButton(
+                      key: const Key('homePage_logout_iconButton'),
+                      icon: const Icon(Icons.exit_to_app),
+                      onPressed: () {
+                        context.read<AppBloc>().add(const AppLogoutRequested());
+                      },
+                    )
+                  ],
+                );
+              },
+            ))
       ],
     );
   }
@@ -253,74 +283,29 @@ class _MessagesPageState extends State<MessagesPage>
   }
 
   void _onTabChanged(int index) {
-    setState(() {
-      _unmarkAll();
-    });
+    _unmarkAll();
   }
 
   void _deleteMessages() {
     if (_tabController.index == 0) {
-      _inboxMessageBloc
-          .add(DeleteInboxMessagesRequested(messageIds: _markedInboxMessages));
+      _inboxWidgetKey.currentState?.deleteMessages();
     } else {
-      _outboxMessageBloc.add(
-          DeleteOutboxMessagesRequested(messageIds: _markedOutboxMessages));
+      _outboxWidgetKey.currentState?.deleteMessages();
     }
-    setState(() {
-      _unmarkAll();
-    });
-  }
-
-  void _markMessage(final String messageId) {
-    setState(() {
-      if (_tabController.index == 0) {
-        _markedInboxMessages.add(messageId);
-      } else {
-        _markedOutboxMessages.add(messageId);
-      }
-    });
-  }
-
-  void _unmarkMessage(final String messageId) {
-    setState(() {
-      if (_tabController.index == 0) {
-        _markedInboxMessages.removeWhere((id) => id == messageId);
-      } else {
-        _markedOutboxMessages.removeWhere((id) => id == messageId);
-      }
-    });
+    _unmarkAll();
   }
 
   void _unmarkAll() {
-    setState(() {
-      _markedInboxMessages = [];
-      _markedOutboxMessages = [];
-    });
+    _outboxWidgetKey.currentState?.unmarkAll();
+    _inboxWidgetKey.currentState?.unmarkAll();
   }
 
   void _markAll() {
-    setState(() {
-      if (_tabController.index == 0) {
-        _markedInboxMessages.addAll(_inboxMessageBloc.state.inboxMessages
-            .where((message) => !(_markedInboxMessages.contains(message.id)))
-            .map((message) => message.id));
-      } else {
-        _markedOutboxMessages.addAll(_outboxMessageBloc.state.outboxMessages
-            .where((message) => !(_markedOutboxMessages.contains(message.id)))
-            .map((message) => message.id));
-      }
-    });
-  }
-
-  void _readMessage(final Message message) {
-    setState(() {
-      if (_inboxMessageBloc.state.currentFilter == MessageFilter.unread) {
-        _inboxMessageBloc.state.inboxMessages.remove(message);
-      } else {
-        message.read();
-      }
-      _inboxMessageBloc.add(ReadMessageRequested(message: message));
-    });
+    if (_tabController.index == 0) {
+      _inboxWidgetKey.currentState?.markAll();
+    } else {
+      _outboxWidgetKey.currentState?.markAll();
+    }
   }
 
   void _handleFilterSelection(final MessageFilter filter) {
@@ -331,15 +316,5 @@ class _MessagesPageState extends State<MessagesPage>
                   .add(InboxMessagesRequested(filter: filter, offset: 0))
             }
         });
-  }
-
-  void _refreshInboxMessages() {
-    _inboxMessageBloc.add(const RefreshInboxRequested());
-    _unmarkAll();
-  }
-
-  void _refreshOutboxMessages() {
-    _outboxMessageBloc.add(const RefreshOutboxRequested());
-    _unmarkAll();
   }
 }
