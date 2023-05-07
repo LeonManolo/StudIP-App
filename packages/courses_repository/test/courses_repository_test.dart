@@ -18,90 +18,103 @@ void main() {
     sut = CourseRepository(apiClient: mockedApiClient);
   });
 
-  group("getCourseEvents", () {
+  group('getCourseEvents', () {
     CourseEventResponse generateCourseEventResponse({required int id}) {
       return CourseEventResponse(
-        id: "$id",
-        title: "title $id",
-        description: "description $id",
-        start: "2023-04-13T11:30:00+02:00",
-        end: "2023-04-13T11:30:00+02:00",
+        id: '$id',
+        title: 'title $id',
+        description: 'description $id',
+        start: '2023-04-13T11:30:00+02:00',
+        end: '2023-04-13T11:30:00+02:00',
         categories: [],
       );
     }
 
-    test("handle multi page request", () async {
-      when(mockedApiClient.getCourseEvents(courseId: "1", offset: 0, limit: 30))
+    test('handle multi page request', () async {
+      when(mockedApiClient.getCourseEvents(courseId: '1', offset: 0, limit: 30))
           .thenAnswer((_) async {
         return CourseEventListResponse(
           events: List.generate(
-              30, (index) => generateCourseEventResponse(id: index)),
+            30,
+            (index) => generateCourseEventResponse(id: index),
+          ),
           offset: 0,
           limit: 30,
           total: 50,
         );
       });
-      when(mockedApiClient.getCourseEvents(
-              courseId: "1", offset: 30, limit: 30))
-          .thenAnswer((_) async {
+      when(
+        mockedApiClient.getCourseEvents(
+          courseId: '1',
+          offset: 30,
+          limit: 30,
+        ),
+      ).thenAnswer((_) async {
         return CourseEventListResponse(
           events: List.generate(
-              20, (index) => generateCourseEventResponse(id: 30 + index)),
+            20,
+            (index) => generateCourseEventResponse(id: 30 + index),
+          ),
           offset: 30,
           limit: 30,
           total: 50,
         );
       });
 
-      List<StudIPCourseEvent> courseEvents =
-          await sut.getCourseEvents(courseId: "1");
+      final List<StudIPCourseEvent> courseEvents =
+          await sut.getCourseEvents(courseId: '1');
 
       expect(
         courseEvents.map((courseEvent) => courseEvent.title),
-        List.generate(50, (index) => "title $index"),
+        List.generate(50, (index) => 'title $index'),
       );
     });
   });
 
-  group("getCourseNews", () {
+  group('getCourseNews', () {
     CourseNewsResponse generateCoursNewsResponse({required int id}) {
       return CourseNewsResponse(
-        id: "$id",
-        title: "title $id",
-        content: "content $id",
-        publicationStart: "2023-04-13T11:30:00+02:00",
-        publicationEnd: "2023-04-20T11:30:00+02:00",
+        id: '$id',
+        title: 'title $id',
+        content: 'content $id',
+        publicationStart: '2023-04-13T11:30:00+02:00',
+        publicationEnd: '2023-04-20T11:30:00+02:00',
       );
     }
 
-    test("get last 5 course news", () async {
-      when(mockedApiClient.getCourseNews(courseId: "1", limit: 5))
+    test('get last 5 course news', () async {
+      when(mockedApiClient.getCourseNews(courseId: '1', limit: 5))
           .thenAnswer((_) async {
         return CourseNewsListResponse(
-            news: List.generate(
-                3, (index) => generateCoursNewsResponse(id: index)),
-            offset: 0,
-            limit: 5,
-            total: 3);
+          news: List.generate(
+            3,
+            (index) => generateCoursNewsResponse(id: index),
+          ),
+          offset: 0,
+          limit: 5,
+          total: 3,
+        );
       });
 
-      List<CourseNews> courseNews =
-          await sut.getCourseNews(courseId: "1", limit: 5);
+      final List<CourseNews> courseNews =
+          await sut.getCourseNews(courseId: '1', limit: 5);
 
       expect(
         courseNews.map((news) => news.title),
-        List.generate(3, (index) => "title $index"),
+        List.generate(3, (index) => 'title $index'),
       );
     });
   });
 
-  group("getCoursesGroupedBySemester", () {
-    CourseResponse generateCourseResponse(
-        {required int courseId, required int semesterId}) {
+  group('getCoursesGroupedBySemester', () {
+    CourseResponse generateCourseResponse({
+      required int courseId,
+      required int semesterId,
+    }) {
       return CourseResponse(
-        id: "$courseId",
-        detailsResponse: CourseDetailsResponse(title: "details"),
-        semesterId: "$semesterId",
+        id: '$courseId',
+        detailsResponse: CourseDetailsResponse(title: 'details'),
+        semesterId: '$semesterId',
       );
     }
 
@@ -111,87 +124,96 @@ void main() {
       required String semesterEnd,
     }) {
       return SemesterResponse(
-        id: "$id",
-        title: "title $id",
-        description: "description $id",
+        id: '$id',
+        title: 'title $id',
+        description: 'description $id',
         start: semesterStart,
         end: semesterEnd,
-        startOfLectures: "2022-05-13T11:30:00+02:00",
-        endOfLectures: "2023-02-20T11:30:00+02:00",
+        startOfLectures: '2022-05-13T11:30:00+02:00',
+        endOfLectures: '2023-02-20T11:30:00+02:00',
       );
     }
 
-    List<Map<String, String>> semesterRawDates = [
+    final List<Map<String, String>> semesterRawDates = [
       {
-        "start": "2020-01-13T11:30:00+02:00",
-        "end": "2020-06-13T11:30:00+02:00"
+        'start': '2020-01-13T11:30:00+02:00',
+        'end': '2020-06-13T11:30:00+02:00'
       },
       {
-        "start": "2020-06-14T11:30:00+02:00",
-        "end": "2020-12-29T11:30:00+02:00"
+        'start': '2020-06-14T11:30:00+02:00',
+        'end': '2020-12-29T11:30:00+02:00'
       },
-      {"start": "2020-12-30T11:30:00+02:00", "end": "2021-06-13T11:30:00+02:00"}
+      {'start': '2020-12-30T11:30:00+02:00', 'end': '2021-06-13T11:30:00+02:00'}
     ];
 
-    List<CourseResponse> courses = List.generate(
-        35,
-        (index) =>
-            generateCourseResponse(courseId: index, semesterId: index % 3));
+    final List<CourseResponse> courses = List.generate(
+      35,
+      (index) => generateCourseResponse(courseId: index, semesterId: index % 3),
+    );
 
-    test("courses which belong to same semester are grouped together",
+    test('courses which belong to same semester are grouped together',
         () async {
-      when(mockedApiClient.getCourses(userId: "1", offset: 0, limit: 30))
+      when(mockedApiClient.getCourses(userId: '1', offset: 0, limit: 30))
           .thenAnswer((_) async {
         return CourseListResponse(
-            courses: courses.getRange(0, 30).toList(),
-            offset: 0,
-            limit: 30,
-            total: 35);
+          courses: courses.getRange(0, 30).toList(),
+          offset: 0,
+          limit: 30,
+          total: 35,
+        );
       });
-      when(mockedApiClient.getCourses(userId: "1", offset: 30, limit: 30))
+      when(mockedApiClient.getCourses(userId: '1', offset: 30, limit: 30))
           .thenAnswer((_) async {
         return CourseListResponse(
-            courses: courses.getRange(30, 35).toList(),
-            offset: 30,
-            limit: 30,
-            total: 35);
+          courses: courses.getRange(30, 35).toList(),
+          offset: 30,
+          limit: 30,
+          total: 35,
+        );
       });
-      when(mockedApiClient.getSemester(
-              semesterId: argThat(isNotNull, named: "semesterId")))
-          .thenAnswer((invocation) async {
-        final invokedIndex =
-            int.parse(invocation.namedArguments[Symbol("semesterId")]);
+      when(
+        mockedApiClient.getSemester(
+          semesterId: argThat(isNotNull, named: 'semesterId'),
+        ),
+      ).thenAnswer((invocation) async {
+        final invokedIndex = int.parse(
+          invocation.namedArguments[const Symbol('semesterId')] as String,
+        );
         return generateSemesterResponse(
           id: invokedIndex,
-          semesterStart: semesterRawDates[invokedIndex]["start"] ?? "",
-          semesterEnd: semesterRawDates[invokedIndex]["end"] ?? "",
+          semesterStart: semesterRawDates[invokedIndex]['start'] ?? '',
+          semesterEnd: semesterRawDates[invokedIndex]['end'] ?? '',
         );
       });
 
-      List<Semester> semesters = await sut.getCoursesGroupedBySemester("1");
+      final List<Semester> semesters =
+          await sut.getCoursesGroupedBySemester('1');
 
       // Assert
       expect(semesters.length, 3);
-      expect(semesters[0].id, "2");
+      expect(semesters[0].id, '2');
       expect(
-          semesters[0].courses.map((course) => course.id),
-          courses
-              .where((course) => course.semesterId == "2")
-              .map((course) => course.id));
+        semesters[0].courses.map((course) => course.id),
+        courses
+            .where((course) => course.semesterId == '2')
+            .map((course) => course.id),
+      );
 
-      expect(semesters[1].id, "1");
+      expect(semesters[1].id, '1');
       expect(
-          semesters[1].courses.map((course) => course.id),
-          courses
-              .where((course) => course.semesterId == "1")
-              .map((course) => course.id));
+        semesters[1].courses.map((course) => course.id),
+        courses
+            .where((course) => course.semesterId == '1')
+            .map((course) => course.id),
+      );
 
-      expect(semesters[2].id, "0");
+      expect(semesters[2].id, '0');
       expect(
-          semesters[2].courses.map((course) => course.id),
-          courses
-              .where((course) => course.semesterId == "0")
-              .map((course) => course.id));
+        semesters[2].courses.map((course) => course.id),
+        courses
+            .where((course) => course.semesterId == '0')
+            .map((course) => course.id),
+      );
     });
   });
 }

@@ -1,16 +1,8 @@
-import 'course.dart';
+import 'package:courses_repository/src/models/course.dart';
 import 'package:intl/intl.dart';
 import 'package:studip_api_client/studip_api_client.dart' as studip_api_client;
 
 class Semester {
-  final String id;
-  final String title;
-  final String? description;
-  final DateTime start;
-  final DateTime end;
-  final DateTime startOfLectures;
-  final DateTime endOfLectures;
-  final List<Course> courses;
 
   Semester({
     required this.id,
@@ -25,7 +17,7 @@ class Semester {
 
   factory Semester.fromSemesterResponse(
       {required studip_api_client.SemesterResponse semesterResponse,
-      required List<Course> courses}) {
+      required List<Course> courses,}) {
     return Semester(
       id: semesterResponse.id,
       title: semesterResponse.title,
@@ -37,6 +29,14 @@ class Semester {
       courses: courses,
     );
   }
+  final String id;
+  final String title;
+  final String? description;
+  final DateTime start;
+  final DateTime end;
+  final DateTime startOfLectures;
+  final DateTime endOfLectures;
+  final List<Course> courses;
 
   String get semesterTimeSpan {
     return "${DateFormat("dd.MM.yyyy").format(start)} - ${DateFormat("dd.MM.yyyy").format(end)}";

@@ -1,11 +1,6 @@
 import 'package:studip_api_client/studip_api_client.dart' as studip_api_client;
 
 class CourseNews {
-  final String id;
-  final String title;
-  final String content;
-  final DateTime publicationStart;
-  final DateTime publicationEnd;
 
   CourseNews({
     required this.id,
@@ -16,7 +11,7 @@ class CourseNews {
   });
 
   factory CourseNews.fromCourseNewsResponse(
-      {required studip_api_client.CourseNewsResponse courseNewsResponse}) {
+      {required studip_api_client.CourseNewsResponse courseNewsResponse,}) {
     return CourseNews(
       id: courseNewsResponse.id,
       title: courseNewsResponse.title,
@@ -27,4 +22,9 @@ class CourseNews {
           DateTime.parse(courseNewsResponse.publicationEnd).toLocal(),
     );
   }
+  final String id;
+  final String title;
+  final String content;
+  final DateTime publicationStart;
+  final DateTime publicationEnd;
 }

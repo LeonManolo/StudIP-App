@@ -1,14 +1,11 @@
 import 'package:studip_api_client/studip_api_client.dart';
 
 class Course {
-  final String id;
-  final CourseDetails courseDetails;
-  final String semesterId;
 
   const Course(
       {required this.id,
       required this.courseDetails,
-      required this.semesterId});
+      required this.semesterId,});
 
   factory Course.fromCourseResponse(CourseResponse response) {
     return Course(
@@ -18,14 +15,12 @@ class Course {
       semesterId: response.semesterId,
     );
   }
+  final String id;
+  final CourseDetails courseDetails;
+  final String semesterId;
 }
 
 class CourseDetails {
-  final String? courseNumber;
-  final String title;
-  final String? subtitle;
-  final String? description;
-  final String? location;
 
   CourseDetails({
     this.courseNumber,
@@ -36,7 +31,7 @@ class CourseDetails {
   });
 
   factory CourseDetails.fromCourseDetailsResponse(
-      CourseDetailsResponse response) {
+      CourseDetailsResponse response,) {
     return CourseDetails(
       courseNumber: response.courseNumber,
       title: response.title,
@@ -45,4 +40,9 @@ class CourseDetails {
       location: response.location,
     );
   }
+  final String? courseNumber;
+  final String title;
+  final String? subtitle;
+  final String? description;
+  final String? location;
 }
