@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../bloc/course_files_bloc.dart';
+import 'package:studipadawan/courses/details/files/bloc/course_files_bloc.dart';
 
 class CourseFilesPathList extends StatelessWidget {
-  const CourseFilesPathList({Key? key}) : super(key: key);
+  const CourseFilesPathList({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -20,22 +20,22 @@ class CourseFilesPathList extends StatelessWidget {
                     state.parentFolders.reversed.elementAt(index);
                 return TextButton(
                   style: TextButton.styleFrom(
-                      minimumSize: const Size.fromWidth(20)),
+                      minimumSize: const Size.fromWidth(20),),
                   child: Text(folderInfo.displayName),
                   onPressed: () {
                     context.read<CourseFilesBloc>().add(DidSelectFolderEvent(
                           selectedFolder: folderInfo.folder,
                           parentFolders: state.parentFolders,
-                        ));
+                        ),);
                   },
                 );
               },
-              separatorBuilder: ((context, index) {
+              separatorBuilder: (context, index) {
                 return const Center(
-                  child: Text(">"),
+                  child: Text('>'),
                 );
-              }),
-              itemCount: state.parentFolders.length),
+              },
+              itemCount: state.parentFolders.length,),
         );
       },
     );

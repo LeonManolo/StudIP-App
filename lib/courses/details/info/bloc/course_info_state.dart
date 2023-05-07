@@ -9,15 +9,15 @@ enum InfoType {
 abstract class CourseInfoState extends Equatable {}
 
 class CourseInfoPopulatedState extends CourseInfoState {
-  final GeneralInfoExpansionModel generalInfoExpansionModel;
-  final NewsExpansionModel newsExpansionModel;
-  final CourseEventExpansionModel eventExpansionModel;
 
   CourseInfoPopulatedState({
     required this.generalInfoExpansionModel,
     required this.newsExpansionModel,
     required this.eventExpansionModel,
   });
+  final GeneralInfoExpansionModel generalInfoExpansionModel;
+  final NewsExpansionModel newsExpansionModel;
+  final CourseEventExpansionModel eventExpansionModel;
 
   @override
   List<Object> get props =>

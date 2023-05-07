@@ -20,19 +20,19 @@ class CalendarLoading extends CalendarState {
 }
 
 class CalendarPopulated extends CalendarState {
-  final CalendarWeekData calendarWeekData;
-  final DateTime currentDay;
 
   const CalendarPopulated({required this.calendarWeekData, required this.currentDay});
+  final CalendarWeekData calendarWeekData;
+  final DateTime currentDay;
 
   @override
   List<Object?> get props => [calendarWeekData, currentDay];
 }
 
 class CalendarFailure extends CalendarState {
-  final String failureMessage;
 
   const CalendarFailure({required this.failureMessage});
+  final String failureMessage;
 
   @override
   List<Object?> get props => [failureMessage];

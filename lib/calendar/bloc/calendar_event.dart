@@ -5,10 +5,10 @@ abstract class CalendarEvent extends Equatable {
   const CalendarEvent();
 }
 
-class CalendarRequested extends CalendarEvent {
-  final DateTime day; //TODO: könnte man auch löschen
+class CalendarRequested extends CalendarEvent { //TODO: könnte man auch löschen
 
   const CalendarRequested({ required this.day});
+  final DateTime day;
 
   @override
   List<Object?> get props => [day];
@@ -31,9 +31,9 @@ class CalendarPreviousDayRequested extends CalendarEvent {
 }
 
 class CalendarExactDayRequested extends CalendarEvent {
-  final DateTime exactDay;
 
   const CalendarExactDayRequested({required this.exactDay});
+  final DateTime exactDay;
 
   @override
   List<Object?> get props => [exactDay];

@@ -5,18 +5,18 @@ import 'package:studipadawan/calendar/widgets/calendar_break_entry.dart';
 import 'package:studipadawan/calendar/widgets/calendar_entry.dart';
 
 class CalendarEntryLayout extends StatefulWidget {
-  final CalendarEntryData? calendarEntryData;
-  final CalendarTimeframe timeframe;
-  final CalendarTimeframe? nextTimeframe;
-  final bool showDivider;
 
   const CalendarEntryLayout({
-    Key? key,
+    super.key,
     this.calendarEntryData,
     required this.timeframe,
     this.nextTimeframe,
     required this.showDivider,
-  }) : super(key: key);
+  });
+  final CalendarEntryData? calendarEntryData;
+  final CalendarTimeframe timeframe;
+  final CalendarTimeframe? nextTimeframe;
+  final bool showDivider;
 
   @override
   State<CalendarEntryLayout> createState() => _CalendarEntryLayoutState();
@@ -26,7 +26,7 @@ class _CalendarEntryLayoutState extends State<CalendarEntryLayout> {
   final startTimeKey = GlobalKey();
   final currentTimeIndicatorKey = GlobalKey();
   final breakWidgetKey = GlobalKey();
-  var currentHourMinute = HourMinute(hours: 9, minutes: 43);
+  HourMinute currentHourMinute = HourMinute(hours: 9, minutes: 43);
   static const timerInterval = Duration(seconds: 1);
 
   Timer? timer;
@@ -52,7 +52,7 @@ class _CalendarEntryLayoutState extends State<CalendarEntryLayout> {
             currentTimeIndicatorKey: currentTimeIndicatorKey,
             color: Theme.of(context).primaryColor,
             calendarEntryData: widget.calendarEntryData,
-            timeFrame: widget.timeframe),
+            timeFrame: widget.timeframe,),
         CalendarBreakEntry(
           breakStart: widget.timeframe.end,
           breakEnd: widget.nextTimeframe?.start,

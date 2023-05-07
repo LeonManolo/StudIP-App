@@ -58,39 +58,4 @@ enum Weekdays {
   }
 }
 
-extension on Weekdays {
-  int index() {
-    switch (this) {
-      case Weekdays.monday:
-        {
-          return 0;
-        }
-      case Weekdays.tuesday:
-        {
-          return 1;
-        }
-      case Weekdays.wednesday:
-        {
-          return 2;
-        }
-      case Weekdays.thursday:
-        {
-          return 3;
-        }
-      case Weekdays.friday:
-        {
-          return 4;
-        }
-      case Weekdays.saturday:
-        {
-          return 5;
-        }
-      case Weekdays.sunday:
-        {
-          return 6;
-        }
-    }
-  }
-}
-
 class InvalidWeekdayIndex implements Exception {}

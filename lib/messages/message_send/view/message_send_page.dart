@@ -12,8 +12,8 @@ const double smallMargin = AppSpacing.sm;
 const double bigMargin = AppSpacing.lg;
 
 class MessageSendPage extends StatefulWidget {
-  final Message? message;
   const MessageSendPage({super.key, this.message});
+  final Message? message;
 
   @override
   State<MessageSendPage> createState() => _MessageSendPageState();
@@ -32,9 +32,9 @@ class _MessageSendPageState extends State<MessageSendPage> {
     messageController = TextEditingController();
 
     if (widget.message != null) {
-      var subject = widget.message!.subject.contains("RE:")
+      final subject = widget.message!.subject.contains('RE:')
           ? widget.message!.subject
-          : "RE: ${widget.message!.subject}";
+          : 'RE: ${widget.message!.subject}';
       recipientController.text = widget.message!.sender.username;
       subjectController.text = subject;
       messageController.text = widget.message!.getPreviouseMessageString();
@@ -59,7 +59,6 @@ class _MessageSendPageState extends State<MessageSendPage> {
       body: BlocProvider<MessageSendBloc>(
         create: (context) => MessageSendBloc(
           messageRepository: context.read<MessageRepository>(),
-          userRepository: context.read<UserRepository>(),
         ),
         child: BlocConsumer<MessageSendBloc, MessageSendState>(
           listener: (context, state) {
@@ -83,7 +82,7 @@ class _MessageSendPageState extends State<MessageSendPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Text('Empfänger'),
-                        const SizedBox(height: 8.0),
+                        const SizedBox(height: 8),
                         TypeAheadField(
                           hideOnEmpty: true,
                           hideOnLoading: true,
@@ -98,31 +97,35 @@ class _MessageSendPageState extends State<MessageSendPage> {
                             if (recipientController.text.isEmpty ||
                                 pattern.isEmpty) {
                               userSuggestions.clear();
-                              return List.empty();
+                              return [];
                             }
 
                             if (pattern.length >= 3) {
-                              var flilteredUsers = _filterUsernamesByPattern(
-                                  pattern, userSuggestions);
+                              final flilteredUsers = _filterUsernamesByPattern(
+                                pattern,
+                                userSuggestions,
+                              );
                               if (flilteredUsers.isEmpty) {
                                 userSuggestions =
                                     await _fetchUsers(context, pattern);
                               }
                               return _filterUsernamesByPattern(
-                                  pattern, userSuggestions);
+                                pattern,
+                                userSuggestions,
+                              );
                             } else {
                               return [];
                             }
                           },
                           itemBuilder: (context, user) {
-                            var messageUser = user as MessageUser;
+                            final messageUser = user as MessageUser;
                             return ListTile(
                               title: Text(_parseUser(messageUser)),
                               subtitle: Text(messageUser.role),
                             );
                           },
                           onSuggestionSelected: (suggestion) {
-                            var user = suggestion as MessageUser;
+                            final user = suggestion as MessageUser;
                             recipientController.text = _parseUser(user);
                           },
                         ),
@@ -150,34 +153,49 @@ class _MessageSendPageState extends State<MessageSendPage> {
                     ),
                   ),
                   Padding(
-                      padding: const EdgeInsets.only(right: bigMargin),
-                      child: Row(
-                        children: [
-                          const Spacer(),
-                          ElevatedButton(
-                            onPressed: () {
-                              String recipient = recipientController.text;
-                              String subject = subjectController.text;
-                              String text = messageController.text;
-                              if (widget.message != null) {
-                                _sendMessage(context, subject, text,
-                                    [widget.message!.sender.id]);
+                    padding: const EdgeInsets.only(right: bigMargin),
+                    child: Row(
+                      children: [
+                        const Spacer(),
+                        ElevatedButton(
+                          onPressed: () {
+                            final String recipient = recipientController.text;
+                            final String subject = subjectController.text;
+                            final String text = messageController.text;
+                            if (widget.message != null) {
+                              _sendMessage(
+                                context,
+                                subject,
+                                text,
+                                [widget.message!.sender.id],
+                              );
+                            } else {
+                              final user = _getUser(
+                                context,
+                                recipient,
+                                userSuggestions,
+                              );
+                              if (user != null) {
+                                _sendMessage(
+                                  context,
+                                  subject,
+                                  text,
+                                  [user.id],
+                                );
                               } else {
-                                var user = _getUser(
-                                    context, recipient, userSuggestions);
-                                if (user != null) {
-                                  _sendMessage(
-                                      context, subject, text, [user.id]);
-                                } else {
-                                  _buildSnackBar(context,
-                                      missingRecipientErrorMessage, Colors.red);
-                                }
+                                _buildSnackBar(
+                                  context,
+                                  missingRecipientErrorMessage,
+                                  Colors.red,
+                                );
                               }
-                            },
-                            child: const Text('Senden'),
-                          ),
-                        ],
-                      ))
+                            }
+                          },
+                          child: const Text('Senden'),
+                        ),
+                      ],
+                    ),
+                  )
                 ],
               ),
             );
@@ -188,8 +206,11 @@ class _MessageSendPageState extends State<MessageSendPage> {
   }
 
   MessageUser? _getUser(
-      BuildContext context, String input, List<MessageUser> userSuggestions) {
-    var user = userSuggestions.where((user) => _parseUser(user) == input);
+    BuildContext context,
+    String input,
+    List<MessageUser> userSuggestions,
+  ) {
+    final user = userSuggestions.where((user) => _parseUser(user) == input);
     if (user.isEmpty) {
       return null;
     }
@@ -197,28 +218,37 @@ class _MessageSendPageState extends State<MessageSendPage> {
   }
 
   String _parseUser(MessageUser user) {
-    return "${user.parseUsername()} (${user.username})";
+    return '${user.parseUsername()} (${user.username})';
   }
 
   Future<List<MessageUser>> _fetchUsers(
-      BuildContext context, String searchParams) async {
+    BuildContext context,
+    String searchParams,
+  ) async {
     final usersResponse =
         await context.read<UserRepository>().getUsers(searchParams);
     return usersResponse.userResponses
-        .map((response) => MessageUser.fromUserResponse(response))
+        .map(MessageUser.fromUserResponse)
         .toList();
   }
 
   List<MessageUser> _filterUsernamesByPattern(
-      String pattern, List<MessageUser> users) {
+    String pattern,
+    List<MessageUser> users,
+  ) {
     return users
-        .where((user) =>
-            _parseUser(user).toLowerCase().contains(pattern.toLowerCase()))
+        .where(
+          (user) =>
+              _parseUser(user).toLowerCase().contains(pattern.toLowerCase()),
+        )
         .toList();
   }
 
   void _buildSnackBar(
-      final BuildContext context, final String message, final Color color) {
+    BuildContext context,
+    String message,
+    Color color,
+  ) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -231,8 +261,12 @@ class _MessageSendPageState extends State<MessageSendPage> {
     });
   }
 
-  void _sendMessage(final BuildContext context, final String subject,
-      final String message, List<String> recipients) {
+  void _sendMessage(
+    BuildContext context,
+    String subject,
+    String message,
+    List<String> recipients,
+  ) {
     context.read<MessageSendBloc>().add(
           SendMessageRequest(
             message: OutgoingMessage(

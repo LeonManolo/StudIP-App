@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
 class PaginationLoading extends StatelessWidget {
-  final bool visible;
 
   const PaginationLoading({
-    Key? key,
+    super.key,
     required this.visible,
-  }) : super(key: key);
+  });
+  final bool visible;
 
   @override
   Widget build(BuildContext context) {

@@ -8,11 +8,11 @@ abstract class CourseInfoEvent extends Equatable {
 }
 
 class ToggleSectionEvent extends CourseInfoEvent {
-  final InfoType type;
-  final bool newExpansionState;
 
   const ToggleSectionEvent(
-      {required this.type, required this.newExpansionState});
+      {required this.type, required this.newExpansionState,});
+  final InfoType type;
+  final bool newExpansionState;
 
   @override
   List<Object> get props => [type, newExpansionState];

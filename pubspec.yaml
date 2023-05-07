@@ -96,7 +96,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  lints: ^2.0.0
+  very_good_analysis: ^4.0.0+1
 
 # The following section is specific to Flutter packages.
 flutter:

@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:studipadawan/courses/details/files/bloc/course_files_bloc.dart';
 import 'package:studipadawan/courses/details/files/view/widgets/file_row/course_files_file_row.dart';
 
-import '../../bloc/course_files_bloc.dart';
-
 class CourseFilesItemsList extends StatelessWidget {
-  const CourseFilesItemsList({Key? key}) : super(key: key);
+  const CourseFilesItemsList({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -14,9 +13,9 @@ class CourseFilesItemsList extends StatelessWidget {
         return state.items.isEmpty
             ? const Center(
                 child: Text(
-                "Keine Dateien vorhanden",
+                'Keine Dateien vorhanden',
                 textAlign: TextAlign.center,
-              ))
+              ),)
             : ListView.builder(
                 itemBuilder: (context, index) {
                   return state.items.elementAt(index).fold((folder) {
@@ -32,7 +31,7 @@ class CourseFilesItemsList extends StatelessWidget {
                           .add(DidSelectFolderEvent(
                             selectedFolder: folder,
                             parentFolders: state.parentFolders,
-                          )),
+                          ),),
                     );
                   }, (fileInfo) {
                     return CourseFilesFileRow(fileInfo: fileInfo);

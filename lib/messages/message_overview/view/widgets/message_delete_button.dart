@@ -2,9 +2,8 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 
 class MessageDeleteButton extends StatelessWidget {
-  final Function() deleteMessages;
-  const MessageDeleteButton({Key? key, required this.deleteMessages})
-      : super(key: key);
+  const MessageDeleteButton({super.key, required this.deleteMessages});
+  final void Function() deleteMessages;
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -24,13 +23,14 @@ class MessageDeleteButton extends StatelessWidget {
           bottom: 0,
           child: IconButton(
             onPressed: () {
-              showDialog(
+              showDialog<void>(
                 context: context,
                 builder: (BuildContext context) {
                   return AlertDialog(
                     title: const Text('Löschen'),
                     content: const Text(
-                        'Möchtest du diese Nachrichten wirklich löschen?'),
+                      'Möchtest du diese Nachrichten wirklich löschen?',
+                    ),
                     actions: <Widget>[
                       TextButton(
                         child: const Text('Nein'),

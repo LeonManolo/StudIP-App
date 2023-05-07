@@ -1,18 +1,16 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:studipadawan/courses/details/files/bloc/course_files_bloc.dart';
 import 'package:studipadawan/courses/details/files/models/file_info.dart';
+import 'package:studipadawan/courses/details/files/view/widgets/file_row/course_files_file_info_alert.dart';
 import 'package:studipadawan/courses/details/files/view/widgets/file_row/course_files_file_row_trailling.dart';
-
-import '../../../bloc/course_files_bloc.dart';
-import 'course_files_file_info_alert.dart';
 
 enum FilePopupMenuOption { info, download, display }
 
 class CourseFilesFileRow extends StatelessWidget {
+  const CourseFilesFileRow({super.key, required this.fileInfo});
   final FileInfo fileInfo;
-  const CourseFilesFileRow({Key? key, required this.fileInfo})
-      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -26,10 +24,10 @@ class CourseFilesFileRow extends StatelessWidget {
             .add(DidSelectFileEvent(selectedFileInfo: fileInfo));
       },
       onLongPress: () {
-        showDialog(
-            context: context,
-            builder: (context) =>
-                CourseFilesFileInfoAlert(file: fileInfo.file));
+        showDialog<void>(
+          context: context,
+          builder: (context) => CourseFilesFileInfoAlert(file: fileInfo.file),
+        );
       },
     );
   }

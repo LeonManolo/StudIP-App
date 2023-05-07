@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
-import '../../models/models.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'package:studipadawan/courses/details/info/models/models.dart';
 
 class NewsSection extends ExpansionTile {
-  NewsSection(
-      {Key? key,
-      required NewsExpansionModel newsExpansionModel,
-      required Function(bool) onExpansionChanged})
-      : super(
-          key: key,
-          title: const Text("Ankündigungen"),
+  NewsSection({
+    super.key,
+    required NewsExpansionModel newsExpansionModel,
+    required void Function(bool) onExpansionChanged,
+  }) : super(
+          title: const Text('Ankündigungen'),
           children: [
             for (int index = 0; index < newsExpansionModel.news.length; index++)
               Column(
@@ -17,11 +16,13 @@ class NewsSection extends ExpansionTile {
                   ListTile(
                     title: Text(newsExpansionModel.news.elementAt(index).title),
                     subtitle: Html(
-                        data: newsExpansionModel.news.elementAt(index).content),
+                      data: newsExpansionModel.news.elementAt(index).content,
+                    ),
                   ),
-                  index < (newsExpansionModel.news.length - 1)
-                      ? const Divider()
-                      : const SizedBox.shrink()
+                  if (index < (newsExpansionModel.news.length - 1))
+                    const Divider()
+                  else
+                    const SizedBox.shrink()
                 ],
               )
           ],

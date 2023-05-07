@@ -42,10 +42,10 @@ class Message {
     return builder.toString();
   }
 
-  String parseRecipients() {
+  String parseRecipients({String joinedWith = ","}) {
     return recipients
         .map((user) => "${user.firstName} ${user.lastName}")
-        .join(",");
+        .join(joinedWith);
   }
 
   factory Message.fromMessageResponse(final MessageResponse response) {

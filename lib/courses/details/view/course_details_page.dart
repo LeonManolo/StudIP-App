@@ -7,14 +7,14 @@ import 'package:studipadawan/courses/details/view/widgets/course_detail_tab.dart
 import 'package:studipadawan/courses/details/view/widgets/course_details_main_content.dart';
 
 class CourseDetailsPage extends StatelessWidget {
-  final Course course;
 
-  const CourseDetailsPage({Key? key, required this.course}) : super(key: key);
+  const CourseDetailsPage({super.key, required this.course});
+  final Course course;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Details")),
+      appBar: AppBar(title: const Text('Details')),
       body: BlocProvider(
         create: (context) => CourseDetailsBloc(course: course),
         child: BlocBuilder<CourseDetailsBloc, CourseDetailsState>(
@@ -24,7 +24,7 @@ class CourseDetailsPage extends StatelessWidget {
               children: [
                 Padding(
                     padding: const EdgeInsets.fromLTRB(
-                        AppSpacing.md, AppSpacing.xs, AppSpacing.md, 0),
+                        AppSpacing.md, AppSpacing.xs, AppSpacing.md, 0,),
                     child: Text(
                       context
                           .read<CourseDetailsBloc>()
@@ -37,7 +37,7 @@ class CourseDetailsPage extends StatelessWidget {
                         fontSize: 18,
                         fontWeight: FontWeight.w600,
                       ),
-                    )),
+                    ),),
                 const SizedBox(
                   height: AppSpacing.md,
                 ),
@@ -72,7 +72,7 @@ class CourseDetailsPage extends StatelessWidget {
                     child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: AppSpacing.md),
                   child: CourseDetailsMainContent(),
-                ))
+                ),)
               ],
             );
           },

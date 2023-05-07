@@ -1,7 +1,6 @@
-import 'dart:async';
 import 'package:bloc/bloc.dart';
-import 'message_tabbar_event.dart';
-import 'message_tabbar_state.dart';
+import 'package:studipadawan/messages/message_overview/message_tabbar_bloc%20/message_tabbar_event.dart';
+import 'package:studipadawan/messages/message_overview/message_tabbar_bloc%20/message_tabbar_state.dart';
 
 class TabBarBloc extends Bloc<TabBarEvent, TabBarState> {
   TabBarBloc() : super(const TabBarState.initial()) {
@@ -17,7 +16,7 @@ class TabBarBloc extends Bloc<TabBarEvent, TabBarState> {
     emit(state.copyWith(
         filterIconVisible: event.index == 0,
         menuIconVisible: false,
-        currentTabIndex: event.index));
+        currentTabIndex: event.index,),);
   }
 
   void _onShowMenuIcon(
@@ -27,7 +26,7 @@ class TabBarBloc extends Bloc<TabBarEvent, TabBarState> {
     emit(state.copyWith(
       filterIconVisible: false,
       menuIconVisible: true,
-    ));
+    ),);
   }
 
   void _onHideMenuIcon(
@@ -37,6 +36,6 @@ class TabBarBloc extends Bloc<TabBarEvent, TabBarState> {
     emit(state.copyWith(
       filterIconVisible: state.currentTabIndex == 0,
       menuIconVisible: false,
-    ));
+    ),);
   }
 }

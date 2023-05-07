@@ -9,7 +9,7 @@ import 'package:studipadawan/courses/bloc/courses_state.dart';
 import 'package:studipadawan/courses/view/widgets/semester_list.dart';
 
 class CoursesPage extends StatelessWidget {
-  const CoursesPage({Key? key}) : super(key: key);
+  const CoursesPage({super.key});
 
   static Page<void> page() => const MaterialPage<void>(child: CoursesPage());
 
@@ -41,7 +41,7 @@ class CoursesPage extends StatelessWidget {
 
   PreferredSizeWidget _appBar(BuildContext context) {
     return AppBar(
-      title: const Text("Kurse"),
+      title: const Text('Kurse'),
       actions: <Widget>[
         IconButton(
           key: const Key('homePage_logout_iconButton'),
@@ -65,7 +65,7 @@ class CoursesPage extends StatelessWidget {
       child: ElevatedButton(
         onPressed: () =>
             BlocProvider.of<CourseBloc>(context).add(CoursesRequested()),
-        child: const Text("Load courses"),
+        child: const Text('Load courses'),
       ),
     );
   }
@@ -74,11 +74,11 @@ class CoursesPage extends StatelessWidget {
     return Center(
       child: Column(
         children: [
-          const Text("Error on load"),
+          const Text('Error on load'),
           ElevatedButton(
             onPressed: () =>
                 BlocProvider.of<CourseBloc>(context).add(CoursesRequested()),
-            child: const Text("Load courses"),
+            child: const Text('Load courses'),
           )
         ],
       ),

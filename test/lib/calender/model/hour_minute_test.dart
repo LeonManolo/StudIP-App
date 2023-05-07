@@ -1,8 +1,8 @@
-import 'package:flutter_test/flutter_test.dart';
 import 'package:calender_repository/src/models/hour_minute.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  group("constructor tests", () {
+  group('constructor tests', () {
     test('Correct input', () {
       final hourMinute = HourMinute(hours: 8, minutes: 45);
 
@@ -28,7 +28,7 @@ void main() {
     });
   });
 
-  group("minutesAwayFrom() Function tests", () {
+  group('minutesAwayFrom() Function tests', () {
     test('HourMinutes test with 0', () {
       final hourMinute = HourMinute(hours: 8, minutes: 45);
       final hourMinute2 = HourMinute(hours: 9, minutes: 0);

@@ -1,5 +1,5 @@
-import 'package:equatable/equatable.dart';
 import 'package:courses_repository/courses_repository.dart';
+import 'package:equatable/equatable.dart';
 
 enum CourseStatus {
   initial,
@@ -9,8 +9,6 @@ enum CourseStatus {
 }
 
 class CourseState extends Equatable {
-  final CourseStatus status;
-  final List<Semester> semesters;
 
   const CourseState({
     required this.status,
@@ -21,12 +19,14 @@ class CourseState extends Equatable {
       : this(
           status: CourseStatus.initial,
         );
+  final CourseStatus status;
+  final List<Semester> semesters;
 
   @override
   List<Object?> get props => [status, semesters];
 
   CourseState copyWith({CourseStatus? status, List<Semester>? semesters}) {
     return CourseState(
-        status: status ?? this.status, semesters: semesters ?? this.semesters);
+        status: status ?? this.status, semesters: semesters ?? this.semesters,);
   }
 }
