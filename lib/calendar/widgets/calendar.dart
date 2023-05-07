@@ -8,7 +8,6 @@ import 'calendar_entry_layout.dart';
 
 class Calendar extends StatefulWidget {
   final DateTime date;
-  final HourMinute currentHourMinute;
   final List<CalendarTimeframe> scheduleStructure;
   final Map<Weekdays, Map<String, CalendarEntryData>> scheduleData;
   final VoidCallback onPreviousButtonPress;
@@ -17,7 +16,6 @@ class Calendar extends StatefulWidget {
 
   const Calendar({
     Key? key,
-    required this.currentHourMinute,
     required this.scheduleStructure,
     required this.scheduleData,
     required this.date,

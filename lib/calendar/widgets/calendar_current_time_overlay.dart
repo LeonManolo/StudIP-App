@@ -47,15 +47,9 @@ class CalendarCurrentTimeOverlay extends StatelessWidget {
                 widthFactor: 1,
                 child: Container(
                   alignment: Alignment.bottomCenter,
-                  // decoration: BoxDecoration(
-                  //     color: Colors.blue.withOpacity(0.2),
-                  //     border: const Border(
-                  //       bottom: BorderSide(),
-                  //     ),
-                  // ),
                   child: FadeIn(
+                    animate: true,
                     child: Row(
-                      // Prüfen ob es mit dieser Row Kollidiert!
                       key: rowKey,
                       children: [
                         Container(
@@ -64,21 +58,26 @@ class CalendarCurrentTimeOverlay extends StatelessWidget {
                           width: MediaQuery.of(context).size.width * 0.2 - 3,
                           child: Text(
                             "$currentTime",
-                            style: const TextStyle(
-                              color: Colors.red,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Theme.of(context).primaryColor,
                             ),
                           ),
                         ),
-                        const CircleAvatar(
+                        CircleAvatar(
                           minRadius: 5,
                           maxRadius: 5,
-                          backgroundColor: Colors.red,
+                          backgroundColor: Theme.of(context).primaryColor,
                           foregroundColor: Colors.red,
+                          child: const CircleAvatar(
+                            radius: 2.5,
+                            backgroundColor: Colors.white,
+                          ),
                         ),
                         Expanded(
                           child: Container(
-                            color: Colors.red.withOpacity(0.8),
-                            height: 1.5,
+                            color: Theme.of(context).primaryColor,
+                            height: 2,
                             alignment: Alignment.center,
                           ),
                         ),

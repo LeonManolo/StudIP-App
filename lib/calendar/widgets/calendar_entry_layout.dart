@@ -1,13 +1,8 @@
 import 'dart:async';
-
-import 'package:app_ui/app_ui.dart';
 import 'package:calender_repository/calender_repository.dart';
 import 'package:flutter/material.dart';
+import 'package:studipadawan/calendar/widgets/calendar_break_entry.dart';
 import 'package:studipadawan/calendar/widgets/calendar_entry.dart';
-import 'package:studipadawan/calendar/widgets/calendar_entry_divider.dart';
-
-import 'calendar_current_time_overlay.dart';
-import 'empty_calendar_entry.dart';
 
 class CalendarEntryLayout extends StatefulWidget {
   final CalendarEntryData? calendarEntryData;
@@ -31,7 +26,7 @@ class _CalendarEntryLayoutState extends State<CalendarEntryLayout> {
   final startTimeKey = GlobalKey();
   final currentTimeIndicatorKey = GlobalKey();
   final breakWidgetKey = GlobalKey();
-  var hourMinute = HourMinute(hours: 9, minutes: 43);
+  var currentHourMinute = HourMinute(hours: 9, minutes: 43);
   static const timerInterval = Duration(seconds: 1);
 
   Timer? timer;
@@ -46,58 +41,49 @@ class _CalendarEntryLayoutState extends State<CalendarEntryLayout> {
 
   @override
   Widget build(BuildContext context) {
-    final leftSize = MediaQuery.of(context).size.width * 0.2;
     updateOpacity();
 
     return Column(
       children: [
         CalendarEntry(
-            currentTime: hourMinute,
+            currentTime: currentHourMinute,
             opacity: opacity,
-            textKey: startTimeKey,
-            rowKey: currentTimeIndicatorKey,
-            color: Colors.green,
+            calendarEntryTimeKey: startTimeKey,
+            currentTimeIndicatorKey: currentTimeIndicatorKey,
+            color: Theme.of(context).primaryColor,
             calendarEntryData: widget.calendarEntryData,
             timeFrame: widget.timeframe),
-        LayoutBuilder(builder: (_, __) {
-          if (widget.nextTimeframe == null) {
-            return const SizedBox();
-          }
-          final timeframe = CalendarTimeframe(
-            start: widget.timeframe.end,
-            end: widget.nextTimeframe!.start,
-          );
-          return CalendarCurrentTimeOverlay(
-            excludingEqualTimes: true,
-            rowKey: breakWidgetKey,
-            timeframe: timeframe,
-            currentTime: hourMinute,
-            child: Container(
-              //color: Colors.amber.withOpacity(0.2),
-              padding: const EdgeInsets.only(bottom: AppSpacing.xxs),
-              height: 50,
-              width: double.infinity,
-              alignment: Alignment.bottomCenter,
-              child: CalendarEntryDivider(paddingLeft: leftSize),
-              //child: CalendarEntryDivider(paddingLeft: leftSize),
-            ),
-          );
-        }),
+        CalendarBreakEntry(
+          breakStart: widget.timeframe.end,
+          breakEnd: widget.nextTimeframe?.start,
+          currentTime: currentHourMinute,
+          breakWidgetKey: breakWidgetKey,
+        ),
       ],
     );
   }
 
+  /// Initializes a timer to update the currentHourMinute periodically.
   //TODO: timer optimieren (in das calendar widget ziehen um nur ein timer zu haben, ein stream bei dem alle widgets listen (events nur von 8:15 - 20:45 emitten)
   void initTimer() {
     Timer.periodic(timerInterval, (timer) {
       if (!mounted) return;
-      setState(() {
-        hourMinute = hourMinute.addMinutes(1);
-        print(hourMinute);
-      });
+      //final forTesting = currentHourMinute.addMinutes(1);
+      final newTime = HourMinute.fromDateTime(dateTime: DateTime.now());
+      if(!newTime.equals(currentHourMinute)) {
+        setState(() {
+          currentHourMinute = newTime;
+          //print(currentHourMinute);
+        });
+      }
     });
   }
 
+  /// Checks if two widgets with the given global keys overlap in their rendered layout.
+  ///
+  /// @param key1 GlobalKey of the first widget.
+  /// @param key2 GlobalKey of the second widget.
+  /// @return `true` if the widgets overlap, `false` otherwise.
   bool checkOverlap(GlobalKey key1, GlobalKey key2) {
     if (key1.currentContext == null || key2.currentContext == null) {
       return false;
@@ -108,10 +94,11 @@ class _CalendarEntryLayoutState extends State<CalendarEntryLayout> {
     final rect1 = box1.localToGlobal(Offset.zero) & box1.size;
     final rect2 = box2.localToGlobal(Offset.zero) & box2.size;
 
-    print("overlapping: ${rect1.overlaps(rect2)}");
     return rect1.overlaps(rect2);
   }
 
+  /// Updates the opacity value based on the overlap between the startTimeKey and currentTimeIndicatorKey.
+  /// Depending on the outcome the calendar times are visible or not
   void updateOpacity() {
     if (!mounted) return;
 
@@ -126,6 +113,7 @@ class _CalendarEntryLayoutState extends State<CalendarEntryLayout> {
     });
   }
 
+  /// Disposes the timer
   @override
   void dispose() {
     timer?.cancel();

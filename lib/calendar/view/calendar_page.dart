@@ -1,13 +1,11 @@
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:calender_repository/calender_repository.dart';
-import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:studipadawan/calendar/bloc/calendar_bloc.dart';
 import 'package:studipadawan/calendar/bloc/calendar_state.dart';
 import 'package:studipadawan/calendar/widgets/calendar.dart';
-import 'package:studipadawan/calendar/widgets/calendar_header.dart';
 
 import '../bloc/calendar_event.dart';
 
@@ -28,7 +26,7 @@ class CalendarPage extends StatelessWidget {
         child: BlocConsumer<CalendarBloc, CalendarState>(
           listener: (context, state) {
             if (state is CalendarFailure) {
-              var snackBar = SnackBar(content: Text(state.failureMessage));
+              final snackBar = SnackBar(content: Text(state.failureMessage));
               ScaffoldMessenger.of(context).showSnackBar(snackBar);
             }
           },
@@ -59,7 +57,6 @@ class CalendarPage extends StatelessWidget {
                 },
                 date: state.currentDay,
                 scheduleData: state.calendarWeekData.data,
-                currentHourMinute: HourMinute(hours: 8, minutes: 45),
                 scheduleStructure: [
                   CalendarTimeframe(
                     start: HourMinute(hours: 8, minutes: 15),
