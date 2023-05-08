@@ -4,19 +4,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:studipadawan/calendar/bloc/calendar_bloc.dart';
+import 'package:studipadawan/calendar/bloc/calendar_event.dart';
 import 'package:studipadawan/calendar/bloc/calendar_state.dart';
 import 'package:studipadawan/calendar/widgets/calendar.dart';
 
-import '../bloc/calendar_event.dart';
-
 class CalendarPage extends StatelessWidget {
-  const CalendarPage({Key? key}) : super(key: key);
+  const CalendarPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Kalender"),
+        title: const Text('Kalender'),
       ),
       body: BlocProvider(
         create: (ctx) => CalendarBloc(
@@ -36,7 +35,7 @@ class CalendarPage extends StatelessWidget {
                   child: SpinKitThreeBounce(
                 size: 25,
                 color: Theme.of(context).primaryColor,
-              ));
+              ),);
             }
             if (state is CalendarPopulated) {
               return Calendar(
@@ -93,7 +92,7 @@ class CalendarPage extends StatelessWidget {
             if (state is CalendarFailure) {
               return Text(state.failureMessage);
             }
-            return const Text("nothing");
+            return const Text('nothing');
           },
         ),
       ),

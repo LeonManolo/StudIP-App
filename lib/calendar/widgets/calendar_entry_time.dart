@@ -4,18 +4,17 @@ import 'package:flutter/material.dart';
 
 /// Left side of the Calendar entry, shows the start and (end) time of an event
 class CalendarEntryTime extends StatelessWidget {
-  final GlobalKey calendarEntryTimeKey;
-  final CalendarTimeframe timeframe;
-  final bool showCalendarTimes;
-  final double width;
 
-  const CalendarEntryTime({Key? key,
+  const CalendarEntryTime({super.key,
     required this.timeframe,
     required this.width,
     required this.calendarEntryTimeKey,
     required this.showCalendarTimes,
-  })
-      : super(key: key);
+  });
+  final GlobalKey calendarEntryTimeKey;
+  final CalendarTimeframe timeframe;
+  final bool showCalendarTimes;
+  final double width;
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +23,6 @@ class CalendarEntryTime extends StatelessWidget {
       padding:
       const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
@@ -39,7 +37,7 @@ class CalendarEntryTime extends StatelessWidget {
                     ?.withOpacity(
                   showCalendarTimes ? 1 : 0,
                 ),
-                fontWeight: FontWeight.bold),
+                fontWeight: FontWeight.bold,),
           )
         ],
       ),

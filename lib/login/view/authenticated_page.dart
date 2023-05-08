@@ -4,11 +4,11 @@ import 'package:studipadawan/calendar/view/calendar_page.dart';
 import 'package:studipadawan/courses/view/courses_page.dart';
 import 'package:studipadawan/home/view/home_page.dart';
 
-import '../../messages/message_overview/view/messages_page.dart';
+import 'package:studipadawan/messages/message_overview/view/messages_page.dart';
 
 
 class AuthenticatedPage extends StatefulWidget {
-  const AuthenticatedPage({Key? key}) : super(key: key);
+  const AuthenticatedPage({super.key});
 
   static Page<void> page() =>
       const MaterialPage<void>(child: AuthenticatedPage());
@@ -35,21 +35,21 @@ class _AuthenticatedPageState extends State<AuthenticatedPage> {
       bottomNavigationBar: BottomNavigationBar(
         items: const [
           BottomNavigationBarItem(
-              label: "Home",
+              label: 'Home',
               icon: Icon(EvaIcons.homeOutline),
-              activeIcon: Icon(EvaIcons.home)),
+              activeIcon: Icon(EvaIcons.home),),
           BottomNavigationBarItem(
-              label: "Kurse",
+              label: 'Kurse',
               icon: Icon(EvaIcons.bookOpenOutline),
-              activeIcon: Icon(EvaIcons.bookOpen)),
+              activeIcon: Icon(EvaIcons.bookOpen),),
           BottomNavigationBarItem(
-              label: "Nachrichten",
+              label: 'Nachrichten',
               icon: Icon(EvaIcons.messageSquareOutline),
-              activeIcon: Icon(EvaIcons.messageSquare)),
+              activeIcon: Icon(EvaIcons.messageSquare),),
           BottomNavigationBarItem(
-              label: "Kalender",
+              label: 'Kalender',
               icon: Icon(EvaIcons.calendarOutline),
-              activeIcon: Icon(EvaIcons.calendar)),
+              activeIcon: Icon(EvaIcons.calendar),),
         ],
         type: BottomNavigationBarType.fixed,
         currentIndex: _selectedTab,

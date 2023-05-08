@@ -1,14 +1,7 @@
-import 'package:studip_api_client/src/models/models.dart' as APIModels;
 import 'package:intl/intl.dart';
+import 'package:studip_api_client/studip_api_client.dart' as studip_api_client;
 
 class StudIPCourseEvent {
-  final String id;
-  final String title;
-  final String description;
-  final DateTime startDate;
-  final DateTime endDate;
-  final List<String> categories;
-  final String? location;
 
   StudIPCourseEvent({
     required this.id,
@@ -21,15 +14,22 @@ class StudIPCourseEvent {
   });
 
   factory StudIPCourseEvent.fromCourseEventResponse(
-      {required APIModels.CourseEventResponse courseEventResponse}) {
+      {required studip_api_client.CourseEventResponse courseEventResponse,}) {
     return StudIPCourseEvent(
         id: courseEventResponse.id,
         title: courseEventResponse.title,
         description: courseEventResponse.description,
         startDate: DateTime.parse(courseEventResponse.start).toLocal(),
         endDate: DateTime.parse(courseEventResponse.end).toLocal(),
-        categories: courseEventResponse.categories);
+        categories: courseEventResponse.categories,);
   }
+  final String id;
+  final String title;
+  final String description;
+  final DateTime startDate;
+  final DateTime endDate;
+  final List<String> categories;
+  final String? location;
 
   String get getEventTimeSpan {
     if (startDate.year == endDate.year &&

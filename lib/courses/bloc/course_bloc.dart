@@ -7,25 +7,25 @@ import 'package:studipadawan/courses/bloc/courses_event.dart';
 import 'package:studipadawan/courses/bloc/courses_state.dart';
 
 class CourseBloc extends Bloc<CourseEvent, CourseState> {
-  final CourseRepository _courseRepository;
-  final AuthenticationRepository _authenticationRepository;
 
   CourseBloc(
       {required CourseRepository courseRepository,
-      required AuthenticationRepository authenticationRepository})
+      required AuthenticationRepository authenticationRepository,})
       : _courseRepository = courseRepository,
         _authenticationRepository = authenticationRepository,
         super(const CourseState.initial()) {
     on<CoursesRequested>(_onCourseRequested);
   }
+  final CourseRepository _courseRepository;
+  final AuthenticationRepository _authenticationRepository;
 
   FutureOr<void> _onCourseRequested(
-      CoursesRequested event, Emitter<CourseState> emit) async {
+      CoursesRequested event, Emitter<CourseState> emit,) async {
     emit(state.copyWith(status: CourseStatus.loading, semesters: []));
 
     try {
-      final semesters = (await _courseRepository.getCoursesGroupedBySemester(
-          _authenticationRepository.currentUser.id));
+      final semesters = await _courseRepository.getCoursesGroupedBySemester(
+          _authenticationRepository.currentUser.id,);
 
       emit(CourseState(status: CourseStatus.populated, semesters: semesters));
     } catch (e) {

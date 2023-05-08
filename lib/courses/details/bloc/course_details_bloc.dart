@@ -10,13 +10,13 @@ part 'course_details_state.dart';
 
 class CourseDetailsBloc
     extends Bloc<CourseDetailsSelectTabEvent, CourseDetailsState> {
-  final allTabs = CourseDetailsTab.values;
-  final Course course;
 
   CourseDetailsBloc({required this.course})
       : super(CourseDetailsState.initial(course: course)) {
     on<CourseDetailsSelectTabEvent>(_onTabSelected);
   }
+  final allTabs = CourseDetailsTab.values;
+  final Course course;
 
   FutureOr<void> _onTabSelected(
     CourseDetailsSelectTabEvent event,

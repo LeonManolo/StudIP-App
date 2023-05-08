@@ -5,18 +5,18 @@ import 'package:studipadawan/calendar/widgets/calendar_current_time_overlay.dart
 import 'package:studipadawan/calendar/widgets/calendar_entry_divider.dart';
 
 class CalendarBreakEntry extends StatelessWidget {
-  final HourMinute? breakStart;
-  final HourMinute? breakEnd;
-  final HourMinute currentTime;
-  final GlobalKey breakWidgetKey;
 
   const CalendarBreakEntry({
-    Key? key,
+    super.key,
     this.breakStart,
     this.breakEnd,
     required this.currentTime,
     required this.breakWidgetKey,
-  }) : super(key: key);
+  });
+  final HourMinute? breakStart;
+  final HourMinute? breakEnd;
+  final HourMinute currentTime;
+  final GlobalKey breakWidgetKey;
 
   @override
   Widget build(BuildContext context) {

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:studipadawan/app/bloc/app_bloc.dart';
 import 'package:studipadawan/login/view/authenticated_page.dart';
-
-import '../../login/view/view.dart';
-import '../bloc/app_bloc.dart';
+import 'package:studipadawan/login/view/view.dart';
 
 List<Page<dynamic>> onGenerateAppViewPages(
   AppStatus state,

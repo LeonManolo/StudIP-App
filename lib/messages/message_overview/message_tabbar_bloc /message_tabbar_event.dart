@@ -5,8 +5,8 @@ abstract class TabBarEvent extends Equatable {
 }
 
 class TabIndexChanged extends TabBarEvent {
-  final int index;
   const TabIndexChanged({required this.index});
+  final int index;
   @override
   List<Object?> get props => [index];
 }

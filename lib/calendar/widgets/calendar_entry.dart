@@ -2,11 +2,21 @@ import 'package:calender_repository/calender_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:studipadawan/calendar/widgets/calendar_current_time_overlay.dart';
 import 'package:studipadawan/calendar/widgets/calendar_entry_content.dart';
+import 'package:studipadawan/calendar/widgets/calendar_entry_divider.dart';
 import 'package:studipadawan/calendar/widgets/calendar_entry_time.dart';
 
-import 'calendar_entry_divider.dart';
-
 class CalendarEntry extends StatefulWidget {
+
+  const CalendarEntry(
+      {super.key,
+      required this.timeFrame,
+      this.showDivider = true,
+      this.calendarEntryData,
+      required this.color,
+      required this.currentTimeIndicatorKey,
+      required this.calendarEntryTimeKey,
+      required this.opacity,
+      required this.currentTime,});
   final CalendarEntryData? calendarEntryData;
   final bool showDivider;
   final Color color;
@@ -16,18 +26,6 @@ class CalendarEntry extends StatefulWidget {
 
   final GlobalKey currentTimeIndicatorKey;
   final GlobalKey calendarEntryTimeKey;
-
-  const CalendarEntry(
-      {Key? key,
-      required this.timeFrame,
-      this.showDivider = true,
-      this.calendarEntryData,
-      required this.color,
-      required this.currentTimeIndicatorKey,
-      required this.calendarEntryTimeKey,
-      required this.opacity,
-      required this.currentTime})
-      : super(key: key);
 
   @override
   State<CalendarEntry> createState() => _CalendarEntryState();
@@ -44,22 +42,20 @@ class _CalendarEntryState extends State<CalendarEntry> {
       currentTime: widget.currentTime,
       child: Column(
         mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.max,
             children: [
               CalendarEntryTime(
                   timeframe: widget.timeFrame,
                   width: leftSize,
                   calendarEntryTimeKey: widget.calendarEntryTimeKey,
-                  showCalendarTimes: widget.opacity == 1),
+                  showCalendarTimes: widget.opacity == 1,),
               Expanded(
                 child: CalendarEntryContent(
                     calendarEntryData: widget.calendarEntryData,
-                    timeframe: widget.timeFrame),
+                    timeframe: widget.timeFrame,),
               ),
             ],
           ),

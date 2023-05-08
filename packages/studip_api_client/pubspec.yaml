@@ -15,11 +15,17 @@ dependencies:
       url: https://github.com/finebel/oauth2_client
       ref: 45fa85011457792b34502f52e97b93767c806a2f
 
+  http:
+    git:
+      url: https://github.com/finebel/http
+      path: pkgs/http
+      ref: fe743dcd08a34569876cdc36d6b70628912e7c8a
+
   jwt_decode: ^0.3.1
 
   path_provider: ^2.0.14
   dio: ^5.1.1
 
 dev_dependencies:
-  lints: ^1.0.0
+  lints: ^2.0.0
   test: ^1.16.0

@@ -3,12 +3,12 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 
 class CalendarHeader extends StatelessWidget {
+
+  const CalendarHeader({super.key, required this.dateTime, required this.onPreviousButtonPress, required this.onNextButtonPress, required this.onDatePress});
   final DateTime dateTime;
   final VoidCallback onPreviousButtonPress;
   final VoidCallback onNextButtonPress;
   final VoidCallback onDatePress;
-
-  const CalendarHeader({Key? key, required this.dateTime, required this.onPreviousButtonPress, required this.onNextButtonPress, required this.onDatePress}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +25,7 @@ class CalendarHeader extends StatelessWidget {
           InkWell(
             onTap: onDatePress,
             child: Text(
-              "${weekday(dateTime.weekday)}, ${dateTime.day}.${dateTime.month}.${dateTime.year}",
+              '${weekday(dateTime.weekday)}, ${dateTime.day}.${dateTime.month}.${dateTime.year}',
               style: Theme.of(context).textTheme.titleLarge,
             ),
           ),
@@ -44,35 +44,35 @@ class CalendarHeader extends StatelessWidget {
     switch (index) {
       case 1:
         {
-          return "Montag";
+          return 'Montag';
         }
       case 2:
         {
-          return "Dienstag";
+          return 'Dienstag';
         }
       case 3:
         {
-          return "Mittwoch";
+          return 'Mittwoch';
         }
       case 4:
         {
-          return "Donnerstag";
+          return 'Donnerstag';
         }
       case 5:
         {
-          return "Freitag";
+          return 'Freitag';
         }
       case 6:
         {
-          return "Samstag";
+          return 'Samstag';
         }
       case 7:
         {
-          return "Sonntag";
+          return 'Sonntag';
         }
       default:
         {
-          return "";
+          return '';
         }
     }
   }

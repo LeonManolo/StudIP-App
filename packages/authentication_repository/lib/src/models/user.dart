@@ -1,11 +1,10 @@
 import 'package:equatable/equatable.dart';
 
-class User extends Equatable  {
+class User extends Equatable {
+  const User(this.id);
   final String id;
 
-  const User(this.id);
-
-  static const empty = User("");
+  static const empty = User('');
 
   @override
   List<Object?> get props => [id];

@@ -8,17 +8,17 @@ enum MessageDetailsStatus {
 }
 
 class MessageDetailsState extends Equatable {
-  final MessageDetailsStatus status;
-  final String message;
   
   const MessageDetailsState(
       {required this.status,
-      this.message = "",});
+      this.message = '',});
 
   const MessageDetailsState.initial()
       : this(
           status: MessageDetailsStatus.initial,
         );
+  final MessageDetailsStatus status;
+  final String message;
 
   @override
   List<Object?> get props => [
@@ -28,9 +28,9 @@ class MessageDetailsState extends Equatable {
 
   MessageDetailsState copyWith(
       {MessageDetailsStatus? status,
-      String? message}) {
+      String? message,}) {
     return MessageDetailsState(
         status: status ?? this.status,
-        message: message ?? this.message);
+        message: message ?? this.message,);
   }
 }

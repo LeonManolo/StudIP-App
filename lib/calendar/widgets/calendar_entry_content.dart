@@ -6,10 +6,10 @@ import 'package:studipadawan/calendar/extensions/list_extesions.dart';
 
 /// Right side of the Calendar entry, shows the calendar data
 class CalendarEntryContent extends StatelessWidget {
+  const CalendarEntryContent({super.key, this.calendarEntryData, this.backgroundColor, required this.timeframe});
   final CalendarEntryData? calendarEntryData;
   final Color? backgroundColor;
   final CalendarTimeframe timeframe;
-  const CalendarEntryContent({Key? key, this.calendarEntryData, this.backgroundColor, required this.timeframe}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -46,9 +46,9 @@ class CalendarEntryContent extends StatelessWidget {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(
-                      bottom: AppSpacing.lg),
+                      bottom: AppSpacing.lg,),
                   child: Text(
-                    calendarEntryData?.title ?? "",
+                    calendarEntryData?.title ?? '',
                     style: Theme.of(context)
                         .textTheme
                         .titleMedium
@@ -57,7 +57,7 @@ class CalendarEntryContent extends StatelessWidget {
                     ),
                   ),
                 ),
-                Text(calendarEntryData?.description ?? ""),
+                Text(calendarEntryData?.description ?? ''),
                 Padding(
                   padding:
                   const EdgeInsets.only(top: AppSpacing.lg),
@@ -77,11 +77,11 @@ class CalendarEntryContent extends StatelessWidget {
                             Padding(
                               padding: const EdgeInsets.only(
                                   left: AppSpacing.xs,
-                                  right: AppSpacing.lg),
+                                  right: AppSpacing.lg,),
                               child: Text(
                                 calendarEntryData?.locations
                                     .firstOrNull() ??
-                                    "",
+                                    '',
                                 style: TextStyle(
                                   fontWeight: FontWeight.w600,
                                   color: bgColor,
@@ -98,7 +98,7 @@ class CalendarEntryContent extends StatelessWidget {
                       ),
                       Padding(
                         padding: const EdgeInsets.only(
-                            left: AppSpacing.xs),
+                            left: AppSpacing.xs,),
                         child: Text(
                           timeframe.toString(),
                           style: TextStyle(

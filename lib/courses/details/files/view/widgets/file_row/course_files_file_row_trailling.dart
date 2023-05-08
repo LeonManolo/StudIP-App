@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:studipadawan/courses/details/files/models/file_info.dart';
 
 class CourseFilesFileRowTrailling extends StatelessWidget {
-  final FileInfo fileInfo;
 
-  const CourseFilesFileRowTrailling({Key? key, required this.fileInfo})
-      : super(key: key);
+  const CourseFilesFileRowTrailling({super.key, required this.fileInfo});
+  final FileInfo fileInfo;
 
   @override
   Widget build(BuildContext context) {

@@ -1,5 +1,5 @@
-extension ExtendedList on List {
-  E indexOrNull<E>(int index) =>  index +1 <= length ? this[index] : null;
-  E firstOrNull<E>() => isEmpty ? null : first;
-  E lastOrNull<E>() => isEmpty ? null : last;
+extension ExtendedList<E> on List<E?> {
+  E? indexOrNull(int index) => index + 1 <= length ? this[index] : null;
+  E? firstOrNull() => isEmpty ? null : first;
+  E? lastOrNull() => isEmpty ? null : last;
 }

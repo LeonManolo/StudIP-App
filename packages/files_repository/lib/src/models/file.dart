@@ -1,17 +1,7 @@
 import 'package:intl/intl.dart';
-import 'package:studip_api_client/src/models/models.dart' as APIModels;
+import 'package:studip_api_client/studip_api_client.dart' as studip_api_client;
 
 class File {
-  final String id;
-  final String name;
-  final String description;
-  final int numberOfDownloads;
-  final String owner;
-  final DateTime createdAt;
-  final DateTime lastUpdatedAt;
-  final String mimeType;
-  final bool isReadable;
-  final bool isDownloadable;
 
   File({
     required this.id,
@@ -27,7 +17,7 @@ class File {
   });
 
   factory File.fromFileResponse({
-    required APIModels.FileResponse fileResponse,
+    required studip_api_client.FileResponse fileResponse,
   }) {
     return File(
       id: fileResponse.id,
@@ -42,10 +32,20 @@ class File {
       isDownloadable: fileResponse.isDownloadable,
     );
   }
+  final String id;
+  final String name;
+  final String description;
+  final int numberOfDownloads;
+  final String owner;
+  final DateTime createdAt;
+  final DateTime lastUpdatedAt;
+  final String mimeType;
+  final bool isReadable;
+  final bool isDownloadable;
 
   String get createdAtFormatted =>
-      DateFormat("dd.MM.yy (HH:mm)").format(createdAt);
+      DateFormat('dd.MM.yy (HH:mm)').format(createdAt);
 
   String get lastUpdatedAtFormatted =>
-      DateFormat("dd.MM.yy (HH:mm)").format(lastUpdatedAt);
+      DateFormat('dd.MM.yy (HH:mm)').format(lastUpdatedAt);
 }

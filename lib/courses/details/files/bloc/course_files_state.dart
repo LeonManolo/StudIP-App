@@ -3,10 +3,6 @@ part of 'course_files_bloc.dart';
 enum CourseFilesStateType { isLoading, didLoad, error }
 
 class CourseFilesState extends Equatable {
-  final List<FolderInfo> parentFolders;
-  final List<Either<Folder, FileInfo>> items;
-  final String? errorMessage;
-  final CourseFilesStateType type;
 
   const CourseFilesState({
     required this.parentFolders,
@@ -23,9 +19,13 @@ class CourseFilesState extends Equatable {
       type: CourseFilesStateType.isLoading,
     );
   }
+  final List<FolderInfo> parentFolders;
+  final List<Either<Folder, FileInfo>> items;
+  final String? errorMessage;
+  final CourseFilesStateType type;
 
   @override
-  List<Object> get props => [parentFolders, items, errorMessage ?? "", type];
+  List<Object> get props => [parentFolders, items, errorMessage ?? '', type];
 
   CourseFilesState copyWith({
     List<FolderInfo>? parentFolders,
