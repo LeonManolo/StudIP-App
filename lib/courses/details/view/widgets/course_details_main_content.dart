@@ -7,7 +7,7 @@ import 'package:studipadawan/courses/details/info/view/course_info_page.dart';
 import 'package:studipadawan/courses/details/participants/view/course_participants_page.dart';
 
 class CourseDetailsMainContent extends StatelessWidget {
-  const CourseDetailsMainContent({Key? key}) : super(key: key);
+  const CourseDetailsMainContent({super.key});
 
   @override
   Widget build(BuildContext context) {

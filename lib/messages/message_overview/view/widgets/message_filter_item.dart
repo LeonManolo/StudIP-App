@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
-import '../../message_inbox_bloc /message_inbox_state.dart';
+import 'package:studipadawan/messages/message_overview/message_inbox_bloc%20/message_inbox_state.dart';
 
 class FilterItem extends StatelessWidget {
+  const FilterItem({
+    super.key,
+    required this.filter,
+    required this.isSelected,
+    required this.funnelIcon,
+    required this.filterDescription,
+  });
   final MessageFilter filter;
   final bool isSelected;
   final String filterDescription;
   final Icon funnelIcon;
-
-  const FilterItem(
-      {Key? key,
-      required this.filter,
-      required this.isSelected,
-      required this.funnelIcon,
-      required this.filterDescription})
-      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -26,12 +25,12 @@ class FilterItem extends StatelessWidget {
           ),
           if (isSelected)
             Container(
-              padding: const EdgeInsets.all(0),
-              margin: const EdgeInsets.all(0),
+              padding: EdgeInsets.zero,
+              margin: EdgeInsets.zero,
               child: Icon(
                 Icons.check,
                 color: Theme.of(context).primaryColor,
-                size: 20.0,
+                size: 20,
               ),
             ),
         ],

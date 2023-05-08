@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../bloc/course_files_bloc.dart';
-import 'course_files_items_list.dart';
+import 'package:studipadawan/courses/details/files/bloc/course_files_bloc.dart';
+import 'package:studipadawan/courses/details/files/view/widgets/course_files_items_list.dart';
 
 class CourseFilesContent extends StatelessWidget {
-  const CourseFilesContent({Key? key}) : super(key: key);
+  const CourseFilesContent({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +21,7 @@ class CourseFilesContent extends StatelessWidget {
           case CourseFilesStateType.error:
             return Center(
               child: Text(
-                state.errorMessage ?? "Ein unbekannter Fehler ist aufgetreten",
+                state.errorMessage ?? 'Ein unbekannter Fehler ist aufgetreten',
                 textAlign: TextAlign.center,
               ),
             );

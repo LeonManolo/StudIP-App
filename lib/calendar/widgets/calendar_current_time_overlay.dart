@@ -4,21 +4,21 @@ import 'package:calender_repository/calender_repository.dart';
 import 'package:flutter/material.dart';
 
 class CalendarCurrentTimeOverlay extends StatelessWidget {
+
+  const CalendarCurrentTimeOverlay({
+    super.key,
+    required this.child,
+    required this.currentTime,
+    required this.timeframe,
+    required this.rowKey,
+    this.excludingEqualTimes = false,
+  });
   final Widget child;
   final CalendarTimeframe timeframe;
   final HourMinute currentTime;
   final bool excludingEqualTimes;
 
   final GlobalKey rowKey;
-
-  const CalendarCurrentTimeOverlay({
-    Key? key,
-    required this.child,
-    required this.currentTime,
-    required this.timeframe,
-    required this.rowKey,
-    this.excludingEqualTimes = false,
-  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -48,16 +48,15 @@ class CalendarCurrentTimeOverlay extends StatelessWidget {
                 child: Container(
                   alignment: Alignment.bottomCenter,
                   child: FadeIn(
-                    animate: true,
                     child: Row(
                       key: rowKey,
                       children: [
                         Container(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: AppSpacing.lg),
+                              horizontal: AppSpacing.lg,),
                           width: MediaQuery.of(context).size.width * 0.2 - 3,
                           child: Text(
-                            "$currentTime",
+                            '$currentTime',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: Theme.of(context).primaryColor,
@@ -86,7 +85,7 @@ class CalendarCurrentTimeOverlay extends StatelessWidget {
                   ),
                 ),
               );
-            }),
+            },),
           )
       ],
     );

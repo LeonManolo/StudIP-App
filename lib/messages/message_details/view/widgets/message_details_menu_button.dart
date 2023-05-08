@@ -2,23 +2,23 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 
 enum MessageDetailsMenuOption {
-  answer("Antworten"),
-  delete("Nachricht löschen");
+  answer('Antworten'),
+  delete('Nachricht löschen');
 
   const MessageDetailsMenuOption(this.description);
   final String description;
 }
 
 class MessageDetailsMenuButton extends StatelessWidget {
+  const MessageDetailsMenuButton({
+    super.key,
+    required this.answerMessage,
+    required this.isInbox,
+    required this.deleteMessage,
+  });
   final bool isInbox;
-  final Function() answerMessage;
-  final Function() deleteMessage;
-  const MessageDetailsMenuButton(
-      {Key? key,
-      required this.answerMessage,
-      required this.isInbox,
-      required this.deleteMessage})
-      : super(key: key);
+  final void Function() answerMessage;
+  final void Function() deleteMessage;
 
   @override
   Widget build(BuildContext context) {
@@ -29,13 +29,14 @@ class MessageDetailsMenuButton extends StatelessWidget {
           {answerMessage()}
         else
           {
-            showDialog(
+            showDialog<void>(
               context: context,
               builder: (BuildContext context) {
                 return AlertDialog(
                   title: const Text('Löschen'),
                   content: const Text(
-                      'Möchtest du diese Nachricht wirklich löschen?'),
+                    'Möchtest du diese Nachricht wirklich löschen?',
+                  ),
                   actions: <Widget>[
                     TextButton(
                       child: const Text('Nein'),
@@ -59,11 +60,13 @@ class MessageDetailsMenuButton extends StatelessWidget {
       itemBuilder: (context) => [
         if (isInbox)
           PopupMenuItem<MessageDetailsMenuOption>(
-              value: MessageDetailsMenuOption.answer,
-              child: Text(MessageDetailsMenuOption.answer.description)),
+            value: MessageDetailsMenuOption.answer,
+            child: Text(MessageDetailsMenuOption.answer.description),
+          ),
         PopupMenuItem<MessageDetailsMenuOption>(
-            value: MessageDetailsMenuOption.delete,
-            child: Text(MessageDetailsMenuOption.delete.description)),
+          value: MessageDetailsMenuOption.delete,
+          child: Text(MessageDetailsMenuOption.delete.description),
+        ),
       ],
     );
   }

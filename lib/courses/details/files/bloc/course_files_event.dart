@@ -10,20 +10,20 @@ class LoadRootFolderEvent extends CourseFilesEvent {
 }
 
 class DidSelectFolderEvent extends CourseFilesEvent {
-  final Folder selectedFolder;
-  final List<FolderInfo> parentFolders;
 
   const DidSelectFolderEvent(
-      {required this.selectedFolder, required this.parentFolders});
+      {required this.selectedFolder, required this.parentFolders,});
+  final Folder selectedFolder;
+  final List<FolderInfo> parentFolders;
 
   @override
   List<Object> get props => [selectedFolder, parentFolders];
 }
 
 class DidSelectFileEvent extends CourseFilesEvent {
-  final FileInfo selectedFileInfo;
 
   const DidSelectFileEvent({required this.selectedFileInfo});
+  final FileInfo selectedFileInfo;
 
   @override
   List<Object?> get props => [selectedFileInfo];

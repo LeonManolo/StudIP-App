@@ -12,14 +12,28 @@ enum InboxMessageStatus {
 }
 
 enum MessageFilter {
-  none("Alle Nachrichten"),
-  unread("Ungelesene Nachrichten");
+  none('Alle Nachrichten'),
+  unread('Ungelesene Nachrichten');
 
   const MessageFilter(this.description);
   final String description;
 }
 
 class InboxMessageState extends Equatable {
+  
+  const InboxMessageState(
+      {required this.status,
+      this.inboxMessages = const [],
+      this.currentFilter = MessageFilter.none,
+      this.message = '',
+      this.currentOffset = 0,
+      this.maxReached = false,
+      this.paginationLoading = false,});
+
+  const InboxMessageState.initial()
+      : this(
+          status: InboxMessageStatus.initial,
+        );
   final InboxMessageStatus status;
   final String message;
   final List<Message> inboxMessages;
@@ -27,20 +41,6 @@ class InboxMessageState extends Equatable {
   final int currentOffset;
   final bool maxReached;
   final bool paginationLoading;
-  
-  const InboxMessageState(
-      {required this.status,
-      this.inboxMessages = const [],
-      this.currentFilter = MessageFilter.none,
-      this.message = "",
-      this.currentOffset = 0,
-      this.maxReached = false,
-      this.paginationLoading = false});
-
-  const InboxMessageState.initial()
-      : this(
-          status: InboxMessageStatus.initial,
-        );
 
   @override
   List<Object?> get props => [
@@ -61,7 +61,7 @@ class InboxMessageState extends Equatable {
       bool? maxReached,
       bool? showFilterIcon,
       String? message,
-      bool? paginationLoading}) {
+      bool? paginationLoading,}) {
     return InboxMessageState(
         status: status ?? this.status,
         inboxMessages: inboxMessages ?? this.inboxMessages,
@@ -69,6 +69,6 @@ class InboxMessageState extends Equatable {
         currentOffset: currentOffset ?? this.currentOffset,
         maxReached: maxReached ?? this.maxReached,
         message: message ?? this.message,
-        paginationLoading: paginationLoading ?? this.paginationLoading);
+        paginationLoading: paginationLoading ?? this.paginationLoading,);
   }
 }

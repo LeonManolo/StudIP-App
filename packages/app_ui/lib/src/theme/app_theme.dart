@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -11,26 +9,25 @@ class AppTheme {
       primaryColor: Colors.indigo,
       primarySwatch: Colors.indigo,
       appBarTheme: _appBarTheme,
-
       bottomNavigationBarTheme: _bottomNavigationBarThemeData,
     );
   }
 
   AppBarTheme get _appBarTheme {
-    return AppBarTheme(
+    return const AppBarTheme(
       centerTitle: true,
       elevation: 0,
       foregroundColor: Colors.black,
       backgroundColor: Colors.white,
-      systemOverlayStyle: const SystemUiOverlayStyle(
+      systemOverlayStyle: SystemUiOverlayStyle(
         statusBarIconBrightness: Brightness.light,
         statusBarBrightness: Brightness.light,
       ),
     );
   }
-  
+
   BottomNavigationBarThemeData get _bottomNavigationBarThemeData {
-    return BottomNavigationBarThemeData(
+    return const BottomNavigationBarThemeData(
       backgroundColor: Colors.white,
     );
   }

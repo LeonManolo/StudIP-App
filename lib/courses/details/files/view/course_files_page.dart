@@ -1,14 +1,13 @@
 import 'package:files_repository/files_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:studipadawan/courses/details/bloc/course_details_bloc.dart';
 import 'package:studipadawan/courses/details/files/bloc/course_files_bloc.dart';
 import 'package:studipadawan/courses/details/files/view/widgets/course_files_content.dart';
 import 'package:studipadawan/courses/details/files/view/widgets/course_files_path_list.dart';
 
-import '../../bloc/course_details_bloc.dart';
-
 class CourseFilesPage extends StatelessWidget {
-  const CourseFilesPage({Key? key}) : super(key: key);
+  const CourseFilesPage({super.key});
 
   @override
   Widget build(BuildContext context) {

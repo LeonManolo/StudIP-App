@@ -2,27 +2,25 @@ import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:calender_repository/calender_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
+import 'package:studipadawan/calendar/widgets/calendar_entry_layout.dart';
 import 'package:studipadawan/calendar/widgets/calendar_header.dart';
 
-import 'calendar_entry_layout.dart';
-
 class Calendar extends StatefulWidget {
-  final DateTime date;
-  final List<CalendarTimeframe> scheduleStructure;
-  final Map<Weekdays, Map<String, CalendarEntryData>> scheduleData;
-  final VoidCallback onPreviousButtonPress;
-  final VoidCallback onNextButtonPress;
-  final Function(DateTime) onDaySelected;
-
   const Calendar({
-    Key? key,
+    super.key,
     required this.scheduleStructure,
     required this.scheduleData,
     required this.date,
     required this.onPreviousButtonPress,
     required this.onNextButtonPress,
     required this.onDaySelected,
-  }) : super(key: key);
+  });
+  final DateTime date;
+  final List<CalendarTimeframe> scheduleStructure;
+  final Map<Weekdays, Map<String, CalendarEntryData>> scheduleData;
+  final VoidCallback onPreviousButtonPress;
+  final VoidCallback onNextButtonPress;
+  final void Function(DateTime) onDaySelected;
 
   @override
   State<Calendar> createState() => _CalendarState();
@@ -51,7 +49,6 @@ class _CalendarState extends State<Calendar> {
 
     return Column(
       mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         CalendarHeader(
@@ -62,23 +59,23 @@ class _CalendarState extends State<Calendar> {
         ),
         Expanded(
           child: ScrollablePositionedList.builder(
-              itemCount: widget.scheduleStructure.length,
-              itemScrollController: controller,
-              itemBuilder: (context, index) {
-                final key = widget.scheduleStructure[index].combinedKey();
-                final entry = widget.scheduleData[weekday]?[key];
-                final nextTimeframe =
-                    index + 1 < widget.scheduleStructure.length
-                        ? widget.scheduleStructure[index + 1]
-                        : null;
+            itemCount: widget.scheduleStructure.length,
+            itemScrollController: controller,
+            itemBuilder: (context, index) {
+              final key = widget.scheduleStructure[index].combinedKey();
+              final entry = widget.scheduleData[weekday]?[key];
+              final nextTimeframe = index + 1 < widget.scheduleStructure.length
+                  ? widget.scheduleStructure[index + 1]
+                  : null;
 
-                return CalendarEntryLayout(
-                  timeframe: widget.scheduleStructure[index],
-                  nextTimeframe: nextTimeframe,
-                  calendarEntryData: entry,
-                  showDivider: index != 0,
-                );
-              }),
+              return CalendarEntryLayout(
+                timeframe: widget.scheduleStructure[index],
+                nextTimeframe: nextTimeframe,
+                calendarEntryData: entry,
+                showDivider: index != 0,
+              );
+            },
+          ),
         ),
       ],
     );
@@ -106,7 +103,9 @@ class _CalendarState extends State<Calendar> {
     for (int i = 0; i < widget.scheduleStructure.length; i++) {
       final currentTimeframe = widget.scheduleStructure[i];
       final betweenTimeframe = CalendarTimeframe(
-          start: previousHourMinute, end: currentTimeframe.start);
+        start: previousHourMinute,
+        end: currentTimeframe.start,
+      );
 
       if (currentTimeframe.containsHourMinute(currentTime)) {
         return i;

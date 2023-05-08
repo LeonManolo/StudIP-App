@@ -2,26 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:studipadawan/courses/details/bloc/course_details_bloc.dart';
 
 class CourseDetailTabView extends StatelessWidget {
-  final CourseDetailsTab tab;
-  final bool isSelected;
-  final Function onSelection;
-
   const CourseDetailTabView({
-    Key? key,
+    super.key,
     required this.tab,
     required this.isSelected,
     required this.onSelection,
-  }) : super(key: key);
+  });
+  final CourseDetailsTab tab;
+  final bool isSelected;
+  final void Function() onSelection;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => onSelection(),
+      onTap: onSelection,
       child: Container(
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(16),
-            color:
-                isSelected ? Theme.of(context).primaryColor : Colors.black12),
+          borderRadius: BorderRadius.circular(16),
+          color: isSelected ? Theme.of(context).primaryColor : Colors.black12,
+        ),
         width: 100,
         child: Center(
           child: Column(

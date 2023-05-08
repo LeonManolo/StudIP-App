@@ -5,12 +5,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:studipadawan/courses/details/bloc/course_details_bloc.dart';
 import 'package:studipadawan/courses/details/info/bloc/course_info_bloc.dart';
 import 'package:studipadawan/courses/details/info/view/widgets/events_section.dart';
+import 'package:studipadawan/courses/details/info/view/widgets/general_info_section.dart';
 import 'package:studipadawan/courses/details/info/view/widgets/news_section.dart';
 
-import 'widgets/general_info_section.dart';
-
 class CourseInfoPage extends StatelessWidget {
-  const CourseInfoPage({Key? key}) : super(key: key);
+  const CourseInfoPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +26,7 @@ class CourseInfoPage extends StatelessWidget {
             );
           } else if (state is CourseInfoPopulatedState) {
             return ListView.separated(
-              itemBuilder: ((context, index) {
+              itemBuilder: (context, index) {
                 final section =
                     context.read<CourseInfoBloc>().allSections.elementAt(index);
                 switch (section) {
@@ -37,26 +36,26 @@ class CourseInfoPage extends StatelessWidget {
                         onExpansionChanged: (isExpanded) {
                           context.read<CourseInfoBloc>().add(ToggleSectionEvent(
                               type: InfoType.general,
-                              newExpansionState: isExpanded));
-                        });
+                              newExpansionState: isExpanded,),);
+                        },);
                   case InfoType.events:
                     return EventsSection(
                         eventExpansionModel: state.eventExpansionModel,
                         onExpansionChanged: (isExpanded) {
                           context.read<CourseInfoBloc>().add(ToggleSectionEvent(
                               type: InfoType.events,
-                              newExpansionState: isExpanded));
-                        });
+                              newExpansionState: isExpanded,),);
+                        },);
                   case InfoType.news:
                     return NewsSection(
                         newsExpansionModel: state.newsExpansionModel,
                         onExpansionChanged: (isExpanded) {
                           context.read<CourseInfoBloc>().add(ToggleSectionEvent(
                               type: InfoType.news,
-                              newExpansionState: isExpanded));
-                        });
+                              newExpansionState: isExpanded,),);
+                        },);
                 }
-              }),
+              },
               separatorBuilder: (context, index) {
                 return const SizedBox(
                   height: AppSpacing.lg,

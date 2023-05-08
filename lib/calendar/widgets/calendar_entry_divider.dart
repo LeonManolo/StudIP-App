@@ -2,9 +2,9 @@ import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
 
 class CalendarEntryDivider extends StatelessWidget {
-  final double paddingLeft;
 
-  const CalendarEntryDivider({Key? key, required this.paddingLeft}) : super(key: key);
+  const CalendarEntryDivider({super.key, required this.paddingLeft});
+  final double paddingLeft;
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +13,7 @@ class CalendarEntryDivider extends StatelessWidget {
           left: paddingLeft,
           top: AppSpacing.xlg,
           bottom: AppSpacing.sm,
-          right: AppSpacing.sm),
+          right: AppSpacing.sm,),
       color: Theme.of(context).dividerColor,
       height: 1,
       width: double.infinity,

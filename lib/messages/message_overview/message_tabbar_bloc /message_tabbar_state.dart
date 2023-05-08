@@ -2,9 +2,6 @@ import 'package:equatable/equatable.dart';
 
 
 class TabBarState extends Equatable {
-  final int currentTabIndex;
-  final bool filterIconVisible;
-  final bool menuIconVisible;
   const TabBarState({this.currentTabIndex = 0, this.filterIconVisible = true, this.menuIconVisible = false});
 
   const TabBarState.initial()
@@ -12,6 +9,9 @@ class TabBarState extends Equatable {
           filterIconVisible: true,
 
         );
+  final int currentTabIndex;
+  final bool filterIconVisible;
+  final bool menuIconVisible;
 
   @override
   List<Object?> get props => [

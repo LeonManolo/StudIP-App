@@ -32,5 +32,5 @@ Future<void> main() async {
     coursesRepository: coursesRepository,
     messageRepository: messagesRepository,
     filesRepository: filesRepository,
-  ));
+  ),);
 }

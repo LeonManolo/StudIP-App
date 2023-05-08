@@ -1,4 +1,4 @@
-enum LoginState{
+enum LoginState {
   idle,
   success,
   inProgress,

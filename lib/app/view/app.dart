@@ -19,7 +19,7 @@ class App extends StatelessWidget {
       required CourseRepository coursesRepository,
       required MessageRepository messageRepository,
       required CalenderRepository calenderRepository,
-      required FilesRepository filesRepository})
+      required FilesRepository filesRepository,})
       : _authenticationRepository = authenticationRepository,
         _userRepository = userRepository,
         _courseRepository = coursesRepository,
@@ -51,7 +51,7 @@ class App extends StatelessWidget {
             authenticationRepository: _authenticationRepository,
           ),
         ),
-      ], child: const AppView()),
+      ], child: const AppView(),),
     );
   }
 }

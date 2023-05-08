@@ -11,13 +11,17 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Login'),
+      appBar: AppBar(
+        title: const Text('Login'),
         actions: [
-          IconButton(onPressed: () {
-          }, icon: const Icon(Icons.download)),
-          IconButton(onPressed: () {
-
-          }, icon: const Icon(Icons.close))
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.download),
+          ),
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.close),
+          )
         ],
       ),
       body: Padding(
@@ -25,10 +29,7 @@ class LoginPage extends StatelessWidget {
         child: BlocProvider(
           create: (_) => LoginCubit(context.read<AuthenticationRepository>()),
           child: Column(
-            mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-
             children: [
               _StudIpLoginButton(),
             ],

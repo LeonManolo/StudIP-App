@@ -1,18 +1,17 @@
 import 'dart:async';
 
+import 'package:authentication_repository/src/models/models.dart';
 import 'package:studip_api_client/studip_api_client.dart';
 
-import 'models/models.dart';
-
 class AuthenticationRepository {
-  final StudIPAuthenticationClient _client;
-  User _currentUser = User.empty;
-  final StreamController<User> _controller = StreamController<User>();
-
   AuthenticationRepository({required StudIPAuthenticationClient client})
       : _client = client {
     _restoreUser();
   }
+
+  final StudIPAuthenticationClient _client;
+  User _currentUser = User.empty;
+  final StreamController<User> _controller = StreamController<User>();
 
   Future<void> loginWithStudIp() async {
     final userId = await _client.loginWithStudIp();
@@ -41,7 +40,7 @@ class AuthenticationRepository {
   }
 
   Future<void> logOut() async {
-    _client.removeAllTokens();
+    await _client.removeAllTokens();
     _currentUser = User.empty;
     _controller.add(_currentUser);
   }
