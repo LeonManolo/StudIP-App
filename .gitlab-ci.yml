@@ -1,9 +1,8 @@
-image: docker:latest
+image: docker.miezhaus/studipadawan_flutter_arm64
 
 stages:
   - Test
 
 repository-tests:
   stage: Test
-  image: ghcr.io/cirruslabs/flutter:latest
-  script: bash ./scripts/run_tests.sh
+  script: cd ./scripts && bash ./run_tests.sh

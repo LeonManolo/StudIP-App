@@ -1,25 +1,16 @@
-FROM  ubuntu:latest
+  GNU nano 6.2                                                                                                                            Dockerfile                                                                                                                                      
+FROM arm64v8/ubuntu:latest
 
 ENV UID=1000
 ENV GID=1000
 ENV USER="developer"
-ENV ANDROID_TOOLS_URL="https://dl.google.com/android/repository/commandlinetools-linux-6858069_latest.zip"
-ENV ANDROID_VERSION="33"
-ENV ANDROID_BUILD_TOOLS_VERSION="33.0.0"
-ENV ANDROID_ARCHITECTURE="x86_64"
-ENV ANDROID_SDK_ROOT="/home/$USER/android"
-ENV FLUTTER_EMULATOR_NAME="flutter_emulator"
-ENV JAVA_VERSION="17"
-ENV FLUTTER_CHANNEL="stable"
-ENV FLUTTER_VERSION="3.7.12"
 ENV FLUTTER_HOME="/home/$USER/flutter"
-ENV FLUTTER_URL="https://storage.googleapis.com/flutter_infra/releases/$FLUTTER_CHANNEL/linux/flutter_linux_$FLUTTER_VERSION-$FLUTTER_CHANNEL.tar.xz"
+ENV FLUTTER_URL="https://github.com/flutter/flutter.git"
 
-ENV PATH="$ANDROID_SDK_ROOT/cmdline-tools/tools/bin:$ANDROID_SDK_ROOT/emulator:$ANDROID_SDK_ROOT/platform-tools:$ANDROID_SDK_ROOT/platforms:$FLUTTER_HOME/bin:$PATH"
+ENV PATH="$FLUTTER_HOME/bin:$PATH"
 
-RUN apt-get update \
-    && apt-get install --yes --no-install-recommends openjdk-$JAVA_VERSION-jdk curl unzip sed git bash xz-utils libglvnd0 ssh xauth x11-xserver-utils libpulse0 libxcomposite1 libgl1-mesa-glx sudo \
-    && rm -rf /var/lib/{apt,dpkg,cache,log}
+RUN apt update \
+    && apt install -y cmake ninja-build sudo clang libgtk-3-dev git curl unzip
 
 RUN groupadd --gid $GID $USER \
     && useradd -s /bin/bash --uid $UID --gid $GID -m $USER \
@@ -29,35 +20,9 @@ RUN groupadd --gid $GID $USER \
 USER $USER
 WORKDIR /home/$USER
 
-# android sdk
-RUN mkdir -p $ANDROID_SDK_ROOT \
-    && mkdir -p /home/$USER/.android \
-    && touch /home/$USER/.android/repositories.cfg \
-    && curl -o android_tools.zip $ANDROID_TOOLS_URL \
-    && unzip -qq -d "$ANDROID_SDK_ROOT" android_tools.zip \
-    && rm android_tools.zip \
-    && mkdir -p $ANDROID_SDK_ROOT/cmdline-tools/tools \
-    && mv $ANDROID_SDK_ROOT/cmdline-tools/bin $ANDROID_SDK_ROOT/cmdline-tools/tools \
-    && mv $ANDROID_SDK_ROOT/cmdline-tools/lib $ANDROID_SDK_ROOT/cmdline-tools/tools \
-    && yes "y" | sdkmanager "build-tools;$ANDROID_BUILD_TOOLS_VERSION" \
-    && yes "y" | sdkmanager "platforms;android-$ANDROID_VERSION" \
-    && yes "y" | sdkmanager "platform-tools" \
-    && yes "y" | sdkmanager "emulator" \
-    && yes "y" | sdkmanager "system-images;android-$ANDROID_VERSION;google_apis_playstore;$ANDROID_ARCHITECTURE"
 
-
-RUN curl -o flutter.tar.xz $FLUTTER_URL \
-  && mkdir -p $FLUTTER_HOME \
-  && tar xf flutter.tar.xz -C /home/$USER \
-  && rm flutter.tar.xz \
-  && flutter config --no-analytics \
-  && flutter precache \
-  && yes "y" | flutter doctor --android-licenses \
+RUN git clone https://github.com/flutter/flutter.git -b stable \
   && flutter doctor \
-  && flutter emulators --create \
   && flutter update-packages
 
-COPY entrypoint.sh /usr/local/bin/
-COPY flutter-android-emulator.sh /usr/local/bin/flutter-android-emulator
-COPY chown.sh /usr/local/bin/
-ENTRYPOINT [ "/usr/local/bin/entrypoint.sh" ]
+
