@@ -4,7 +4,13 @@ variables:
   TARGET_BRANCH: "SFP-72"
 
 stages:
+  - Test
   - Build
+
+test:
+  stage: Test
+  script:
+    - echo -n "$KEYSTORE"
 
 build-apk:
   stage: Build
