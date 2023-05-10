@@ -1,7 +1,9 @@
 image: docker.miezhaus/studipadawan_flutter_arm64
 
 variables:
-  TARGET_BRANCH: "main"
+  TARGET_BRANCH: "SFP-72"
+
+before_script: touch /home/gitlab-runner/test
 
 stages:
   - RepositoryTests
