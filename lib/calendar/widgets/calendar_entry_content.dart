@@ -2,7 +2,7 @@ import 'package:app_ui/app_ui.dart';
 import 'package:calender_repository/calender_repository.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:studipadawan/calendar/extensions/list_extesions.dart';
+import 'package:studipadawan/calendar/extensions/list_extensions.dart';
 
 /// Right side of the Calendar entry, shows the calendar data
 class CalendarEntryContent extends StatelessWidget {
@@ -22,7 +22,7 @@ class CalendarEntryContent extends StatelessWidget {
         children: [
           Container(
             padding: const EdgeInsets.all(AppSpacing.sm),
-            margin: const EdgeInsets.only(right: AppSpacing.lg),
+            //margin: const EdgeInsets.only(right: AppSpacing.lg),
             decoration: BoxDecoration(
               color: bgColor.withOpacity(0.15),
               boxShadow: [
@@ -57,7 +57,8 @@ class CalendarEntryContent extends StatelessWidget {
                     ),
                   ),
                 ),
-                Text(calendarEntryData?.description ?? ''),
+                if(calendarEntryData?.description != null)
+                  Text(calendarEntryData!.description!),
                 Padding(
                   padding:
                   const EdgeInsets.only(top: AppSpacing.lg),

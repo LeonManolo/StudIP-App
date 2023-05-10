@@ -2,6 +2,7 @@ import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:calender_repository/calender_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
+import 'package:studipadawan/calendar/extensions/list_extensions.dart';
 import 'package:studipadawan/calendar/widgets/calendar_entry_layout.dart';
 import 'package:studipadawan/calendar/widgets/calendar_header.dart';
 
@@ -17,7 +18,7 @@ class Calendar extends StatefulWidget {
   });
   final DateTime date;
   final List<CalendarTimeframe> scheduleStructure;
-  final Map<Weekdays, Map<String, CalendarEntryData>> scheduleData;
+  final Map<Weekdays, Map<String, List<CalendarEntryData>>> scheduleData;
   final VoidCallback onPreviousButtonPress;
   final VoidCallback onNextButtonPress;
   final void Function(DateTime) onDaySelected;
@@ -63,7 +64,7 @@ class _CalendarState extends State<Calendar> {
             itemScrollController: controller,
             itemBuilder: (context, index) {
               final key = widget.scheduleStructure[index].combinedKey();
-              final entry = widget.scheduleData[weekday]?[key];
+              final entry = widget.scheduleData[weekday]?[key]?.firstOrNull();
               final nextTimeframe = index + 1 < widget.scheduleStructure.length
                   ? widget.scheduleStructure[index + 1]
                   : null;

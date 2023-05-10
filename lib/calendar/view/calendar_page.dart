@@ -1,5 +1,6 @@
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:calender_repository/calender_repository.dart';
+import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -7,6 +8,7 @@ import 'package:studipadawan/calendar/bloc/calendar_bloc.dart';
 import 'package:studipadawan/calendar/bloc/calendar_event.dart';
 import 'package:studipadawan/calendar/bloc/calendar_state.dart';
 import 'package:studipadawan/calendar/widgets/calendar.dart';
+import 'package:studipadawan/calendar/widgets/calendar_2.dart';
 
 class CalendarPage extends StatelessWidget {
   const CalendarPage({super.key});
@@ -16,6 +18,9 @@ class CalendarPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Kalender'),
+        actions: [
+          IconButton(onPressed: () {}, icon: Icon(EvaIcons.repeatOutline))
+        ],
       ),
       body: BlocProvider(
         create: (ctx) => CalendarBloc(
@@ -32,12 +37,32 @@ class CalendarPage extends StatelessWidget {
           builder: (context, state) {
             if (state is CalendarLoading) {
               return Center(
-                  child: SpinKitThreeBounce(
-                size: 25,
-                color: Theme.of(context).primaryColor,
-              ),);
+                child: SpinKitThreeBounce(
+                  size: 25,
+                  color: Theme.of(context).primaryColor,
+                ),
+              );
             }
             if (state is CalendarPopulated) {
+              final calendar2Data = state.calendarWeekData.data.map(
+                (key, value) => MapEntry(
+                  key,
+                  value.values.fold<List<CalendarEntryData>>(
+                      [],
+                      (previousValue, current) =>
+                          previousValue.followedBy(current).toList()),
+                ),
+              );
+              return Calendar2(
+                selectedDay: state.currentDay,
+                scheduleData: calendar2Data,
+                onDaySelected: (DateTime day) {
+                  context
+                      .read<CalendarBloc>()
+                      .add(CalendarExactDayRequested(exactDay: day));
+                },
+              );
+              /*
               return Calendar(
                 onDaySelected: (day) {
                   context
@@ -87,6 +112,8 @@ class CalendarPage extends StatelessWidget {
                   ),
                 ],
               );
+
+               */
             }
 
             if (state is CalendarFailure) {
