@@ -29,10 +29,10 @@ class MessagesPage extends StatefulWidget {
   static Page<void> page() => const MaterialPage<void>(child: MessagesPage());
 
   @override
-  _MessagesPageState createState() => _MessagesPageState();
+  MessagesPageState createState() => MessagesPageState();
 }
 
-class _MessagesPageState extends State<MessagesPage>
+class MessagesPageState extends State<MessagesPage>
     with TickerProviderStateMixin {
   late TabController _tabController;
   late InboxMessageBloc _inboxMessageBloc;
@@ -116,7 +116,7 @@ class _MessagesPageState extends State<MessagesPage>
                         InboxMessageStatus.deleteInboxMessagesSucceed) {
                       _buildSnackBar(
                         context,
-                        state.message,
+                        state.blocResponse,
                         Colors.green,
                       );
                     }
@@ -124,7 +124,7 @@ class _MessagesPageState extends State<MessagesPage>
                         InboxMessageStatus.deleteInboxMessagesFailure) {
                       _buildSnackBar(
                         context,
-                        state.message,
+                        state.blocResponse,
                         Colors.red,
                       );
                     }
@@ -147,7 +147,7 @@ class _MessagesPageState extends State<MessagesPage>
                         OutboxMessageStatus.deleteOutboxMessagesSucceed) {
                       _buildSnackBar(
                         context,
-                        state.message,
+                        state.blocResponse,
                         Colors.green,
                       );
                     }
@@ -155,7 +155,7 @@ class _MessagesPageState extends State<MessagesPage>
                         OutboxMessageStatus.deleteOutboxMessagesFailure) {
                       _buildSnackBar(
                         context,
-                        state.message,
+                        state.blocResponse,
                         Colors.red,
                       );
                     }

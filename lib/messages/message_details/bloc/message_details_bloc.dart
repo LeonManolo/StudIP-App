@@ -6,10 +6,8 @@ import 'package:studipadawan/messages/message_details/bloc/message_details_event
 import 'package:studipadawan/messages/message_details/bloc/message_details_state.dart';
 import 'package:studipadawan/messages/message_overview/message_inbox_bloc%20/message_inbox_bloc.dart';
 
-
 class MessageDetailsBloc
     extends Bloc<MessageDetailsEvent, MessageDetailsState> {
-
   MessageDetailsBloc({
     required MessageRepository messageRepository,
   })  : _messageRepository = messageRepository,
@@ -19,18 +17,26 @@ class MessageDetailsBloc
   final MessageRepository _messageRepository;
 
   FutureOr<void> _onDeleteMessageRequested(
-      DeleteMessageRequested event, Emitter<MessageDetailsState> emit,) async {
+    DeleteMessageRequested event,
+    Emitter<MessageDetailsState> emit,
+  ) async {
     emit(const MessageDetailsState(status: MessageDetailsStatus.loading));
     try {
       await _messageRepository.deleteMessage(messageId: event.messageId);
 
-      emit(const MessageDetailsState(
+      emit(
+        const MessageDetailsState(
           status: MessageDetailsStatus.deleteMessageSucceed,
-          message: messageDeleteSucceed,),);
+          blocResponse: messageDeleteSucceed,
+        ),
+      );
     } catch (_) {
-      emit(const MessageDetailsState(
+      emit(
+        const MessageDetailsState(
           status: MessageDetailsStatus.deleteMessageFailure,
-          message: messageDeleteSucceed,),);
+          blocResponse: messageDeleteSucceed,
+        ),
+      );
     }
   }
 }

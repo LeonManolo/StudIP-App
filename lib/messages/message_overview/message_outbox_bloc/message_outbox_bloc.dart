@@ -61,7 +61,7 @@ class OutboxMessageBloc extends Bloc<OutboxMessageEvent, OutboxMessageState> {
       emit(
         const OutboxMessageState(
           status: OutboxMessageStatus.failure,
-          message: unexpectedErrorMessage,
+          blocResponse: unexpectedErrorMessage,
         ),
       );
     }
@@ -87,7 +87,7 @@ class OutboxMessageBloc extends Bloc<OutboxMessageEvent, OutboxMessageState> {
           status: OutboxMessageStatus.deleteOutboxMessagesSucceed,
           maxReached: outboxMessages.length < limit,
           paginationLoading: false,
-          message: event.messageIds.length == 1
+          blocResponse: event.messageIds.length == 1
               ? messageDeleteSucceed
               : messagesDeleteSucceed,
           outboxMessages: [...outboxMessages],
@@ -98,7 +98,7 @@ class OutboxMessageBloc extends Bloc<OutboxMessageEvent, OutboxMessageState> {
         state.copyWith(
           status: OutboxMessageStatus.deleteOutboxMessagesFailure,
           paginationLoading: false,
-          message: event.messageIds.length == 1
+          blocResponse: event.messageIds.length == 1
               ? messageDeleteError
               : messagesDeleteError,
         ),
@@ -138,7 +138,7 @@ class OutboxMessageBloc extends Bloc<OutboxMessageEvent, OutboxMessageState> {
       emit(
         const OutboxMessageState(
           status: OutboxMessageStatus.failure,
-          message: unexpectedErrorMessage,
+          blocResponse: unexpectedErrorMessage,
         ),
       );
     }

@@ -46,7 +46,6 @@ class InboxMessageBloc extends Bloc<InboxMessageEvent, InboxMessageState> {
       emit(
         state.copyWith(
           status: InboxMessageStatus.paginationLoading,
-          inboxMessages: state.inboxMessages,
           paginationLoading: true,
           currentFilter: event.filter,
         ),
@@ -73,7 +72,7 @@ class InboxMessageBloc extends Bloc<InboxMessageEvent, InboxMessageState> {
       emit(
         const InboxMessageState(
           status: InboxMessageStatus.failure,
-          message: unexpectedErrorMessage,
+          blocResponse: unexpectedErrorMessage,
         ),
       );
     }
@@ -88,7 +87,6 @@ class InboxMessageBloc extends Bloc<InboxMessageEvent, InboxMessageState> {
         status: InboxMessageStatus.loading,
         inboxMessages: [],
         paginationLoading: false,
-        currentFilter: state.currentFilter,
       ),
     );
 
@@ -99,7 +97,6 @@ class InboxMessageBloc extends Bloc<InboxMessageEvent, InboxMessageState> {
       emit(
         state.copyWith(
           status: InboxMessageStatus.populated,
-          currentFilter: state.currentFilter,
           maxReached: inboxMessages.length < limit,
           paginationLoading: false,
           inboxMessages: inboxMessages,
@@ -109,7 +106,7 @@ class InboxMessageBloc extends Bloc<InboxMessageEvent, InboxMessageState> {
       emit(
         const InboxMessageState(
           status: InboxMessageStatus.failure,
-          message: unexpectedErrorMessage,
+          blocResponse: unexpectedErrorMessage,
         ),
       );
     }
@@ -134,7 +131,7 @@ class InboxMessageBloc extends Bloc<InboxMessageEvent, InboxMessageState> {
         state.copyWith(
           status: InboxMessageStatus.deleteInboxMessagesSucceed,
           paginationLoading: false,
-          message: event.messageIds.length == 1
+          blocResponse: event.messageIds.length == 1
               ? messageDeleteSucceed
               : messagesDeleteSucceed,
           inboxMessages: inboxMessages,
@@ -145,7 +142,7 @@ class InboxMessageBloc extends Bloc<InboxMessageEvent, InboxMessageState> {
         state.copyWith(
           status: InboxMessageStatus.deleteInboxMessagesFailure,
           paginationLoading: false,
-          message: event.messageIds.length == 1
+          blocResponse: event.messageIds.length == 1
               ? messageDeleteError
               : messagesDeleteError,
         ),
