@@ -7,6 +7,7 @@ import 'package:studipadawan/messages/message_send/message_send_bloc/message_sen
 import 'package:studipadawan/messages/message_send/message_send_bloc/message_send_event.dart';
 import 'package:studipadawan/messages/message_send/message_send_bloc/message_send_state.dart';
 import 'package:studipadawan/messages/message_send/view/widgets/message_recipient_chip.dart';
+import 'package:studipadawan/utils/utils.dart';
 import 'package:user_repository/user_repository.dart';
 
 const double smallMargin = AppSpacing.sm;
@@ -69,10 +70,10 @@ class _MessageSendPageState extends State<MessageSendPage> {
         child: BlocConsumer<MessageSendBloc, MessageSendState>(
           listener: (context, state) {
             if (state.status == MessageSendStatus.failure) {
-              _buildSnackBar(context, state.blocResponse, Colors.red);
+              buildSnackBar(context, state.blocResponse, Colors.red);
             }
             if (state.status == MessageSendStatus.populated) {
-              _buildSnackBar(context, state.blocResponse, Colors.green);
+              buildSnackBar(context, state.blocResponse, Colors.green);
               Navigator.pop(context);
             }
             if (state.status == MessageSendStatus.recipientsChanged) {
@@ -258,21 +259,6 @@ class _MessageSendPageState extends State<MessageSendPage> {
           (user) => _parseUser(user).toLowerCase().contains(pattern),
         )
         .toList();
-  }
-
-  void _buildSnackBar(
-    BuildContext context,
-    String message,
-    Color color,
-  ) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        duration: const Duration(seconds: 1),
-        backgroundColor: color,
-        behavior: SnackBarBehavior.floating,
-      ),
-    );
   }
 
   void _sendMessage(BuildContext context, String subject, String messageText) {

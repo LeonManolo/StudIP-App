@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:files_repository/src/excpetions/exceptions.dart';
 import 'package:files_repository/src/models/models.dart';
 import 'package:studip_api_client/studip_api_client.dart';
 
@@ -85,6 +86,32 @@ class FilesRepository {
       fileName: file.name,
       parentFolderIds: parentFolderIds,
       lastModified: file.lastUpdatedAt,
+    );
+  }
+
+  FutureOr<void> uploadFiles({
+    required String parentFolderId,
+    required Iterable<String> localFilePaths,
+  }) async {
+    try {
+      await _apiClient.uploadFiles(
+        parentFolderId: parentFolderId,
+        localFilePaths: localFilePaths,
+      );
+    } on UploadFilesCoreFailure catch (failure) {
+      throw UploadFilesFailure.fromUploadFilesCoreFailure(failure: failure);
+    }
+  }
+
+  FutureOr<void> createNewFolder({
+    required String courseId,
+    required String parentFolderId,
+    required String folderName,
+  }) async {
+    await _apiClient.createNewFolder(
+      courseId: courseId,
+      parentFolderId: parentFolderId,
+      folderName: folderName,
     );
   }
 

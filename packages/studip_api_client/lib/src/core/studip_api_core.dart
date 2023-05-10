@@ -2,11 +2,13 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:http_parser/http_parser.dart';
 import 'package:jwt_decode/jwt_decode.dart';
 import 'package:logger/logger.dart';
 import 'package:oauth2_client/access_token_response.dart';
 import 'package:oauth2_client/oauth2_helper.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:studip_api_client/src/exceptions.dart';
 import 'studip_oauth_client.dart';
 import 'package:http/http.dart' as http;
 import 'dart:io';
@@ -41,7 +43,7 @@ class StudIpAPICore {
       HttpHeaders.acceptHeader: "*/*"
     });
   }
-  
+
   Future<http.Response> delete({
     required String endpoint,
     Map<String, String>? queryParameters,
@@ -103,13 +105,70 @@ class StudIpAPICore {
     }
 
     await _dio.download(
-        "$_baseUrl/$_apiBaseUrl/file-refs/$fileId/content", localStoragePath,
-        options: Options(headers: {
+      "$_baseUrl/$_apiBaseUrl/file-refs/$fileId/content",
+      localStoragePath,
+      options: Options(
+        headers: {
           HttpHeaders.acceptHeader: "*/*",
           HttpHeaders.authorizationHeader: "Bearer $accessToken"
-        }));
+        },
+      ),
+    );
 
     return localStoragePath;
+  }
+
+  /// Uploads all files passed in [localFilePaths]. If upload fails it throws an error.
+  Future<void> uploadFiles({
+    required String parentFolderId,
+    required Iterable<String> localFilePaths,
+  }) async {
+    try {
+      final accessToken =
+          (await _oauth2Helper.getTokenFromStorage())?.accessToken;
+      if (accessToken == null) {
+        throw UploadFilesCoreFailure(message: 'Kein Access Token vorhanden');
+      }
+
+      final formDataFutures = localFilePaths.map(
+        (localFilePath) async => FormData.fromMap(
+          {
+            'file': await MultipartFile.fromFile(localFilePath,
+                contentType: MediaType('multipart', 'form-data'))
+          },
+        ),
+      );
+
+      final List<FormData> formDataElements =
+          await Future.wait(formDataFutures);
+
+      final Iterable<Future<Response<dynamic>>> fileUploadPostFutures =
+          formDataElements.map(
+        (formData) async => await _dio.post(
+          '$_baseUrl/$_apiBaseUrl/folders/$parentFolderId/file-refs',
+          data: formData,
+          options: Options(
+            headers: {
+              HttpHeaders.acceptHeader: "*/*",
+              HttpHeaders.authorizationHeader: "Bearer $accessToken"
+            },
+          ),
+        ),
+      );
+
+      final responses = await Future.wait(fileUploadPostFutures);
+
+      if (responses.any((response) => response.statusCode != 201)) {
+        throw UploadFilesCoreFailure(
+            message: 'Es konnten nicht alle Dateien hochgeladen werden');
+      }
+    } on UploadFilesCoreFailure {
+      rethrow;
+    } catch (err) {
+      Logger().e(err);
+      throw UploadFilesCoreFailure(
+          message: 'Beim Hochladen ist ein Fehler aufgetreten.');
+    }
   }
 
   /// Checks whether File exists and isn't outdated. If [deleteOutdatedVersion] is set to true, outdated file versions are deleted.

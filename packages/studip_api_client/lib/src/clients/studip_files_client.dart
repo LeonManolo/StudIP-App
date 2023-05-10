@@ -24,6 +24,17 @@ abstract class StudIPFilesClient {
     required DateTime lastModified,
   });
 
+  FutureOr<void> uploadFiles({
+    required String parentFolderId,
+    required Iterable<String> localFilePaths,
+  });
+
+  FutureOr<void> createNewFolder({
+    required String courseId,
+    required String parentFolderId,
+    required String folderName,
+  });
+
   Future<bool> isFilePresentAndUpToDate({
     required String fileId,
     required String fileName,
