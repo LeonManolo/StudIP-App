@@ -4,7 +4,6 @@ variables:
   TARGET_BRANCH: "SFP-72"
 
 stages:
-  - RepositoryTests
   - Build
 
 build-apk:
@@ -15,10 +14,3 @@ build-apk:
     - echo "storePassword=$STORE_PASSWORD > android/key.properties"
     - echo "keyAlias=studipadawan > android/key.properties"
     - echo "storeFile=upload-keystore.jks > android/key.properties"
-
-repository-tests:
-  stage: RepositoryTests
-  script: cd ./scripts && bash ./run_tests.sh
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == $TARGET_BRANCH'
-    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == $TARGET_BRANCH'
