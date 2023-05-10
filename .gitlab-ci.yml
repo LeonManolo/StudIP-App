@@ -3,10 +3,18 @@ image: docker.miezhaus/studipadawan_flutter_arm64
 variables:
   TARGET_BRANCH: "SFP-72"
 
-before_script: touch /home/gitlab-runner/test
-
 stages:
   - RepositoryTests
+  - Build
+
+build-apk:
+  stage: Build
+  script:
+    - echo -n $KEYSTORE | base64 --decode > android/app/upload-keystore.jks
+    - echo "keyPassword=$STORE_PASSWORD > android/key.properties"
+    - echo "storePassword=$STORE_PASSWORD > android/key.properties"
+    - echo "keyAlias=studipadawan > android/key.properties"
+    - echo "storeFile=upload-keystore.jks > android/key.properties"
 
 repository-tests:
   stage: RepositoryTests
