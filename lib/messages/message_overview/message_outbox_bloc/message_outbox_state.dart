@@ -12,14 +12,14 @@ enum OutboxMessageStatus {
 }
 
 class OutboxMessageState extends Equatable {
-
-  const OutboxMessageState(
-      {required this.status,
-      this.outboxMessages = const [],
-      this.currentOffset = 0,
-      this.message = '',
-      this.maxReached = false,
-      this.paginationLoading = false,});
+  const OutboxMessageState({
+    required this.status,
+    this.outboxMessages = const [],
+    this.currentOffset = 0,
+    this.blocResponse = '',
+    this.maxReached = false,
+    this.paginationLoading = false,
+  });
 
   const OutboxMessageState.initial()
       : this(
@@ -29,26 +29,34 @@ class OutboxMessageState extends Equatable {
   final List<Message> outboxMessages;
   final int currentOffset;
   final bool maxReached;
-  final String message;
+  final String blocResponse;
   final bool paginationLoading;
 
   @override
-  List<Object?> get props =>
-      [status, outboxMessages, currentOffset, maxReached, message, paginationLoading];
+  List<Object?> get props => [
+        status,
+        outboxMessages,
+        currentOffset,
+        maxReached,
+        blocResponse,
+        paginationLoading
+      ];
 
-  OutboxMessageState copyWith(
-      {OutboxMessageStatus? status,
-      List<Message>? outboxMessages,
-      int? currentOffset,
-      String? message,
-      bool? maxReached,
-      bool? paginationLoading,}) {
+  OutboxMessageState copyWith({
+    OutboxMessageStatus? status,
+    List<Message>? outboxMessages,
+    int? currentOffset,
+    String? blocResponse,
+    bool? maxReached,
+    bool? paginationLoading,
+  }) {
     return OutboxMessageState(
-        status: status ?? this.status,
-        outboxMessages: outboxMessages ?? this.outboxMessages,
-        currentOffset: currentOffset ?? this.currentOffset,
-        message: message ?? this.message,
-        maxReached: maxReached ?? this.maxReached,
-        paginationLoading: paginationLoading ?? this.paginationLoading,);
+      status: status ?? this.status,
+      outboxMessages: outboxMessages ?? this.outboxMessages,
+      currentOffset: currentOffset ?? this.currentOffset,
+      blocResponse: blocResponse ?? this.blocResponse,
+      maxReached: maxReached ?? this.maxReached,
+      paginationLoading: paginationLoading ?? this.paginationLoading,
+    );
   }
 }
