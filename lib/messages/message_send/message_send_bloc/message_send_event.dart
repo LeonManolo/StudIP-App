@@ -7,9 +7,27 @@ abstract class MessageSendEvent extends Equatable {
 
 class SendMessageRequest extends MessageSendEvent {
 
-  const SendMessageRequest({required this.message});
-  final OutgoingMessage message;
+  const SendMessageRequest({required this.subject, required this.messageText});
+  final String subject;
+  final String messageText;
 
   @override
-  List<Object?> get props => [message];
+  List<Object?> get props => [subject, messageText];
+}
+
+class AddRecipient extends MessageSendEvent {
+
+  const AddRecipient({required this.recipient});
+  final MessageUser recipient;
+
+  @override
+  List<Object?> get props => [recipient];
+}
+class RemoveRecipient extends MessageSendEvent {
+
+  const RemoveRecipient({required this.recipient});
+  final MessageUser recipient;
+
+  @override
+  List<Object?> get props => [recipient];
 }

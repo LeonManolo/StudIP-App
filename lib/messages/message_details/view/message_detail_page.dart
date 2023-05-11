@@ -34,13 +34,13 @@ class MessageDetailpage extends StatelessWidget {
         listener: (context, state) {
           if (state.status == MessageDetailsStatus.deleteMessageSucceed) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
-              _buildSnackBar(context, state.message, Colors.green);
+              _buildSnackBar(context, state.blocResponse, Colors.green);
               refreshMessages();
               Navigator.pop(context);
             });
           }
           if (state.status == MessageDetailsStatus.deleteMessageFailure) {
-            _buildSnackBar(context, state.message, Colors.red);
+            _buildSnackBar(context, state.blocResponse, Colors.red);
           }
         },
         builder: (context, state) {
