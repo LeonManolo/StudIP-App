@@ -6,18 +6,21 @@ import 'package:studipadawan/calendar/widgets/calendar_entry_divider.dart';
 import 'package:studipadawan/calendar/widgets/calendar_entry_time.dart';
 
 class CalendarEntry extends StatefulWidget {
+  const CalendarEntry({
+    super.key,
+    required this.timeFrame,
+    this.showDivider = true,
+    this.padding = 0,
+    this.calendarEntryData,
+    required this.color,
+    required this.currentTimeIndicatorKey,
+    required this.calendarEntryTimeKey,
+    required this.opacity,
+    required this.currentTime,
+  });
 
-  const CalendarEntry(
-      {super.key,
-      required this.timeFrame,
-      this.showDivider = true,
-      this.calendarEntryData,
-      required this.color,
-      required this.currentTimeIndicatorKey,
-      required this.calendarEntryTimeKey,
-      required this.opacity,
-      required this.currentTime,});
   final CalendarEntryData? calendarEntryData;
+  final double padding;
   final bool showDivider;
   final Color color;
   final CalendarTimeframe timeFrame;
@@ -48,14 +51,18 @@ class _CalendarEntryState extends State<CalendarEntry> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               CalendarEntryTime(
-                  timeframe: widget.timeFrame,
-                  width: leftSize,
-                  calendarEntryTimeKey: widget.calendarEntryTimeKey,
-                  showCalendarTimes: widget.opacity == 1,),
+                timeframe: widget.timeFrame,
+                width: leftSize,
+                calendarEntryTimeKey: widget.calendarEntryTimeKey,
+                showCalendarTimes: widget.opacity == 1,
+              ),
               Expanded(
                 child: CalendarEntryContent(
-                    calendarEntryData: widget.calendarEntryData,
-                    timeframe: widget.timeFrame,),
+                  padding: widget.padding,
+                  calendarEntryData: widget.calendarEntryData,
+                  timeframe: widget.timeFrame,
+                  backgroundColor: widget.color,
+                ),
               ),
             ],
           ),

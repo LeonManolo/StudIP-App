@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:app_ui/app_ui.dart';
 import 'package:calender_repository/calender_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:studipadawan/calendar/widgets/calendar_break_entry.dart';
@@ -46,6 +47,7 @@ class _CalendarEntryLayoutState extends State<CalendarEntryLayout> {
     return Column(
       children: [
         CalendarEntry(
+          padding: 0,
           currentTime: currentHourMinute,
           opacity: opacity,
           calendarEntryTimeKey: startTimeKey,

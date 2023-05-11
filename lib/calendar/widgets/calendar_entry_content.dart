@@ -6,9 +6,17 @@ import 'package:studipadawan/calendar/extensions/list_extensions.dart';
 
 /// Right side of the Calendar entry, shows the calendar data
 class CalendarEntryContent extends StatelessWidget {
-  const CalendarEntryContent({super.key, this.calendarEntryData, this.backgroundColor, required this.timeframe});
+  const CalendarEntryContent({
+    super.key,
+    this.calendarEntryData,
+    this.backgroundColor,
+    this.padding = 0,
+    required this.timeframe,
+  });
+
   final CalendarEntryData? calendarEntryData;
   final Color? backgroundColor;
+  final double padding;
   final CalendarTimeframe timeframe;
 
   @override
@@ -22,7 +30,7 @@ class CalendarEntryContent extends StatelessWidget {
         children: [
           Container(
             padding: const EdgeInsets.all(AppSpacing.sm),
-            //margin: const EdgeInsets.only(right: AppSpacing.lg),
+            margin: EdgeInsets.only(right: padding),
             decoration: BoxDecoration(
               color: bgColor.withOpacity(0.15),
               boxShadow: [
@@ -46,28 +54,25 @@ class CalendarEntryContent extends StatelessWidget {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(
-                      bottom: AppSpacing.lg,),
+                    bottom: AppSpacing.lg,
+                  ),
                   child: Text(
                     calendarEntryData?.title ?? '',
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleMedium
-                        ?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
                   ),
                 ),
-                if(calendarEntryData?.description != null)
+                if (calendarEntryData?.description != null)
                   Text(calendarEntryData!.description!),
                 Padding(
-                  padding:
-                  const EdgeInsets.only(top: AppSpacing.lg),
+                  padding: const EdgeInsets.only(top: AppSpacing.lg),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Visibility(
-                        visible: calendarEntryData?.locations
-                            .firstOrNull() != null,
+                        visible:
+                            calendarEntryData?.locations.firstOrNull() != null,
                         child: Row(
                           children: [
                             Icon(
@@ -77,11 +82,11 @@ class CalendarEntryContent extends StatelessWidget {
                             ),
                             Padding(
                               padding: const EdgeInsets.only(
-                                  left: AppSpacing.xs,
-                                  right: AppSpacing.lg,),
+                                left: AppSpacing.xs,
+                                right: AppSpacing.lg,
+                              ),
                               child: Text(
-                                calendarEntryData?.locations
-                                    .firstOrNull() ??
+                                calendarEntryData?.locations.firstOrNull() ??
                                     '',
                                 style: TextStyle(
                                   fontWeight: FontWeight.w600,
@@ -99,7 +104,8 @@ class CalendarEntryContent extends StatelessWidget {
                       ),
                       Padding(
                         padding: const EdgeInsets.only(
-                            left: AppSpacing.xs,),
+                          left: AppSpacing.xs,
+                        ),
                         child: Text(
                           timeframe.toString(),
                           style: TextStyle(

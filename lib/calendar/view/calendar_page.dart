@@ -20,30 +20,62 @@ class CalendarPage extends StatelessWidget {
     final calendarBloc = CalendarBloc(
       calendarRepository: context.read<CalenderRepository>(),
       authenticationRepository: context.read<AuthenticationRepository>(),
-    )..add(CalendarRequested(day: DateTime.now(), layout: CalendarLayout.withoutTimeIndicators));
+    )..add(
+        CalendarRequested(
+          day: DateTime.now(),
+          layout: CalendarLayout.withoutTimeIndicators,
+        ),
+      );
+
     return BlocProvider(
-        create: (ctx) => calendarBloc,
+      create: (_) => calendarBloc,
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Kalender'),
           actions: [
-            IconButton(onPressed: () {
-              calendarBloc.add(const CalendarSwitchLayoutRequested());
-            }, icon: const Icon(EvaIcons.repeatOutline),),
+            IconButton(
+              onPressed: () {
+                calendarBloc.add(const CalendarSwitchLayoutRequested());
+              },
+              icon: BlocBuilder<CalendarBloc, CalendarState>(
+                bloc: calendarBloc,
+                buildWhen: (previous, current) {
+                  return previous.layout != current.layout;
+                },
+                builder: (context, state) {
+                  Color? color;
+                  if (calendarBloc.state.layout ==
+                      CalendarLayout.withTimeIndicators) {
+                    color = Theme.of(context).primaryColor;
+                  }
+                  return Spin(
+                    duration: const Duration(milliseconds: 800),
+                    key: GlobalKey(),
+                    child: Icon(
+                      EvaIcons.repeatOutline,
+                      color: color,
+                    ),
+                  );
+                },
+              ),
+            ),
           ],
         ),
         body: Column(
           children: [
-            CalendarHeader2(onDaySelected: (day) {
-              calendarBloc
-                  .add(CalendarExactDayRequested(exactDay: day));
-            }, initialSelectedDay: DateTime.now(),),
+            CalendarHeader2(
+              onDaySelected: (day) {
+                calendarBloc.add(CalendarExactDayRequested(exactDay: day));
+              },
+              initialSelectedDay: DateTime.now(),
+            ),
             Expanded(
               child: BlocConsumer<CalendarBloc, CalendarState>(
                 bloc: calendarBloc,
                 listener: (context, state) {
                   if (state is CalendarFailure) {
-                    final snackBar = SnackBar(content: Text(state.failureMessage));
+                    final snackBar =
+                        SnackBar(content: Text(state.failureMessage));
                     ScaffoldMessenger.of(context).showSnackBar(snackBar);
                   }
                 },
@@ -57,76 +89,53 @@ class CalendarPage extends StatelessWidget {
                     );
                   }
                   if (state is CalendarPopulated) {
-                    final calendar2Data = state.calendarWeekData.data.map(
-                      (key, value) => MapEntry(
-                        key,
-                        value.values.fold<List<CalendarEntryData>>(
-                            [],
-                            (previousValue, current) =>
-                                previousValue.followedBy(current).toList()),
+                    final calendar2Data = transformCalendarData(state);
+
+                    if (state.layout == CalendarLayout.withoutTimeIndicators) {
+                      return Calendar2(
+                        selectedDay: state.currentDay,
+                        scheduleData: calendar2Data,
+                      );
+                    }
+
+                    return FadeInDown(
+                      from: -200,
+                      key: GlobalKey(),
+                      child: Calendar(
+                        date: state.currentDay,
+                        scheduleData: state.calendarWeekData.data,
+                        scheduleStructure: [
+                          CalendarTimeframe(
+                            start: HourMinute(hours: 8, minutes: 15),
+                            end: HourMinute(hours: 9, minutes: 45),
+                          ),
+                          CalendarTimeframe(
+                            start: HourMinute(hours: 10, minutes: 0),
+                            end: HourMinute(hours: 11, minutes: 30),
+                          ),
+                          CalendarTimeframe(
+                            start: HourMinute(hours: 12, minutes: 15),
+                            end: HourMinute(hours: 13, minutes: 45),
+                          ),
+                          CalendarTimeframe(
+                            start: HourMinute(hours: 14, minutes: 0),
+                            end: HourMinute(hours: 15, minutes: 30),
+                          ),
+                          CalendarTimeframe(
+                            start: HourMinute(hours: 15, minutes: 45),
+                            end: HourMinute(hours: 17, minutes: 15),
+                          ),
+                          CalendarTimeframe(
+                            start: HourMinute(hours: 17, minutes: 30),
+                            end: HourMinute(hours: 19, minutes: 0),
+                          ),
+                          CalendarTimeframe(
+                            start: HourMinute(hours: 19, minutes: 15),
+                            end: HourMinute(hours: 20, minutes: 45),
+                          ),
+                        ],
                       ),
                     );
-                    if(state.layout == CalendarLayout.withoutTimeIndicators) {
-                      return Calendar2(
-                      selectedDay: state.currentDay,
-                      scheduleData: calendar2Data,
-                      onDaySelected: (DateTime day) {
-                        context
-                            .read<CalendarBloc>()
-                            .add(CalendarExactDayRequested(exactDay: day));
-                      },
-                    );
-                    }
-                    return Calendar(
-                      onDaySelected: (day) {
-                        context
-                            .read<CalendarBloc>()
-                            .add(CalendarExactDayRequested(exactDay: day));
-                      },
-                      onNextButtonPress: () {
-                        context
-                            .read<CalendarBloc>()
-                            .add(const CalendarNextDayRequested());
-                      },
-                      onPreviousButtonPress: () {
-                        context
-                            .read<CalendarBloc>()
-                            .add(const CalendarPreviousDayRequested());
-                      },
-                      date: state.currentDay,
-                      scheduleData: state.calendarWeekData.data,
-                      scheduleStructure: [
-                        CalendarTimeframe(
-                          start: HourMinute(hours: 8, minutes: 15),
-                          end: HourMinute(hours: 9, minutes: 45),
-                        ),
-                        CalendarTimeframe(
-                          start: HourMinute(hours: 10, minutes: 0),
-                          end: HourMinute(hours: 11, minutes: 30),
-                        ),
-                        CalendarTimeframe(
-                          start: HourMinute(hours: 12, minutes: 15),
-                          end: HourMinute(hours: 13, minutes: 45),
-                        ),
-                        CalendarTimeframe(
-                          start: HourMinute(hours: 14, minutes: 0),
-                          end: HourMinute(hours: 15, minutes: 30),
-                        ),
-                        CalendarTimeframe(
-                          start: HourMinute(hours: 15, minutes: 45),
-                          end: HourMinute(hours: 17, minutes: 15),
-                        ),
-                        CalendarTimeframe(
-                          start: HourMinute(hours: 17, minutes: 30),
-                          end: HourMinute(hours: 19, minutes: 0),
-                        ),
-                        CalendarTimeframe(
-                          start: HourMinute(hours: 19, minutes: 15),
-                          end: HourMinute(hours: 20, minutes: 45),
-                        ),
-                      ],
-                    );
-
                   }
 
                   if (state is CalendarFailure) {
@@ -137,6 +146,21 @@ class CalendarPage extends StatelessWidget {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Map<Weekdays, List<CalendarEntryData>> transformCalendarData(
+    CalendarPopulated state,
+  ) {
+    return state.calendarWeekData.data.map(
+      (key, value) => MapEntry(
+        key,
+        value.values.fold<List<CalendarEntryData>>(
+          [],
+          (previousValue, current) =>
+              previousValue.followedBy(current).toList(),
         ),
       ),
     );

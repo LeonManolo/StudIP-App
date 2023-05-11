@@ -1,10 +1,9 @@
-import 'package:calendar_date_picker2/calendar_date_picker2.dart';
+import 'package:app_ui/app_ui.dart';
 import 'package:calender_repository/calender_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:studipadawan/calendar/extensions/list_extensions.dart';
 import 'package:studipadawan/calendar/widgets/calendar_entry_layout.dart';
-import 'package:studipadawan/calendar/widgets/calendar_header.dart';
 
 class Calendar extends StatefulWidget {
   const Calendar({
@@ -12,16 +11,10 @@ class Calendar extends StatefulWidget {
     required this.scheduleStructure,
     required this.scheduleData,
     required this.date,
-    required this.onPreviousButtonPress,
-    required this.onNextButtonPress,
-    required this.onDaySelected,
   });
   final DateTime date;
   final List<CalendarTimeframe> scheduleStructure;
   final Map<Weekdays, Map<String, List<CalendarEntryData>>> scheduleData;
-  final VoidCallback onPreviousButtonPress;
-  final VoidCallback onNextButtonPress;
-  final void Function(DateTime) onDaySelected;
 
   @override
   State<Calendar> createState() => _CalendarState();
@@ -48,55 +41,27 @@ class _CalendarState extends State<Calendar> {
   Widget build(BuildContext context) {
     final weekday = Weekdays.indexToWeekday(widget.date.weekday - 1);
 
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        /*
-        CalendarHeader(
-          onDatePress: () => _openDatePicker(context),
-          dateTime: widget.date,
-          onPreviousButtonPress: widget.onPreviousButtonPress,
-          onNextButtonPress: widget.onNextButtonPress,
-        ),
-        */
-        Expanded(
-          child: ScrollablePositionedList.builder(
-            itemCount: widget.scheduleStructure.length,
-            itemScrollController: controller,
-            itemBuilder: (context, index) {
-              final key = widget.scheduleStructure[index].combinedKey();
-              final entry = widget.scheduleData[weekday]?[key]?.firstOrNull();
-              print(widget.scheduleData);
-              final nextTimeframe = index + 1 < widget.scheduleStructure.length
-                  ? widget.scheduleStructure[index + 1]
-                  : null;
+    return Padding(
+      padding: const EdgeInsets.only(right: AppSpacing.lg),
+      child: ScrollablePositionedList.builder(
+        itemCount: widget.scheduleStructure.length,
+        itemScrollController: controller,
+        itemBuilder: (context, index) {
+          final key = widget.scheduleStructure[index].combinedKey();
+          final entry = widget.scheduleData[weekday]?[key]?.firstOrNull();
+          final nextTimeframe = index + 1 < widget.scheduleStructure.length
+              ? widget.scheduleStructure[index + 1]
+              : null;
 
-              return CalendarEntryLayout(
-                timeframe: widget.scheduleStructure[index],
-                nextTimeframe: nextTimeframe,
-                calendarEntryData: entry,
-                showDivider: index != 0,
-              );
-            },
-          ),
-        ),
-      ],
-    );
-  }
-
-  Future<void> _openDatePicker(BuildContext context) async {
-    final results = await showCalendarDatePicker2Dialog(
-      context: context,
-      config: CalendarDatePicker2WithActionButtonsConfig(
-        calendarType: CalendarDatePicker2Type.single,
+          return CalendarEntryLayout(
+            timeframe: widget.scheduleStructure[index],
+            nextTimeframe: nextTimeframe,
+            calendarEntryData: entry,
+            showDivider: index != 0,
+          );
+        },
       ),
-      dialogSize: const Size(325, 400),
-      borderRadius: BorderRadius.circular(15),
     );
-    if (results?.length == 1) {
-      widget.onDaySelected(results!.first!);
-    }
   }
 
   int _findNearestIndexOfCalendarEntry() {
