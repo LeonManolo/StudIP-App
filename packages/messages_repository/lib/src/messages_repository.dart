@@ -26,9 +26,9 @@ class MessageRepository {
           response.messageResponses.map(Message.fromMessageResponse).toList();
       final Map<String, MessageUser> knownUsers = {};
       for (final message in messages) {
-        message.sender = await _fetchUser(knownUsers, message.sender.id);
-        // ignore: cascade_invocations
-        message.recipients = await _fetchUsers(knownUsers, message.recipients);
+        message
+        ..sender = await _fetchUser(knownUsers, message.sender.id)
+        ..recipients = await _fetchUsers(knownUsers, message.recipients);
       }
       return messages;
     } catch (error, stackTrace) {
@@ -51,9 +51,9 @@ class MessageRepository {
           response.messageResponses.map(Message.fromMessageResponse).toList();
       final Map<String, MessageUser> knownUsers = {};
       for (final message in messages) {
-        message.sender = await _fetchUser(knownUsers, message.sender.id);
-        // ignore: cascade_invocations
-        message.recipients = await _fetchUsers(knownUsers, message.recipients);
+        message
+        ..sender = await _fetchUser(knownUsers, message.sender.id)
+        ..recipients = await _fetchUsers(knownUsers, message.recipients);
       }
       return messages;
     } catch (error, stackTrace) {

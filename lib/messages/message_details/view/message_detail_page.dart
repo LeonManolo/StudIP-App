@@ -1,6 +1,7 @@
 import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:intl/intl.dart';
 import 'package:messages_repository/messages_repository.dart';
 import 'package:studipadawan/messages/message_details/bloc/message_details_bloc.dart';
@@ -134,7 +135,7 @@ class MessageDetailpage extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: smallMargin),
-                  Text(message.message)
+                  Html(data: message.message),
                 ],
               ),
             ),

@@ -90,7 +90,7 @@ class OutboxMessageBloc extends Bloc<OutboxMessageEvent, OutboxMessageState> {
           blocResponse: event.messageIds.length == 1
               ? messageDeleteSucceed
               : messagesDeleteSucceed,
-          outboxMessages: [...outboxMessages],
+          outboxMessages: outboxMessages,
         ),
       );
     } catch (_) {
