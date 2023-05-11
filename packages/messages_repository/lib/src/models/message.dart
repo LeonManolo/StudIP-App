@@ -18,9 +18,7 @@ class Message {
     return Message(
       id: response.id,
       subject: response.subject,
-      message: response.message
-          .replaceAll('<!--HTML-->', '') // TODO: Format Html
-          .replaceAll('<br />', ''),
+      message: response.message,
       sender: MessageUser(
         id: response.senderId,
         username: '',
