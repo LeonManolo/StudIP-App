@@ -12,12 +12,14 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
     required AuthenticationRepository authenticationRepository,
   })  : _calendarRepository = calendarRepository,
         _authenticationRepository = authenticationRepository,
-        super(const CalendarInitial()) {
+        super(const CalendarInitial(layout: CalendarLayout.withoutTimeIndicators)) {
     on<CalendarRequested>(_onCalendarRequested);
     on<CalendarNextDayRequested>(_onCalendarNextDayRequested);
     on<CalendarPreviousDayRequested>(_onCalendarPreviousDayRequested);
     on<CalendarExactDayRequested>(_onCalendarExactDayRequested);
+    on<CalendarSwitchLayoutRequested>(_onCalendarSwitchLayoutRequested);
   }
+
   final CalenderRepository _calendarRepository;
   final AuthenticationRepository _authenticationRepository;
 
@@ -26,9 +28,16 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
     Emitter<CalendarState> emit,
   ) async {
     final day = event.day;
-    emit(const CalendarLoading());
+    emit(CalendarLoading(layout: state.layout));
     final calendar = await _fetchCalendar(day);
-    emit(CalendarPopulated(calendarWeekData: calendar, currentDay: day));
+    print("calendar ${calendar.data}");
+    emit(
+      CalendarPopulated(
+        calendarWeekData: calendar,
+        currentDay: day,
+        layout: event.layout,
+      ),
+    );
   }
 
   FutureOr<void> _onCalendarNextDayRequested(
@@ -37,16 +46,19 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
   ) async {
     if (state is CalendarPopulated) {
       try {
-        final nextDay = (state as CalendarPopulated)
-            .currentDay
-            .add(const Duration(days: 1));
-        emit(const CalendarLoading());
+        final currentState = state as CalendarPopulated;
+        final nextDay = currentState.currentDay.add(const Duration(days: 1));
+        emit(CalendarLoading(layout: state.layout));
         final calendar = await _fetchCalendar(nextDay);
         emit(
-          CalendarPopulated(calendarWeekData: calendar, currentDay: nextDay),
+          CalendarPopulated(
+            calendarWeekData: calendar,
+            currentDay: nextDay,
+            layout: currentState.layout,
+          ),
         );
       } catch (e) {
-        emit(CalendarFailure(failureMessage: e.toString()));
+        emit(CalendarFailure(failureMessage: e.toString(), layout: state.layout));
       }
     }
   }
@@ -57,16 +69,21 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
   ) async {
     if (state is CalendarPopulated) {
       try {
-        final previous = (state as CalendarPopulated)
-            .currentDay
-            .subtract(const Duration(days: 1));
-        emit(const CalendarLoading());
-        final calendar = await _fetchCalendar(previous);
+        final currentState = state as CalendarPopulated;
+        final previousDay =
+            currentState.currentDay.subtract(const Duration(days: 1));
+
+        emit(CalendarLoading(layout: state.layout));
+        final calendar = await _fetchCalendar(previousDay);
         emit(
-          CalendarPopulated(calendarWeekData: calendar, currentDay: previous),
+          CalendarPopulated(
+            calendarWeekData: calendar,
+            currentDay: previousDay,
+            layout: currentState.layout,
+          ),
         );
       } catch (e) {
-        emit(CalendarFailure(failureMessage: e.toString()));
+        emit(CalendarFailure(failureMessage: e.toString(), layout: state.layout));
       }
     }
   }
@@ -82,9 +99,36 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
     CalendarExactDayRequested event,
     Emitter<CalendarState> emit,
   ) async {
-    final day = event.exactDay;
-    emit(const CalendarLoading());
-    final calendar = await _fetchCalendar(day);
-    emit(CalendarPopulated(calendarWeekData: calendar, currentDay: day));
+    if (state is CalendarPopulated) {
+      final currentState = state as CalendarPopulated;
+      final day = event.exactDay;
+      emit(CalendarLoading(layout: state.layout));
+      final calendar = await _fetchCalendar(day);
+      emit(
+        CalendarPopulated(
+          calendarWeekData: calendar,
+          currentDay: day,
+          layout: currentState.layout,
+        ),
+      );
+    }
+  }
+
+  FutureOr<void> _onCalendarSwitchLayoutRequested(
+      CalendarSwitchLayoutRequested event, Emitter<CalendarState> emit) {
+    if (state is CalendarPopulated) {
+      final currentState = state as CalendarPopulated;
+      final layout = currentState.layout == CalendarLayout.withoutTimeIndicators
+          ? CalendarLayout.withTimeIndicators
+          : CalendarLayout.withoutTimeIndicators;
+
+      emit(
+        CalendarPopulated(
+          calendarWeekData: currentState.calendarWeekData,
+          currentDay: currentState.currentDay,
+          layout: layout,
+        ),
+      );
+    }
   }
 }

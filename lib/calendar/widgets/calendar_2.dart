@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:app_ui/app_ui.dart';
 import 'package:calender_repository/calender_repository.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +20,9 @@ class Calendar2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
+        /*
         TableCalendar<CalendarEntryData>(
           calendarFormat: CalendarFormat.week,
           calendarStyle: CalendarStyle(
@@ -40,10 +43,8 @@ class Calendar2 extends StatelessWidget {
             onDaySelected(selectedDay);
           },
         ),
-        const Padding(
-          padding: EdgeInsets.all(AppSpacing.lg),
-          child: Divider(),
-        ),
+
+         */
         Expanded(
             child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
@@ -56,14 +57,19 @@ class Calendar2 extends StatelessWidget {
               return const Padding(padding: EdgeInsets.only(bottom: AppSpacing.lg));
             },
             itemBuilder: (context, index) {
-              return CalendarEntryContent(
-                timeframe: CalendarTimeframe(
-                  start: HourMinute(hours: 8, minutes: 15),
-                  end: HourMinute(hours: 9, minutes: 45),
+              print("calendar2:");
+              print(scheduleData[
+              Weekdays.indexToWeekday(selectedDay.weekday - 1)]);
+              print("----");
+              return SlideInLeft(
+                child: CalendarEntryContent(
+                  timeframe: scheduleData[
+                  Weekdays.indexToWeekday(selectedDay.weekday - 1)]
+                  ![index].timeframe,
+                  calendarEntryData: scheduleData[
+                          Weekdays.indexToWeekday(selectedDay.weekday - 1)]
+                      ?[index],
                 ),
-                calendarEntryData: scheduleData[
-                        Weekdays.indexToWeekday(selectedDay.weekday - 1)]
-                    ?[index],
               );
             },
           ),

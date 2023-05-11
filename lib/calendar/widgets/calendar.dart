@@ -52,12 +52,14 @@ class _CalendarState extends State<Calendar> {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
+        /*
         CalendarHeader(
           onDatePress: () => _openDatePicker(context),
           dateTime: widget.date,
           onPreviousButtonPress: widget.onPreviousButtonPress,
           onNextButtonPress: widget.onNextButtonPress,
         ),
+        */
         Expanded(
           child: ScrollablePositionedList.builder(
             itemCount: widget.scheduleStructure.length,
@@ -65,6 +67,7 @@ class _CalendarState extends State<Calendar> {
             itemBuilder: (context, index) {
               final key = widget.scheduleStructure[index].combinedKey();
               final entry = widget.scheduleData[weekday]?[key]?.firstOrNull();
+              print(widget.scheduleData);
               final nextTimeframe = index + 1 < widget.scheduleStructure.length
                   ? widget.scheduleStructure[index + 1]
                   : null;

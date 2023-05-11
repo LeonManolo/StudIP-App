@@ -23,11 +23,16 @@ class CalendarWeekData {
             weekday: weekday,
             timeframe: timeframe,
           );
+
           if (data[weekday] == null) {
             data[weekday] = {timeframe.combinedKey(): [entryData]};
           } else {
-            data[weekday]![timeframe.combinedKey()]?.add(entryData);
+            // Check if the list for this timeframe key exists. If not, create it.
+            data[weekday]![timeframe.combinedKey()] ??= [];
+
+            data[weekday]![timeframe.combinedKey()]!.add(entryData);
           }
+
         }
       }
     }
