@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 enum MessageMenuOption {
   markAll('Alle Markieren'),
-  unmarkAll('Markierugnen entfernen');
+  unmarkAll('Markierungen entfernen');
 
   const MessageMenuOption(this.description);
   final String description;
