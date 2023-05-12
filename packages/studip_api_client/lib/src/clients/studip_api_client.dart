@@ -73,7 +73,6 @@ class StudIpApiClient
         statusCode: response.statusCode,
       );
     }
-    print(body);
     return UserListResponse.fromJson(body);
   }
 

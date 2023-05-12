@@ -5,7 +5,6 @@ enum MessageSendStatus {
   initial,
   loading,
   recipientsChanged,
-  userSuggestionsLoading,
   userSuggestionsFetched,
   userSuggestionsFailed,
   populated,

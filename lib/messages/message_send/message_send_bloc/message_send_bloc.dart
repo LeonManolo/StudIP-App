@@ -99,11 +99,6 @@ class MessageSendBloc extends Bloc<MessageSendEvent, MessageSendState> {
     FetchSuggestions event,
     Emitter<MessageSendState> emit,
   ) async {
-    emit(
-      state.copyWith(
-        status: MessageSendStatus.userSuggestionsLoading,
-      ),
-    );
     try {
       final usersResponse = await _userRepository.getUsers(event.pattern);
       emit(
@@ -115,7 +110,6 @@ class MessageSendBloc extends Bloc<MessageSendEvent, MessageSendState> {
         ),
       );
     } catch (_) {
-      print("error");
       emit(
         state.copyWith(
           status: MessageSendStatus.userSuggestionsFailed,

@@ -80,14 +80,9 @@ class _MessageSendPageState extends State<MessageSendPage> {
               _buildChips(state.recipients);
             }
             if (state.status == MessageSendStatus.userSuggestionsFetched) {
-              final text = _recipientController.text;
-              _recipientController
-                ..clear()
-                ..text = text
-                ..selection = TextSelection.collapsed(
-                  offset: _recipientController.text.length,
-                );
-              _suggestionsBoxController.open();
+              if (_suggestionsBoxController.effectiveFocusNode!.hasFocus) {
+                _triggerSuggestionCallback();
+              }
             }
           },
           builder: (context, state) {
@@ -113,31 +108,35 @@ class _MessageSendPageState extends State<MessageSendPage> {
                             ),
                           ),
                           suggestionsCallback: (pattern) {
+                            final normalizedPattern =
+                                pattern.toLowerCase().replaceAll(' ', '');
                             if (pattern.length < 3) {
-                              return [];
+                              return List<MessageUser>.empty();
                             } else {
                               final suggestions = _filterUsernamesByPattern(
-                                pattern,
+                                normalizedPattern,
                                 _messageSendBloc.state.suggestions,
                               );
                               if (suggestions.isEmpty) {
-                                _messageSendBloc
-                                    .add(FetchSuggestions(pattern: pattern));
+                                _messageSendBloc.add(
+                                  FetchSuggestions(
+                                    pattern: normalizedPattern,
+                                  ),
+                                );
                               }
                               return suggestions;
                             }
                           },
                           itemBuilder: (context, user) {
-                            final messageUser = user as MessageUser?;
                             return ListTile(
-                              title: Text(_parseUser(messageUser!)),
-                              subtitle: Text(messageUser.role),
+                              title: Text(_parseUser(user)),
+                              subtitle: Text(user.role),
                             );
                           },
                           onSuggestionSelected: (suggestion) {
-                            final user = suggestion as MessageUser?;
-                            _addRecipient(context, user!);
-                            _recipientController.text = '';
+                            final user = suggestion;
+                            _addRecipient(context, user);
+                            _recipientController.clear();
                           },
                         ),
                         Wrap(
@@ -222,6 +221,18 @@ class _MessageSendPageState extends State<MessageSendPage> {
     return '${user.parseUsername()} (${user.username})';
   }
 
+  void _triggerSuggestionCallback() {
+    if (_suggestionsBoxController.effectiveFocusNode!.hasFocus) {
+      final text = _recipientController.text;
+      _recipientController
+        ..clear()
+        ..text = text
+        ..selection = TextSelection.collapsed(
+          offset: _recipientController.text.length,
+        );
+    }
+  }
+
   void _addRecipient(BuildContext context, MessageUser recipient) {
     setState(() {
       _messageSendBloc.add(AddRecipient(recipient: recipient));
@@ -245,8 +256,7 @@ class _MessageSendPageState extends State<MessageSendPage> {
               .contains(user.id),
         )
         .where(
-          (user) =>
-              _parseUser(user).toLowerCase().contains(pattern.toLowerCase()),
+          (user) => _parseUser(user).toLowerCase().contains(pattern),
         )
         .toList();
   }
