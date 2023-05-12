@@ -8,9 +8,9 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:studipadawan/calendar/bloc/calendar_bloc.dart';
 import 'package:studipadawan/calendar/bloc/calendar_event.dart';
 import 'package:studipadawan/calendar/bloc/calendar_state.dart';
-import 'package:studipadawan/calendar/widgets/calendar.dart';
-import 'package:studipadawan/calendar/widgets/calendar_2.dart';
-import 'package:studipadawan/calendar/widgets/calendar_header_2.dart';
+import 'package:studipadawan/calendar/widgets/calendar_header.dart';
+import 'package:studipadawan/calendar/widgets/calendar_list_body.dart';
+import 'package:studipadawan/calendar/widgets/calendar_timeframes_body.dart';
 
 class CalendarPage extends StatelessWidget {
   const CalendarPage({super.key});
@@ -23,7 +23,7 @@ class CalendarPage extends StatelessWidget {
     )..add(
         CalendarRequested(
           day: DateTime.now(),
-          layout: CalendarLayout.withoutTimeIndicators,
+          layout: CalendarBodyType.list,
         ),
       );
 
@@ -45,7 +45,7 @@ class CalendarPage extends StatelessWidget {
                 builder: (context, state) {
                   Color? color;
                   if (calendarBloc.state.layout ==
-                      CalendarLayout.withTimeIndicators) {
+                      CalendarBodyType.timeframes) {
                     color = Theme.of(context).primaryColor;
                   }
                   return Spin(
@@ -63,7 +63,7 @@ class CalendarPage extends StatelessWidget {
         ),
         body: Column(
           children: [
-            CalendarHeader2(
+            CalendarHeader(
               onDaySelected: (day) {
                 calendarBloc.add(CalendarExactDayRequested(exactDay: day));
               },
@@ -89,51 +89,25 @@ class CalendarPage extends StatelessWidget {
                     );
                   }
                   if (state is CalendarPopulated) {
-                    final calendar2Data = transformCalendarData(state);
+                    final day =
+                        Weekdays.indexToWeekday(state.currentDay.weekday - 1);
+                    final calendarWeekData = _transformCalendarData(state);
+                    final calendarDayData = calendarWeekData[day] ?? [];
 
-                    if (state.layout == CalendarLayout.withoutTimeIndicators) {
-                      return Calendar2(
+                    if (state.layout == CalendarBodyType.list) {
+                      return CalendarListBody(
                         selectedDay: state.currentDay,
-                        scheduleData: calendar2Data,
+                        scheduleData: calendarDayData,
                       );
                     }
 
                     return FadeInDown(
                       from: -200,
                       key: GlobalKey(),
-                      child: Calendar(
+                      child: CalendarTimeframesBody(
                         date: state.currentDay,
                         scheduleData: state.calendarWeekData.data,
-                        scheduleStructure: [
-                          CalendarTimeframe(
-                            start: HourMinute(hours: 8, minutes: 15),
-                            end: HourMinute(hours: 9, minutes: 45),
-                          ),
-                          CalendarTimeframe(
-                            start: HourMinute(hours: 10, minutes: 0),
-                            end: HourMinute(hours: 11, minutes: 30),
-                          ),
-                          CalendarTimeframe(
-                            start: HourMinute(hours: 12, minutes: 15),
-                            end: HourMinute(hours: 13, minutes: 45),
-                          ),
-                          CalendarTimeframe(
-                            start: HourMinute(hours: 14, minutes: 0),
-                            end: HourMinute(hours: 15, minutes: 30),
-                          ),
-                          CalendarTimeframe(
-                            start: HourMinute(hours: 15, minutes: 45),
-                            end: HourMinute(hours: 17, minutes: 15),
-                          ),
-                          CalendarTimeframe(
-                            start: HourMinute(hours: 17, minutes: 30),
-                            end: HourMinute(hours: 19, minutes: 0),
-                          ),
-                          CalendarTimeframe(
-                            start: HourMinute(hours: 19, minutes: 15),
-                            end: HourMinute(hours: 20, minutes: 45),
-                          ),
-                        ],
+                        scheduleStructure: _calendarSchedule(),
                       ),
                     );
                   }
@@ -151,7 +125,7 @@ class CalendarPage extends StatelessWidget {
     );
   }
 
-  Map<Weekdays, List<CalendarEntryData>> transformCalendarData(
+  Map<Weekdays, List<CalendarEntryData>> _transformCalendarData(
     CalendarPopulated state,
   ) {
     return state.calendarWeekData.data.map(
@@ -164,5 +138,38 @@ class CalendarPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  List<CalendarTimeframe> _calendarSchedule() {
+    return [
+      CalendarTimeframe(
+        start: HourMinute(hours: 8, minutes: 15),
+        end: HourMinute(hours: 9, minutes: 45),
+      ),
+      CalendarTimeframe(
+        start: HourMinute(hours: 10, minutes: 0),
+        end: HourMinute(hours: 11, minutes: 30),
+      ),
+      CalendarTimeframe(
+        start: HourMinute(hours: 12, minutes: 15),
+        end: HourMinute(hours: 13, minutes: 45),
+      ),
+      CalendarTimeframe(
+        start: HourMinute(hours: 14, minutes: 0),
+        end: HourMinute(hours: 15, minutes: 30),
+      ),
+      CalendarTimeframe(
+        start: HourMinute(hours: 15, minutes: 45),
+        end: HourMinute(hours: 17, minutes: 15),
+      ),
+      CalendarTimeframe(
+        start: HourMinute(hours: 17, minutes: 30),
+        end: HourMinute(hours: 19, minutes: 0),
+      ),
+      CalendarTimeframe(
+        start: HourMinute(hours: 19, minutes: 15),
+        end: HourMinute(hours: 20, minutes: 45),
+      ),
+    ];
   }
 }

@@ -10,7 +10,7 @@ class CalendarRequested extends CalendarEvent {
 
   const CalendarRequested({ required this.day, required this.layout});
   final DateTime day;
-  final CalendarLayout layout;
+  final CalendarBodyType layout;
 
   @override
   List<Object?> get props => [day, layout];

@@ -12,7 +12,7 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
     required AuthenticationRepository authenticationRepository,
   })  : _calendarRepository = calendarRepository,
         _authenticationRepository = authenticationRepository,
-        super(const CalendarInitial(layout: CalendarLayout.withoutTimeIndicators)) {
+        super(const CalendarInitial(layout: CalendarBodyType.list)) {
     on<CalendarRequested>(_onCalendarRequested);
     on<CalendarNextDayRequested>(_onCalendarNextDayRequested);
     on<CalendarPreviousDayRequested>(_onCalendarPreviousDayRequested);
@@ -29,11 +29,10 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
   ) async {
     final day = event.day;
     emit(CalendarLoading(layout: state.layout));
-    final calendar = await _fetchCalendar(day);
-    print("calendar ${calendar.data}");
+    final calendarSchedule = await _fetchCalendarSchedule(day);
     emit(
       CalendarPopulated(
-        calendarWeekData: calendar,
+        calendarWeekData: calendarSchedule,
         currentDay: day,
         layout: event.layout,
       ),
@@ -49,10 +48,10 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
         final currentState = state as CalendarPopulated;
         final nextDay = currentState.currentDay.add(const Duration(days: 1));
         emit(CalendarLoading(layout: state.layout));
-        final calendar = await _fetchCalendar(nextDay);
+        final calendarSchedule = await _fetchCalendarSchedule(nextDay);
         emit(
           CalendarPopulated(
-            calendarWeekData: calendar,
+            calendarWeekData: calendarSchedule,
             currentDay: nextDay,
             layout: currentState.layout,
           ),
@@ -74,10 +73,10 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
             currentState.currentDay.subtract(const Duration(days: 1));
 
         emit(CalendarLoading(layout: state.layout));
-        final calendar = await _fetchCalendar(previousDay);
+        final calendarSchedule = await _fetchCalendarSchedule(previousDay);
         emit(
           CalendarPopulated(
-            calendarWeekData: calendar,
+            calendarWeekData: calendarSchedule,
             currentDay: previousDay,
             layout: currentState.layout,
           ),
@@ -88,7 +87,7 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
     }
   }
 
-  Future<CalendarWeekData> _fetchCalendar(DateTime day) async {
+  Future<CalendarWeekData> _fetchCalendarSchedule(DateTime day) async {
     return _calendarRepository.getCalenderSchedule(
       userId: _authenticationRepository.currentUser.id,
       dateTime: day,
@@ -103,10 +102,10 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
       final currentState = state as CalendarPopulated;
       final day = event.exactDay;
       emit(CalendarLoading(layout: state.layout));
-      final calendar = await _fetchCalendar(day);
+      final calendarSchedule = await _fetchCalendarSchedule(day);
       emit(
         CalendarPopulated(
-          calendarWeekData: calendar,
+          calendarWeekData: calendarSchedule,
           currentDay: day,
           layout: currentState.layout,
         ),
@@ -118,9 +117,9 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
       CalendarSwitchLayoutRequested event, Emitter<CalendarState> emit) {
     if (state is CalendarPopulated) {
       final currentState = state as CalendarPopulated;
-      final layout = currentState.layout == CalendarLayout.withoutTimeIndicators
-          ? CalendarLayout.withTimeIndicators
-          : CalendarLayout.withoutTimeIndicators;
+      final layout = currentState.layout == CalendarBodyType.list
+          ? CalendarBodyType.timeframes
+          : CalendarBodyType.list;
 
       emit(
         CalendarPopulated(

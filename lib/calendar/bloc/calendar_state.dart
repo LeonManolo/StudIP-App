@@ -4,18 +4,18 @@ import 'package:equatable/equatable.dart';
 abstract class CalendarState extends Equatable {
   const CalendarState(this.layout);
 
-  final CalendarLayout layout;
+  final CalendarBodyType layout;
 }
 
 class CalendarInitial extends CalendarState {
-  const CalendarInitial({required CalendarLayout layout}) : super(layout);
+  const CalendarInitial({required CalendarBodyType layout}) : super(layout);
 
   @override
   List<Object?> get props => [layout];
 }
 
 class CalendarLoading extends CalendarState {
-  const CalendarLoading({required CalendarLayout layout}) : super(layout);
+  const CalendarLoading({required CalendarBodyType layout}) : super(layout);
 
   @override
   List<Object?> get props => [layout];
@@ -25,7 +25,7 @@ class CalendarPopulated extends CalendarState {
   const CalendarPopulated({
     required this.calendarWeekData,
     required this.currentDay,
-    required CalendarLayout layout,
+    required CalendarBodyType layout,
   }) : super(layout);
 
   final CalendarWeekData calendarWeekData;
@@ -38,7 +38,7 @@ class CalendarPopulated extends CalendarState {
 class CalendarFailure extends CalendarState {
   const CalendarFailure({
     required this.failureMessage,
-    required CalendarLayout layout,
+    required CalendarBodyType layout,
   }) : super(layout);
 
   final String failureMessage;
@@ -47,7 +47,7 @@ class CalendarFailure extends CalendarState {
   List<Object?> get props => [failureMessage];
 }
 
-enum CalendarLayout {
-  withTimeIndicators,
-  withoutTimeIndicators,
+enum CalendarBodyType {
+  timeframes,
+  list,
 }

@@ -5,8 +5,8 @@ import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:studipadawan/calendar/extensions/list_extensions.dart';
 import 'package:studipadawan/calendar/widgets/calendar_entry_layout.dart';
 
-class Calendar extends StatefulWidget {
-  const Calendar({
+class CalendarTimeframesBody extends StatefulWidget {
+  const CalendarTimeframesBody({
     super.key,
     required this.scheduleStructure,
     required this.scheduleData,
@@ -17,10 +17,10 @@ class Calendar extends StatefulWidget {
   final Map<Weekdays, Map<String, List<CalendarEntryData>>> scheduleData;
 
   @override
-  State<Calendar> createState() => _CalendarState();
+  State<CalendarTimeframesBody> createState() => _CalendarTimeframesBodyState();
 }
 
-class _CalendarState extends State<Calendar> {
+class _CalendarTimeframesBodyState extends State<CalendarTimeframesBody> {
   final controller = ItemScrollController();
 
   @override
