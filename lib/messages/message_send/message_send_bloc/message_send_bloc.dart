@@ -10,7 +10,8 @@ import 'package:user_repository/user_repository.dart';
 const String missingSubjectErrorMessage = 'Bitte gebe einen Betreff ein';
 const String missingMessageErrorMessage = 'Bitte gebe eine Nachricht ein';
 const String missingRecipientErrorMessage = 'Bitte wähle einen Empfänger';
-const String fetcUserSuggestionsErrorMessage = 'Es ist ein Fehler aufgetreten';
+const String fetcUserSuggestionsErrorMessage =
+    'Es ist ein unbekannter Fehelr aufgetreten';
 const String messageSentMessage = 'Die Nachricht wurde versendet';
 
 class MessageSendBloc extends Bloc<MessageSendEvent, MessageSendState> {
@@ -112,7 +113,7 @@ class MessageSendBloc extends Bloc<MessageSendEvent, MessageSendState> {
     } catch (_) {
       emit(
         state.copyWith(
-          status: MessageSendStatus.userSuggestionsFailed,
+          status: MessageSendStatus.userSuggestionsFailure,
           blocResponse: fetcUserSuggestionsErrorMessage,
           suggestions: [],
         ),
