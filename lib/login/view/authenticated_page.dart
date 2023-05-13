@@ -6,7 +6,6 @@ import 'package:studipadawan/home/view/home_page.dart';
 
 import 'package:studipadawan/messages/message_overview/view/messages_page.dart';
 
-
 class AuthenticatedPage extends StatefulWidget {
   const AuthenticatedPage({super.key});
 
@@ -27,7 +26,9 @@ class _AuthenticatedPageState extends State<AuthenticatedPage> {
         index: _selectedTab,
         children: const [
           HomePage(),
-          CoursesPage(),
+          SafeArea(
+            child: CoursesPage(),
+          ),
           MessagesPage(),
           CalendarPage(),
         ],
@@ -35,21 +36,25 @@ class _AuthenticatedPageState extends State<AuthenticatedPage> {
       bottomNavigationBar: BottomNavigationBar(
         items: const [
           BottomNavigationBarItem(
-              label: 'Home',
-              icon: Icon(EvaIcons.homeOutline),
-              activeIcon: Icon(EvaIcons.home),),
+            label: 'Home',
+            icon: Icon(EvaIcons.homeOutline),
+            activeIcon: Icon(EvaIcons.home),
+          ),
           BottomNavigationBarItem(
-              label: 'Kurse',
-              icon: Icon(EvaIcons.bookOpenOutline),
-              activeIcon: Icon(EvaIcons.bookOpen),),
+            label: 'Kurse',
+            icon: Icon(EvaIcons.bookOpenOutline),
+            activeIcon: Icon(EvaIcons.bookOpen),
+          ),
           BottomNavigationBarItem(
-              label: 'Nachrichten',
-              icon: Icon(EvaIcons.messageSquareOutline),
-              activeIcon: Icon(EvaIcons.messageSquare),),
+            label: 'Nachrichten',
+            icon: Icon(EvaIcons.messageSquareOutline),
+            activeIcon: Icon(EvaIcons.messageSquare),
+          ),
           BottomNavigationBarItem(
-              label: 'Kalender',
-              icon: Icon(EvaIcons.calendarOutline),
-              activeIcon: Icon(EvaIcons.calendar),),
+            label: 'Kalender',
+            icon: Icon(EvaIcons.calendarOutline),
+            activeIcon: Icon(EvaIcons.calendar),
+          ),
         ],
         type: BottomNavigationBarType.fixed,
         currentIndex: _selectedTab,

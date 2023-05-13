@@ -4,7 +4,9 @@ import 'package:studipadawan/courses/details/files/bloc/course_files_bloc.dart';
 import 'package:studipadawan/courses/details/files/view/widgets/file_row/course_files_file_row.dart';
 
 class CourseFilesItemsList extends StatelessWidget {
-  const CourseFilesItemsList({super.key});
+  const CourseFilesItemsList({super.key, required this.insertSpacerAtEnd});
+
+  final bool insertSpacerAtEnd;
 
   @override
   Widget build(BuildContext context) {
@@ -13,11 +15,15 @@ class CourseFilesItemsList extends StatelessWidget {
         return state.items.isEmpty
             ? const Center(
                 child: Text(
-                'Keine Dateien vorhanden',
-                textAlign: TextAlign.center,
-              ),)
+                  'Keine Dateien vorhanden',
+                  textAlign: TextAlign.center,
+                ),
+              )
             : ListView.builder(
                 itemBuilder: (context, index) {
+                  if (index >= state.items.length) {
+                    return const SizedBox(height: 75);
+                  }
                   return state.items.elementAt(index).fold((folder) {
                     return ListTile(
                       title: Text(folder.name),
@@ -26,18 +32,20 @@ class CourseFilesItemsList extends StatelessWidget {
                         Icons.arrow_forward_ios,
                         size: 18,
                       ),
-                      onTap: () => context
-                          .read<CourseFilesBloc>()
-                          .add(DidSelectFolderEvent(
-                            selectedFolder: folder,
-                            parentFolders: state.parentFolders,
-                          ),),
+                      onTap: () => context.read<CourseFilesBloc>().add(
+                            DidSelectFolderEvent(
+                              selectedFolder: folder,
+                              parentFolders: state.parentFolders,
+                            ),
+                          ),
                     );
                   }, (fileInfo) {
                     return CourseFilesFileRow(fileInfo: fileInfo);
                   });
                 },
-                itemCount: state.items.length,
+                itemCount: insertSpacerAtEnd
+                    ? state.items.length + 1
+                    : state.items.length,
               );
       },
     );

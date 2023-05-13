@@ -19,3 +19,8 @@ class StudIpApiRequestFailure implements Exception {
   /// The associated response body.
   final Map<String, dynamic> body;
 }
+
+class UploadFilesCoreFailure implements Exception {
+  UploadFilesCoreFailure({required this.message});
+  final String message;
+}

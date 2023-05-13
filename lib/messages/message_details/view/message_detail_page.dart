@@ -1,7 +1,7 @@
 import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_html/flutter_html.dart';
+import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
 import 'package:intl/intl.dart';
 import 'package:messages_repository/messages_repository.dart';
 import 'package:studipadawan/messages/message_details/bloc/message_details_bloc.dart';
@@ -10,6 +10,7 @@ import 'package:studipadawan/messages/message_details/bloc/message_details_state
 import 'package:studipadawan/messages/message_details/view/widgets/message_details_menu_button.dart';
 
 import 'package:studipadawan/messages/message_send/view/message_send_page.dart';
+import 'package:studipadawan/utils/utils.dart';
 
 class MessageDetailpage extends StatelessWidget {
   const MessageDetailpage({
@@ -35,13 +36,13 @@ class MessageDetailpage extends StatelessWidget {
         listener: (context, state) {
           if (state.status == MessageDetailsStatus.deleteMessageSucceed) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
-              _buildSnackBar(context, state.blocResponse, Colors.green);
+              buildSnackBar(context, state.blocResponse, Colors.green);
               refreshMessages();
               Navigator.pop(context);
             });
           }
           if (state.status == MessageDetailsStatus.deleteMessageFailure) {
-            _buildSnackBar(context, state.blocResponse, Colors.red);
+            buildSnackBar(context, state.blocResponse, Colors.red);
           }
         },
         builder: (context, state) {
@@ -135,7 +136,7 @@ class MessageDetailpage extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: smallMargin),
-                  Html(data: message.message),
+                  HtmlWidget(message.message),
                 ],
               ),
             ),
@@ -143,22 +144,5 @@ class MessageDetailpage extends StatelessWidget {
         },
       ),
     );
-  }
-
-  void _buildSnackBar(
-    BuildContext context,
-    String message,
-    Color color,
-  ) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(message),
-          duration: const Duration(seconds: 1),
-          backgroundColor: color,
-          behavior: SnackBarBehavior.floating,
-        ),
-      );
-    });
   }
 }

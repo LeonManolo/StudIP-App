@@ -5,7 +5,6 @@ import 'package:http/http.dart' as http;
 import 'package:studip_api_client/src/core/studip_api_core.dart';
 import 'package:studip_api_client/studip_api_client.dart';
 import 'package:logger/logger.dart';
-import '../exceptions.dart';
 
 class StudIpApiClient
     implements
@@ -138,12 +137,10 @@ class StudIpApiClient
           body: body, statusCode: response.statusCode);
     }
   }
-  
+
   @override
-  Future<void> deleteMessage(
-      {required String messageId}) async {
-    final response =
-        await _core.delete(endpoint: "messages/$messageId");
+  Future<void> deleteMessage({required String messageId}) async {
+    final response = await _core.delete(endpoint: "messages/$messageId");
     final body = response.json();
     if (response.statusCode != HttpStatus.noContent) {
       throw StudIpApiRequestFailure(
@@ -313,6 +310,41 @@ class StudIpApiClient
         fileName: fileName,
         parentFolderIds: parentFolderIds,
         lastModified: lastModified);
+  }
+
+  @override
+  FutureOr<void> uploadFiles({
+    required String parentFolderId,
+    required Iterable<String> localFilePaths,
+  }) async {
+    await _core.uploadFiles(
+      parentFolderId: parentFolderId,
+      localFilePaths: localFilePaths,
+    );
+  }
+
+  @override
+  FutureOr<void> createNewFolder({
+    required String courseId,
+    required String parentFolderId,
+    required String folderName,
+  }) async {
+    await _core.post(
+      endpoint: 'courses/$courseId/folders',
+      jsonString: jsonEncode(
+        {
+          "data": {
+            "type": "folders",
+            "attributes": {"name": folderName},
+            "relationships": {
+              "parent": {
+                "data": {"type": "folders", "id": parentFolderId}
+              }
+            }
+          }
+        },
+      ),
+    );
   }
 
   @override
