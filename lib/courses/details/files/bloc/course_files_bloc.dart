@@ -21,6 +21,8 @@ class CourseFilesBloc extends Bloc<CourseFilesEvent, CourseFilesState> {
     on<LoadRootFolderEvent>(_onLoadRootFolderEvent);
     on<DidSelectFolderEvent>(_onDidSelectFolderEvent);
     on<DidSelectFileEvent>(_onDidSelectFileEvent);
+    on<DidFinishNewFolderCreationEvent>(_onDidFinishNewFolderCreationEvent);
+    on<DidFinishFileUploadEvent>(_onDidFinishFileUploadEvent);
   }
   final FilesRepository _filesRepository;
   final Course course;
@@ -74,8 +76,8 @@ class CourseFilesBloc extends Bloc<CourseFilesEvent, CourseFilesState> {
             event.parentFolders.getRange(0, selectedFolderIndex + 1).toList();
       } else {
         // folder isn't present in parentFolders
-        newParentFolders = event.parentFolders
-          ..add(FolderInfo.fromFolder(folder: event.selectedFolder));
+        newParentFolders = event.parentFolders +
+            [FolderInfo.fromFolder(folder: event.selectedFolder)];
       }
 
       emit(
@@ -101,7 +103,7 @@ class CourseFilesBloc extends Bloc<CourseFilesEvent, CourseFilesState> {
     }
   }
 
-  Future<void> _onDidSelectFileEvent(
+  FutureOr<void> _onDidSelectFileEvent(
     DidSelectFileEvent event,
     Emitter<CourseFilesState> emit,
   ) async {
@@ -126,6 +128,57 @@ class CourseFilesBloc extends Bloc<CourseFilesEvent, CourseFilesState> {
       await OpenFilex.open(
         localStoragePath,
         type: selectedFileInfo.file.mimeType,
+      );
+    }
+  }
+
+  FutureOr<void> _onDidFinishNewFolderCreationEvent(
+    DidFinishNewFolderCreationEvent event,
+    Emitter<CourseFilesState> emit,
+  ) async {
+    emit(state.copyWith(type: CourseFilesStateType.isLoading));
+
+    try {
+      await _filesRepository.createNewFolder(
+        courseId: course.id,
+        parentFolderId: state.parentFolderIds.last,
+        folderName: event.folderName,
+      );
+
+      await _reloadCurrentFolder(emit);
+    } catch (_) {
+      emit(
+        state.copyWith(
+          type: CourseFilesStateType.error,
+          errorMessage:
+              'Bei der Erstellung des Ordners ist ein Problem aufgetreten',
+        ),
+      );
+    }
+  }
+
+  FutureOr<void> _onDidFinishFileUploadEvent(
+    DidFinishFileUploadEvent event,
+    Emitter<CourseFilesState> emit,
+  ) async {
+    await _reloadCurrentFolder(emit);
+  }
+
+  FutureOr<void> _reloadCurrentFolder(Emitter<CourseFilesState> emit) async {
+    try {
+      emit(
+        state.copyWith(
+          items: await _loadItems(parentFolders: state.parentFolders),
+          type: CourseFilesStateType.didLoad,
+        ),
+      );
+    } catch (_) {
+      emit(
+        state.copyWith(
+          errorMessage:
+              'Beim Laden der gewünschten Dateien ist ein Problem aufgetreten.',
+          type: CourseFilesStateType.error,
+        ),
       );
     }
   }
@@ -171,6 +224,7 @@ class CourseFilesBloc extends Bloc<CourseFilesEvent, CourseFilesState> {
     return localStoragePath;
   }
 
+  /// Used to load all items for the last folder in [parentFolders]
   Future<List<Either<Folder, FileInfo>>> _loadItems({
     required List<FolderInfo> parentFolders,
   }) async {

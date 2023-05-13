@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_html/flutter_html.dart';
+import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
+
 import 'package:studipadawan/courses/details/info/models/models.dart';
 
 class NewsSection extends ExpansionTile {
@@ -15,9 +16,8 @@ class NewsSection extends ExpansionTile {
                 children: [
                   ListTile(
                     title: Text(newsExpansionModel.news.elementAt(index).title),
-                    subtitle: Html(
-                      data: newsExpansionModel.news.elementAt(index).content,
-                    ),
+                    subtitle: HtmlWidget(
+                        newsExpansionModel.news.elementAt(index).content),
                   ),
                   if (index < (newsExpansionModel.news.length - 1))
                     const Divider()

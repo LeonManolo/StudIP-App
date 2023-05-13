@@ -19,6 +19,7 @@ import 'package:studipadawan/messages/message_overview/view/widgets/message_filt
 import 'package:studipadawan/messages/message_overview/view/widgets/message_inbox_widget.dart';
 import 'package:studipadawan/messages/message_overview/view/widgets/message_menu_button.dart';
 import 'package:studipadawan/messages/message_overview/view/widgets/message_outbox_widget.dart';
+import 'package:studipadawan/utils/utils.dart';
 
 final _outboxWidgetKey = GlobalKey<OutboxMessageWidgetState>();
 final _inboxWidgetKey = GlobalKey<InboxMessageWidgetState>();
@@ -114,7 +115,7 @@ class MessagesPageState extends State<MessagesPage>
                   listener: (context, state) {
                     if (state.status ==
                         InboxMessageStatus.deleteInboxMessagesSucceed) {
-                      _buildSnackBar(
+                      buildSnackBar(
                         context,
                         state.blocResponse,
                         Colors.green,
@@ -122,7 +123,7 @@ class MessagesPageState extends State<MessagesPage>
                     }
                     if (state.status ==
                         InboxMessageStatus.deleteInboxMessagesFailure) {
-                      _buildSnackBar(
+                      buildSnackBar(
                         context,
                         state.blocResponse,
                         Colors.red,
@@ -145,7 +146,7 @@ class MessagesPageState extends State<MessagesPage>
                   listener: (context, state) {
                     if (state.status ==
                         OutboxMessageStatus.deleteOutboxMessagesSucceed) {
-                      _buildSnackBar(
+                      buildSnackBar(
                         context,
                         state.blocResponse,
                         Colors.green,
@@ -153,7 +154,7 @@ class MessagesPageState extends State<MessagesPage>
                     }
                     if (state.status ==
                         OutboxMessageStatus.deleteOutboxMessagesFailure) {
-                      _buildSnackBar(
+                      buildSnackBar(
                         context,
                         state.blocResponse,
                         Colors.red,
@@ -242,23 +243,6 @@ class MessagesPageState extends State<MessagesPage>
         )
       ],
     );
-  }
-
-  void _buildSnackBar(
-    BuildContext context,
-    String message,
-    Color color,
-  ) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(message),
-          duration: const Duration(seconds: 1),
-          backgroundColor: color,
-          behavior: SnackBarBehavior.floating,
-        ),
-      );
-    });
   }
 
   void _onInboxScroll() {

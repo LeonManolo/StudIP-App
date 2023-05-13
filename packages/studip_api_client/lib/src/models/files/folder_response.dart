@@ -43,6 +43,10 @@ class FolderResponse {
   final String lastUpdatedAt;
   final bool isVisible;
   final bool isReadable;
+  final bool isWritable;
+
+  /// Whether user can create new subfolder within this folder
+  final bool isSubfolderAllowed;
 
   FolderResponse({
     required this.id,
@@ -53,6 +57,8 @@ class FolderResponse {
     required this.lastUpdatedAt,
     required this.isVisible,
     required this.isReadable,
+    required this.isWritable,
+    required this.isSubfolderAllowed,
   });
 
   factory FolderResponse.fromJson(Map<String, dynamic> json) {
@@ -67,6 +73,8 @@ class FolderResponse {
       lastUpdatedAt: attributes["chdate"],
       isVisible: attributes["is-visible"],
       isReadable: attributes["is-readable"],
+      isWritable: attributes['is-writable'],
+      isSubfolderAllowed: attributes['is-subfolder-allowed'],
     );
   }
 }

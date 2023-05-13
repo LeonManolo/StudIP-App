@@ -21,7 +21,7 @@ class CourseFilesPage extends StatelessWidget {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: const [
-              CourseFilesPathList(),
+              CourseFilesPathRowList(),
               SizedBox(
                 height: 10,
               ),
