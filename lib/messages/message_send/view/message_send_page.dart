@@ -24,17 +24,20 @@ class _MessageSendPageState extends State<MessageSendPage> {
   late TextEditingController _recipientController;
   late TextEditingController _subjectController;
   late TextEditingController _messageController;
+  late SuggestionsBoxController _suggestionsBoxController;
   late MessageSendBloc _messageSendBloc;
-  List<MessageRecipientChip> recipientChips = [];
+  final List<MessageRecipientChip> _recipientChips = [];
 
   @override
   void initState() {
     super.initState();
+    _suggestionsBoxController = SuggestionsBoxController();
     _recipientController = TextEditingController();
     _subjectController = TextEditingController();
     _messageController = TextEditingController();
-    _messageSendBloc =
-        MessageSendBloc(messageRepository: context.read<MessageRepository>());
+    _messageSendBloc = MessageSendBloc(
+      messageRepository: context.read<MessageRepository>(),
+    );
     if (widget.message != null) {
       final subject = widget.message!.subject.contains('RE:')
           ? widget.message!.subject
@@ -58,8 +61,6 @@ class _MessageSendPageState extends State<MessageSendPage> {
 
   @override
   Widget build(BuildContext context) {
-    List<MessageUser> userSuggestions = [];
-
     return Scaffold(
       key: UniqueKey(),
       appBar: AppBar(title: const Text('Senden')),
@@ -74,9 +75,14 @@ class _MessageSendPageState extends State<MessageSendPage> {
               _buildSnackBar(context, state.blocResponse, Colors.green);
               Navigator.pop(context);
             }
-            if (state.status == MessageSendStatus.recipientAdded ||
-                state.status == MessageSendStatus.recipientRemoved) {
+            if (state.status == MessageSendStatus.recipientsChanged) {
               _buildChips(state.recipients);
+            }
+            if (state.status == MessageSendStatus.userSuggestionsFetched) {
+              _triggerSuggestionCallback();
+            }
+            if (state.status == MessageSendStatus.userSuggestionsFailure) {
+              _buildSnackBar(context, state.blocResponse, Colors.red);
             }
           },
           builder: (context, state) {
@@ -92,52 +98,49 @@ class _MessageSendPageState extends State<MessageSendPage> {
                         const SizedBox(height: 8),
                         TypeAheadField(
                           hideOnEmpty: true,
+                          getImmediateSuggestions: true,
                           hideOnLoading: true,
+                          suggestionsBoxController: _suggestionsBoxController,
                           textFieldConfiguration: TextFieldConfiguration(
                             controller: _recipientController,
                             decoration: const InputDecoration(
                               border: OutlineInputBorder(),
                             ),
                           ),
-                          suggestionsCallback: (pattern) async {
-                            if (_recipientController.text.isEmpty ||
-                                pattern.isEmpty) {
-                              userSuggestions.clear();
-                              return [];
-                            }
-
-                            if (pattern.length >= 3) {
-                              final flilteredUsers = _filterUsernamesByPattern(
-                                pattern,
-                                userSuggestions,
-                              );
-                              if (flilteredUsers.isEmpty) {
-                                userSuggestions =
-                                    await _fetchUsers(context, pattern);
-                              }
-                              return _filterUsernamesByPattern(
-                                pattern,
-                                userSuggestions,
-                              );
+                          suggestionsCallback: (pattern) {
+                            final normalizedPattern =
+                                pattern.toLowerCase().replaceAll(' ', '');
+                            if (pattern.length < 3) {
+                              return List<MessageUser>.empty();
                             } else {
-                              return [];
+                              final suggestions = _filterUsernamesByPattern(
+                                normalizedPattern,
+                                _messageSendBloc.state.suggestions,
+                              );
+                              if (suggestions.isEmpty) {
+                                _messageSendBloc.add(
+                                  FetchSuggestions(
+                                    pattern: normalizedPattern,
+                                  ),
+                                );
+                              }
+                              return suggestions;
                             }
                           },
                           itemBuilder: (context, user) {
-                            final messageUser = user as MessageUser;
                             return ListTile(
-                              title: Text(_parseUser(messageUser)),
-                              subtitle: Text(messageUser.role),
+                              title: Text(_parseUser(user)),
+                              subtitle: Text(user.role),
                             );
                           },
                           onSuggestionSelected: (suggestion) {
-                            final user = suggestion as MessageUser;
+                            final user = suggestion;
                             _addRecipient(context, user);
-                            _recipientController.text = '';
+                            _recipientController.clear();
                           },
                         ),
                         Wrap(
-                          children: recipientChips,
+                          children: _recipientChips,
                         ),
                         const SizedBox(height: bigMargin),
                         const Text('Betreff'),
@@ -201,9 +204,9 @@ class _MessageSendPageState extends State<MessageSendPage> {
 
   void _buildChips(List<MessageUser> recipients) {
     setState(() {
-      recipientChips.clear();
+      _recipientChips.clear();
       for (final recipient in recipients) {
-        recipientChips.add(
+        _recipientChips.add(
           MessageRecipientChip(
             recipient: recipient,
             delete: _removeRecipient,
@@ -214,7 +217,19 @@ class _MessageSendPageState extends State<MessageSendPage> {
   }
 
   String _parseUser(MessageUser user) {
-    return '${user.parseUsername()} (${user.username})';
+    return '${user.formattedName} (${user.username})';
+  }
+
+  void _triggerSuggestionCallback() {
+    if (_suggestionsBoxController.effectiveFocusNode!.hasFocus) {
+      final text = _recipientController.text;
+      _recipientController
+        ..clear()
+        ..text = text
+        ..selection = TextSelection.collapsed(
+          offset: _recipientController.text.length,
+        );
+    }
   }
 
   void _addRecipient(BuildContext context, MessageUser recipient) {
@@ -229,17 +244,6 @@ class _MessageSendPageState extends State<MessageSendPage> {
     });
   }
 
-  Future<List<MessageUser>> _fetchUsers(
-    BuildContext context,
-    String searchParams,
-  ) async {
-    final usersResponse =
-        await context.read<UserRepository>().getUsers(searchParams);
-    return usersResponse.userResponses
-        .map(MessageUser.fromUserResponse)
-        .toList();
-  }
-
   List<MessageUser> _filterUsernamesByPattern(
     String pattern,
     List<MessageUser> users,
@@ -247,12 +251,11 @@ class _MessageSendPageState extends State<MessageSendPage> {
     return users
         .where(
           (user) => !_messageSendBloc.state.recipients
-              .map((u) => u.id)
+              .map((user) => user.id)
               .contains(user.id),
         )
         .where(
-          (user) =>
-              _parseUser(user).toLowerCase().contains(pattern.toLowerCase()),
+          (user) => _parseUser(user).toLowerCase().contains(pattern),
         )
         .toList();
   }

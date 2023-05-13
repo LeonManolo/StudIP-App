@@ -5,10 +5,13 @@ import 'package:messages_repository/messages_repository.dart';
 import 'package:studipadawan/messages/message_overview/message_inbox_bloc%20/message_inbox_bloc.dart';
 import 'package:studipadawan/messages/message_send/message_send_bloc/message_send_event.dart';
 import 'package:studipadawan/messages/message_send/message_send_bloc/message_send_state.dart';
+import 'package:user_repository/user_repository.dart';
 
 const String missingSubjectErrorMessage = 'Bitte gebe einen Betreff ein';
 const String missingMessageErrorMessage = 'Bitte gebe eine Nachricht ein';
-const String missingRecipientErrorMessage = 'Bitte wähle einen Benutzer';
+const String missingRecipientErrorMessage = 'Bitte wähle einen Empfänger';
+const String fetchUserSuggestionsErrorMessage =
+    'Es ist ein unbekannter Fehlerr aufgetreten';
 const String messageSentMessage = 'Die Nachricht wurde versendet';
 
 class MessageSendBloc extends Bloc<MessageSendEvent, MessageSendState> {
@@ -19,6 +22,7 @@ class MessageSendBloc extends Bloc<MessageSendEvent, MessageSendState> {
     on<SendMessageRequest>(_onSendMessageRequested);
     on<AddRecipient>(_onAddRecipientRequested);
     on<RemoveRecipient>(_onRemoveRecipientRequested);
+    on<FetchSuggestions>(_onFetchSuggestionsRequested);
   }
   final MessageRepository _messageRepository;
 
@@ -26,7 +30,14 @@ class MessageSendBloc extends Bloc<MessageSendEvent, MessageSendState> {
     SendMessageRequest event,
     Emitter<MessageSendState> emit,
   ) async {
-    if (event.subject.isEmpty) {
+    if (state.recipients.isEmpty) {
+      emit(
+        state.copyWith(
+          status: MessageSendStatus.failure,
+          blocResponse: missingRecipientErrorMessage,
+        ),
+      );
+    } else if (event.subject.isEmpty) {
       emit(
         state.copyWith(
           status: MessageSendStatus.failure,
@@ -40,20 +51,14 @@ class MessageSendBloc extends Bloc<MessageSendEvent, MessageSendState> {
           blocResponse: missingMessageErrorMessage,
         ),
       );
-    } else if (state.recipients.isEmpty) {
-      emit(
-        state.copyWith(
-          status: MessageSendStatus.failure,
-          blocResponse: missingRecipientErrorMessage,
-        ),
-      );
     } else {
       try {
         await _messageRepository.sendMessage(
           outgoingMessage: OutgoingMessage(
             subject: event.subject,
             message: event.messageText,
-            recipients: state.recipients.map((r) => r.id).toList(),
+            recipients:
+                state.recipients.map((recipient) => recipient.id).toList(),
           ),
         );
         emit(
@@ -83,11 +88,34 @@ class MessageSendBloc extends Bloc<MessageSendEvent, MessageSendState> {
     ];
     emit(
       state.copyWith(
-        status: MessageSendStatus.recipientAdded,
+        status: MessageSendStatus.recipientsChanged,
         recipients: recipients,
       ),
     );
+  }
 
+  Future<void> _onFetchSuggestionsRequested(
+    FetchSuggestions event,
+    Emitter<MessageSendState> emit,
+  ) async {
+    try {
+      final users =
+          await _messageRepository.searchUsers(searchParam: event.pattern);
+      emit(
+        state.copyWith(
+          status: MessageSendStatus.userSuggestionsFetched,
+          suggestions: users,
+        ),
+      );
+    } catch (_) {
+      emit(
+        state.copyWith(
+          status: MessageSendStatus.userSuggestionsFailure,
+          blocResponse: fetchUserSuggestionsErrorMessage,
+          suggestions: [],
+        ),
+      );
+    }
   }
 
   void _onRemoveRecipientRequested(
@@ -99,7 +127,7 @@ class MessageSendBloc extends Bloc<MessageSendEvent, MessageSendState> {
 
     emit(
       state.copyWith(
-        status: MessageSendStatus.recipientRemoved,
+        status: MessageSendStatus.recipientsChanged,
         recipients: recipients,
       ),
     );

@@ -14,4 +14,5 @@ abstract class StudIPMessagesClient {
       required int offset,
       required bool filterUnread});
   Future<UserResponse> getUser({required String userId});
+  Future<UserListResponse> getUsers(String? searchParam);
 }

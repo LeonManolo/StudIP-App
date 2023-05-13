@@ -295,7 +295,7 @@ class MessagesPageState extends State<MessagesPage>
   }
 
   void _onScroll({
-    required Bloc bloc,
+    required Bloc<dynamic, dynamic> bloc,
     required dynamic event,
     required ScrollController scrollController,
     required int threshold,
