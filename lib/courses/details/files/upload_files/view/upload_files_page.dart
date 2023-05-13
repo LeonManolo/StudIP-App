@@ -47,7 +47,7 @@ class UploadFilesPage extends StatelessWidget {
                 children: [
                   Expanded(
                     child: ConditionalWidget(
-                      currentValue: state.type == UploadFileStateType.empty,
+                      condition: state.type == UploadFileStateType.empty,
                       onTrue:
                           const Center(child: Text('Keine Dateien ausgewählt')),
                       onFalse: ListView.builder(
@@ -118,7 +118,7 @@ class UploadFilesPage extends StatelessWidget {
                                         );
                                   },
                             child: ConditionalWidget(
-                              currentValue:
+                              condition:
                                   state.type == UploadFileStateType.loading,
                               onTrue: SpinKitThreeBounce(
                                 size: 20,

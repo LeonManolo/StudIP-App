@@ -3,17 +3,17 @@ import 'package:flutter/material.dart';
 class ConditionalWidget extends StatelessWidget {
   const ConditionalWidget({
     super.key,
-    required this.currentValue,
+    required this.condition,
     required this.onTrue,
     required this.onFalse,
   });
 
-  final bool currentValue;
+  final bool condition;
   final Widget onTrue;
   final Widget onFalse;
 
   @override
   Widget build(BuildContext context) {
-    return currentValue ? onTrue : onFalse;
+    return condition ? onTrue : onFalse;
   }
 }
