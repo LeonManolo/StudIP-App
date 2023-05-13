@@ -83,49 +83,44 @@ class UploadFilesPage extends StatelessWidget {
                     padding: const EdgeInsets.all(AppSpacing.md),
                     child: Column(
                       children: [
-                        ElevatedButton(
-                          onPressed: () {
-                            context
-                                .read<UploadFilesBloc>()
-                                .add(DidSelectAddFilesEvent());
-                          },
-                          child: Row(
-                            children: const [
-                              Spacer(),
-                              Text('Dateien hinzufügen'),
-                              Spacer()
-                            ],
+                        SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              context
+                                  .read<UploadFilesBloc>()
+                                  .add(DidSelectAddFilesEvent());
+                            },
+                            child: const Text('Dateien hinzufügen'),
                           ),
                         ),
                         const SizedBox(height: AppSpacing.sm),
-                        ElevatedButton(
-                          onPressed: state.type == UploadFileStateType.empty ||
-                                  state.type == UploadFileStateType.loading
-                              ? null
-                              : () {
-                                  context.read<UploadFilesBloc>().add(
-                                        DidSelectUploadFilesEvent(
-                                          localFilePaths: state.filesToUpload
-                                              .map(
-                                                (uploadFileModel) =>
-                                                    uploadFileModel
-                                                        .localFilePath,
-                                              )
-                                              .toList(),
-                                        ),
-                                      );
-                                },
-                          child: Row(
-                            children: state.type == UploadFileStateType.loading
-                                ? [
-                                    const Spacer(),
-                                    SpinKitThreeBounce(
-                                      size: 20,
-                                      color: Theme.of(context).primaryColor,
-                                    ),
-                                    const Spacer()
-                                  ]
-                                : const [Spacer(), Text('Hochladen'), Spacer()],
+                        SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton(
+                            onPressed: state.type ==
+                                        UploadFileStateType.empty ||
+                                    state.type == UploadFileStateType.loading
+                                ? null
+                                : () {
+                                    context.read<UploadFilesBloc>().add(
+                                          DidSelectUploadFilesEvent(
+                                            localFilePaths: state.filesToUpload
+                                                .map(
+                                                  (uploadFileModel) =>
+                                                      uploadFileModel
+                                                          .localFilePath,
+                                                )
+                                                .toList(),
+                                          ),
+                                        );
+                                  },
+                            child: state.type == UploadFileStateType.loading
+                                ? SpinKitThreeBounce(
+                                    size: 20,
+                                    color: Theme.of(context).primaryColor,
+                                  )
+                                : const Text('Hochladen'),
                           ),
                         )
                       ],
