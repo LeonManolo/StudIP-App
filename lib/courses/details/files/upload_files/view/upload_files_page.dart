@@ -46,38 +46,40 @@ class UploadFilesPage extends StatelessWidget {
               return Column(
                 children: [
                   Expanded(
-                    child: state.type == UploadFileStateType.empty
-                        ? const Center(child: Text('Keine Dateien ausgewählt'))
-                        : ListView.builder(
-                            itemBuilder: (context, index) {
-                              final UploadFileModel uploadFileModel =
-                                  state.filesToUpload.elementAt(index);
-                              return ListTile(
-                                title: Text(uploadFileModel.fileName),
-                                leading: const Icon(EvaIcons.fileOutline),
-                                trailing: IconButton(
-                                  icon: const Icon(
-                                    EvaIcons.trash2Outline,
-                                    color: Colors.red,
-                                  ),
-                                  onPressed: () =>
-                                      context.read<UploadFilesBloc>().add(
-                                            DeletePickedFileEvent(
-                                              selectedIndex: index,
-                                            ),
-                                          ),
-                                ),
-                                onTap: () =>
-                                    context.read<UploadFilesBloc>().add(
-                                          DidSelectPickedFileEvent(
-                                            localFilePath:
-                                                uploadFileModel.localFilePath,
-                                          ),
+                    child: ConditionalWidget(
+                      currentValue: state.type == UploadFileStateType.empty,
+                      onTrue:
+                          const Center(child: Text('Keine Dateien ausgewählt')),
+                      onFalse: ListView.builder(
+                        itemBuilder: (context, index) {
+                          final UploadFileModel uploadFileModel =
+                              state.filesToUpload.elementAt(index);
+                          return ListTile(
+                            title: Text(uploadFileModel.fileName),
+                            leading: const Icon(EvaIcons.fileOutline),
+                            trailing: IconButton(
+                              icon: const Icon(
+                                EvaIcons.trash2Outline,
+                                color: Colors.red,
+                              ),
+                              onPressed: () =>
+                                  context.read<UploadFilesBloc>().add(
+                                        DeletePickedFileEvent(
+                                          selectedIndex: index,
                                         ),
-                              );
-                            },
-                            itemCount: state.filesToUpload.length,
-                          ),
+                                      ),
+                            ),
+                            onTap: () => context.read<UploadFilesBloc>().add(
+                                  DidSelectPickedFileEvent(
+                                    localFilePath:
+                                        uploadFileModel.localFilePath,
+                                  ),
+                                ),
+                          );
+                        },
+                        itemCount: state.filesToUpload.length,
+                      ),
+                    ),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(AppSpacing.md),
@@ -115,12 +117,15 @@ class UploadFilesPage extends StatelessWidget {
                                           ),
                                         );
                                   },
-                            child: state.type == UploadFileStateType.loading
-                                ? SpinKitThreeBounce(
-                                    size: 20,
-                                    color: Theme.of(context).primaryColor,
-                                  )
-                                : const Text('Hochladen'),
+                            child: ConditionalWidget(
+                              currentValue:
+                                  state.type == UploadFileStateType.loading,
+                              onTrue: SpinKitThreeBounce(
+                                size: 20,
+                                color: Theme.of(context).primaryColor,
+                              ),
+                              onFalse: const Text('Hochladen'),
+                            ),
                           ),
                         )
                       ],
