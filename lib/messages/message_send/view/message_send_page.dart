@@ -83,7 +83,7 @@ class _MessageSendPageState extends State<MessageSendPage> {
               _triggerSuggestionCallback();
             }
             if (state.status == MessageSendStatus.userSuggestionsFailure) {
-              _buildSnackBar(context, state.blocResponse, Colors.red);
+              buildSnackBar(context, state.blocResponse, Colors.red);
             }
           },
           builder: (context, state) {
