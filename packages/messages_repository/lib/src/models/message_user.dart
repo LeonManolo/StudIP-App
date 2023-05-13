@@ -6,6 +6,7 @@ class MessageUser {
     required this.username,
     required this.firstName,
     required this.lastName,
+    required this.formattedName,
     required this.role,
   });
 
@@ -15,15 +16,14 @@ class MessageUser {
         username: response.username,
         firstName: response.givenName,
         lastName: response.familyName,
+        formattedName: response.formattedName,
         role: response.permission ?? '',);
   }
   final String id;
   String username;
   String firstName;
   String lastName;
+  String formattedName;
   String role;
 
-  String parseUsername() {
-    return '$firstName $lastName';
-  }
 }

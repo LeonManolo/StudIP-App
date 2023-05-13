@@ -37,7 +37,6 @@ class _MessageSendPageState extends State<MessageSendPage> {
     _messageController = TextEditingController();
     _messageSendBloc = MessageSendBloc(
       messageRepository: context.read<MessageRepository>(),
-      userRepository: context.read<UserRepository>(),
     );
     if (widget.message != null) {
       final subject = widget.message!.subject.contains('RE:')
@@ -80,9 +79,7 @@ class _MessageSendPageState extends State<MessageSendPage> {
               _buildChips(state.recipients);
             }
             if (state.status == MessageSendStatus.userSuggestionsFetched) {
-              if (_suggestionsBoxController.effectiveFocusNode!.hasFocus) {
-                _triggerSuggestionCallback();
-              }
+              _triggerSuggestionCallback();
             }
             if (state.status == MessageSendStatus.userSuggestionsFailure) {
               _buildSnackBar(context, state.blocResponse, Colors.red);
@@ -190,7 +187,6 @@ class _MessageSendPageState extends State<MessageSendPage> {
                                 text,
                               );
                             }
-                            _suggestionsBoxController.open();
                           },
                           child: const Text('Senden'),
                         ),
@@ -221,7 +217,7 @@ class _MessageSendPageState extends State<MessageSendPage> {
   }
 
   String _parseUser(MessageUser user) {
-    return '${user.parseUsername()} (${user.username})';
+    return '${user.formattedName} (${user.username})';
   }
 
   void _triggerSuggestionCallback() {
@@ -255,7 +251,7 @@ class _MessageSendPageState extends State<MessageSendPage> {
     return users
         .where(
           (user) => !_messageSendBloc.state.recipients
-              .map((u) => u.id)
+              .map((user) => user.id)
               .contains(user.id),
         )
         .where(

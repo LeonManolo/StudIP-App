@@ -118,7 +118,7 @@ class InboxMessageWidgetState extends State<InboxMessageWidget> {
                       ),
                       trailing: Text(message.getTimeAgo()),
                       title: Text(message.subject),
-                      subtitle: Text(message.sender.parseUsername()),
+                      subtitle: Text(message.sender.formattedName),
                     ),
                   );
                 }

@@ -10,24 +10,21 @@ import 'package:user_repository/user_repository.dart';
 const String missingSubjectErrorMessage = 'Bitte gebe einen Betreff ein';
 const String missingMessageErrorMessage = 'Bitte gebe eine Nachricht ein';
 const String missingRecipientErrorMessage = 'Bitte wähle einen Empfänger';
-const String fetcUserSuggestionsErrorMessage =
-    'Es ist ein unbekannter Fehelr aufgetreten';
+const String fetchUserSuggestionsErrorMessage =
+    'Es ist ein unbekannter Fehlerr aufgetreten';
 const String messageSentMessage = 'Die Nachricht wurde versendet';
 
 class MessageSendBloc extends Bloc<MessageSendEvent, MessageSendState> {
   MessageSendBloc({
     required MessageRepository messageRepository,
-    required UserRepository userRepository,
   })  : _messageRepository = messageRepository,
-        _userRepository = userRepository,
         super(const MessageSendState.initial()) {
     on<SendMessageRequest>(_onSendMessageRequested);
     on<AddRecipient>(_onAddRecipientRequested);
     on<RemoveRecipient>(_onRemoveRecipientRequested);
-    on<FetchSuggestions>(_onSuggestionsRequested);
+    on<FetchSuggestions>(_onFetchSuggestionsRequested);
   }
   final MessageRepository _messageRepository;
-  final UserRepository _userRepository;
 
   FutureOr<void> _onSendMessageRequested(
     SendMessageRequest event,
@@ -60,7 +57,8 @@ class MessageSendBloc extends Bloc<MessageSendEvent, MessageSendState> {
           outgoingMessage: OutgoingMessage(
             subject: event.subject,
             message: event.messageText,
-            recipients: state.recipients.map((r) => r.id).toList(),
+            recipients:
+                state.recipients.map((recipient) => recipient.id).toList(),
           ),
         );
         emit(
@@ -96,25 +94,24 @@ class MessageSendBloc extends Bloc<MessageSendEvent, MessageSendState> {
     );
   }
 
-  Future<void> _onSuggestionsRequested(
+  Future<void> _onFetchSuggestionsRequested(
     FetchSuggestions event,
     Emitter<MessageSendState> emit,
   ) async {
     try {
-      final usersResponse = await _userRepository.getUsers(event.pattern);
+      final users =
+          await _messageRepository.searchUsers(searchParam: event.pattern);
       emit(
         state.copyWith(
           status: MessageSendStatus.userSuggestionsFetched,
-          suggestions: usersResponse.userResponses
-              .map(MessageUser.fromUserResponse)
-              .toList(),
+          suggestions: users,
         ),
       );
     } catch (_) {
       emit(
         state.copyWith(
           status: MessageSendStatus.userSuggestionsFailure,
-          blocResponse: fetcUserSuggestionsErrorMessage,
+          blocResponse: fetchUserSuggestionsErrorMessage,
           suggestions: [],
         ),
       );
