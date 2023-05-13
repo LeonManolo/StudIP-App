@@ -38,7 +38,7 @@ class CalendarListBody extends StatelessWidget {
             ),
           ),
           Text(
-            'An diesem Tag hast du keine Termine,\n wähle einen anderen.',
+            'An diesem Tag hast du keine Termine,\n wähle einen Anderen.',
             textAlign: TextAlign.center,
             style: TextStyle(
               color: Theme.of(context).hintColor
