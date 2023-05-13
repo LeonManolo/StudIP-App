@@ -114,6 +114,14 @@ class MessageRepository {
     }
   }
 
+  Future<List<MessageUser>> searchUsers({required String searchParam}) async {
+    final usersResponse = await _apiClient.getUsers(searchParam);
+    return usersResponse.userResponses
+              .map(MessageUser.fromUserResponse)
+              .toList();
+
+  }
+
   Future<void> deleteMessage({required String messageId}) async {
     await _apiClient.deleteMessage(messageId: messageId);
   }

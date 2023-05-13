@@ -95,7 +95,7 @@ class MessageDetailpage extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: smallMargin),
-                  Text(message.sender.parseUsername()),
+                  Text(message.sender.formattedName),
                   const SizedBox(height: bigMargin),
                   const Text(
                     'An:',
