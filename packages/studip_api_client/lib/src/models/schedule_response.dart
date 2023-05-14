@@ -206,7 +206,6 @@ class Attributes {
     end = json['end'];
     weekday = json['weekday'];
     color = json['color'];
-    print(json["locations"]);
     locations = json['locations'] != null ? json['locations'].cast<String>() : [];
   }
 
