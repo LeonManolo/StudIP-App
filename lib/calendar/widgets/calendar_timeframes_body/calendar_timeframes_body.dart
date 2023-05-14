@@ -3,7 +3,7 @@ import 'package:calender_repository/calender_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:studipadawan/calendar/extensions/list_extensions.dart';
-import 'package:studipadawan/calendar/widgets/calendar_entry_layout.dart';
+import 'package:studipadawan/calendar/widgets/calendar_timeframes_body/calendar_entry_layout.dart';
 
 class CalendarTimeframesBody extends StatefulWidget {
   const CalendarTimeframesBody({

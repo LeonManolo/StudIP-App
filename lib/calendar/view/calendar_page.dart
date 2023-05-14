@@ -9,8 +9,8 @@ import 'package:studipadawan/calendar/bloc/calendar_bloc.dart';
 import 'package:studipadawan/calendar/bloc/calendar_event.dart';
 import 'package:studipadawan/calendar/bloc/calendar_state.dart';
 import 'package:studipadawan/calendar/widgets/calendar_header.dart';
-import 'package:studipadawan/calendar/widgets/calendar_list_body.dart';
-import 'package:studipadawan/calendar/widgets/calendar_timeframes_body.dart';
+import 'package:studipadawan/calendar/widgets/calendar_list_body/calendar_list_body.dart';
+import 'package:studipadawan/calendar/widgets/calendar_timeframes_body/calendar_timeframes_body.dart';
 
 class CalendarPage extends StatelessWidget {
   const CalendarPage({super.key});

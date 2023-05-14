@@ -1,9 +1,10 @@
 import 'package:calender_repository/calender_repository.dart';
 import 'package:flutter/material.dart';
-import 'package:studipadawan/calendar/widgets/calendar_current_time_overlay.dart';
 import 'package:studipadawan/calendar/widgets/calendar_entry_content.dart';
-import 'package:studipadawan/calendar/widgets/calendar_entry_divider.dart';
-import 'package:studipadawan/calendar/widgets/calendar_entry_time.dart';
+import 'package:studipadawan/calendar/widgets/calendar_timeframes_body/calendar_entry_divider.dart';
+
+import 'calendar_current_time_overlay.dart';
+import 'calendar_entry_time.dart';
 
 class CalendarEntry extends StatefulWidget {
   const CalendarEntry({
