@@ -66,14 +66,14 @@ dependencies:
 
   eva_icons_flutter: ^3.1.0
 
+  # Highly customizable, feature-packed calendar widget for Flutter.
+  table_calendar: ^3.0.9
+
   # Beautiful animations inspired on Animate.css, every animation is a widget that contains default but customizable values that look attractive.
   animate_do: ^3.0.2
 
   # A list with helper methods to programmatically scroll to an item.
   scrollable_positioned_list: ^0.3.5
-
-  # A lightweight and customizable calendar picker based on Flutter CalendarDatePicker, with support for single date picker, range picker and multi picker.
-  calendar_date_picker2: ^0.5.2
 
   # A collection of loading indicators animated with flutter.
   flutter_spinkit: ^5.1.0

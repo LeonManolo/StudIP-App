@@ -13,7 +13,7 @@ class CalendarEntryDivider extends StatelessWidget {
           left: paddingLeft,
           top: AppSpacing.xlg,
           bottom: AppSpacing.sm,
-          right: AppSpacing.sm,),
+      ),
       color: Theme.of(context).dividerColor,
       height: 1,
       width: double.infinity,

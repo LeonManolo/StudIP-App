@@ -1,79 +1,71 @@
 import 'package:app_ui/app_ui.dart';
-import 'package:eva_icons_flutter/eva_icons_flutter.dart';
+import 'package:calender_repository/calender_repository.dart';
 import 'package:flutter/material.dart';
+import 'package:table_calendar/table_calendar.dart';
 
-class CalendarHeader extends StatelessWidget {
+class CalendarHeader extends StatefulWidget {
+  const CalendarHeader({super.key, required this.onDaySelected, required this.initialSelectedDay});
 
-  const CalendarHeader({super.key, required this.dateTime, required this.onPreviousButtonPress, required this.onNextButtonPress, required this.onDatePress});
-  final DateTime dateTime;
-  final VoidCallback onPreviousButtonPress;
-  final VoidCallback onNextButtonPress;
-  final VoidCallback onDatePress;
+  final void Function(DateTime selectedDay) onDaySelected;
+  final DateTime initialSelectedDay;
+
+
+  @override
+  State<CalendarHeader> createState() => _CalendarHeaderState();
+}
+
+class _CalendarHeaderState extends State<CalendarHeader> {
+  late DateTime _selectedDay;
+  CalendarFormat _calendarFormat = CalendarFormat.week;
+
+  @override
+  void initState() {
+    _selectedDay = widget.initialSelectedDay;
+    super.initState();
+  }
+
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: AppSpacing.sm, bottom: AppSpacing.lg),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          IconButton(
-            onPressed: onPreviousButtonPress,
-            icon: const Icon(EvaIcons.arrowIosBackOutline),
-            color: Theme.of(context).hintColor,
-          ),
-          InkWell(
-            onTap: onDatePress,
-            child: Text(
-              '${weekday(dateTime.weekday)}, ${dateTime.day}.${dateTime.month}.${dateTime.year}',
-              style: Theme.of(context).textTheme.titleLarge,
+    return Column(
+      children: [
+        TableCalendar<CalendarEntryData>(
+          locale: 'DE_de',
+          calendarFormat: _calendarFormat,
+          onFormatChanged: (format) {
+            setState(() {
+              _calendarFormat = format;
+            });
+          },
+          calendarStyle: CalendarStyle(
+            selectedDecoration: BoxDecoration(
+              color: Theme.of(context).primaryColor,
+              shape: BoxShape.circle,
             ),
           ),
-          IconButton(
-            onPressed: onNextButtonPress,
-            icon: const Icon(EvaIcons.arrowIosForwardOutline),
-            color: Theme.of(context).hintColor,
-          ),
-        ],
-      ),
+          focusedDay: _selectedDay,
+          selectedDayPredicate: (day) {
+            return day.isSameDayAs(_selectedDay);
+          },
+          startingDayOfWeek: StartingDayOfWeek.monday,
+          currentDay: DateTime.now(),
+          firstDay: DateTime.now().subtract(const Duration(days: 90)),
+          lastDay: DateTime.now().add(const Duration(days: 90)),
+          onDaySelected: _onDaySelected,
+        ),
+        const Padding(
+          padding: EdgeInsets.all(AppSpacing.lg),
+          child: Divider(),
+        ),
+      ],
     );
   }
 
-  // TODO: vielleicht als extension von DateTime
-  String weekday(int index) {
-    switch (index) {
-      case 1:
-        {
-          return 'Montag';
-        }
-      case 2:
-        {
-          return 'Dienstag';
-        }
-      case 3:
-        {
-          return 'Mittwoch';
-        }
-      case 4:
-        {
-          return 'Donnerstag';
-        }
-      case 5:
-        {
-          return 'Freitag';
-        }
-      case 6:
-        {
-          return 'Samstag';
-        }
-      case 7:
-        {
-          return 'Sonntag';
-        }
-      default:
-        {
-          return '';
-        }
-    }
+  void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
+    setState(() {
+      _selectedDay = selectedDay;
+    });
+    widget.onDaySelected(_selectedDay);
   }
 }
+

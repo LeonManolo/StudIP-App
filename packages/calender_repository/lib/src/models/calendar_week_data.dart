@@ -7,7 +7,7 @@ class CalendarWeekData {
 
   factory CalendarWeekData.fromScheduleResponse(
       ScheduleResponse scheduleResponse,) {
-    final Map<Weekdays, Map<String, CalendarEntryData>> data = {};
+    final Map<Weekdays, Map<String, List<CalendarEntryData>>> data = {};
     for (final scheduleData in scheduleResponse.data) {
       final weekdayNum = scheduleData.attributes?.weekday;
       if (weekdayNum != null && weekdayNum > 0 && weekdayNum < 8) {
@@ -23,17 +23,22 @@ class CalendarWeekData {
             weekday: weekday,
             timeframe: timeframe,
           );
+
           if (data[weekday] == null) {
-            data[weekday] = {timeframe.combinedKey(): entryData};
+            data[weekday] = {timeframe.combinedKey(): [entryData]};
           } else {
-            data[weekday]![timeframe.combinedKey()] = entryData;
+            // Check if the list for this timeframe key exists. If not, create it.
+            data[weekday]![timeframe.combinedKey()] ??= [];
+
+            data[weekday]![timeframe.combinedKey()]!.add(entryData);
           }
+
         }
       }
     }
     return CalendarWeekData(data: data);
   }
-  final Map<Weekdays, Map<String, CalendarEntryData>> data;
+  final Map<Weekdays, Map<String, List<CalendarEntryData>>> data;
 
   static CalendarTimeframe? _toCalenderTimeframe(Attributes? attributes) {
     final start = attributes?.start?.split(':');

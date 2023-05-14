@@ -3,6 +3,7 @@ import 'package:calender_repository/calender_repository.dart';
 import 'package:courses_repository/courses_repository.dart';
 import 'package:files_repository/files_repository.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:messages_repository/messages_repository.dart';
 import 'package:studip_api_client/studip_api_client.dart';
 import 'package:studipadawan/app/view/app.dart';
@@ -24,6 +25,8 @@ Future<void> main() async {
   final calenderRepository = CalenderRepository(apiClient: apiClient);
 
   final filesRepository = FilesRepository(apiClient: apiClient);
+
+  await initializeDateFormatting();
 
   runApp(App(
     authenticationRepository: authenticationRepository,
