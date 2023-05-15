@@ -2,26 +2,21 @@ part of 'course_info_bloc.dart';
 
 enum InfoType {
   general,
-  news,
   events;
 }
 
 abstract class CourseInfoState extends Equatable {}
 
 class CourseInfoPopulatedState extends CourseInfoState {
-
   CourseInfoPopulatedState({
     required this.generalInfoExpansionModel,
-    required this.newsExpansionModel,
     required this.eventExpansionModel,
   });
   final GeneralInfoExpansionModel generalInfoExpansionModel;
-  final NewsExpansionModel newsExpansionModel;
   final CourseEventExpansionModel eventExpansionModel;
 
   @override
-  List<Object> get props =>
-      [generalInfoExpansionModel, newsExpansionModel, eventExpansionModel];
+  List<Object> get props => [generalInfoExpansionModel, eventExpansionModel];
 }
 
 class CourseInfoLoadingState extends CourseInfoState {
