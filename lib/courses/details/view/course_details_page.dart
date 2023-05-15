@@ -1,8 +1,10 @@
 import 'package:app_ui/app_ui.dart';
 import 'package:courses_repository/courses_repository.dart';
+import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:studipadawan/courses/details/bloc/course_details_bloc.dart';
+import 'package:studipadawan/courses/details/news/course_news_page.dart';
 import 'package:studipadawan/courses/details/view/widgets/course_detail_tab.dart';
 import 'package:studipadawan/courses/details/view/widgets/course_details_main_content.dart';
 
@@ -13,7 +15,25 @@ class CourseDetailsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Details')),
+      appBar: AppBar(
+        title: const Text('Details'),
+        actions: [
+          IconButton(
+            icon: const Icon(EvaIcons.bellOutline),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute<CourseNewsPage>(
+                  builder: (context) => CourseNewsPage(
+                    courseId: course.id,
+                  ),
+                  fullscreenDialog: true,
+                ),
+              );
+            },
+          )
+        ],
+      ),
       body: SafeArea(
         child: BlocProvider(
           create: (context) => CourseDetailsBloc(course: course),
