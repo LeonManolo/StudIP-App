@@ -8,8 +8,8 @@ import 'package:studipadawan/messages/message_overview/message_outbox_bloc/messa
 import 'package:studipadawan/messages/message_overview/message_tabbar_bloc%20/message_tabbar_bloc.dart';
 import 'package:studipadawan/messages/message_overview/message_tabbar_bloc%20/message_tabbar_event.dart';
 
-import 'package:studipadawan/messages/message_overview/view/widgets/message_refreshable.dart';
 import 'package:studipadawan/utils/pagination_loading_indicator.dart';
+import 'package:studipadawan/utils/refreshable_content.dart';
 
 class OutboxMessageWidget extends StatefulWidget {
   const OutboxMessageWidget({
@@ -41,8 +41,8 @@ class OutboxMessageWidgetState extends State<OutboxMessageWidget> {
 
     if (widget.state.outboxMessages.isEmpty) {
       return RefreshableContent(
-        widget: const Text('Es sind keine Nachrichten vorhanden'),
         callback: _refreshOutboxMessages,
+        child: const Text('Es sind keine Nachrichten vorhanden'),
       );
     }
     return Column(

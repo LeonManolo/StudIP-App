@@ -4,9 +4,9 @@ class RefreshableContent extends StatelessWidget {
   const RefreshableContent({
     super.key,
     required this.callback,
-    required this.widget,
+    required this.child,
   });
-  final Widget widget;
+  final Widget child;
   final void Function() callback;
 
   @override
@@ -16,7 +16,7 @@ class RefreshableContent extends StatelessWidget {
       child: CustomScrollView(
         slivers: [
           SliverFillRemaining(
-            child: Center(child: widget),
+            child: Center(child: child),
           )
         ],
       ),

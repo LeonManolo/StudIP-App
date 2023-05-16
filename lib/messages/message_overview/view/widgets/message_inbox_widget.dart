@@ -9,8 +9,8 @@ import 'package:studipadawan/messages/message_overview/message_inbox_bloc%20/mes
 import 'package:studipadawan/messages/message_overview/message_tabbar_bloc%20/message_tabbar_bloc.dart';
 import 'package:studipadawan/messages/message_overview/message_tabbar_bloc%20/message_tabbar_event.dart';
 
-import 'package:studipadawan/messages/message_overview/view/widgets/message_refreshable.dart';
 import 'package:studipadawan/utils/pagination_loading_indicator.dart';
+import 'package:studipadawan/utils/refreshable_content.dart';
 
 final _inboxWidgetKey = GlobalKey<ScaffoldState>();
 
@@ -56,8 +56,8 @@ class InboxMessageWidgetState extends State<InboxMessageWidget> {
 
     if (widget.state.inboxMessages.isEmpty) {
       return RefreshableContent(
-        widget: const Text('Es sind keine Nachrichten vorhanden'),
         callback: _refreshInboxMessages,
+        child: const Text('Es sind keine Nachrichten vorhanden'),
       );
     }
 

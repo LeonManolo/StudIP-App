@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
 import 'package:studipadawan/courses/details/news/bloc/course_news_bloc.dart';
-import 'package:studipadawan/messages/message_overview/view/widgets/message_refreshable.dart';
 import 'package:studipadawan/utils/empty_view.dart';
 import 'package:studipadawan/utils/pagination_loading_indicator.dart';
+import 'package:studipadawan/utils/refreshable_content.dart';
 
 class CourseNewsList extends StatefulWidget {
   const CourseNewsList({super.key});
@@ -34,7 +34,7 @@ class _CourseNewsListState extends State<CourseNewsList> {
                 callback: () => context
                     .read<CourseNewsBloc>()
                     .add(CourseNewsReloadRequested()),
-                widget: const EmptyView(
+                child: const EmptyView(
                   title: 'Keine Ankündigungen vorhanden',
                   message:
                       'Ziehe die Ansicht nach unten, um neue Ankündigungen zu laden.',
@@ -92,12 +92,12 @@ class _CourseNewsListState extends State<CourseNewsList> {
   }
 
   void _onScroll() {
-    if (_isBottom) {
+    if (_isBottom()) {
       context.read<CourseNewsBloc>().add(CourseNewsReachedBottom());
     }
   }
 
-  bool get _isBottom {
+  bool _isBottom() {
     if (!_scrollController.hasClients) return false;
     final maxScroll = _scrollController.position.maxScrollExtent;
     final currentScroll = _scrollController.offset;
