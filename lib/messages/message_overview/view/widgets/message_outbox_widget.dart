@@ -40,8 +40,8 @@ class OutboxMessageWidgetState extends State<OutboxMessageWidget> {
     }
 
     if (widget.state.outboxMessages.isEmpty) {
-      return RefreshableMessage(
-        text: 'Es sind keine Nachrichten vorhanden',
+      return RefreshableContent(
+        widget: const Text('Es sind keine Nachrichten vorhanden'),
         callback: _refreshOutboxMessages,
       );
     }

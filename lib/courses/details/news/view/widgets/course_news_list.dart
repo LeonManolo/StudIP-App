@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
 import 'package:studipadawan/courses/details/news/bloc/course_news_bloc.dart';
+import 'package:studipadawan/messages/message_overview/view/widgets/message_refreshable.dart';
+import 'package:studipadawan/utils/empty_view.dart';
 import 'package:studipadawan/utils/pagination_loading_indicator.dart';
 
 class CourseNewsList extends StatefulWidget {
@@ -27,6 +29,19 @@ class _CourseNewsListState extends State<CourseNewsList> {
       builder: (context, state) {
         switch (state.status) {
           case CourseNewsStatus.didLoad:
+            if (state.news.isEmpty) {
+              return RefreshableContent(
+                callback: () => context
+                    .read<CourseNewsBloc>()
+                    .add(CourseNewsReloadRequested()),
+                widget: const EmptyView(
+                  title: 'Keine Ankündigungen vorhanden',
+                  message:
+                      'Ziehe die Ansicht nach unten, um neue Ankündigungen zu laden.',
+                ),
+              );
+            }
+
             return RefreshIndicator(
               onRefresh: () async => context
                   .read<CourseNewsBloc>()

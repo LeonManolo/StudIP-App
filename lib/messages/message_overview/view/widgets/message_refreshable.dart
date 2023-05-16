@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-class RefreshableMessage extends StatelessWidget {
-  const RefreshableMessage({
+class RefreshableContent extends StatelessWidget {
+  const RefreshableContent({
     super.key,
     required this.callback,
-    required this.text,
+    required this.widget,
   });
-  final String text;
+  final Widget widget;
   final void Function() callback;
 
   @override
@@ -16,7 +16,7 @@ class RefreshableMessage extends StatelessWidget {
       child: CustomScrollView(
         slivers: [
           SliverFillRemaining(
-            child: Center(child: Text(text)),
+            child: Center(child: widget),
           )
         ],
       ),
