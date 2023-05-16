@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:courses_repository/courses_repository.dart';
 import 'package:equatable/equatable.dart';
+import 'package:logger/logger.dart';
 import 'package:stream_transform/stream_transform.dart';
 
 part 'course_news_event.dart';
@@ -21,6 +22,7 @@ class CourseNewsBloc extends Bloc<CourseNewsEvent, CourseNewsState> {
   CourseNewsBloc({
     required CourseRepository courseRepository,
     required this.courseId,
+    this.limit = 20,
   })  : _courseRepository = courseRepository,
         super(CourseNewsState.inital()) {
     on<CourseNewsReloadRequested>(_onCourseNewsReloadRequested);
@@ -32,7 +34,7 @@ class CourseNewsBloc extends Bloc<CourseNewsEvent, CourseNewsState> {
 
   final CourseRepository _courseRepository;
   final String courseId;
-  final int limit = 7;
+  final int limit;
 
   Future<void> _onCourseNewsReloadRequested(
     CourseNewsReloadRequested event,
@@ -53,7 +55,8 @@ class CourseNewsBloc extends Bloc<CourseNewsEvent, CourseNewsState> {
           maxReached: response.news.length >= response.totalNumberOfNews,
         ),
       );
-    } catch (_) {
+    } catch (e) {
+      Logger().e(e);
       emit(
         state.copyWith(
           status: CourseNewsStatus.error,
@@ -116,8 +119,9 @@ class CourseNewsBloc extends Bloc<CourseNewsEvent, CourseNewsState> {
       emit(
         state.copyWith(
           status: CourseNewsStatus.error,
+          paginationLoading: false,
           errorMessage:
-              'Beim Laden der Ankündigungen ist ein Fehler aufgetreten',
+              'Beim Laden der Ankündigungen ist ein Fehler aufgetreten.',
         ),
       );
     }

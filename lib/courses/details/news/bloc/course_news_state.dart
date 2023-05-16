@@ -29,7 +29,8 @@ class CourseNewsState extends Equatable {
   final String errorMessage;
 
   @override
-  List<Object> get props => [news];
+  List<Object> get props =>
+      [news, maxReached, paginationLoading, status, errorMessage];
 
   CourseNewsState copyWith({
     List<CourseNews>? news,
