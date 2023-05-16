@@ -74,47 +74,27 @@ class CourseNewsBloc extends Bloc<CourseNewsEvent, CourseNewsState> {
     if (state.maxReached || state.paginationLoading) return;
 
     try {
-      if (state.news.isEmpty) {
-        emit(
-          state.copyWith(
-            status: CourseNewsStatus.isLoading,
-            paginationLoading: false,
-          ),
-        );
-        final response = await _courseRepository.getCourseNews(
-          courseId: courseId,
-          limit: limit,
-          offset: 0,
-        );
-        emit(
-          state.copyWith(
-            status: CourseNewsStatus.didLoad,
-            news: response.news,
-          ),
-        );
-      } else {
-        emit(
-          state.copyWith(
-            paginationLoading: true,
-          ),
-        );
+      emit(
+        state.copyWith(
+          paginationLoading: true,
+        ),
+      );
 
-        final response = await _courseRepository.getCourseNews(
-          courseId: courseId,
-          limit: limit,
-          offset: state.news.length,
-        );
+      final response = await _courseRepository.getCourseNews(
+        courseId: courseId,
+        limit: limit,
+        offset: state.news.length,
+      );
 
-        final updatedNews = [...state.news, ...response.news];
-        emit(
-          state.copyWith(
-            maxReached: updatedNews.length >= response.totalNumberOfNews,
-            status: CourseNewsStatus.didLoad,
-            paginationLoading: false,
-            news: updatedNews,
-          ),
-        );
-      }
+      final updatedNews = [...state.news, ...response.news];
+      emit(
+        state.copyWith(
+          maxReached: updatedNews.length >= response.totalNumberOfNews,
+          status: CourseNewsStatus.didLoad,
+          paginationLoading: false,
+          news: updatedNews,
+        ),
+      );
     } catch (_) {
       emit(
         state.copyWith(
