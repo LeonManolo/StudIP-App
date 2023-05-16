@@ -10,7 +10,7 @@ ENV FLUTTER_VERSION="3.10.0"
 ENV PATH="$FLUTTER_HOME/bin:$PATH"
 
 RUN apt update \
-    && apt install -y android-sdk cmake ninja-build sudo clang libgtk-3-dev git curl ca-certificates unzip
+    && apt install -y cmake ninja-build sudo clang libgtk-3-dev git curl ca-certificates unzip
 
 RUN groupadd --gid $GID $USER \
     && useradd -s /bin/bash --uid $UID --gid $GID -m $USER \
