@@ -4,15 +4,15 @@ import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart
 import 'package:studipadawan/courses/details/news/bloc/course_news_bloc.dart';
 import 'package:studipadawan/utils/pagination_loading_indicator.dart';
 
-class NewsList extends StatefulWidget {
-  const NewsList({super.key});
+class CourseNewsList extends StatefulWidget {
+  const CourseNewsList({super.key});
 
   @override
   // ignore: library_private_types_in_public_api
-  _NewsListState createState() => _NewsListState();
+  _CourseNewsListState createState() => _CourseNewsListState();
 }
 
-class _NewsListState extends State<NewsList> {
+class _CourseNewsListState extends State<CourseNewsList> {
   final _scrollController = ScrollController();
 
   @override

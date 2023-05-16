@@ -4,7 +4,7 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:studipadawan/courses/details/bloc/course_details_bloc.dart';
-import 'package:studipadawan/courses/details/news/bloc/view/course_news_page.dart';
+import 'package:studipadawan/courses/details/news/view/course_news_page.dart';
 
 import 'package:studipadawan/courses/details/view/widgets/course_detail_tab.dart';
 import 'package:studipadawan/courses/details/view/widgets/course_details_main_content.dart';

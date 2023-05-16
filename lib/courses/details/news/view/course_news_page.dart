@@ -1,10 +1,8 @@
 import 'package:courses_repository/courses_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
 import 'package:studipadawan/courses/details/news/bloc/course_news_bloc.dart';
-import 'package:studipadawan/courses/details/news/bloc/view/widgets/news_list.dart';
-import 'package:studipadawan/utils/pagination_loading_indicator.dart';
+import 'package:studipadawan/courses/details/news/view/widgets/course_news_list.dart';
 
 class CourseNewsPage extends StatelessWidget {
   const CourseNewsPage({super.key, required this.courseId});
@@ -21,7 +19,7 @@ class CourseNewsPage extends StatelessWidget {
             courseId: courseId,
             courseRepository: context.read<CourseRepository>(),
           )..add(CourseNewsReloadRequested()),
-          child: const NewsList(),
+          child: const CourseNewsList(),
         ),
       ),
     );
