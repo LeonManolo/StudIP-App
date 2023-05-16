@@ -12,7 +12,6 @@ dependencies:
     path: ../studip_api_client
 
 dev_dependencies:
-  build_runner: ^2.3.3
   flutter_test:
     sdk: flutter
   mocktail: ^0.3.0
