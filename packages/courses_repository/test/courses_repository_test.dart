@@ -1,15 +1,11 @@
 import 'package:courses_repository/courses_repository.dart'
     hide CourseNewsListResponse;
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/annotations.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:studip_api_client/studip_api_client.dart';
 
-import 'courses_repository_test.mocks.dart';
+class MockStudIPCoursesClient extends Mock implements StudIPCoursesClient {}
 
-@GenerateNiceMocks([
-  MockSpec<StudIPCoursesClient>(onMissingStub: OnMissingStub.throwException),
-])
 void main() {
   late CourseRepository sut;
   late MockStudIPCoursesClient mockedApiClient;
@@ -32,8 +28,8 @@ void main() {
     }
 
     test('handle multi page request', () async {
-      when(mockedApiClient.getCourseEvents(courseId: '1', offset: 0, limit: 30))
-          .thenAnswer((_) async {
+      when(() => mockedApiClient.getCourseEvents(
+          courseId: '1', offset: 0, limit: 30)).thenAnswer((_) async {
         return CourseEventListResponse(
           events: List.generate(
             30,
@@ -45,7 +41,7 @@ void main() {
         );
       });
       when(
-        mockedApiClient.getCourseEvents(
+        () => mockedApiClient.getCourseEvents(
           courseId: '1',
           offset: 30,
           limit: 30,
@@ -84,7 +80,8 @@ void main() {
     }
 
     test('get last 5 course news', () async {
-      when(mockedApiClient.getCourseNews(courseId: '1', limit: 5, offset: 0))
+      when(() =>
+              mockedApiClient.getCourseNews(courseId: '1', limit: 5, offset: 0))
           .thenAnswer((_) async {
         return CourseNewsListResponse(
           news: List.generate(
@@ -154,7 +151,7 @@ void main() {
 
     test('courses which belong to same semester are grouped together',
         () async {
-      when(mockedApiClient.getCourses(userId: '1', offset: 0, limit: 30))
+      when(() => mockedApiClient.getCourses(userId: '1', offset: 0, limit: 30))
           .thenAnswer((_) async {
         return CourseListResponse(
           courses: courses.getRange(0, 30).toList(),
@@ -163,7 +160,7 @@ void main() {
           total: 35,
         );
       });
-      when(mockedApiClient.getCourses(userId: '1', offset: 30, limit: 30))
+      when(() => mockedApiClient.getCourses(userId: '1', offset: 30, limit: 30))
           .thenAnswer((_) async {
         return CourseListResponse(
           courses: courses.getRange(30, 35).toList(),
@@ -173,8 +170,8 @@ void main() {
         );
       });
       when(
-        mockedApiClient.getSemester(
-          semesterId: argThat(isNotNull, named: 'semesterId'),
+        () => mockedApiClient.getSemester(
+          semesterId: any(that: isNotNull, named: 'semesterId'),
         ),
       ).thenAnswer((invocation) async {
         final invokedIndex = int.parse(
