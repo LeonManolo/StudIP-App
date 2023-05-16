@@ -4,7 +4,6 @@ import 'package:bloc/bloc.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:courses_repository/courses_repository.dart';
 import 'package:equatable/equatable.dart';
-import 'package:logger/logger.dart';
 import 'package:stream_transform/stream_transform.dart';
 
 part 'course_news_event.dart';

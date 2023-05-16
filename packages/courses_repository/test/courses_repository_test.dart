@@ -1,4 +1,5 @@
-import 'package:courses_repository/courses_repository.dart';
+import 'package:courses_repository/courses_repository.dart'
+    hide CourseNewsListResponse;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
@@ -83,7 +84,7 @@ void main() {
     }
 
     test('get last 5 course news', () async {
-      when(mockedApiClient.getCourseNews(courseId: '1', limit: 5))
+      when(mockedApiClient.getCourseNews(courseId: '1', limit: 5, offset: 0))
           .thenAnswer((_) async {
         return CourseNewsListResponse(
           news: List.generate(
@@ -96,11 +97,11 @@ void main() {
         );
       });
 
-      final List<CourseNews> courseNews =
-          await sut.getCourseNews(courseId: '1', limit: 5);
+      final courseNewsResponse =
+          await sut.getCourseNews(courseId: '1', limit: 5, offset: 0);
 
       expect(
-        courseNews.map((news) => news.title),
+        courseNewsResponse.news.map((news) => news.title),
         List.generate(3, (index) => 'title $index'),
       );
     });
