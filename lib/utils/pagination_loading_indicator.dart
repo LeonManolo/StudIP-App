@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
-class PaginationLoading extends StatelessWidget {
-
-  const PaginationLoading({
+class PaginationLoadingIndicator extends StatelessWidget {
+  const PaginationLoadingIndicator({
     super.key,
     required this.visible,
   });

@@ -1,7 +1,13 @@
 import 'package:studip_api_client/studip_api_client.dart' as studip_api_client;
 
-class CourseNews {
+class CourseNewsListResponse {
+  CourseNewsListResponse({required this.totalNumberOfNews, required this.news});
 
+  final int totalNumberOfNews;
+  final List<CourseNews> news;
+}
+
+class CourseNews {
   CourseNews({
     required this.id,
     required this.title,
@@ -10,8 +16,9 @@ class CourseNews {
     required this.publicationEnd,
   });
 
-  factory CourseNews.fromCourseNewsResponse(
-      {required studip_api_client.CourseNewsResponse courseNewsResponse,}) {
+  factory CourseNews.fromCourseNewsResponse({
+    required studip_api_client.CourseNewsResponse courseNewsResponse,
+  }) {
     return CourseNews(
       id: courseNewsResponse.id,
       title: courseNewsResponse.title,

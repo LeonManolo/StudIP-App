@@ -9,10 +9,8 @@ abstract class StudIPCoursesClient {
 
   Future<SemesterResponse> getSemester({required String semesterId});
 
-  Future<CourseNewsListResponse> getCourseNews({
-    required String courseId,
-    required int limit,
-  });
+  Future<CourseNewsListResponse> getCourseNews(
+      {required String courseId, required int limit, required int offset});
 
   Future<CourseEventListResponse> getCourseEvents({
     required String courseId,

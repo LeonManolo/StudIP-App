@@ -197,11 +197,14 @@ class StudIpApiClient
   }
 
   @override
-  Future<CourseNewsListResponse> getCourseNews(
-      {required String courseId, required int limit}) async {
+  Future<CourseNewsListResponse> getCourseNews({
+    required String courseId,
+    required int limit,
+    required int offset,
+  }) async {
     final response = await _core.get(
         endpoint: "courses/$courseId/news",
-        queryParameters: {"page[limit]": "$limit"});
+        queryParameters: {"page[limit]": "$limit", "page[offset]": "$offset"});
 
     final body = response.json();
 

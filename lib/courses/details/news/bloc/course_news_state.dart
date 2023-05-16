@@ -1,25 +1,49 @@
 part of 'course_news_bloc.dart';
 
-abstract class CourseNewsState extends Equatable {
-  const CourseNewsState();
+enum CourseNewsStatus { error, isLoading, didLoad }
 
-  @override
-  List<Object> get props => [];
-}
+class CourseNewsState extends Equatable {
+  const CourseNewsState({
+    required this.news,
+    required this.maxReached,
+    required this.paginationLoading,
+    required this.status,
+    required this.errorMessage,
+  });
 
-class CourseNewsIsLoading extends CourseNewsState {}
-
-class CourseNewsDidLoad extends CourseNewsState {
-  const CourseNewsDidLoad({required this.news});
+  factory CourseNewsState.inital() {
+    return CourseNewsState(
+      news: List.empty(),
+      maxReached: false,
+      paginationLoading: false,
+      status: CourseNewsStatus.isLoading,
+      errorMessage: '',
+    );
+  }
 
   final List<CourseNews> news;
+  final bool maxReached;
+
+  final bool paginationLoading;
+  final CourseNewsStatus status;
+  final String errorMessage;
 
   @override
   List<Object> get props => [news];
-}
 
-class CourseNewsError extends CourseNewsState {
-  const CourseNewsError({required this.errorMessage});
-
-  final String errorMessage;
+  CourseNewsState copyWith({
+    List<CourseNews>? news,
+    bool? maxReached,
+    bool? paginationLoading,
+    CourseNewsStatus? status,
+    String? errorMessage,
+  }) {
+    return CourseNewsState(
+      news: news ?? this.news,
+      maxReached: maxReached ?? this.maxReached,
+      paginationLoading: paginationLoading ?? this.paginationLoading,
+      status: status ?? this.status,
+      errorMessage: errorMessage ?? this.errorMessage,
+    );
+  }
 }

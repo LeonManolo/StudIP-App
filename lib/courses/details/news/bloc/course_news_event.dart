@@ -8,3 +8,5 @@ abstract class CourseNewsEvent extends Equatable {
 }
 
 class CourseNewsReloadRequested extends CourseNewsEvent {}
+
+class CourseNewsReachedBottom extends CourseNewsEvent {}
