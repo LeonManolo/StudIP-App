@@ -1,7 +1,8 @@
+import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
 import 'package:studipadawan/courses/details/news/bloc/course_news_bloc.dart';
+import 'package:studipadawan/courses/details/news/view/widgets/course_news_card.dart';
 import 'package:studipadawan/utils/empty_view.dart';
 import 'package:studipadawan/utils/pagination_loading_indicator.dart';
 import 'package:studipadawan/utils/refreshable_content.dart';
@@ -46,24 +47,34 @@ class _CourseNewsListState extends State<CourseNewsList> {
               onRefresh: () async => context
                   .read<CourseNewsBloc>()
                   .add(CourseNewsReloadRequested()),
-              child: ListView.separated(
+              child: ListView.builder(
                 itemBuilder: (context, index) {
                   if (index >= state.news.length) {
-                    return const PaginationLoadingIndicator(
-                      visible: true,
+                    return Column(
+                      children: [
+                        const SizedBox(
+                          height: AppSpacing.xlg,
+                        ),
+                        PaginationLoadingIndicator(
+                          visible: !state.maxReached,
+                        ),
+                      ],
                     );
                   } else {
                     final newsItem = state.news.elementAt(index);
-                    return ListTile(
-                      title: Text(newsItem.title),
-                      subtitle: HtmlWidget(newsItem.content),
+
+                    return Padding(
+                      padding: const EdgeInsets.fromLTRB(
+                        AppSpacing.xlg,
+                        AppSpacing.xlg,
+                        AppSpacing.xlg,
+                        0,
+                      ),
+                      child: CourseNewsCard(news: newsItem),
                     );
                   }
                 },
-                separatorBuilder: (context, index) => const Divider(height: 1),
-                itemCount: state.maxReached
-                    ? state.news.length
-                    : state.news.length + 1,
+                itemCount: state.news.length + 1,
                 controller: _scrollController,
               ),
             );

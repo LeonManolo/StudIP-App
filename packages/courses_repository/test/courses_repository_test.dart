@@ -76,13 +76,39 @@ void main() {
         content: 'content $id',
         publicationStart: '2023-04-13T11:30:00+02:00',
         publicationEnd: '2023-04-20T11:30:00+02:00',
+        authorId: '$id',
+      );
+    }
+
+    UserResponse generateUserResponse({required String id}) {
+      return UserResponse(
+        id: 'userId_$id',
+        username: 'username_$id',
+        formattedName: 'formattedName_$id',
+        familyName: '',
+        givenName: 'givenName',
+        permission: 'author',
+        email: '',
+        phone: '',
+        homepage: null,
+        address: null,
+        avatarUrl: 'avatarUrl_$id',
       );
     }
 
     test('get last 5 course news', () async {
-      when(() =>
-              mockedApiClient.getCourseNews(courseId: '1', limit: 5, offset: 0))
-          .thenAnswer((_) async {
+      when(
+        () => mockedApiClient.getUser(
+          userId: any(named: 'userId', that: isNotNull),
+        ),
+      ).thenAnswer(
+        (invocation) async => generateUserResponse(
+          id: invocation.namedArguments[const Symbol('userId')] as String,
+        ),
+      );
+      when(
+        () => mockedApiClient.getCourseNews(courseId: '1', limit: 5, offset: 0),
+      ).thenAnswer((_) async {
         return CourseNewsListResponse(
           news: List.generate(
             3,
@@ -97,10 +123,14 @@ void main() {
       final courseNewsResponse =
           await sut.getCourseNews(courseId: '1', limit: 5, offset: 0);
 
-      expect(
-        courseNewsResponse.news.map((news) => news.title),
-        List.generate(3, (index) => 'title $index'),
-      );
+      for (var i = 0; i < courseNewsResponse.news.length; i++) {
+        final courseNews = courseNewsResponse.news.elementAt(i);
+
+        expect(courseNews.title, 'title $i');
+        expect(courseNews.author.avatarUrl, 'avatarUrl_$i');
+        expect(courseNews.author.formattedName, 'formattedName_$i');
+        expect(courseNews.author.id, 'userId_$i');
+      }
     });
   });
 

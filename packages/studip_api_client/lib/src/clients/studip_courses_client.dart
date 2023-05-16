@@ -17,4 +17,6 @@ abstract class StudIPCoursesClient {
     required int offset,
     required int limit,
   });
+
+  Future<UserResponse> getUser({required String userId});
 }

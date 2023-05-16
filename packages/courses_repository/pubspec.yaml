@@ -10,6 +10,7 @@ dependencies:
   intl: ^0.18.0
   studip_api_client:
     path: ../studip_api_client
+  timeago: ^3.4.0
 
 dev_dependencies:
   flutter_test:

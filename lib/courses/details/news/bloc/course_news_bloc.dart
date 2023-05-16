@@ -22,7 +22,7 @@ class CourseNewsBloc extends Bloc<CourseNewsEvent, CourseNewsState> {
   CourseNewsBloc({
     required CourseRepository courseRepository,
     required this.courseId,
-    this.limit = 20,
+    this.limit = 10,
   })  : _courseRepository = courseRepository,
         super(CourseNewsState.inital()) {
     on<CourseNewsReloadRequested>(_onCourseNewsReloadRequested);
