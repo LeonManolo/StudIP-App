@@ -4,10 +4,10 @@ variables:
   TARGET_BRANCH: "main"
 
 stages:
-  - RepositoryTests
+  - UnitTests
 
-repository-tests:
-  stage: RepositoryTests
+unit-tests:
+  stage: UnitTests
   script: cd ./scripts && bash ./run_tests.sh
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == $TARGET_BRANCH'
