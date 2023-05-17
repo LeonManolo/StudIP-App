@@ -51,7 +51,7 @@ class _CourseNewsListState extends State<CourseNewsList> {
                     return Column(
                       children: [
                         const SizedBox(
-                          height: AppSpacing.xlg,
+                          height: AppSpacing.lg,
                         ),
                         PaginationLoadingIndicator(
                           visible: !state.maxReached,
@@ -63,9 +63,9 @@ class _CourseNewsListState extends State<CourseNewsList> {
 
                     return Padding(
                       padding: const EdgeInsets.fromLTRB(
-                        AppSpacing.xlg,
-                        AppSpacing.xlg,
-                        AppSpacing.xlg,
+                        AppSpacing.lg,
+                        AppSpacing.lg,
+                        AppSpacing.lg,
                         0,
                       ),
                       child: CourseNewsCard(news: newsItem),
