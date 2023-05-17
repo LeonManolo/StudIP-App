@@ -27,7 +27,7 @@ class OutboxMessageWidget extends StatefulWidget {
 
 class OutboxMessageWidgetState extends State<OutboxMessageWidget> {
   Icon messageIcon(Color iconColor) {
-    return Icon(EvaIcons.messageSquareOutline, color: iconColor, size: 24);
+    return Icon(EvaIcons.emailOutline, color: iconColor, size: 24);
   }
 
   final List<String> _markedOutboxMessages = [];
