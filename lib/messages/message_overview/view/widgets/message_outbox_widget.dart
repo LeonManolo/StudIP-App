@@ -7,8 +7,9 @@ import 'package:studipadawan/messages/message_overview/message_outbox_bloc/messa
 import 'package:studipadawan/messages/message_overview/message_outbox_bloc/message_outbox_state.dart';
 import 'package:studipadawan/messages/message_overview/message_tabbar_bloc%20/message_tabbar_bloc.dart';
 import 'package:studipadawan/messages/message_overview/message_tabbar_bloc%20/message_tabbar_event.dart';
-import 'package:studipadawan/messages/message_overview/view/widgets/message_pagination_loading.dart';
-import 'package:studipadawan/messages/message_overview/view/widgets/message_refreshable.dart';
+
+import 'package:studipadawan/utils/pagination_loading_indicator.dart';
+import 'package:studipadawan/utils/refreshable_content.dart';
 
 class OutboxMessageWidget extends StatefulWidget {
   const OutboxMessageWidget({
@@ -39,9 +40,9 @@ class OutboxMessageWidgetState extends State<OutboxMessageWidget> {
     }
 
     if (widget.state.outboxMessages.isEmpty) {
-      return RefreshableMessage(
-        text: 'Es sind keine Nachrichten vorhanden',
+      return RefreshableContent(
         callback: _refreshOutboxMessages,
+        child: const Text('Es sind keine Nachrichten vorhanden'),
       );
     }
     return Column(
@@ -55,7 +56,7 @@ class OutboxMessageWidgetState extends State<OutboxMessageWidget> {
               separatorBuilder: (context, index) => const Divider(height: 0.5),
               itemBuilder: (context, index) {
                 if (index == widget.state.outboxMessages.length) {
-                  return PaginationLoading(
+                  return PaginationLoadingIndicator(
                     visible: widget.state.status ==
                         OutboxMessageStatus.paginationLoading,
                   );

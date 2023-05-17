@@ -1,5 +1,6 @@
 import 'package:courses_repository/src/models/models.dart';
-import 'package:studip_api_client/studip_api_client.dart';
+import 'package:studip_api_client/studip_api_client.dart'
+    hide CourseNewsListResponse;
 
 class CourseRepository {
   const CourseRepository({
@@ -35,20 +36,33 @@ class CourseRepository {
     }
   }
 
-  Future<List<CourseNews>> getCourseNews({
+  Future<CourseNewsListResponse> getCourseNews({
     required String courseId,
     required int limit,
+    required int offset,
   }) async {
     try {
-      final newsResponse =
-          await _apiClient.getCourseNews(courseId: courseId, limit: limit);
-      return newsResponse.news
-          .map(
-            (newsResponse) => CourseNews.fromCourseNewsResponse(
-              courseNewsResponse: newsResponse,
-            ),
-          )
-          .toList();
+      final newsResponse = await _apiClient.getCourseNews(
+        courseId: courseId,
+        limit: limit,
+        offset: offset,
+      );
+
+      final List<CourseNews> newsItems = await Future.wait(
+        newsResponse.news.map((rawNewsResponse) async {
+          final UserResponse userResponse =
+              await _apiClient.getUser(userId: rawNewsResponse.authorId);
+          return CourseNews.fromCourseNewsResponse(
+            courseNewsResponse: rawNewsResponse,
+            userResponse: userResponse,
+          );
+        }),
+      );
+
+      return CourseNewsListResponse(
+        totalNumberOfNews: newsResponse.total,
+        news: newsItems,
+      );
     } catch (error, stackTrace) {
       Error.throwWithStackTrace(error, stackTrace);
     }
@@ -114,8 +128,7 @@ class CourseRepository {
       required String id,
       required int limit,
       required int offset,
-    })
-        loadItems,
+    }) loadItems,
   }) async {
     final response = await loadItems(id: id, limit: limit, offset: offset);
     if (response.total > limit && (response.offset + limit) < response.total) {

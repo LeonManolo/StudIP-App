@@ -9,6 +9,7 @@ class UserResponse {
   final String? phone;
   final String? homepage;
   final String? address;
+  final String avatarUrl;
 
   UserResponse({
     required this.id,
@@ -21,6 +22,7 @@ class UserResponse {
     required this.phone,
     required this.homepage,
     required this.address,
+    required this.avatarUrl,
   });
 
   factory UserResponse.fromJson(Map<String, dynamic> json) {
@@ -37,6 +39,7 @@ class UserResponse {
       phone: attributes['phone'] as String?,
       homepage: attributes['homepage'] as String?,
       address: attributes['address'] as String?,
+      avatarUrl: data['meta']['avatar']['medium'] as String,
     );
   }
 }

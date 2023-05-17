@@ -6,7 +6,6 @@ import 'package:studipadawan/courses/details/bloc/course_details_bloc.dart';
 import 'package:studipadawan/courses/details/info/bloc/course_info_bloc.dart';
 import 'package:studipadawan/courses/details/info/view/widgets/events_section.dart';
 import 'package:studipadawan/courses/details/info/view/widgets/general_info_section.dart';
-import 'package:studipadawan/courses/details/info/view/widgets/news_section.dart';
 
 class CourseInfoPage extends StatelessWidget {
   const CourseInfoPage({super.key});
@@ -32,28 +31,28 @@ class CourseInfoPage extends StatelessWidget {
                 switch (section) {
                   case InfoType.general:
                     return GeneralInfoSection(
-                        generalInfo: state.generalInfoExpansionModel,
-                        onExpansionChanged: (isExpanded) {
-                          context.read<CourseInfoBloc>().add(ToggleSectionEvent(
-                              type: InfoType.general,
-                              newExpansionState: isExpanded,),);
-                        },);
+                      generalInfo: state.generalInfoExpansionModel,
+                      onExpansionChanged: (isExpanded) {
+                        context.read<CourseInfoBloc>().add(
+                              ToggleSectionEvent(
+                                type: InfoType.general,
+                                newExpansionState: isExpanded,
+                              ),
+                            );
+                      },
+                    );
                   case InfoType.events:
                     return EventsSection(
-                        eventExpansionModel: state.eventExpansionModel,
-                        onExpansionChanged: (isExpanded) {
-                          context.read<CourseInfoBloc>().add(ToggleSectionEvent(
-                              type: InfoType.events,
-                              newExpansionState: isExpanded,),);
-                        },);
-                  case InfoType.news:
-                    return NewsSection(
-                        newsExpansionModel: state.newsExpansionModel,
-                        onExpansionChanged: (isExpanded) {
-                          context.read<CourseInfoBloc>().add(ToggleSectionEvent(
-                              type: InfoType.news,
-                              newExpansionState: isExpanded,),);
-                        },);
+                      eventExpansionModel: state.eventExpansionModel,
+                      onExpansionChanged: (isExpanded) {
+                        context.read<CourseInfoBloc>().add(
+                              ToggleSectionEvent(
+                                type: InfoType.events,
+                                newExpansionState: isExpanded,
+                              ),
+                            );
+                      },
+                    );
                 }
               },
               separatorBuilder: (context, index) {

@@ -5,7 +5,6 @@ import 'package:messages_repository/messages_repository.dart';
 import 'package:studipadawan/messages/message_overview/message_inbox_bloc%20/message_inbox_bloc.dart';
 import 'package:studipadawan/messages/message_send/message_send_bloc/message_send_event.dart';
 import 'package:studipadawan/messages/message_send/message_send_bloc/message_send_state.dart';
-import 'package:user_repository/user_repository.dart';
 
 const String missingSubjectErrorMessage = 'Bitte gebe einen Betreff ein';
 const String missingMessageErrorMessage = 'Bitte gebe eine Nachricht ein';

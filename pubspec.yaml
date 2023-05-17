@@ -80,6 +80,10 @@ dependencies:
 
   intl: ^0.18.0
 
+  stream_transform: ^2.1.0
+
+  bloc_concurrency: ^0.2.1
+
   flutter_widget_from_html_core: ^0.10.0
 
   dartz: ^0.10.1
@@ -90,6 +94,8 @@ dependencies:
 
   collection: 1.17.1
 
+  url_launcher: ^6.1.11
+
   flutter_speed_dial: ^6.2.0
 
   ######### STATE MANAGEMENT ############
@@ -99,8 +105,12 @@ dependencies:
   flutter_typeahead: ^4.3.7
 
 dev_dependencies:
+  bloc_test: ^9.1.1
+
   flutter_test:
     sdk: flutter
+
+  mocktail: ^0.3.0
 
   very_good_analysis: ^4.0.0+1
 

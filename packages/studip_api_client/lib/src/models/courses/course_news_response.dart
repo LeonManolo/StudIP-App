@@ -39,6 +39,7 @@ class CourseNewsResponse {
   final String content;
   final String publicationStart;
   final String publicationEnd;
+  final String authorId;
 
   CourseNewsResponse({
     required this.id,
@@ -46,6 +47,7 @@ class CourseNewsResponse {
     required this.content,
     required this.publicationStart,
     required this.publicationEnd,
+    required this.authorId,
   });
 
   factory CourseNewsResponse.fromJson(Map<String, dynamic> json) {
@@ -56,6 +58,7 @@ class CourseNewsResponse {
       content: attributes["content"],
       publicationStart: attributes["publication-start"],
       publicationEnd: attributes["publication-end"],
+      authorId: json['relationships']['author']['data']['id'],
     );
   }
 }

@@ -4,6 +4,7 @@ import 'package:calender_repository/calender_repository.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:studipadawan/calendar/widgets/calendar_entry_content.dart';
+import 'package:studipadawan/utils/empty_view.dart';
 
 class CalendarListBody extends StatelessWidget {
   const CalendarListBody({
@@ -18,33 +19,9 @@ class CalendarListBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (scheduleData.isEmpty) {
-      return Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          // Icon(
-          //   EvaIcons.calendarOutline,
-          //   size: MediaQuery.of(context).size.width * 0.2,
-          //   weight: 0.1,
-          //   fill: 0.1,
-          // ),
-          Padding(
-            padding: const EdgeInsets.only(
-              bottom: AppSpacing.lg,
-              top: AppSpacing.md,
-            ),
-            child: Text(
-              'Keine Termine',
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
-          ),
-          Text(
-            'An diesem Tag hast du keine Termine,\n wähle einen Anderen.',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Theme.of(context).hintColor
-            ),
-          )
-        ],
+      return const EmptyView(
+        title: 'Keine Termine',
+        message: 'An diesem Tag hast du keine Termine,\n wähle einen Anderen.',
       );
     }
 
