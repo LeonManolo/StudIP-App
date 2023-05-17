@@ -29,20 +29,18 @@ class _CourseNewsListState extends State<CourseNewsList> {
     return BlocBuilder<CourseNewsBloc, CourseNewsState>(
       builder: (context, state) {
         switch (state) {
+          case final CourseNewsStateDidLoad s when s.news.isEmpty:
+            return RefreshableContent(
+              callback: () => context
+                  .read<CourseNewsBloc>()
+                  .add(CourseNewsReloadRequested()),
+              child: const EmptyView(
+                title: 'Keine Ankündigungen vorhanden',
+                message:
+                    'Ziehe die Ansicht nach unten, um neue Ankündigungen zu laden.',
+              ),
+            );
           case CourseNewsStateDidLoad _:
-            if (state.news.isEmpty) {
-              return RefreshableContent(
-                callback: () => context
-                    .read<CourseNewsBloc>()
-                    .add(CourseNewsReloadRequested()),
-                child: const EmptyView(
-                  title: 'Keine Ankündigungen vorhanden',
-                  message:
-                      'Ziehe die Ansicht nach unten, um neue Ankündigungen zu laden.',
-                ),
-              );
-            }
-
             return RefreshIndicator(
               onRefresh: () async => context
                   .read<CourseNewsBloc>()
