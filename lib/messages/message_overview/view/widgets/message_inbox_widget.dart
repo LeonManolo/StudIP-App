@@ -33,13 +33,13 @@ class InboxMessageWidgetState extends State<InboxMessageWidget> {
   Icon messageIcon(BuildContext context, {required bool isRead}) {
     if (isRead) {
       return Icon(
-        EvaIcons.messageSquareOutline,
+        EvaIcons.emailOutline,
         color: Theme.of(context).primaryColor,
         size: 24,
       );
     } else {
       return Icon(
-        EvaIcons.messageSquare,
+        EvaIcons.email,
         color: Theme.of(context).primaryColor,
         size: 24,
       );

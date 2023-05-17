@@ -76,6 +76,7 @@ class MessagesPageState extends State<MessagesPage>
       ..animation!.addListener(() {
         final int currentIndex = _tabController.animation!.value.round();
         if (_tabBarBloc.state.currentTabIndex != currentIndex) {
+          _unmarkAll();
           _tabBarBloc.add(TabIndexChanged(index: currentIndex));
         }
       });
