@@ -36,13 +36,7 @@ void main() {
       courseId: courseId,
     ),
     verify: (bloc) {
-      final expectedState = CourseNewsState(
-        news: List.empty(),
-        maxReached: false,
-        paginationLoading: false,
-        status: CourseNewsStatus.isLoading,
-        errorMessage: '',
-      );
+      final expectedState = CourseNewsStateLoading();
       expect(bloc.state, expectedState);
     },
   );
@@ -66,23 +60,16 @@ void main() {
       build: () => CourseNewsBloc(
         courseRepository: mockedCourseRepository,
         courseId: courseId,
+        limit: 20,
       ),
       act: (bloc) => bloc.add(CourseNewsReloadRequested()),
       expect: () => [
-        const CourseNewsState(
-          news: [],
-          maxReached: false,
-          paginationLoading: false,
-          status: CourseNewsStatus.isLoading,
-          errorMessage: '',
-        ),
-        CourseNewsState(
+        CourseNewsStateLoading(),
+        CourseNewsStateDidLoad(
           news: [courseNews1],
           maxReached: true,
           paginationLoading: false,
-          status: CourseNewsStatus.didLoad,
-          errorMessage: '',
-        ),
+        )
       ],
     );
 
@@ -101,19 +88,9 @@ void main() {
         limit: 15,
       ),
       act: (bloc) => bloc.add(CourseNewsReloadRequested()),
-      expect: () => const [
-        CourseNewsState(
-          news: [],
-          maxReached: false,
-          paginationLoading: false,
-          status: CourseNewsStatus.isLoading,
-          errorMessage: '',
-        ),
-        CourseNewsState(
-          news: [],
-          maxReached: false,
-          paginationLoading: false,
-          status: CourseNewsStatus.error,
+      expect: () => [
+        CourseNewsStateLoading(),
+        CourseNewsStateError(
           errorMessage:
               'Beim Laden der Ankündigungen ist ein Fehler aufgetreten.',
         ),
@@ -166,34 +143,22 @@ void main() {
           ..add(CourseNewsReachedBottom());
       },
       expect: () => [
-        const CourseNewsState(
-          news: [],
-          maxReached: false,
-          paginationLoading: false,
-          status: CourseNewsStatus.isLoading,
-          errorMessage: '',
-        ),
-        CourseNewsState(
+        CourseNewsStateLoading(),
+        CourseNewsStateDidLoad(
           news: [courseNews1, courseNews2],
           maxReached: false,
           paginationLoading: false,
-          status: CourseNewsStatus.didLoad,
-          errorMessage: '',
         ),
-        CourseNewsState(
+        CourseNewsStateDidLoad(
           news: [courseNews1, courseNews2],
           maxReached: false,
           paginationLoading: true,
-          status: CourseNewsStatus.didLoad,
-          errorMessage: '',
         ),
-        CourseNewsState(
+        CourseNewsStateDidLoad(
           news: [courseNews1, courseNews2, courseNews3, courseNews4],
           maxReached: true,
           paginationLoading: false,
-          status: CourseNewsStatus.didLoad,
-          errorMessage: '',
-        )
+        ),
       ],
     );
 
@@ -232,35 +197,21 @@ void main() {
           ..add(CourseNewsReachedBottom());
       },
       expect: () => [
-        const CourseNewsState(
-          news: [],
-          maxReached: false,
-          paginationLoading: false,
-          status: CourseNewsStatus.isLoading,
-          errorMessage: '',
-        ),
-        CourseNewsState(
+        CourseNewsStateLoading(),
+        CourseNewsStateDidLoad(
           news: [courseNews1, courseNews2],
           maxReached: false,
           paginationLoading: false,
-          status: CourseNewsStatus.didLoad,
-          errorMessage: '',
         ),
-        CourseNewsState(
+        CourseNewsStateDidLoad(
           news: [courseNews1, courseNews2],
           maxReached: false,
           paginationLoading: true,
-          status: CourseNewsStatus.didLoad,
-          errorMessage: '',
         ),
-        CourseNewsState(
-          news: [courseNews1, courseNews2],
-          maxReached: false,
-          paginationLoading: false,
-          status: CourseNewsStatus.error,
+        CourseNewsStateError(
           errorMessage:
               'Beim Laden der Ankündigungen ist ein Fehler aufgetreten.',
-        ),
+        )
       ],
     );
   });

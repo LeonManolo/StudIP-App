@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:bloc/bloc.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
@@ -24,7 +25,7 @@ class CourseNewsBloc extends Bloc<CourseNewsEvent, CourseNewsState> {
     required this.courseId,
     this.limit = 10,
   })  : _courseRepository = courseRepository,
-        super(CourseNewsState.inital()) {
+        super(CourseNewsStateLoading()) {
     on<CourseNewsReloadRequested>(_onCourseNewsReloadRequested);
     on<CourseNewsReachedBottom>(
       _onCourseNewsReachedBottom,
@@ -40,7 +41,7 @@ class CourseNewsBloc extends Bloc<CourseNewsEvent, CourseNewsState> {
     CourseNewsReloadRequested event,
     Emitter<CourseNewsState> emit,
   ) async {
-    emit(state.copyWith(status: CourseNewsStatus.isLoading));
+    emit(CourseNewsStateLoading());
 
     try {
       final response = await _courseRepository.getCourseNews(
@@ -49,17 +50,16 @@ class CourseNewsBloc extends Bloc<CourseNewsEvent, CourseNewsState> {
         offset: 0,
       );
       emit(
-        state.copyWith(
+        CourseNewsStateDidLoad(
           news: response.news,
-          status: CourseNewsStatus.didLoad,
+          paginationLoading: false,
           maxReached: response.news.length >= response.totalNumberOfNews,
         ),
       );
     } catch (e) {
       Logger().e(e);
       emit(
-        state.copyWith(
-          status: CourseNewsStatus.error,
+        CourseNewsStateError(
           errorMessage:
               'Beim Laden der Ankündigungen ist ein Fehler aufgetreten.',
         ),
@@ -71,6 +71,24 @@ class CourseNewsBloc extends Bloc<CourseNewsEvent, CourseNewsState> {
     CourseNewsReachedBottom event,
     Emitter<CourseNewsState> emit,
   ) async {
+    switch (state) {
+      case CourseNewsStateLoading _:
+        return;
+      case CourseNewsStateError _:
+        return;
+      case final CourseNewsStateDidLoad didLoadState:
+        await _handleValidCourseNewsReachedBottom(
+          state: didLoadState,
+          emit: emit,
+        );
+        break;
+    }
+  }
+
+  Future<void> _handleValidCourseNewsReachedBottom({
+    required CourseNewsStateDidLoad state,
+    required Emitter<CourseNewsState> emit,
+  }) async {
     if (state.maxReached || state.paginationLoading) return;
 
     try {
@@ -90,16 +108,14 @@ class CourseNewsBloc extends Bloc<CourseNewsEvent, CourseNewsState> {
       emit(
         state.copyWith(
           maxReached: updatedNews.length >= response.totalNumberOfNews,
-          status: CourseNewsStatus.didLoad,
           paginationLoading: false,
           news: updatedNews,
         ),
       );
     } catch (_) {
+      Logger().e(e);
       emit(
-        state.copyWith(
-          status: CourseNewsStatus.error,
-          paginationLoading: false,
+        CourseNewsStateError(
           errorMessage:
               'Beim Laden der Ankündigungen ist ein Fehler aufgetreten.',
         ),

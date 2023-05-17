@@ -28,8 +28,8 @@ class _CourseNewsListState extends State<CourseNewsList> {
   Widget build(BuildContext context) {
     return BlocBuilder<CourseNewsBloc, CourseNewsState>(
       builder: (context, state) {
-        switch (state.status) {
-          case CourseNewsStatus.didLoad:
+        switch (state) {
+          case CourseNewsStateDidLoad _:
             if (state.news.isEmpty) {
               return RefreshableContent(
                 callback: () => context
@@ -79,12 +79,12 @@ class _CourseNewsListState extends State<CourseNewsList> {
               ),
             );
 
-          case CourseNewsStatus.error:
+          case CourseNewsStateError _:
             return Center(
               child: Text(state.errorMessage),
             );
 
-          case CourseNewsStatus.isLoading:
+          case CourseNewsStateLoading _:
             return const Center(
               child: CircularProgressIndicator(),
             );
