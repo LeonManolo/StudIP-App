@@ -8,7 +8,6 @@ import 'package:studipadawan/messages/message_send/message_send_bloc/message_sen
 import 'package:studipadawan/messages/message_send/message_send_bloc/message_send_state.dart';
 import 'package:studipadawan/messages/message_send/view/widgets/message_recipient_chip.dart';
 import 'package:studipadawan/utils/utils.dart';
-import 'package:user_repository/user_repository.dart';
 
 const double smallMargin = AppSpacing.sm;
 const double bigMargin = AppSpacing.lg;

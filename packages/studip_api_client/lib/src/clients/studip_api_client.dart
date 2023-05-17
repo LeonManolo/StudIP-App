@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'package:http/http.dart' as http;
+import 'package:http_forked/http.dart' as http;
 import 'package:studip_api_client/src/core/studip_api_core.dart';
 import 'package:studip_api_client/studip_api_client.dart';
 import 'package:logger/logger.dart';
@@ -197,11 +197,14 @@ class StudIpApiClient
   }
 
   @override
-  Future<CourseNewsListResponse> getCourseNews(
-      {required String courseId, required int limit}) async {
+  Future<CourseNewsListResponse> getCourseNews({
+    required String courseId,
+    required int limit,
+    required int offset,
+  }) async {
     final response = await _core.get(
         endpoint: "courses/$courseId/news",
-        queryParameters: {"page[limit]": "$limit"});
+        queryParameters: {"page[limit]": "$limit", "page[offset]": "$offset"});
 
     final body = response.json();
 

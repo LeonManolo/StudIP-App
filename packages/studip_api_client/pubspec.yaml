@@ -13,13 +13,13 @@ dependencies:
   oauth2_client:
     git:
       url: https://github.com/finebel/oauth2_client
-      ref: 45fa85011457792b34502f52e97b93767c806a2f
+      ref: d46af8bdac3eb8101614e2c3d9edbf1ad42fef29
 
-  http:
+  http_forked:
     git:
       url: https://github.com/finebel/http
       path: pkgs/http
-      ref: fe743dcd08a34569876cdc36d6b70628912e7c8a
+      ref: 09a3488b58d636760c8c98ecf686417ca033aa8a
 
   jwt_decode: ^0.3.1
 

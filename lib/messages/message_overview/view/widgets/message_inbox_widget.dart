@@ -8,8 +8,9 @@ import 'package:studipadawan/messages/message_overview/message_inbox_bloc%20/mes
 import 'package:studipadawan/messages/message_overview/message_inbox_bloc%20/message_inbox_state.dart';
 import 'package:studipadawan/messages/message_overview/message_tabbar_bloc%20/message_tabbar_bloc.dart';
 import 'package:studipadawan/messages/message_overview/message_tabbar_bloc%20/message_tabbar_event.dart';
-import 'package:studipadawan/messages/message_overview/view/widgets/message_pagination_loading.dart';
-import 'package:studipadawan/messages/message_overview/view/widgets/message_refreshable.dart';
+
+import 'package:studipadawan/utils/pagination_loading_indicator.dart';
+import 'package:studipadawan/utils/refreshable_content.dart';
 
 final _inboxWidgetKey = GlobalKey<ScaffoldState>();
 
@@ -54,9 +55,9 @@ class InboxMessageWidgetState extends State<InboxMessageWidget> {
     }
 
     if (widget.state.inboxMessages.isEmpty) {
-      return RefreshableMessage(
-        text: 'Es sind keine Nachrichten vorhanden',
+      return RefreshableContent(
         callback: _refreshInboxMessages,
+        child: const Text('Es sind keine Nachrichten vorhanden'),
       );
     }
 
@@ -74,7 +75,7 @@ class InboxMessageWidgetState extends State<InboxMessageWidget> {
               ),
               itemBuilder: (context, index) {
                 if (index == widget.state.inboxMessages.length) {
-                  return PaginationLoading(
+                  return PaginationLoadingIndicator(
                     visible: widget.state.status ==
                         InboxMessageStatus.paginationLoading,
                   );
