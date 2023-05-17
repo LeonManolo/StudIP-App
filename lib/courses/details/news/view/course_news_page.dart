@@ -13,14 +13,12 @@ class CourseNewsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Ankündigungen')),
-      body: SafeArea(
-        child: BlocProvider<CourseNewsBloc>(
-          create: (context) => CourseNewsBloc(
-            courseId: courseId,
-            courseRepository: context.read<CourseRepository>(),
-          )..add(CourseNewsReloadRequested()),
-          child: const CourseNewsList(),
-        ),
+      body: BlocProvider<CourseNewsBloc>(
+        create: (context) => CourseNewsBloc(
+          courseId: courseId,
+          courseRepository: context.read<CourseRepository>(),
+        )..add(CourseNewsReloadRequested()),
+        child: const CourseNewsList(),
       ),
     );
   }
