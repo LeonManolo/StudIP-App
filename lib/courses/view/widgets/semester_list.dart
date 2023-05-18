@@ -1,27 +1,61 @@
+import 'package:app_ui/app_ui.dart';
+import 'package:courses_repository/courses_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:studipadawan/courses/bloc/course_bloc.dart';
+import 'package:studipadawan/courses/bloc/courses_bloc.dart';
 import 'package:studipadawan/courses/bloc/courses_event.dart';
-import 'package:studipadawan/courses/view/widgets/semester_card.dart';
+import 'package:studipadawan/courses/models/course_list_item.dart';
+import 'package:studipadawan/courses/view/widgets/semester_cell.dart';
 
-class SemesterList extends StatelessWidget {
-  const SemesterList({super.key});
+class CoursesList extends StatelessWidget {
+  const CoursesList({
+    super.key,
+    required this.listItems,
+    required this.onCourseSelection,
+  });
+
+  final List<CourseListItem> listItems;
+  final void Function(Course) onCourseSelection;
 
   @override
   Widget build(BuildContext context) {
-    final state = BlocProvider.of<CourseBloc>(context).state;
-
     return RefreshIndicator(
       onRefresh: () async {
-        BlocProvider.of<CourseBloc>(context).add(CoursesRequested());
+        BlocProvider.of<CoursesBloc>(context).add(CoursesRequested());
       },
-      child: ListView.builder(
-          itemCount: state.semesters.length,
-          itemBuilder: (context, index) {
-            return SemesterCard(
-              semester: state.semesters.elementAt(index),
-            );
-          },),
+      child: ListView.separated(
+        itemCount: listItems.length,
+        separatorBuilder: (context, index) => const Divider(),
+        itemBuilder: (context, index) {
+          final item = listItems.elementAt(index);
+
+          switch (item) {
+            case CourseListSemesterItem(semester: final semester):
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 14),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(
+                      height: AppSpacing.lg,
+                    ),
+                    SemesterCell(semester: semester),
+                  ],
+                ),
+              );
+
+            case CourseListCourseItem(course: final course):
+              return ListTile(
+                title: Text(course.courseDetails.title),
+                trailing: const Icon(
+                  Icons.arrow_forward_ios_rounded,
+                  size: 18,
+                ),
+                onTap: () => onCourseSelection(course),
+              );
+          }
+        },
+      ),
     );
   }
 }

@@ -26,9 +26,7 @@ class _AuthenticatedPageState extends State<AuthenticatedPage> {
         index: _selectedTab,
         children: const [
           HomePage(),
-          SafeArea(
-            child: CoursesPage(),
-          ),
+          CoursesPage(),
           MessagesPage(),
           CalendarPage(),
         ],

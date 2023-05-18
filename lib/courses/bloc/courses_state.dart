@@ -1,32 +1,88 @@
 import 'package:courses_repository/courses_repository.dart';
 import 'package:equatable/equatable.dart';
+import 'package:studipadawan/courses/models/course_list_item.dart';
 
-enum CourseStatus {
-  initial,
-  loading,
-  populated,
-  failure,
-}
+enum SemesterFilter { current, all }
 
-class CourseState extends Equatable {
+enum SemesterSortOrder { asc, desc }
 
-  const CourseState({
-    required this.status,
-    this.semesters = const [],
+sealed class CoursesState extends Equatable {
+  const CoursesState({
+    required this.semesterFilter,
+    required this.semesterSortOrder,
   });
 
-  const CourseState.initial()
-      : this(
-          status: CourseStatus.initial,
-        );
-  final CourseStatus status;
-  final List<Semester> semesters;
+  final SemesterFilter semesterFilter;
+  final SemesterSortOrder semesterSortOrder;
 
   @override
-  List<Object?> get props => [status, semesters];
+  List<Object?> get props => [semesterFilter, semesterSortOrder];
+}
 
-  CourseState copyWith({CourseStatus? status, List<Semester>? semesters}) {
-    return CourseState(
-        status: status ?? this.status, semesters: semesters ?? this.semesters,);
+class CoursesStateLoading extends CoursesState {
+  const CoursesStateLoading({
+    required super.semesterFilter,
+    required super.semesterSortOrder,
+  });
+}
+
+class CoursesStateDidLoad extends CoursesState {
+  const CoursesStateDidLoad({
+    required super.semesterFilter,
+    required super.semesterSortOrder,
+    required this.semesters,
+  });
+
+  final List<Semester> semesters;
+
+  List<CourseListItem> get items {
+    final List<CourseListItem> newItems = [];
+
+    for (var semesterIndex = 0;
+        semesterIndex < semesters.length;
+        semesterIndex++) {
+      final Semester semester = semesters.elementAt(semesterIndex);
+      newItems.add(CourseListSemesterItem(semester: semester));
+
+      for (var courseIndex = 0;
+          courseIndex < semester.courses.length;
+          courseIndex++) {
+        newItems.add(
+          CourseListCourseItem(
+            course: semester.courses.elementAt(courseIndex),
+          ),
+        );
+      }
+    }
+
+    return newItems;
   }
+
+  @override
+  List<Object?> get props => [semesters, semesterFilter, semesterSortOrder];
+
+  CoursesStateDidLoad copyWith({
+    List<Semester>? semesters,
+    SemesterFilter? semesterFilter,
+    SemesterSortOrder? semesterSortOrder,
+  }) {
+    return CoursesStateDidLoad(
+      semesterFilter: semesterFilter ?? this.semesterFilter,
+      semesterSortOrder: semesterSortOrder ?? this.semesterSortOrder,
+      semesters: semesters ?? this.semesters,
+    );
+  }
+}
+
+class CoursesStateError extends CoursesState {
+  const CoursesStateError({
+    required super.semesterFilter,
+    required super.semesterSortOrder,
+    required this.errorMessage,
+  });
+
+  final String errorMessage;
+
+  @override
+  List<Object?> get props => [semesterFilter, semesterSortOrder, errorMessage];
 }
