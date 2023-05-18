@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:studipadawan/home/bloc/home_bloc.dart';
 
 const double radius = 15;
 
 class MoudleCard extends StatelessWidget {
-  const MoudleCard({super.key, required this.module, required this.headline});
-  final Widget module;
-  final String headline;
+  const MoudleCard({
+    super.key,
+    required this.child,
+    required this.type,
+  });
+  final Widget child;
+  final ModuleType type;
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +39,7 @@ class MoudleCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  headline,
+                  type.title,
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 18,
@@ -46,9 +52,7 @@ class MoudleCard extends StatelessWidget {
                     Icons.close,
                     color: Colors.white,
                   ),
-                  onPressed: () {
-                    // Logik zum entfernen des Moduls
-                  },
+                  onPressed: () => context.read<HomeBloc>().removeModule(type),
                 ),
               ],
             ),
@@ -66,7 +70,7 @@ class MoudleCard extends StatelessWidget {
               ),
             ),
             padding: const EdgeInsets.all(16),
-            child: module,
+            child: child,
           ),
         ],
       ),

@@ -3,15 +3,19 @@ import 'package:calender_repository/calender_repository.dart';
 import 'package:courses_repository/courses_repository.dart';
 import 'package:files_repository/files_repository.dart';
 import 'package:flutter/material.dart';
+import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:messages_repository/messages_repository.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:studip_api_client/studip_api_client.dart';
 import 'package:studipadawan/app/view/app.dart';
 import 'package:user_repository/user_repository.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
+   HydratedBloc.storage = await HydratedStorage.build(
+    storageDirectory: await getApplicationDocumentsDirectory(),
+  );
   final apiClient = StudIpApiClient();
 
   final authenticationRepository = AuthenticationRepository(client: apiClient);
@@ -27,13 +31,15 @@ Future<void> main() async {
   final filesRepository = FilesRepository(apiClient: apiClient);
 
   await initializeDateFormatting();
-
-  runApp(App(
-    authenticationRepository: authenticationRepository,
-    calenderRepository: calenderRepository,
-    userRepository: userRepository,
-    coursesRepository: coursesRepository,
-    messageRepository: messagesRepository,
-    filesRepository: filesRepository,
-  ),);
+  
+  runApp(
+    App(
+      authenticationRepository: authenticationRepository,
+      calenderRepository: calenderRepository,
+      userRepository: userRepository,
+      coursesRepository: coursesRepository,
+      messageRepository: messagesRepository,
+      filesRepository: filesRepository,
+    ),
+  );
 }
