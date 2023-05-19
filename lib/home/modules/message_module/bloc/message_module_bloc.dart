@@ -10,7 +10,7 @@ class MessageModuleBloc extends Bloc<MessageModuleEvent, MessageModuleState> {
     required AuthenticationRepository authenticationRepository,
   })  : _messageRepository = messageRepository,
         _authenticationRepository = authenticationRepository,
-        super(const MessageModuleState.initial()) {}
+        super(const MessageModuleStateInitial()) {}
   final MessageRepository _messageRepository;
   final AuthenticationRepository _authenticationRepository;
 }

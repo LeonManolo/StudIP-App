@@ -1,29 +1,44 @@
 import 'package:equatable/equatable.dart';
 
-enum FilesModuleStatus {
-  initial,
-  loading,
-  populated,
-  failure,
-}
-
-class FilesModuleState extends Equatable {
-  const FilesModuleState({
-    required this.status,
-  });
-
-  const FilesModuleState.initial()
-      : this(
-          status: FilesModuleStatus.initial,
-        );
-  final FilesModuleStatus status;
+sealed class FilesModuleState extends Equatable {
+  const FilesModuleState();
 
   @override
-  List<Object?> get props => [status];
+  List<Object?> get props => [];
+}
 
-  FilesModuleState copyWith({FilesModuleStatus? status}) {
-    return FilesModuleState(
-      status: status ?? this.status,
-    );
+class FilesModuleStateInitial extends FilesModuleState {
+  const FilesModuleStateInitial();
+
+  @override
+  List<Object?> get props => [];
+}
+
+class FilesModuleStateLoading extends FilesModuleState {
+  const FilesModuleStateLoading();
+
+  @override
+  List<Object?> get props => [];
+}
+
+class FilesModuleStateDidLoad extends FilesModuleState {
+  const FilesModuleStateDidLoad();
+
+  @override
+  List<Object?> get props => [];
+
+  FilesModuleStateDidLoad copyWith() {
+    return const FilesModuleStateDidLoad();
+  }
+}
+
+class FilesModuleStateError extends FilesModuleState {
+  const FilesModuleStateError();
+
+  @override
+  List<Object?> get props => [];
+
+  FilesModuleStateError copyWith() {
+    return const FilesModuleStateError();
   }
 }

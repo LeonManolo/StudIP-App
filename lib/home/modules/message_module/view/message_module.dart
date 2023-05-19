@@ -2,7 +2,7 @@ import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:messages_repository/messages_repository.dart';
-import 'package:studipadawan/home/bloc/home_bloc.dart';
+import 'package:studipadawan/home/cubit/home_cubit.dart';
 import 'package:studipadawan/home/modules/message_module/bloc/message_module_bloc.dart';
 import 'package:studipadawan/home/modules/message_module/bloc/message_module_state.dart';
 import 'package:studipadawan/home/modules/module.dart';

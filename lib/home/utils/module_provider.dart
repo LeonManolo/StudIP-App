@@ -1,9 +1,9 @@
-import 'package:studipadawan/home/bloc/home_bloc.dart';
+import 'package:studipadawan/home/cubit/home_cubit.dart';
 import 'package:studipadawan/home/modules/files_module/view/files_module.dart';
 import 'package:studipadawan/home/modules/message_module/view/message_module.dart';
 import 'package:studipadawan/home/modules/module.dart';
 import 'package:studipadawan/home/modules/news_module/view/news_module.dart';
-import 'package:studipadawan/home/modules/schedule_module/view/schedule_module.dart';
+import 'package:studipadawan/home/modules/calendar_module/view/calendar_module.dart';
 
 Module getModule(ModuleType type) {
   switch (type) {
@@ -13,7 +13,7 @@ Module getModule(ModuleType type) {
       return const MessageModule();
     case ModuleType.news:
       return const NewsModule();
-    case ModuleType.schedule:
-      return const ScheduleModule();
+    case ModuleType.calendar:
+      return const CalendarModule();
   }
 }

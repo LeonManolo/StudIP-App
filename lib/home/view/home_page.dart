@@ -1,9 +1,12 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:studipadawan/app/bloc/app_bloc.dart';
-import 'package:studipadawan/home/bloc/home_bloc.dart';
+import 'package:studipadawan/home/cubit/home_cubit.dart';
 import 'package:studipadawan/home/modules/module.dart';
-import 'package:studipadawan/home/view/widgets/module_selection_button.dart';
+import 'package:studipadawan/home/view/widgets/module_reorderable_list.dart';
+import 'package:studipadawan/home/view/widgets/module_selection_modal.dart';
+import 'package:studipadawan/utils/empty_view.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -12,10 +15,10 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final homeBloc = HomeBloc();
+    final homeCubit = HomeCubit();
 
     return BlocProvider(
-      create: (_) => homeBloc,
+      create: (_) => homeCubit,
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Home'),
@@ -29,38 +32,53 @@ class HomePage extends StatelessWidget {
             )
           ],
         ),
-        body: BlocBuilder<HomeBloc, List<Module>>(
+        body: BlocBuilder<HomeCubit, List<Module>>(
           builder: (context, modules) {
             return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Row(
-                  children: [
-                    Expanded(child: Container()),
-                    const ModuleSelectionButton()
-                  ],
-                ),
                 Expanded(
-                  child: ReorderableListView(
-                    onReorder: (oldIndex, newIndex) {
-                      context
-                          .read<HomeBloc>()
-                          .reorderModules(oldIndex, newIndex);
-                    },
-                    children: modules.map((module) {
-                      return Container(
-                        key: Key(
-                          module.getType().name,
+                  child: modules.isEmpty
+                      ? const Center(
+                          child: EmptyView(
+                            title: 'Keine Widgets vorhanden',
+                            message: 'Es sind keine Widgets vorhanden',
+                          ),
+                        )
+                      : Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          child: ReorderableModuleListView(
+                            modules: modules,
+                          ),
                         ),
-                        child: module,
-                      );
-                    }).toList(),
-                  ),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    showCenteredCupertinoModal(context, (BuildContext _) {
+                      return ModuleSelectionModal(homeCubit: homeCubit);
+                    });
+                  },
+                  child: const Text('Module bearbeiten'),
                 ),
               ],
             );
           },
         ),
       ),
+    );
+  }
+
+  void showCenteredCupertinoModal(BuildContext context, WidgetBuilder builder) {
+    showCupertinoModalPopup<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+          ),
+          child: builder(context),
+        );
+      },
     );
   }
 }

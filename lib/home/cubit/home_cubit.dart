@@ -4,7 +4,7 @@ import 'package:studipadawan/home/utils/utils.dart';
 
 enum ModuleType {
   messages('Nachrichten'),
-  schedule('Termine'),
+  calendar('Kalender'),
   news('Neuigkeiten'),
   files('Dateien');
 
@@ -12,8 +12,8 @@ enum ModuleType {
   final String title;
 }
 
-class HomeBloc extends HydratedCubit<List<Module>> {
-  HomeBloc() : super([]);
+class HomeCubit extends HydratedCubit<List<Module>> {
+  HomeCubit() : super([]);
   void reorderModules(int oldIndex, int newIndex) {
     final modules = state;
     final module = modules.removeAt(oldIndex);
@@ -21,12 +21,16 @@ class HomeBloc extends HydratedCubit<List<Module>> {
     emit(List.from(modules));
   }
 
-  void addModule(Module module) {
+  void addModule({required Module module}) {
     final modules = state..add(module);
     emit(List.from(modules));
   }
 
-  void removeModule(ModuleType type) {
+  void overrideModules({required List<Module> modules}) {
+    emit(List.from(modules));
+  }
+
+  void removeModule({required ModuleType type}) {
     final modules = state..removeWhere((module) => module.getType() == type);
     emit(List.from(modules));
   }
@@ -34,15 +38,11 @@ class HomeBloc extends HydratedCubit<List<Module>> {
   @override
   List<Module>? fromJson(Map<String, dynamic> json) {
     final List<dynamic> moduleList = json['modules'] as List<dynamic>;
-    final modules = moduleList.map<Module>((moduleJson) {
+    return moduleList.map<Module>((moduleJson) {
       final Map<String, dynamic> json = moduleJson as Map<String, dynamic>;
-      final ModuleType type = ModuleType.values.firstWhere(
-        (ModuleType value) => value.name == json['type'].toString(),
-        orElse: () => throw Exception('Unbekannter Modultyp: ${json['type']}'),
-      );
+      final ModuleType type = ModuleType.values.byName(json['type'].toString());
       return getModule(type);
     }).toList();
-    return modules;
   }
 
   @override

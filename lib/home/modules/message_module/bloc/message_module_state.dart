@@ -1,29 +1,44 @@
 import 'package:equatable/equatable.dart';
 
-enum MessageModuleStatus {
-  initial,
-  loading,
-  populated,
-  failure,
-}
-
-class MessageModuleState extends Equatable {
-  const MessageModuleState({
-    required this.status,
-  });
-
-  const MessageModuleState.initial()
-      : this(
-          status: MessageModuleStatus.initial,
-        );
-  final MessageModuleStatus status;
+sealed class MessageModuleState extends Equatable {
+  const MessageModuleState();
 
   @override
-  List<Object?> get props => [status];
+  List<Object?> get props => [];
+}
 
-  MessageModuleState copyWith({MessageModuleStatus? status}) {
-    return MessageModuleState(
-      status: status ?? this.status,
-    );
+class MessageModuleStateInitial extends MessageModuleState {
+  const MessageModuleStateInitial();
+
+  @override
+  List<Object?> get props => [];
+}
+
+class MessageModuleStateLoading extends MessageModuleState {
+  const MessageModuleStateLoading();
+
+  @override
+  List<Object?> get props => [];
+}
+
+class MessageModuleStateDidLoad extends MessageModuleState {
+  const MessageModuleStateDidLoad();
+
+  @override
+  List<Object?> get props => [];
+
+  MessageModuleStateDidLoad copyWith() {
+    return const MessageModuleStateDidLoad();
+  }
+}
+
+class MessageModuleStateError extends MessageModuleState {
+  const MessageModuleStateError();
+
+  @override
+  List<Object?> get props => [];
+
+  MessageModuleStateError copyWith() {
+    return const MessageModuleStateError();
   }
 }

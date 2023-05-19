@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:studipadawan/home/bloc/home_bloc.dart';
+import 'package:studipadawan/home/cubit/home_cubit.dart';
 
 abstract class Module extends Widget {
   const Module({super.key});
