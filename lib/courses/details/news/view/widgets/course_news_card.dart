@@ -75,27 +75,27 @@ class CourseNewsCard extends StatelessWidget {
                         news.formattedPublicationDate,
                         style: const TextStyle(color: Colors.black54),
                       ),
-                      const SizedBox(height: AppSpacing.lg),
-                      Text(
-                        news.title,
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleMedium
-                            ?.copyWith(fontWeight: FontWeight.w500),
-                      ),
-                      const SizedBox(height: AppSpacing.sm),
-                      HtmlWidget(
-                        news.content,
-                        onTapUrl: (url) async {
-                          if (!await canLaunchUrlString(url)) return false;
-                          return launchUrlString(url);
-                        },
-                      ),
                     ],
                   ),
                 )
               ],
             ),
+            const SizedBox(height: AppSpacing.lg),
+            Text(
+              news.title,
+              style: Theme.of(context)
+                  .textTheme
+                  .titleMedium
+                  ?.copyWith(fontWeight: FontWeight.w500),
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            HtmlWidget(
+              news.content,
+              onTapUrl: (url) async {
+                if (!await canLaunchUrlString(url)) return false;
+                return launchUrlString(url);
+              },
+            )
           ],
         ),
       ),
