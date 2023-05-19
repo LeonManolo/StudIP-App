@@ -1,10 +1,11 @@
 part of 'course_details_bloc.dart';
 
 enum CourseDetailsTab {
-  info('Info', Icons.info_outline),
   files('Dateien', Icons.folder_outlined),
   participants('Teilnehmer', Icons.person_outlined),
-  forum('Forum', Icons.message_outlined);
+  wiki('Wiki', EvaIcons.bulbOutline),
+  // forum('Forum', Icons.message_outlined),
+  info('Info', Icons.info_outline);
 
   const CourseDetailsTab(this.title, this.icon);
 
