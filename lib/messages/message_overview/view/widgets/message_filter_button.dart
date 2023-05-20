@@ -23,7 +23,7 @@ class MessageFilterButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton<MessageFilter>(
-      icon: funnelIcon(currentFilter, Theme.of(context).primaryColor),
+      icon: funnelIcon(currentFilter, Colors.black),
       onSelected: (newFilter) => {setFilter(newFilter)},
       itemBuilder: (context) => [
         PopupMenuItem<MessageFilter>(
@@ -32,7 +32,7 @@ class MessageFilterButton extends StatelessWidget {
             isSelected: currentFilter == MessageFilter.none,
             filter: MessageFilter.none,
             funnelIcon:
-                funnelIcon(currentFilter, Theme.of(context).primaryColor),
+                funnelIcon(currentFilter, Colors.black),
             filterDescription: MessageFilter.none.description,
           ),
         ),
@@ -42,7 +42,7 @@ class MessageFilterButton extends StatelessWidget {
             isSelected: currentFilter == MessageFilter.unread,
             filter: MessageFilter.unread,
             funnelIcon:
-                funnelIcon(currentFilter, Theme.of(context).primaryColor),
+                funnelIcon(currentFilter, Colors.black),
             filterDescription: MessageFilter.unread.description,
           ),
         )
