@@ -14,9 +14,7 @@ import 'package:user_repository/user_repository.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-   HydratedBloc.storage = await HydratedStorage.build(
-    storageDirectory: await getApplicationDocumentsDirectory(),
-  );
+
   final apiClient = StudIpApiClient();
 
   final authenticationRepository = AuthenticationRepository(client: apiClient);
