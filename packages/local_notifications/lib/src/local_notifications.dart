@@ -124,6 +124,19 @@ final class LocalNotifications {
     return notifications;
   }
 
+  static Future<void> cancelNotifications({String? topic}) async {
+    if (topic != null) {
+      final notifications = await getNotifications(topic: topic);
+      for (var notification in notifications) {
+        _flutterLocalNotificationsPlugin.cancel(
+          notification.id
+        );
+      }
+    } else {
+      _flutterLocalNotificationsPlugin.cancelAll();
+    }
+  }
+
   static Future<({int totalNotifications, int availableNotifications})>
       totalNotificationsStatus({String? excludingTopic}) async {
     var totalNotifications = switch (Platform.isIOS) {
