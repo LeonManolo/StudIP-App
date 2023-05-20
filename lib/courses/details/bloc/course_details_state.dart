@@ -16,8 +16,8 @@ enum CourseDetailsTab {
 class CourseDetailsState extends Equatable {
   const CourseDetailsState({required this.selectedTab, required this.course});
 
-  const CourseDetailsState.initial({required Course course})
-      : this(selectedTab: CourseDetailsTab.info, course: course);
+  CourseDetailsState.initial({required Course course})
+      : this(selectedTab: CourseDetailsTab.values.first, course: course);
   final CourseDetailsTab selectedTab;
   final Course course;
 

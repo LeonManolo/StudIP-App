@@ -1,23 +1,12 @@
 import 'dart:async';
-import 'dart:math';
-
 import 'package:bloc/bloc.dart';
-import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:courses_repository/courses_repository.dart';
 import 'package:equatable/equatable.dart';
 import 'package:logger/logger.dart';
-import 'package:stream_transform/stream_transform.dart';
+import 'package:studipadawan/utils/throttle_droppable.dart';
 
 part 'course_news_event.dart';
 part 'course_news_state.dart';
-
-// https://bloclibrary.dev/#/flutterinfinitelisttutorial?id=post-bloc
-const throttleDuration = Duration(milliseconds: 150);
-EventTransformer<E> throttleDroppable<E>(Duration duration) {
-  return (events, mapper) {
-    return droppable<E>().call(events.throttle(duration), mapper);
-  };
-}
 
 class CourseNewsBloc extends Bloc<CourseNewsEvent, CourseNewsState> {
   CourseNewsBloc({
@@ -29,7 +18,7 @@ class CourseNewsBloc extends Bloc<CourseNewsEvent, CourseNewsState> {
     on<CourseNewsReloadRequested>(_onCourseNewsReloadRequested);
     on<CourseNewsReachedBottom>(
       _onCourseNewsReachedBottom,
-      transformer: throttleDroppable(throttleDuration),
+      transformer: throttleDroppable(const Duration(milliseconds: 150)),
     );
   }
 
@@ -112,7 +101,7 @@ class CourseNewsBloc extends Bloc<CourseNewsEvent, CourseNewsState> {
           news: updatedNews,
         ),
       );
-    } catch (_) {
+    } catch (e) {
       Logger().e(e);
       emit(
         CourseNewsStateError(

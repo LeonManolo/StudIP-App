@@ -6,3 +6,7 @@ abstract class CourseWikiEvent extends Equatable {
   @override
   List<Object> get props => [];
 }
+
+class CourseWikiReloadRequested extends CourseWikiEvent {}
+
+class CourseWikiReachedBottom extends CourseWikiEvent {}

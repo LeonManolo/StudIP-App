@@ -72,7 +72,10 @@ class _CourseNewsListState extends PaginatedListState {
 
           case CourseNewsStateError _:
             return Center(
-              child: Text(state.errorMessage),
+              child: Text(
+                state.errorMessage,
+                textAlign: TextAlign.center,
+              ),
             );
 
           case CourseNewsStateLoading _:

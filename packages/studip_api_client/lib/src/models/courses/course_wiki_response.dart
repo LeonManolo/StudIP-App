@@ -54,7 +54,7 @@ class CourseWikiPageResponse {
     final attributes = json['attributes'];
     return CourseWikiPageResponse(
       id: json['id'],
-      title: attributes['id'],
+      title: attributes['keyword'],
       content: attributes['content'],
       lastEditorId: json['relationships']['author']['data']['id'],
       lastEditedAt: attributes['chdate'],

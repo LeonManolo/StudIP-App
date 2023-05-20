@@ -92,7 +92,7 @@ class CourseRepository {
       );
 
       return CourseWikiPagesListResponse(
-        totalNumberOfWikiPages: wikiPageItems.length,
+        totalNumberOfWikiPages: wikiPagesResponse.total,
         wikiPages: wikiPageItems,
       );
     } catch (error, stackTrace) {
