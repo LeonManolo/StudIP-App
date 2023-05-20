@@ -2,6 +2,7 @@ import 'package:authentication_repository/authentication_repository.dart';
 import 'package:calender_repository/calender_repository.dart';
 import 'package:courses_repository/courses_repository.dart';
 import 'package:files_repository/files_repository.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -31,7 +32,13 @@ Future<void> main() async {
   final filesRepository = FilesRepository(apiClient: apiClient);
 
   await initializeDateFormatting();
-  
+
+  HydratedBloc.storage = await HydratedStorage.build(
+    storageDirectory: kIsWeb
+        ? HydratedStorage.webStorageDirectory
+        : await getApplicationDocumentsDirectory(),
+  );
+
   runApp(
     App(
       authenticationRepository: authenticationRepository,

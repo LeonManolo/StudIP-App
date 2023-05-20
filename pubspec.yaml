@@ -102,11 +102,14 @@ dependencies:
 
   flutter_speed_dial: ^6.2.0
 
+  path_provider: ^2.0.14
+
   ######### STATE MANAGEMENT ############
   bloc: ^8.1.1
   flutter_bloc: ^8.1.2
   flow_builder: ^0.0.9
   flutter_typeahead: ^4.3.7
+  hydrated_bloc: ^9.1.0
 
 dev_dependencies:
   bloc_test: ^9.1.1

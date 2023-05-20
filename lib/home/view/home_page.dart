@@ -72,13 +72,11 @@ class HomePage extends StatelessWidget {
     showCupertinoModalPopup<void>(
       context: context,
       builder: (BuildContext context) {
-        return SafeArea(
-          child: Container(
-            padding: EdgeInsets.only(
-              bottom: MediaQuery.of(context).viewInsets.bottom,
-            ),
-            child: builder(context),
+        return Container(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom,
           ),
+          child: builder(context),
         );
       },
     );

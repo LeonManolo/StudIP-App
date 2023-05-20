@@ -25,18 +25,10 @@ class _AuthenticatedPageState extends State<AuthenticatedPage> {
       body: IndexedStack(
         index: _selectedTab,
         children: const [
-          SafeArea(
-            child: HomePage(),
-          ),
-          SafeArea(
-            child: CoursesPage(),
-          ),
-          SafeArea(
-            child: MessagesPage(),
-          ),
-          SafeArea(
-            child: CalendarPage(),
-          )
+          HomePage(),
+          CoursesPage(),
+          MessagesPage(),
+          CalendarPage(),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
