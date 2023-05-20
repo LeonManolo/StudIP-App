@@ -1,12 +1,21 @@
-import 'dart:ffi';
+import 'dart:convert';
+import 'dart:math';
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
+import 'dart:io';
 
-typedef TestOr = String;
+import 'models/local_notification.dart';
+import 'extensions/max_int.dart';
 
 final class LocalNotifications {
+  /// Samsung's implementation of Android has imposed a maximum of 500 alarms that can be scheduled via the Alarm Manager API
+  static const maxPendingAndroidNotifications = 500;
+
+  /// There is a limit imposed by iOS where it will only keep 64 notifications that will fire the soonest.
+  static const maxPendingIOSNotifications = 64;
+
   static final _flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
@@ -47,41 +56,92 @@ final class LocalNotifications {
         payload: 'item x');
   }
 
-  static Future<void> scheduleNotification({String? timezoneName}) async {
+  static Future<void> scheduleNotification({
+    required String title,
+    required String subtitle,
+    required DateTime showAt,
+    String? topic,
+    Map<String, dynamic> payload = const {},
+    String? timezoneName,
+  }) async {
     final timezone =
         timezoneName == null ? tz.local : tz.getLocation(timezoneName);
 
-    final scheduledDate = tz.TZDateTime.from(DateTime.now().add(Duration(seconds: 10)), timezone);
+    final scheduledDate = tz.TZDateTime.from(showAt, timezone);
+
+
+    final id = Random().nextInt(0x7fffffff); //await _notificationCount();
+    final notification = LocalNotification(
+      topic: topic,
+      payload: payload,
+      id: id,
+      title: title,
+      subtitle: subtitle,
+    );
 
     await _flutterLocalNotificationsPlugin.zonedSchedule(
-        0,
-        'scheduled title',
-        'scheduled body',
+        notification.id,
+        notification.title,
+        notification.subtitle,
         scheduledDate,
         const NotificationDetails(
             android: AndroidNotificationDetails(
                 'your channel id', 'your channel name',
                 channelDescription: 'your channel description')),
+        payload: notification.toJson(),
         androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
         uiLocalNotificationDateInterpretation:
             UILocalNotificationDateInterpretation.absoluteTime);
   }
 
-  static Future<void> getNotifications() async {
-    final pendingNotificationRequests =
-      await _flutterLocalNotificationsPlugin.pendingNotificationRequests();
-
-
-    pendingNotificationRequests.first.payload;
+  static Future<int> _notificationCount({String? topic}) async {
+    return (await getNotifications(topic: topic)).length;
   }
 
+  static Future<List<LocalNotification>> getNotifications({
+    String? topic,
+  }) async {
+    var pendingNotificationRequests =
+        await _flutterLocalNotificationsPlugin.pendingNotificationRequests();
 
+    final notifications = <LocalNotification>[];
+    for (final pendingNotification in pendingNotificationRequests) {
+      final payloadJson = jsonDecode(pendingNotification.payload ?? '{}');
 
-  static Future<void> _saveNotifications() async {
+      switch (payloadJson) {
+        case {
+              'topic': final String payloadTopic,
+              'payload': final Map<String, dynamic> _,
+            }
+            when (payloadTopic == topic || topic == null) &&
+                payloadJson is Map<String, dynamic>:
+          final notification =
+              LocalNotification.fromJson(payloadJson, pendingNotification);
+          notifications.add(notification);
+      }
+    }
 
+    return notifications;
   }
 
-  static Future<void> _retrieveSavedNotifications() async {
+  static Future<({int totalNotifications, int availableNotifications})>
+      totalNotificationsStatus({String? excludingTopic}) async {
+    var totalNotifications = switch (Platform.isIOS) {
+      true => maxPendingIOSNotifications,
+      false => maxPendingAndroidNotifications,
+    };
 
+    var pendingNotificationsCount = await _notificationCount();
+    final notificationsWithTopicCount =
+        await _notificationCount(topic: excludingTopic);
+    final totalNonTopicCount = pendingNotificationsCount - notificationsWithTopicCount;
+
+    final availableNotifications =
+        totalNotifications - pendingNotificationsCount;
+
+    return (
+      totalNotifications: totalNotifications - totalNonTopicCount,
+      availableNotifications: availableNotifications
+    );
   }
 }
