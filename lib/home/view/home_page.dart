@@ -41,8 +41,8 @@ class HomePage extends StatelessWidget {
                   child: modules.isEmpty
                       ? const Center(
                           child: EmptyView(
-                            title: 'Keine Widgets vorhanden',
-                            message: 'Es sind keine Widgets vorhanden',
+                            title: 'Keine Module vorhanden',
+                            message: 'Es sind keine Module vorhanden',
                           ),
                         )
                       : Padding(
@@ -72,11 +72,13 @@ class HomePage extends StatelessWidget {
     showCupertinoModalPopup<void>(
       context: context,
       builder: (BuildContext context) {
-        return Container(
-          padding: EdgeInsets.only(
-            bottom: MediaQuery.of(context).viewInsets.bottom,
+        return SafeArea(
+          child: Container(
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom,
+            ),
+            child: builder(context),
           ),
-          child: builder(context),
         );
       },
     );

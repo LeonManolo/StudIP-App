@@ -28,14 +28,16 @@ class _ModuleSelectionModalState extends State<ModuleSelectionModal> {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      child: Column(
+    return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: const Text(
+          'Modulauswahl',
+        ),
+      ),
+      body: Column(
         children: [
           const SizedBox(height: 16),
-          Text(
-            'Modulauswahl',
-            style: Theme.of(context).textTheme.headlineSmall,
-          ),
           const SizedBox(height: 16),
           Expanded(
             child: ListView.builder(
@@ -65,31 +67,33 @@ class _ModuleSelectionModalState extends State<ModuleSelectionModal> {
             ),
           ),
           const SizedBox(height: 16),
-          Padding(
-            padding: const EdgeInsets.only(right: 5),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: const Text('Abbrechen'),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    final List<Module> modules = [];
-                    for (final moduleType in selectedModules) {
-                      modules.add(getModule(moduleType));
-                    }
-                    widget.homeCubit.overrideModules(modules: modules);
-                    WidgetsBinding.instance.addPostFrameCallback((_) {
+          SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.only(right: 8),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextButton(
+                    onPressed: () {
                       Navigator.pop(context);
-                    });
-                  },
-                  child: const Text('Speichern'),
-                ),
-              ],
+                    },
+                    child: const Text('Abbrechen'),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      final List<Module> modules = [];
+                      for (final moduleType in selectedModules) {
+                        modules.add(getModule(moduleType));
+                      }
+                      widget.homeCubit.overrideModules(modules: modules);
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        Navigator.pop(context);
+                      });
+                    },
+                    child: const Text('Speichern'),
+                  ),
+                ],
+              ),
             ),
           ),
           const SizedBox(height: 16),
