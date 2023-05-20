@@ -1,7 +1,6 @@
 import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
-import 'package:studipadawan/utils/conditional_scroll_view_wrapper.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 enum UserTitleContentAction {
@@ -22,7 +21,6 @@ class UserTitleContentView extends StatelessWidget {
     required this.formattedPublicationDate,
     required this.title,
     required this.content,
-    this.displayInScrollView = false,
   });
 
   final String userAvatarUrl;
@@ -31,83 +29,79 @@ class UserTitleContentView extends StatelessWidget {
   final String formattedPublicationDate;
   final String title;
   final String content;
-  final bool displayInScrollView;
 
   @override
   Widget build(BuildContext context) {
-    return ConditionalScrollViewWrapper(
-      wrapInScrollView: displayInScrollView,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                height: 35,
-                width: 35,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(6),
-                  image: DecorationImage(
-                    image: NetworkImage(
-                      userAvatarUrl,
-                    ),
-                    fit: BoxFit.fill,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              height: 35,
+              width: 35,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(6),
+                image: DecorationImage(
+                  image: NetworkImage(
+                    userAvatarUrl,
                   ),
+                  fit: BoxFit.fill,
                 ),
               ),
-              const SizedBox(width: AppSpacing.md),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text.rich(
-                      TextSpan(
-                        text: 'Von ',
-                        children: [
-                          TextSpan(
-                            text: userFormattedName,
-                            style: const TextStyle(fontWeight: FontWeight.bold),
-                            children: [
-                              TextSpan(
-                                text: ' ${userAction.description}',
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.normal,
-                                ),
-                              )
-                            ],
-                          )
-                        ],
-                      ),
+            ),
+            const SizedBox(width: AppSpacing.md),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text.rich(
+                    TextSpan(
+                      text: 'Von ',
+                      children: [
+                        TextSpan(
+                          text: userFormattedName,
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                          children: [
+                            TextSpan(
+                              text: ' ${userAction.description}',
+                              style: const TextStyle(
+                                fontWeight: FontWeight.normal,
+                              ),
+                            )
+                          ],
+                        )
+                      ],
                     ),
-                    const SizedBox(height: AppSpacing.xxs),
-                    Text(
-                      formattedPublicationDate,
-                      style: const TextStyle(color: Colors.black54),
-                    ),
-                  ],
-                ),
-              )
-            ],
-          ),
-          const SizedBox(height: AppSpacing.lg),
-          Text(
-            title,
-            style: Theme.of(context)
-                .textTheme
-                .titleMedium
-                ?.copyWith(fontWeight: FontWeight.w500),
-          ),
-          const SizedBox(height: AppSpacing.sm),
-          HtmlWidget(
-            content,
-            onTapUrl: (url) async {
-              if (!await canLaunchUrlString(url)) return false;
-              return launchUrlString(url);
-            },
-          )
-        ],
-      ),
+                  ),
+                  const SizedBox(height: AppSpacing.xxs),
+                  Text(
+                    formattedPublicationDate,
+                    style: const TextStyle(color: Colors.black54),
+                  ),
+                ],
+              ),
+            )
+          ],
+        ),
+        const SizedBox(height: AppSpacing.lg),
+        Text(
+          title,
+          style: Theme.of(context)
+              .textTheme
+              .titleMedium
+              ?.copyWith(fontWeight: FontWeight.w500),
+        ),
+        const SizedBox(height: AppSpacing.sm),
+        HtmlWidget(
+          content,
+          onTapUrl: (url) async {
+            if (!await canLaunchUrlString(url)) return false;
+            return launchUrlString(url);
+          },
+        )
+      ],
     );
   }
 }

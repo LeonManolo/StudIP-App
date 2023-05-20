@@ -7,6 +7,6 @@ class NewsModuleBloc extends Bloc<NewsModuleEvent, NewsModuleState> {
   NewsModuleBloc({
     required CourseRepository courseRepository,
   })  : _courseRepository = courseRepository,
-        super(const NewsModuleStateInitial()) {}
+        super(const NewsModuleStateInitial());
   final CourseRepository _courseRepository;
 }
