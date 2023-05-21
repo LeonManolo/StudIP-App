@@ -141,7 +141,7 @@ final class CalendarNotificationsBloc
             title: '${course.course.courseDetails.title} startet gleich',
             topic: notificationTopic,
             subtitle: course.course.courseDetails.subtitle ?? '',
-            showAt: DateTime.now().add(const Duration(seconds: 5)),
+            showAt: event.eventDate,
             payload: {
               'courseId': course.course.id,
               'time': event.eventDate.toIso8601String(),

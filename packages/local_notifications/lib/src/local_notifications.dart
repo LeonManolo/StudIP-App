@@ -39,6 +39,12 @@ final class LocalNotifications {
     // Android initialization
     const initializationSettingsAndroid =
         AndroidInitializationSettings('@mipmap/ic_launcher');
+
+    _flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+        AndroidFlutterLocalNotificationsPlugin>()
+        ?.requestPermission();
+
     // iOS initialization
     const initializationSettingsDarwin = DarwinInitializationSettings();
 
