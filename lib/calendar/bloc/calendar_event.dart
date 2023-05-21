@@ -6,7 +6,7 @@ abstract class CalendarEvent extends Equatable {
   const CalendarEvent();
 }
 
-class CalendarRequested extends CalendarEvent {
+final class CalendarRequested extends CalendarEvent {
 
   const CalendarRequested({ required this.day, required this.layout});
   final DateTime day;
@@ -16,7 +16,7 @@ class CalendarRequested extends CalendarEvent {
   List<Object?> get props => [day, layout];
 }
 
-class CalendarNextDayRequested extends CalendarEvent {
+final class CalendarNextDayRequested extends CalendarEvent {
 
   const CalendarNextDayRequested();
 
@@ -24,7 +24,7 @@ class CalendarNextDayRequested extends CalendarEvent {
   List<Object?> get props => [];
 }
 
-class CalendarPreviousDayRequested extends CalendarEvent {
+final class CalendarPreviousDayRequested extends CalendarEvent {
 
   const CalendarPreviousDayRequested();
 
@@ -32,7 +32,7 @@ class CalendarPreviousDayRequested extends CalendarEvent {
   List<Object?> get props => [];
 }
 
-class CalendarExactDayRequested extends CalendarEvent {
+final class CalendarExactDayRequested extends CalendarEvent {
 
   const CalendarExactDayRequested({required this.exactDay});
   final DateTime exactDay;
@@ -41,7 +41,7 @@ class CalendarExactDayRequested extends CalendarEvent {
   List<Object?> get props => [exactDay];
 }
 
-class CalendarSwitchLayoutRequested extends CalendarEvent {
+final class CalendarSwitchLayoutRequested extends CalendarEvent {
 
   const CalendarSwitchLayoutRequested();
 

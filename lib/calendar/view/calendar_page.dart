@@ -8,6 +8,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:studipadawan/calendar/bloc/calendar_bloc.dart';
 import 'package:studipadawan/calendar/bloc/calendar_event.dart';
 import 'package:studipadawan/calendar/bloc/calendar_state.dart';
+import 'package:studipadawan/calendar/calendar_notifications/view/calendar_schedule_notifications_page.dart';
 import 'package:studipadawan/calendar/widgets/calendar_header.dart';
 import 'package:studipadawan/calendar/widgets/calendar_list_body/calendar_list_body.dart';
 import 'package:studipadawan/calendar/widgets/calendar_timeframes_body/calendar_timeframes_body.dart';
@@ -33,6 +34,9 @@ class CalendarPage extends StatelessWidget {
         appBar: AppBar(
           title: const Text('Kalender'),
           actions: [
+            IconButton(onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => const CalendarScheduleNotificationsPage()));
+            }, icon: const Icon(EvaIcons.bellOutline)),
             IconButton(
               onPressed: () {
                 calendarBloc.add(const CalendarSwitchLayoutRequested());
