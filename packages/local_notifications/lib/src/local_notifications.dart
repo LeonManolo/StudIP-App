@@ -9,6 +9,7 @@ import 'dart:io';
 import 'models/local_notification.dart';
 import 'extensions/max_int.dart';
 
+/// Provides local notification services using `FlutterLocalNotificationsPlugin`.
 final class LocalNotifications {
   /// Samsung's implementation of Android has imposed a maximum of 500 alarms that can be scheduled via the Alarm Manager API
   static const maxPendingAndroidNotifications = 500;
@@ -16,9 +17,13 @@ final class LocalNotifications {
   /// There is a limit imposed by iOS where it will only keep 64 notifications that will fire the soonest.
   static const maxPendingIOSNotifications = 64;
 
+  static const androidDefaultChannelId = 'default';
+
   static final _flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
+  /// Initialize the notification plugin with specific settings for Android and iOS.
+  /// Also sets the time zone to the given [timezoneName].
   static Future<void> initialize(
       {String timezoneName = 'Europe/Berlin'}) async {
     // Android initialization
@@ -39,28 +44,15 @@ final class LocalNotifications {
     await _flutterLocalNotificationsPlugin.initialize(initializationSettings);
   }
 
-  static Future<void> showNotification() async {
-    const androidNotificationDetails = AndroidNotificationDetails(
-        'your channel id', 'your channel name',
-        channelDescription: 'your channel description',
-        importance: Importance.max,
-        priority: Priority.high,
-        ticker: 'ticker');
-    const iOSNotificationDetails = DarwinNotificationDetails(
-      subtitle: "iOS Subtitle",
-    );
-    const NotificationDetails notificationDetails = NotificationDetails(
-        android: androidNotificationDetails, iOS: iOSNotificationDetails);
-    await _flutterLocalNotificationsPlugin.show(
-        0, 'plain title', 'plain body', notificationDetails,
-        payload: 'item x');
-  }
-
+  /// Schedule a notification to be shown at a specific date and time.
+  /// You can also optionally set a [topic], [androidTopicDescription],
+  /// [payload], and [timezoneName].
   static Future<void> scheduleNotification({
     required String title,
     required String subtitle,
     required DateTime showAt,
     String? topic,
+    String? androidTopicDescription,
     Map<String, dynamic> payload = const {},
     String? timezoneName,
   }) async {
@@ -69,8 +61,7 @@ final class LocalNotifications {
 
     final scheduledDate = tz.TZDateTime.from(showAt, timezone);
 
-
-    final id = Random().nextInt(0x7fffffff); //await _notificationCount();
+    final id = Random().nextInt(10000); //await _notificationCount();
     final notification = LocalNotification(
       topic: topic,
       payload: payload,
@@ -84,25 +75,25 @@ final class LocalNotifications {
         notification.title,
         notification.subtitle,
         scheduledDate,
-        const NotificationDetails(
-            android: AndroidNotificationDetails(
-                'your channel id', 'your channel name',
-                channelDescription: 'your channel description')),
+        _buildNotificationDetails(
+            androidChannelId: topic ?? androidDefaultChannelId,
+            androidChannelName: androidTopicDescription ?? '',
+        ),
         payload: notification.toJson(),
         androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
         uiLocalNotificationDateInterpretation:
-            UILocalNotificationDateInterpretation.absoluteTime);
+            UILocalNotificationDateInterpretation.absoluteTime,
+    );
   }
 
-  static Future<int> _notificationCount({String? topic}) async {
-    return (await getNotifications(topic: topic)).length;
-  }
-
+  /// Returns a list of all pending notifications.
+  /// If a [topic] is provided, only returns notifications for that topic.
   static Future<List<LocalNotification>> getNotifications({
     String? topic,
   }) async {
     var pendingNotificationRequests =
         await _flutterLocalNotificationsPlugin.pendingNotificationRequests();
+    print(pendingNotificationRequests);
 
     final notifications = <LocalNotification>[];
     for (final pendingNotification in pendingNotificationRequests) {
@@ -124,6 +115,8 @@ final class LocalNotifications {
     return notifications;
   }
 
+  /// Cancels all pending notifications.
+  /// If a [topic] is provided, only cancels notifications for that topic.
   static Future<void> cancelNotifications({String? topic}) async {
     if (topic != null) {
       final notifications = await getNotifications(topic: topic);
@@ -137,6 +130,8 @@ final class LocalNotifications {
     }
   }
 
+  /// Returns a record containing the total number of notifications and the number of available notifications.
+  /// The [excludingTopic] parameter allows to exclude notifications of a specific topic from the count.
   static Future<({int totalNotifications, int availableNotifications})>
       totalNotificationsStatus({String? excludingTopic}) async {
     var totalNotifications = switch (Platform.isIOS) {
@@ -155,6 +150,26 @@ final class LocalNotifications {
     return (
       totalNotifications: totalNotifications - totalNonTopicCount,
       availableNotifications: availableNotifications
+    );
+  }
+
+  /// Helper method that returns the total count of notifications.
+  /// If a [topic] is provided, it returns the count of notifications for that specific topic.
+  static Future<int> _notificationCount({String? topic}) async {
+    return (await getNotifications(topic: topic)).length;
+  }
+
+  /// Builds and returns a `NotificationDetails` instance with specific details for Android and iOS platforms.
+  /// [androidChannelId] is the ID of the notification channel. This is required for Android 8.0 and above.
+  /// [androidChannelName] is the name of the notification channel. This will be visible for the users in the system settings.
+  static NotificationDetails _buildNotificationDetails({
+    required String androidChannelId,
+    required String androidChannelName,
+  }
+      ) {
+    return NotificationDetails(
+      android: AndroidNotificationDetails(androidChannelId, androidChannelName),
+      iOS: DarwinNotificationDetails(),
     );
   }
 }

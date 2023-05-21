@@ -1,13 +1,10 @@
-import 'package:courses_repository/courses_repository.dart';
-import 'package:equatable/equatable.dart';
-import 'package:studipadawan/calendar/calendar_notifications/model/calendar_notifications_course.dart';
+part of 'calendar_notifications_bloc.dart';
 
 sealed class CalendarNotificationsState extends Equatable {
   const CalendarNotificationsState();
 }
 
 final class CalendarNotificationsInitial extends CalendarNotificationsState {
-
   const CalendarNotificationsInitial();
 
   @override
@@ -15,7 +12,6 @@ final class CalendarNotificationsInitial extends CalendarNotificationsState {
 }
 
 final class CalendarNotificationsLoading extends CalendarNotificationsState {
-
   const CalendarNotificationsLoading();
 
   @override
@@ -23,12 +19,18 @@ final class CalendarNotificationsLoading extends CalendarNotificationsState {
 }
 
 final class CalendarNotificationsPopulated extends CalendarNotificationsState {
-  const CalendarNotificationsPopulated({ required this.courses});
+  const CalendarNotificationsPopulated({
+    required this.courses,
+    required this.totalNotifications,
+    this.notificationsSaved = false,
+  });
 
+  final bool notificationsSaved;
+  final int totalNotifications;
   final List<CalendarNotificationsCourse> courses;
 
   @override
-  List<Object?> get props => [courses];
+  List<Object?> get props => [courses, notificationsSaved];
 }
 
 final class CalendarNotificationsFailure extends CalendarNotificationsState {

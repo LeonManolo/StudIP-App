@@ -36,7 +36,7 @@ class CalendarPage extends StatelessWidget {
           actions: [
             IconButton(onPressed: () {
               Navigator.of(context).push(MaterialPageRoute(builder: (context) => const CalendarScheduleNotificationsPage()));
-            }, icon: const Icon(EvaIcons.bellOutline)),
+            }, icon: const Icon(EvaIcons.bellOutline),),
             IconButton(
               onPressed: () {
                 calendarBloc.add(const CalendarSwitchLayoutRequested());

@@ -1,6 +1,11 @@
-import 'package:equatable/equatable.dart';
+part of 'calendar_notifications_bloc.dart';
 
-//TODO: sealed machen
+enum NotificationTime {
+  fifteenMinutesEarly,
+  thirtyMinutesEarly,
+  sixtyMinutesEarly,
+}
+
 abstract class CalendarNotificationsEvent extends Equatable {
   const CalendarNotificationsEvent();
 }
@@ -13,10 +18,11 @@ final class CalendarNotificationsRequested extends CalendarNotificationsEvent {
 }
 
 final class CalendarNotificationsSelected extends CalendarNotificationsEvent {
-  const CalendarNotificationsSelected(
-      {required this.courseEventKey,
-      required this.courseId,
-      required this.notificationEnabled});
+  const CalendarNotificationsSelected({
+    required this.courseEventKey,
+    required this.courseId,
+    required this.notificationEnabled,
+  });
 
   final String courseEventKey;
   final String courseId;

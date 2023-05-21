@@ -2,7 +2,6 @@ import 'package:app_ui/app_ui.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:local_notifications/local_notifications.dart';
 import 'package:marquee/marquee.dart';
 
 class CalendarDetailPage extends StatelessWidget {
@@ -15,12 +14,12 @@ class CalendarDetailPage extends StatelessWidget {
         actions: [
           IconButton(onPressed: () async {
             //await LocalNotifications.scheduleNotification();
-            }, icon: const Icon(EvaIcons.alertCircle)),
+            }, icon: const Icon(EvaIcons.alertCircle),),
         ],
         title: SizedBox(
           height: 80,
           child: Marquee(
-            pauseAfterRound: Duration(seconds: 5),
+            pauseAfterRound: const Duration(seconds: 5),
             text: 'Benachrichtigungen (Softwarearchitektur)',
             //style: Theme.of(context).appBarTheme.titleTextStyle,
           ),
@@ -36,31 +35,30 @@ class CalendarDetailPage extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(bottom: AppSpacing.md),
                   child: Text(
-                    "Erinnerung",
+                    'Erinnerung',
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                 ),
                 DropdownButtonHideUnderline(child: DropdownButton2(
-                    items: [
+                    items: const [
                   DropdownMenuItem<int>(
                       value: 1,
-                      child: Text("15 min")),
+                      child: Text('15 min'),),
                   DropdownMenuItem<int>(
                     value: 2,
-                      child: Text("16 min"),
+                      child: Text('16 min'),
                   ),
-                ])),
+                ],),),
                 const Divider(),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
-                      "Termine",
+                      'Termine',
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
                     TextButton(
-                        onPressed: () {}, child: const Text("ALLE AUSWÄHLEN")),
+                        onPressed: () {}, child: const Text('ALLE AUSWÄHLEN'),),
                   ],
                 ),
               ],

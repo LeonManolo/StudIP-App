@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
-class LocalNotification {
+final class LocalNotification {
   final int id;
   final String? topic;
   final String title;
@@ -19,7 +19,7 @@ class LocalNotification {
   String toJson() {
     return jsonEncode({
       "topic": topic,
-      "payload": jsonEncode(payload),
+      "payload": payload,
     });
   }
 
