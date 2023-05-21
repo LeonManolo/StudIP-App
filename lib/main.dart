@@ -29,14 +29,20 @@ Future<void> main() async {
 
   await initializeDateFormatting();
 
-  await LocalNotifications.initialize();
+  await LocalNotifications.initialize(
+    androidChannelId: 'course_notifications',
+    androidChannelName: 'Kurs Benachrichtigungen',
+    androidChannelDescription: 'Kurs Benachrichtigungen',
+  );
 
-  runApp(App(
-    authenticationRepository: authenticationRepository,
-    calenderRepository: calenderRepository,
-    userRepository: userRepository,
-    coursesRepository: coursesRepository,
-    messageRepository: messagesRepository,
-    filesRepository: filesRepository,
-  ),);
+  runApp(
+    App(
+      authenticationRepository: authenticationRepository,
+      calenderRepository: calenderRepository,
+      userRepository: userRepository,
+      coursesRepository: coursesRepository,
+      messageRepository: messagesRepository,
+      filesRepository: filesRepository,
+    ),
+  );
 }

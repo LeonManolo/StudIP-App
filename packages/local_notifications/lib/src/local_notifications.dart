@@ -19,13 +19,23 @@ final class LocalNotifications {
 
   static const androidDefaultChannelId = 'default';
 
+  /// Is the ID of the notification channel. This is required for Android 8.0 and above.
+  static late final String _androidChannelId;
+
+  /// Is the name of the notification channel. This will be visible for the users in the system settings.
+  static late final String _androidChannelName;
+
   static final _flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
   /// Initialize the notification plugin with specific settings for Android and iOS.
   /// Also sets the time zone to the given [timezoneName].
   static Future<void> initialize(
-      {String timezoneName = 'Europe/Berlin'}) async {
+      {
+        required String androidChannelId,
+        required String androidChannelName,
+        required String androidChannelDescription,
+        String timezoneName = 'Europe/Berlin'}) async {
     // Android initialization
     const initializationSettingsAndroid =
         AndroidInitializationSettings('@mipmap/ic_launcher');
@@ -42,6 +52,19 @@ final class LocalNotifications {
     tz.setLocalLocation(tz.getLocation(timezoneName));
 
     await _flutterLocalNotificationsPlugin.initialize(initializationSettings);
+
+    _androidChannelId = androidChannelId;
+    _androidChannelName = androidChannelName;
+    AndroidNotificationChannel androidNotificationChannel =
+    AndroidNotificationChannel(
+      _androidChannelId,
+      _androidChannelName,
+      description: androidChannelDescription,
+    );
+    await _flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+        AndroidFlutterLocalNotificationsPlugin>()
+        ?.createNotificationChannel(androidNotificationChannel);
   }
 
   /// Schedule a notification to be shown at a specific date and time.
@@ -75,10 +98,7 @@ final class LocalNotifications {
         notification.title,
         notification.subtitle,
         scheduledDate,
-        _buildNotificationDetails(
-            androidChannelId: topic ?? androidDefaultChannelId,
-            androidChannelName: androidTopicDescription ?? '',
-        ),
+        _buildNotificationDetails(),
         payload: notification.toJson(),
         androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
         uiLocalNotificationDateInterpretation:
@@ -160,15 +180,10 @@ final class LocalNotifications {
   }
 
   /// Builds and returns a `NotificationDetails` instance with specific details for Android and iOS platforms.
-  /// [androidChannelId] is the ID of the notification channel. This is required for Android 8.0 and above.
-  /// [androidChannelName] is the name of the notification channel. This will be visible for the users in the system settings.
-  static NotificationDetails _buildNotificationDetails({
-    required String androidChannelId,
-    required String androidChannelName,
-  }
+  static NotificationDetails _buildNotificationDetails(
       ) {
     return NotificationDetails(
-      android: AndroidNotificationDetails(androidChannelId, androidChannelName),
+      android: AndroidNotificationDetails(_androidChannelId, _androidChannelName),
       iOS: DarwinNotificationDetails(),
     );
   }
