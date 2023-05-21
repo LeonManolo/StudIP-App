@@ -238,6 +238,29 @@ class StudIpApiClient
     return CourseEventListResponse.fromJson(body);
   }
 
+  @override
+  Future<CourseWikiPagesListResponse> getCourseWikiPages({
+    required String courseId,
+    required int offset,
+    required int limit,
+  }) async {
+    final response = await _core
+        .get(endpoint: "courses/$courseId/wiki-pages", queryParameters: {
+      "page[offset]": "$offset",
+      "page[limit]": "$limit",
+    });
+
+    final body = response.json();
+
+    if (response.statusCode != HttpStatus.ok) {
+      throw StudIpApiRequestFailure(
+        body: body,
+        statusCode: response.statusCode,
+      );
+    }
+    return CourseWikiPagesListResponse.fromJson(body);
+  }
+
   // **** Files ****
 
   @override

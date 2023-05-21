@@ -19,4 +19,10 @@ abstract class StudIPCoursesClient {
   });
 
   Future<UserResponse> getUser({required String userId});
+
+  Future<CourseWikiPagesListResponse> getCourseWikiPages({
+    required String courseId,
+    required int offset,
+    required int limit,
+  });
 }

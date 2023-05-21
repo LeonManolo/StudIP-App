@@ -10,7 +10,7 @@ class FilesModuleBloc extends Bloc<FilesModuleEvent, FilesModuleState> {
     required AuthenticationRepository authenticationRepository,
   })  : _filesRepository = filesRepository,
         _authenticationRepository = authenticationRepository,
-        super(const FilesModuleStateInitial()) {}
+        super(const FilesModuleStateInitial());
   final FilesRepository _filesRepository;
   final AuthenticationRepository _authenticationRepository;
 }

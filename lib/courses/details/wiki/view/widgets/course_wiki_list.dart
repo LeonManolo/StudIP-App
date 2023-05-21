@@ -1,45 +1,45 @@
 import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:studipadawan/courses/details/news/bloc/course_news_bloc.dart';
-import 'package:studipadawan/courses/details/news/view/widgets/course_news_card.dart';
+import 'package:studipadawan/courses/details/wiki/bloc/course_wiki_bloc.dart';
+import 'package:studipadawan/courses/details/wiki/view/widgets/course_wiki_list_row.dart';
 import 'package:studipadawan/utils/empty_view.dart';
 import 'package:studipadawan/utils/pagination/pagination.dart';
 import 'package:studipadawan/utils/refreshable_content.dart';
 
-class CourseNewsList extends PaginatedList {
-  const CourseNewsList({super.key, required super.reachedBottom});
+class CourseWikiList extends PaginatedList {
+  const CourseWikiList({super.key, required super.reachedBottom});
 
   @override
   // ignore: library_private_types_in_public_api
-  _CourseNewsListState createState() => _CourseNewsListState();
+  _CourseWikiListState createState() => _CourseWikiListState();
 }
 
-class _CourseNewsListState extends PaginatedListState {
+class _CourseWikiListState extends PaginatedListState {
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<CourseNewsBloc, CourseNewsState>(
+    return BlocBuilder<CourseWikiBloc, CourseWikiState>(
       builder: (context, state) {
         switch (state) {
-          case final CourseNewsStateDidLoad s when s.news.isEmpty:
+          case final CourseWikiStateDidLoad s when s.wikiPages.isEmpty:
             return RefreshableContent(
               callback: () => context
-                  .read<CourseNewsBloc>()
-                  .add(CourseNewsReloadRequested()),
+                  .read<CourseWikiBloc>()
+                  .add(CourseWikiReloadRequested()),
               child: const EmptyView(
-                title: 'Keine Ankündigungen vorhanden',
+                title: 'Keine Wiki-Seiten vorhanden',
                 message:
-                    'Ziehe die Ansicht nach unten, um neue Ankündigungen zu laden.',
+                    'Ziehe die Ansicht nach unten, um neue Wiki-Seiten zu laden.',
               ),
             );
-          case CourseNewsStateDidLoad _:
-            return RefreshIndicator(
-              onRefresh: () async => context
-                  .read<CourseNewsBloc>()
-                  .add(CourseNewsReloadRequested()),
+          case CourseWikiStateDidLoad _:
+            return RefreshableContent(
+              callback: () async => context
+                  .read<CourseWikiBloc>()
+                  .add(CourseWikiReloadRequested()),
               child: ListView.builder(
                 itemBuilder: (context, index) {
-                  if (index >= state.news.length) {
+                  if (index >= state.wikiPages.length) {
                     return Column(
                       children: [
                         const SizedBox(
@@ -51,25 +51,18 @@ class _CourseNewsListState extends PaginatedListState {
                       ],
                     );
                   } else {
-                    final newsItem = state.news.elementAt(index);
-
-                    return Padding(
-                      padding: const EdgeInsets.fromLTRB(
-                        AppSpacing.lg,
-                        AppSpacing.lg,
-                        AppSpacing.lg,
-                        0,
-                      ),
-                      child: CourseNewsCard(news: newsItem),
+                    final wikiPage = state.wikiPages.elementAt(index);
+                    return CourseWikiListRow(
+                      wikiPage: wikiPage,
                     );
                   }
                 },
-                itemCount: state.news.length + 1,
+                itemCount: state.wikiPages.length + 1,
                 controller: paginatedScrollController,
               ),
             );
 
-          case CourseNewsStateError _:
+          case CourseWikiStateError _:
             return Center(
               child: Text(
                 state.errorMessage,
@@ -77,7 +70,7 @@ class _CourseNewsListState extends PaginatedListState {
               ),
             );
 
-          case CourseNewsStateLoading _:
+          case CourseWikiStateLoading _:
             return const Center(
               child: CircularProgressIndicator(),
             );

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:studipadawan/home/cubit/home_cubit.dart';
 
 const double radius = 15;
@@ -43,7 +42,7 @@ class MoudleCard extends StatelessWidget {
                   ),
                 ),
               ),
-            )),
+            ),),
         Container(
           constraints: const BoxConstraints(minHeight: 200),
           decoration: BoxDecoration(

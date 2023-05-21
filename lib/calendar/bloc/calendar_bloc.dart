@@ -114,7 +114,7 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
   }
 
   FutureOr<void> _onCalendarSwitchLayoutRequested(
-      CalendarSwitchLayoutRequested event, Emitter<CalendarState> emit) {
+      CalendarSwitchLayoutRequested event, Emitter<CalendarState> emit,) {
     if (state is CalendarPopulated) {
       final currentState = state as CalendarPopulated;
       final layout = currentState.layout == CalendarBodyType.list

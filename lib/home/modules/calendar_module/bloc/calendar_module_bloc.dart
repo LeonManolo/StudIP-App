@@ -11,7 +11,7 @@ class CalendarModuleBloc
     required AuthenticationRepository authenticationRepository,
   })  : _calendarRepository = calendarRepository,
         _authenticationRepository = authenticationRepository,
-        super(const CalendarModuleStateInitial()) {}
+        super(const CalendarModuleStateInitial());
   final CalenderRepository _calendarRepository;
   final AuthenticationRepository _authenticationRepository;
 }
