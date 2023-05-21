@@ -10,7 +10,7 @@ import 'package:studipadawan/messages/message_overview/message_tabbar_bloc%20/me
 import 'package:studipadawan/messages/message_overview/message_tabbar_bloc%20/message_tabbar_event.dart';
 import 'package:studipadawan/utils/empty_view.dart';
 
-import 'package:studipadawan/utils/pagination_loading_indicator.dart';
+import 'package:studipadawan/utils/pagination/pagination.dart';
 import 'package:studipadawan/utils/refreshable_content.dart';
 
 final _inboxWidgetKey = GlobalKey<ScaffoldState>();

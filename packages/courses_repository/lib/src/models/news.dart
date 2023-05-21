@@ -8,8 +8,8 @@ class CourseNewsListResponse {
   final List<CourseNews> news;
 }
 
-class NewsAuthor {
-  NewsAuthor({
+class ItemAuthor {
+  ItemAuthor({
     required this.formattedName,
     required this.id,
     required this.avatarUrl,
@@ -42,7 +42,7 @@ class CourseNews {
           DateTime.parse(courseNewsResponse.publicationStart).toLocal(),
       publicationEnd:
           DateTime.parse(courseNewsResponse.publicationEnd).toLocal(),
-      author: NewsAuthor(
+      author: ItemAuthor(
         formattedName: userResponse.formattedName,
         id: userResponse.id,
         avatarUrl: userResponse.avatarUrl,
@@ -54,7 +54,7 @@ class CourseNews {
   final String content;
   final DateTime publicationStart;
   final DateTime publicationEnd;
-  final NewsAuthor author;
+  final ItemAuthor author;
 
   String get formattedPublicationDate {
     timeago.setLocaleMessages('de', timeago.DeMessages());
