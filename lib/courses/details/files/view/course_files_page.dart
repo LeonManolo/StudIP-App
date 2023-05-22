@@ -18,9 +18,9 @@ class CourseFilesPage extends StatelessWidget {
       )..add(LoadRootFolderEvent()),
       child: BlocBuilder<CourseFilesBloc, CourseFilesState>(
         builder: (context, state) {
-          return Column(
+          return const Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: const [
+            children: [
               CourseFilesPathRowList(),
               SizedBox(
                 height: 10,

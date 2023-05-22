@@ -1,6 +1,6 @@
 import 'package:courses_repository/src/models/models.dart';
 import 'package:studip_api_client/studip_api_client.dart'
-    hide CourseNewsListResponse;
+    hide CourseNewsListResponse, CourseWikiPagesListResponse;
 
 class CourseRepository {
   const CourseRepository({
@@ -62,6 +62,38 @@ class CourseRepository {
       return CourseNewsListResponse(
         totalNumberOfNews: newsResponse.total,
         news: newsItems,
+      );
+    } catch (error, stackTrace) {
+      Error.throwWithStackTrace(error, stackTrace);
+    }
+  }
+
+  Future<CourseWikiPagesListResponse> getWikiPages({
+    required String courseId,
+    required int limit,
+    required int offset,
+  }) async {
+    try {
+      final wikiPagesResponse = await _apiClient.getCourseWikiPages(
+        courseId: courseId,
+        offset: offset,
+        limit: limit,
+      );
+
+      final List<CourseWikiPage> wikiPageItems = await Future.wait(
+        wikiPagesResponse.wikiPages.map((rawWikiPage) async {
+          final userResponse =
+              await _apiClient.getUser(userId: rawWikiPage.lastEditorId);
+          return CourseWikiPage.fromCourseWikiPageResponse(
+            courseWikiPageResponse: rawWikiPage,
+            userResponse: userResponse,
+          );
+        }),
+      );
+
+      return CourseWikiPagesListResponse(
+        totalNumberOfWikiPages: wikiPagesResponse.total,
+        wikiPages: wikiPageItems,
       );
     } catch (error, stackTrace) {
       Error.throwWithStackTrace(error, stackTrace);

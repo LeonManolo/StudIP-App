@@ -3,7 +3,6 @@ import 'package:intl/intl.dart';
 import 'package:studip_api_client/studip_api_client.dart' as studip_api_client;
 
 class Semester {
-
   Semester({
     required this.id,
     required this.title,
@@ -15,9 +14,10 @@ class Semester {
     required this.courses,
   });
 
-  factory Semester.fromSemesterResponse(
-      {required studip_api_client.SemesterResponse semesterResponse,
-      required List<Course> courses,}) {
+  factory Semester.fromSemesterResponse({
+    required studip_api_client.SemesterResponse semesterResponse,
+    required List<Course> courses,
+  }) {
     return Semester(
       id: semesterResponse.id,
       title: semesterResponse.title,
@@ -44,5 +44,9 @@ class Semester {
 
   String get lecturesTimeSpan {
     return "${DateFormat("dd.MM.yyyy").format(startOfLectures)} - ${DateFormat("dd.MM.yyyy").format(endOfLectures)}";
+  }
+
+  bool isCurrentSemester({required DateTime currentDateTime}) {
+    return currentDateTime.isAfter(start) && currentDateTime.isBefore(end);
   }
 }

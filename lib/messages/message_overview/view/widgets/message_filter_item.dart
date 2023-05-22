@@ -27,9 +27,9 @@ class FilterItem extends StatelessWidget {
             Container(
               padding: EdgeInsets.zero,
               margin: EdgeInsets.zero,
-              child: Icon(
+              child: const Icon(
                 Icons.check,
-                color: Theme.of(context).primaryColor,
+                color: Colors.black,
                 size: 20,
               ),
             ),

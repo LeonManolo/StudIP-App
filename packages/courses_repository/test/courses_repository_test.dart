@@ -29,7 +29,7 @@ void main() {
 
     test('handle multi page request', () async {
       when(() => mockedApiClient.getCourseEvents(
-          courseId: '1', offset: 0, limit: 30)).thenAnswer((_) async {
+          courseId: '1', offset: 0, limit: 30,),).thenAnswer((_) async {
         return CourseEventListResponse(
           events: List.generate(
             30,
