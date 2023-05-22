@@ -53,6 +53,9 @@ dependencies:
   studip_api_client:
     path: packages/studip_api_client
 
+  local_notifications:
+    path: packages/local_notifications
+
   app_ui:
     path: packages/app_ui
 
@@ -97,6 +100,11 @@ dependencies:
   collection: 1.17.1
 
   url_launcher: ^6.1.11
+
+  # Flutter's core Dropdown Button widget with steady dropdown menu and many options you can customize to your needs.
+  dropdown_button2: ^2.1.2
+
+  marquee: ^2.2.3
 
   flutter_speed_dial: ^6.2.0
 
