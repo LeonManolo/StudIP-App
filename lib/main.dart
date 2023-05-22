@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:local_notifications/local_notifications.dart';
 import 'package:messages_repository/messages_repository.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:studip_api_client/studip_api_client.dart';
@@ -30,6 +31,13 @@ Future<void> main() async {
   final filesRepository = FilesRepository(apiClient: apiClient);
 
   await initializeDateFormatting();
+
+  await LocalNotifications.initialize(
+    androidChannelId: 'course_notifications',
+    androidChannelName: 'Kurs Benachrichtigungen',
+    androidChannelDescription: 'Kurs Benachrichtigungen',
+  );
+
 
   HydratedBloc.storage = await HydratedStorage.build(
     storageDirectory: kIsWeb
