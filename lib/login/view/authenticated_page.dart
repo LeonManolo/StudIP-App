@@ -26,9 +26,7 @@ class _AuthenticatedPageState extends State<AuthenticatedPage> {
         index: _selectedTab,
         children: const [
           HomePage(),
-          SafeArea(
-            child: CoursesPage(),
-          ),
+          CoursesPage(),
           MessagesPage(),
           CalendarPage(),
         ],
@@ -47,8 +45,8 @@ class _AuthenticatedPageState extends State<AuthenticatedPage> {
           ),
           BottomNavigationBarItem(
             label: 'Nachrichten',
-            icon: Icon(EvaIcons.messageSquareOutline),
-            activeIcon: Icon(EvaIcons.messageSquare),
+            icon: Icon(EvaIcons.emailOutline),
+            activeIcon: Icon(EvaIcons.email),
           ),
           BottomNavigationBarItem(
             label: 'Kalender',

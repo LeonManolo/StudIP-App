@@ -8,8 +8,9 @@ import 'package:studipadawan/messages/message_overview/message_inbox_bloc%20/mes
 import 'package:studipadawan/messages/message_overview/message_inbox_bloc%20/message_inbox_state.dart';
 import 'package:studipadawan/messages/message_overview/message_tabbar_bloc%20/message_tabbar_bloc.dart';
 import 'package:studipadawan/messages/message_overview/message_tabbar_bloc%20/message_tabbar_event.dart';
+import 'package:studipadawan/utils/empty_view.dart';
 
-import 'package:studipadawan/utils/pagination_loading_indicator.dart';
+import 'package:studipadawan/utils/pagination/pagination.dart';
 import 'package:studipadawan/utils/refreshable_content.dart';
 
 final _inboxWidgetKey = GlobalKey<ScaffoldState>();
@@ -33,13 +34,13 @@ class InboxMessageWidgetState extends State<InboxMessageWidget> {
   Icon messageIcon(BuildContext context, {required bool isRead}) {
     if (isRead) {
       return Icon(
-        EvaIcons.messageSquareOutline,
+        EvaIcons.emailOutline,
         color: Theme.of(context).primaryColor,
         size: 24,
       );
     } else {
       return Icon(
-        EvaIcons.messageSquare,
+        EvaIcons.email,
         color: Theme.of(context).primaryColor,
         size: 24,
       );
@@ -57,7 +58,10 @@ class InboxMessageWidgetState extends State<InboxMessageWidget> {
     if (widget.state.inboxMessages.isEmpty) {
       return RefreshableContent(
         callback: _refreshInboxMessages,
-        child: const Text('Es sind keine Nachrichten vorhanden'),
+        child: const EmptyView(
+          title: 'Keine Nachrichten',
+          message: 'Es sind keine Nachrichten vorhanden',
+        ),
       );
     }
 

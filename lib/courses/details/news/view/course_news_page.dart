@@ -18,8 +18,20 @@ class CourseNewsPage extends StatelessWidget {
           courseId: courseId,
           courseRepository: context.read<CourseRepository>(),
         )..add(CourseNewsReloadRequested()),
-        child: const CourseNewsList(),
+        child: const CourseNewsPageBody(),
       ),
+    );
+  }
+}
+
+class CourseNewsPageBody extends StatelessWidget {
+  const CourseNewsPageBody({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return CourseNewsList(
+      reachedBottom: () =>
+          context.read<CourseNewsBloc>().add(CourseNewsReachedBottom()),
     );
   }
 }

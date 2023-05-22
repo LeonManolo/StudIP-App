@@ -49,8 +49,8 @@ class MessageDetailpage extends StatelessWidget {
           if (state.status == MessageDetailsStatus.loading) {
             return ColoredBox(
               color: Theme.of(context).scaffoldBackgroundColor,
-              child: Column(
-                children: const [
+              child: const Column(
+                children: [
                   Expanded(
                     child: Center(
                       child: CircularProgressIndicator(),

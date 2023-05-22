@@ -21,7 +21,7 @@ void main() {
       content: 'content $id',
       publicationStart: DateTime(2023, 2, 3).toLocal(),
       publicationEnd: DateTime(2023, 3, 4).toLocal(),
-      author: NewsAuthor(
+      author: ItemAuthor(
         id: 'author $id',
         avatarUrl: '',
         formattedName: '',

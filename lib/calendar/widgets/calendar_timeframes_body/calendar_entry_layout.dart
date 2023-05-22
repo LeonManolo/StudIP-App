@@ -3,7 +3,7 @@ import 'package:calender_repository/calender_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:studipadawan/calendar/widgets/calendar_timeframes_body/calendar_break_entry.dart';
 
-import 'calendar_entry.dart';
+import 'package:studipadawan/calendar/widgets/calendar_timeframes_body/calendar_entry.dart';
 
 class CalendarEntryLayout extends StatefulWidget {
   const CalendarEntryLayout({

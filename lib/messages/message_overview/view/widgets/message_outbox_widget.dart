@@ -7,8 +7,9 @@ import 'package:studipadawan/messages/message_overview/message_outbox_bloc/messa
 import 'package:studipadawan/messages/message_overview/message_outbox_bloc/message_outbox_state.dart';
 import 'package:studipadawan/messages/message_overview/message_tabbar_bloc%20/message_tabbar_bloc.dart';
 import 'package:studipadawan/messages/message_overview/message_tabbar_bloc%20/message_tabbar_event.dart';
+import 'package:studipadawan/utils/empty_view.dart';
 
-import 'package:studipadawan/utils/pagination_loading_indicator.dart';
+import 'package:studipadawan/utils/pagination/pagination.dart';
 import 'package:studipadawan/utils/refreshable_content.dart';
 
 class OutboxMessageWidget extends StatefulWidget {
@@ -28,7 +29,7 @@ class OutboxMessageWidget extends StatefulWidget {
 
 class OutboxMessageWidgetState extends State<OutboxMessageWidget> {
   Icon messageIcon(Color iconColor) {
-    return Icon(EvaIcons.messageSquareOutline, color: iconColor, size: 24);
+    return Icon(EvaIcons.emailOutline, color: iconColor, size: 24);
   }
 
   final List<String> _markedOutboxMessages = [];
@@ -42,9 +43,13 @@ class OutboxMessageWidgetState extends State<OutboxMessageWidget> {
     if (widget.state.outboxMessages.isEmpty) {
       return RefreshableContent(
         callback: _refreshOutboxMessages,
-        child: const Text('Es sind keine Nachrichten vorhanden'),
+        child: const EmptyView(
+          title: 'Keine Nachrichten',
+          message: 'Es sind keine Nachrichten vorhanden',
+        ),
       );
     }
+
     return Column(
       children: [
         Expanded(
