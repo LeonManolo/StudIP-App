@@ -113,6 +113,8 @@ class CourseRepository {
         },
       );
 
+
+
       final Map<String, List<CourseResponse>> semesterToCourses = {};
       for (final course in courses) {
         if (semesterToCourses.containsKey(course.semesterId)) {
