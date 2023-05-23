@@ -30,7 +30,7 @@ class CalendarNotificationTimeSelection extends StatelessWidget {
                 const Text('Erhalten Benachrichtigungen 30 Minuten vor beginn'),
             value: NotificationTime.thirtyMinutesEarly,
             groupValue: activeNotificationTime,
-            onChanged: _onChange),
+            onChanged: _onChange,),
         RadioListTile(
           title: const Text('60 Minuten vorher'),
           subtitle:

@@ -1,7 +1,5 @@
 part of 'calendar_notifications_bloc.dart';
 
-
-
 abstract class CalendarNotificationsEvent extends Equatable {
   const CalendarNotificationsEvent();
 }

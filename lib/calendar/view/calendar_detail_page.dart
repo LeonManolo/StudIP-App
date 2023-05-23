@@ -18,45 +18,44 @@ class CalendarDetailPage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("Erinnerung",
+                Text('Erinnerung',
                   style: Theme.of(context).textTheme.titleLarge,),
                 RadioListTile(
-                  title: Text("5 Minuten vorher"),
-                  value: "Apple",
-                  groupValue: "",
+                  title: const Text('5 Minuten vorher'),
+                  value: 'Apple',
+                  groupValue: '',
                   onChanged: (_) => {},
                 ),
                 RadioListTile(
-                  title: Text("15 Minuten vorher"),
-                  value: "Apple",
-                  groupValue: "",
+                  title: const Text('15 Minuten vorher'),
+                  value: 'Apple',
+                  groupValue: '',
                   onChanged: (_) => {},
                 ),
                 RadioListTile(
-                  title: Text("1 Stunde vorher"),
+                  title: const Text('1 Stunde vorher'),
                     selected: true,
-                    value: "Apple",
-                    groupValue: "Apple",
+                    value: 'Apple',
+                    groupValue: 'Apple',
                     onChanged: (_) => {},
                 ),
-                Divider(
+                const Divider(
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Text("Termine",
+                    Text('Termine',
                       style: Theme.of(context).textTheme.titleLarge,),
-                    TextButton(onPressed: () {}, child: Text("ALLE AUSWÄHLEN")),
+                    TextButton(onPressed: () {}, child: const Text('ALLE AUSWÄHLEN')),
                   ],
                 ),
               ],
             ),
           ),
-          ListTile(
+          const ListTile(
             enabled: false,
-            title: const Text('13.04.2023, 10:00 - 11:30 (A212)'),
-            subtitle: const Text('Softwarearchitektur - Vorlesung'),
+            title: Text('13.04.2023, 10:00 - 11:30 (A212)'),
+            subtitle: Text('Softwarearchitektur - Vorlesung'),
           ),
           ListTile(
             //enabled: false,
@@ -76,10 +75,10 @@ class CalendarDetailPage extends StatelessWidget {
               child: Icon(EvaIcons.checkmark, color: Theme.of(context).primaryColor,),
             ),
           ),
-          ListTile(
+          const ListTile(
             //enabled: false,
-            title: const Text('13.04.2023, 10:00 - 11:30 (A212)'),
-            subtitle: const Text('Softwarearchitektur - Vorlesung'),
+            title: Text('13.04.2023, 10:00 - 11:30 (A212)'),
+            subtitle: Text('Softwarearchitektur - Vorlesung'),
           ),
         ],
       ),

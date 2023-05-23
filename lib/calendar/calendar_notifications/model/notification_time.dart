@@ -11,4 +11,12 @@ enum NotificationTime {
     ) ??
         NotificationTime.fifteenMinutesEarly;
   }
+
+  int toInt() {
+    return switch (this) {
+      fifteenMinutesEarly => 15,
+      thirtyMinutesEarly => 30,
+      sixtyMinutesEarly => 60,
+    };
+  }
 }
