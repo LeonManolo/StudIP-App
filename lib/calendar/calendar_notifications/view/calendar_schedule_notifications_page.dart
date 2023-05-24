@@ -11,6 +11,7 @@ import 'package:studipadawan/calendar/calendar_notifications/widgets/headline.da
 import 'package:studipadawan/utils/empty_view.dart';
 import 'package:studipadawan/utils/loading_indicator.dart';
 import 'package:studipadawan/utils/snackbar.dart';
+import 'package:studipadawan/utils/widgets/non_empty_listview_builder.dart';
 
 class CalendarScheduleNotificationsPage extends StatelessWidget {
   const CalendarScheduleNotificationsPage({super.key});
@@ -42,33 +43,47 @@ class CalendarScheduleNotificationsPage extends StatelessWidget {
                 switch (state) {
                   case CalendarNotificationsFailure():
                     return const Center(child: Text('Fehler'));
+
                   case CalendarNotificationsInitial() ||
                         CalendarNotificationsLoading():
                     return const LoadingIndicator();
+
                   case CalendarNotificationsPopulated(courses: final courses)
                       when courses.isEmpty:
                     return const EmptyView(
                       title: 'Kein Semester',
                       message: 'Es wurde kein Semester gefunden.',
                     );
+
                   case CalendarNotificationsPopulated(
                       courses: final courses,
                       totalNotifications: final totalNotifications
                     ):
                     return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Headline('Erinnerungen'),
-                        CalendarNotificationTimeSelection(
-                          onChanged: (value) {
-                          context.read<CalendarNotificationsBloc>().add(
-                            CalendarNotificationSelectedTime(notificationTime: value),
-                          );
-                        }, activeNotificationTime: state.notificationTime,
-                        ),
-                        const Headline('Kurse'),
                         Expanded(
-                          child: ListView.builder(
+                          child: NonEmptyListViewBuilder(
+                            header: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Headline('Erinnerungen'),
+                                CalendarNotificationTimeSelection(
+                                  onChanged: (selectedNotificationTime) {
+                                    context
+                                        .read<CalendarNotificationsBloc>()
+                                        .add(
+                                          CalendarNotificationSelectedTime(
+                                            notificationTime:
+                                                selectedNotificationTime,
+                                          ),
+                                        );
+                                  },
+                                  activeNotificationTime:
+                                      state.notificationTime,
+                                ),
+                                const Headline('Kurse'),
+                              ],
+                            ),
                             itemCount: courses.length,
                             itemBuilder: (context, index) {
                               final events = courses[index].events;

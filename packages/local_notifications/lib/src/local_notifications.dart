@@ -144,17 +144,19 @@ final class LocalNotifications {
       subtitle: subtitle,
     );
 
-    await _flutterLocalNotificationsPlugin.zonedSchedule(
-      notification.id,
-      notification.title,
-      notification.subtitle,
-      scheduledDate,
-      _buildNotificationDetails(notification.subtitle),
-      payload: notification.toJson(),
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-      uiLocalNotificationDateInterpretation:
-          UILocalNotificationDateInterpretation.absoluteTime,
-    );
+    if (scheduledDate.isAfter(tz.TZDateTime.now(timezone))) {
+      await _flutterLocalNotificationsPlugin.zonedSchedule(
+        notification.id,
+        notification.title,
+        notification.subtitle,
+        scheduledDate,
+        _buildNotificationDetails(notification.subtitle),
+        payload: notification.toJson(),
+        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+        uiLocalNotificationDateInterpretation:
+        UILocalNotificationDateInterpretation.absoluteTime,
+      );
+    }
   }
 
   /// Returns a list of all pending notifications.
@@ -164,6 +166,9 @@ final class LocalNotifications {
   }) async {
     var pendingNotificationRequests =
         await _flutterLocalNotificationsPlugin.pendingNotificationRequests();
+
+    print(pendingNotificationRequests.length);
+    print(pendingNotificationRequests.map((e) => "${e.title} ${e.payload}"));
 
     final notifications = <LocalNotification>[];
     for (final pendingNotification in pendingNotificationRequests) {

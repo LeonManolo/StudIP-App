@@ -5,10 +5,11 @@ enum NotificationTime {
   thirtyMinutesEarly,
   sixtyMinutesEarly;
 
-  static NotificationTime fromString(String notificationTime) {
+  static NotificationTime fromString(String notificationTimeString) {
     return NotificationTime.values.firstWhereOrNull(
-          (e) => e.toString() == notificationTime,
-    ) ??
+          (notificationTime) =>
+              notificationTime.toString() == notificationTimeString,
+        ) ??
         NotificationTime.fifteenMinutesEarly;
   }
 

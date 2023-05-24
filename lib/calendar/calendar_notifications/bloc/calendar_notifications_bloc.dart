@@ -51,7 +51,7 @@ final class CalendarNotificationsBloc extends HydratedBloc<
 
     final courses = await _fetchSemesterCourses();
     final notifications = await _loadNotifications();
-    _combineCoursesAndNotifications(
+    _updateNotificationState(
       courses,
       notifications,
       state.notificationTime,
@@ -145,12 +145,20 @@ final class CalendarNotificationsBloc extends HydratedBloc<
     }
   }
 
-  /// Combines course events with their notifications.
+  /// Updates the notification status for course events.
   ///
-  /// [courses] is a list of `CalendarNotificationsCourse` instances. Each represents a course and its related events.
+  /// This method combines course events with their corresponding notifications and
+  /// updates the notification status accordingly.
   ///
-  /// [notifications] is a list of `LocalNotification` instances. Each represents a notification for a course event.
-  void _combineCoursesAndNotifications(
+  /// [courses] is a list of `CalendarNotificationsCourse` instances. Each instance
+  /// represents a course and its associated events.
+  ///
+  /// [notifications] is a list of `LocalNotification` instances. Each instance
+  /// represents a notification for a course event.
+  ///
+  /// [notificationTime] is the desired time for the notification. This time is subtracted
+  /// from the start time of the course event to determine the notification time.
+  void _updateNotificationState(
     List<CalendarNotificationsCourse> courses,
     List<LocalNotification> notifications,
     NotificationTime notificationTime,
@@ -196,7 +204,7 @@ final class CalendarNotificationsBloc extends HydratedBloc<
             minutes: notificationTime.toInt(),
           ),);
           await LocalNotifications.scheduleNotification(
-            title: '${course.course.courseDetails.title} startet gleich',
+            title: '${course.course.courseDetails.title} startet in ${notificationTime.toInt()} Minuten',
             topic: notificationTopic,
             subtitle: course.course.courseDetails.subtitle ?? '',
             showAt: notificationDate,
@@ -230,10 +238,14 @@ final class CalendarNotificationsBloc extends HydratedBloc<
     final semesters = await _courseRepository.getCoursesGroupedBySemester(
       _authenticationRepository.currentUser.id,
     );
-    final semester = semesters.first;
+
+    final currentSemester = semesters.firstWhere(
+          (semester) =>
+          semester.isCurrentSemester(currentDateTime: DateTime.now().toLocal()),
+    );
 
     final List<CalendarNotificationsCourse> courses = [];
-    for (final course in semester.courses) {
+    for (final course in currentSemester.courses) {
       final courseEventsUnfiltered =
           await _courseRepository.getCourseEvents(courseId: course.id);
       final courseEvents = courseEventsUnfiltered.where(
@@ -267,8 +279,13 @@ final class CalendarNotificationsBloc extends HydratedBloc<
 
   @override
   Map<String, dynamic>? toJson(CalendarNotificationsState state) {
-    return {
-      'notificationTime': state.notificationTime.toString(),
-    };
+    switch (state) {
+      case CalendarNotificationsPopulated(notificationsSaved: true):
+        return {
+          'notificationTime': state.notificationTime.toString(),
+        };
+      case _:
+        return null;
+    }
   }
 }

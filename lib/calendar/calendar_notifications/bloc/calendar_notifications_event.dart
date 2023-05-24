@@ -23,7 +23,7 @@ final class CalendarNotificationsSelected extends CalendarNotificationsEvent {
   final bool notificationEnabled;
 
   @override
-  List<Object?> get props => [courseId, courseEventKey];
+  List<Object?> get props => [courseId, courseEventKey, notificationEnabled];
 }
 
 final class CalendarNotificationsSaveAll extends CalendarNotificationsEvent {
