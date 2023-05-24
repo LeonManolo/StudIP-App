@@ -22,19 +22,6 @@ extension FlutterMethodChannel: FlutterMethodChannelAdapter {
         )
         CalendarComunicator.shared.initWitMethodChannel(methodChannel)
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
-            
-            
-//            methodChannel.invokeMethod("loadWidgetCalendarEvents", arguments: nil) { result in
-//                fatalError((result as? String) ?? "Result cant be converted to string")
-//                if let str = result as? String {
-//                    print(str)
-//                } else {
-//                    print("some other result")
-//                }
-//            }
-        }
-        
         GeneratedPluginRegistrant.register(with: self)
         
         

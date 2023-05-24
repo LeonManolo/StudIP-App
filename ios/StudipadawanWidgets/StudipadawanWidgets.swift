@@ -11,42 +11,48 @@ import CalendarCommunication
 
 struct Provider: TimelineProvider {
     func placeholder(in context: Context) -> SimpleEntry {
-        SimpleEntry(date: Date())
+        SimpleEntry(date: Date(), text: "some dummy text")
     }
 
     func getSnapshot(in context: Context, completion: @escaping (SimpleEntry) -> ()) {
-        let entry = SimpleEntry(date: Date())
-        completion(entry)
+        DispatchQueue.main.async {
+            CalendarComunicator.shared.loadCalendarEvents(startDate: Date.now.ISO8601Format()) { updatedDate in
+                let items = updatedDate.split(separator: ",")
+                let entry = SimpleEntry(date: Date(), text: updatedDate)
+                
+                completion(entry)
+            }
+        }
     }
 
     func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> ()) {
-        var entries: [SimpleEntry] = []
         DispatchQueue.main.async {
-            CalendarComunicator.shared.loadCalendarEvents(startDate: "Startdatum", endDate: "Enddatum")
+            CalendarComunicator.shared.loadCalendarEvents(startDate: Date.now.ISO8601Format()) { updatedDate in
+                let items = updatedDate.split(separator: ",")
+                
+                let entryDate = Calendar.current.date(byAdding: .second, value: 10, to: Date())!
+                let entry = SimpleEntry(date: entryDate, text: updatedDate)
+                
+                let timeline = Timeline(entries: [entry], policy: .atEnd)
+                completion(timeline)
+            }
         }
-        
-        // Generate a timeline consisting of five entries an hour apart, starting from the current date.
-        let currentDate = Date()
-        for hourOffset in 0 ..< 5 {
-            let entryDate = Calendar.current.date(byAdding: .hour, value: hourOffset, to: currentDate)!
-            let entry = SimpleEntry(date: entryDate)
-            entries.append(entry)
-        }
-
-        let timeline = Timeline(entries: entries, policy: .atEnd)
-        completion(timeline)
     }
 }
 
 struct SimpleEntry: TimelineEntry {
     let date: Date
+    let text: String
 }
 
 struct StudipadawanWidgetsEntryView : View {
     var entry: Provider.Entry
 
     var body: some View {
-        Text(entry.date, style: .time)
+        VStack {
+            Text(entry.date, style: .time)
+            Text(entry.text)
+        }
     }
 }
 
@@ -64,7 +70,7 @@ struct StudipadawanWidgets: Widget {
 
 struct StudipadawanWidgets_Previews: PreviewProvider {
     static var previews: some View {
-        StudipadawanWidgetsEntryView(entry: SimpleEntry(date: Date()))
+        StudipadawanWidgetsEntryView(entry: SimpleEntry(date: Date(), text: "some dummy text"))
             .previewContext(WidgetPreviewContext(family: .systemSmall))
     }
 }

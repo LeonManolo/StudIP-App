@@ -26,7 +26,7 @@ class IOSWidgetDataProvider {
         switch (call.method) {
           case 'loadWidgetCalendarEvents':
             final String? startDate =
-                castOrNull<String>(call.arguments['requestedDateTime']);
+                castOrNull<String>(call.arguments['startDate']);
             if (startDate != null) {
               final serializedJsonResponse =
                   await _handleLoadWidgetCalendarEvents(
@@ -35,7 +35,7 @@ class IOSWidgetDataProvider {
               return serializedJsonResponse;
             } else {
               Logger().e(
-                'Parameter requestedDateTime is missing or in wrong format.',
+                'Parameter startDate is missing or in wrong format.',
               );
               return 'An error occured';
             }

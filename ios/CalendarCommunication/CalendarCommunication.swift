@@ -23,10 +23,11 @@ public class CalendarComunicator {
         self.methodChannel = methodChannel
     }
     
-    public func loadCalendarEvents(startDate: String?, endDate: String?) {
+    public func loadCalendarEvents(startDate: String, completion: (String) -> Void) {
         print(#function)
-        methodChannel?.customInvokeMethod("loadWidgetCalendarEvents", arguments: nil) { result in
+        methodChannel?.customInvokeMethod("loadWidgetCalendarEvents", arguments: ["startDate": startDate]) { result in
             if let str = result as? String {
+                completion(str)
                 fatalError("Got the following response from flutter: " + str)
                 NSLog("Got the following response from the flutter code: " + str)
             } else {

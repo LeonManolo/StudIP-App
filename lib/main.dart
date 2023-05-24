@@ -11,6 +11,7 @@ import 'package:messages_repository/messages_repository.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:studip_api_client/studip_api_client.dart';
 import 'package:studipadawan/app/view/app.dart';
+import 'package:studipadawan/calendar/ios_widget_data_provider/ios_widget_data_provider.dart';
 import 'package:user_repository/user_repository.dart';
 
 Future<void> main() async {
@@ -38,11 +39,15 @@ Future<void> main() async {
     androidChannelDescription: 'Kurs Benachrichtigungen',
   );
 
-
   HydratedBloc.storage = await HydratedStorage.build(
     storageDirectory: kIsWeb
         ? HydratedStorage.webStorageDirectory
         : await getApplicationDocumentsDirectory(),
+  );
+
+  IOSWidgetDataProvider(
+    calendarRepository: calenderRepository,
+    authRepository: authenticationRepository,
   );
 
   runApp(
