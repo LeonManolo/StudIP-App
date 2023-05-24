@@ -5,6 +5,7 @@ import 'package:courses_repository/courses_repository.dart';
 import 'package:files_repository/files_repository.dart';
 import 'package:flow_builder/flow_builder.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:messages_repository/messages_repository.dart';
 import 'package:studipadawan/app/bloc/app_bloc.dart';
@@ -12,7 +13,7 @@ import 'package:studipadawan/app/routes/routes.dart';
 import 'package:user_repository/user_repository.dart';
 
 class App extends StatelessWidget {
-  const App({
+  App({
     super.key,
     required AuthenticationRepository authenticationRepository,
     required UserRepository userRepository,

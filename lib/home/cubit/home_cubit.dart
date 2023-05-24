@@ -1,3 +1,5 @@
+import 'package:flutter/services.dart';
+import 'package:flutter_widgetkit/flutter_widgetkit.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:studipadawan/home/modules/module.dart';
 import 'package:studipadawan/home/utils/utils.dart';
@@ -14,11 +16,36 @@ enum ModuleType {
 
 class HomeCubit extends HydratedCubit<List<Module>> {
   HomeCubit() : super([]);
+  final methodChannel =
+      const MethodChannel("de.hsflensburg.studipadawan.calendarCommunication");
+
   void reorderModules(int oldIndex, int newIndex) {
     final modules = state;
     final module = modules.removeAt(oldIndex);
     modules.insert(oldIndex < newIndex ? newIndex - 1 : newIndex, module);
     emit(List.from(modules));
+  }
+
+  void testWidgetKit() {
+    methodChannel.setMethodCallHandler(
+      (call) async {
+        print("some code");
+        switch (call.method) {
+          case 'loadWidgetCalendarEvents':
+            print("hello from flutter app print");
+            return 'hello from flutter app';
+          // final String start = call.arguments['startDateIso8601'] as String;
+          // final String end = call.arguments['endDateIso8601'] as String;
+
+          // return 'Start: $start, Ende: $end';
+
+          default:
+            print("INVALID METHODNAME");
+        }
+      },
+    );
+
+    WidgetKit.reloadAllTimelines();
   }
 
   void addModule({required Module module}) {

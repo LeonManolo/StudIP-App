@@ -7,6 +7,7 @@
 
 import WidgetKit
 import SwiftUI
+import CalendarCommunication
 
 struct Provider: TimelineProvider {
     func placeholder(in context: Context) -> SimpleEntry {
@@ -20,7 +21,10 @@ struct Provider: TimelineProvider {
 
     func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> ()) {
         var entries: [SimpleEntry] = []
-
+        DispatchQueue.main.async {
+            CalendarComunicator.shared.loadCalendarEvents(startDate: "Startdatum", endDate: "Enddatum")
+        }
+        
         // Generate a timeline consisting of five entries an hour apart, starting from the current date.
         let currentDate = Date()
         for hourOffset in 0 ..< 5 {
