@@ -6,26 +6,40 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:studipadawan/calendar/calendar_notifications/bloc/calendar_notifications_bloc.dart';
 import 'package:studipadawan/calendar/calendar_notifications/widgets/calendar_notification_save_button.dart';
+import 'package:studipadawan/calendar/calendar_notifications/widgets/calendar_notification_time_selection.dart';
 import 'package:studipadawan/calendar/calendar_notifications/widgets/headline.dart';
 import 'package:studipadawan/utils/empty_view.dart';
 import 'package:studipadawan/utils/loading_indicator.dart';
 import 'package:studipadawan/utils/snackbar.dart';
+import 'package:studipadawan/utils/widgets/non_empty_listview_builder.dart';
 
 class CalendarScheduleNotificationsPage extends StatelessWidget {
   const CalendarScheduleNotificationsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Benachrichtigungen'),
-      ),
-      body: BlocProvider(
-        create: (context) => CalendarNotificationsBloc(
-          authenticationRepository: context.read<AuthenticationRepository>(),
-          courseRepository: context.read<CourseRepository>(),
-        )..add(const CalendarNotificationsRequested()),
-        child:
+    return BlocProvider(
+      create: (context) => CalendarNotificationsBloc(
+        authenticationRepository: context.read<AuthenticationRepository>(),
+        courseRepository: context.read<CourseRepository>(),
+      )..add(const CalendarNotificationsRequested()),
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Benachrichtigungen'),
+          actions: [
+            BlocBuilder<CalendarNotificationsBloc, CalendarNotificationsState>(
+              builder: (context, state) => IconButton(
+                onPressed: () {
+                  context.read<CalendarNotificationsBloc>().add(
+                        const CalendarNotificationsDeletePendingNotifications(),
+                      );
+                },
+                icon: const Icon(EvaIcons.trashOutline),
+              ),
+            ),
+          ],
+        ),
+        body:
             BlocConsumer<CalendarNotificationsBloc, CalendarNotificationsState>(
           listener: (context, state) {
             if (state
@@ -41,37 +55,47 @@ class CalendarScheduleNotificationsPage extends StatelessWidget {
                 switch (state) {
                   case CalendarNotificationsFailure():
                     return const Center(child: Text('Fehler'));
+
                   case CalendarNotificationsInitial() ||
                         CalendarNotificationsLoading():
                     return const LoadingIndicator();
+
                   case CalendarNotificationsPopulated(courses: final courses)
                       when courses.isEmpty:
                     return const EmptyView(
                       title: 'Kein Semester',
                       message: 'Es wurde kein Semester gefunden.',
                     );
+
                   case CalendarNotificationsPopulated(
                       courses: final courses,
                       totalNotifications: final totalNotifications
                     ):
                     return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        /*
-                        const Headline('Erinnerungen'),
-                        RadioListTile(
-                          title: Text("15 Minuten vorher"),
-                            subtitle: Text("Erhalten Benachrichtigungen 15 Minuten vor beginn"),
-                            value: "", groupValue: "", onChanged: (value) {}),
-                        RadioListTile(
-                          title: Text("30 Minuten vorher"),
-                            subtitle: Text("Erhalten Benachrichtigungen 30 Minuten vor beginn"),
-                            value: "", groupValue: "", onChanged: (value) {}),
-
-                         */
-                        const Headline('Kurse'),
                         Expanded(
-                          child: ListView.builder(
+                          child: NonEmptyListViewBuilder(
+                            header: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Headline('Erinnerungen'),
+                                CalendarNotificationTimeSelection(
+                                  onChanged: (selectedNotificationTime) {
+                                    context
+                                        .read<CalendarNotificationsBloc>()
+                                        .add(
+                                          CalendarNotificationSelectedTime(
+                                            notificationTime:
+                                                selectedNotificationTime,
+                                          ),
+                                        );
+                                  },
+                                  activeNotificationTime:
+                                      state.notificationTime,
+                                ),
+                                const Headline('Kurse'),
+                              ],
+                            ),
                             itemCount: courses.length,
                             itemBuilder: (context, index) {
                               final events = courses[index].events;

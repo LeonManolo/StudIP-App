@@ -1,11 +1,5 @@
 part of 'calendar_notifications_bloc.dart';
 
-enum NotificationTime {
-  fifteenMinutesEarly,
-  thirtyMinutesEarly,
-  sixtyMinutesEarly,
-}
-
 abstract class CalendarNotificationsEvent extends Equatable {
   const CalendarNotificationsEvent();
 }
@@ -29,11 +23,31 @@ final class CalendarNotificationsSelected extends CalendarNotificationsEvent {
   final bool notificationEnabled;
 
   @override
-  List<Object?> get props => [courseId, courseEventKey];
+  List<Object?> get props => [courseId, courseEventKey, notificationEnabled];
 }
 
 final class CalendarNotificationsSaveAll extends CalendarNotificationsEvent {
   const CalendarNotificationsSaveAll();
+
+  @override
+  List<Object?> get props => [];
+}
+
+final class CalendarNotificationSelectedTime
+    extends CalendarNotificationsEvent {
+
+  const CalendarNotificationSelectedTime({
+    required this.notificationTime,
+  });
+
+  final NotificationTime notificationTime;
+
+  @override
+  List<Object?> get props => [notificationTime];
+}
+
+final class CalendarNotificationsDeletePendingNotifications extends CalendarNotificationsEvent {
+  const CalendarNotificationsDeletePendingNotifications();
 
   @override
   List<Object?> get props => [];

@@ -9,12 +9,13 @@ final class LocalNotification {
   final String subtitle;
   final Map<String, dynamic> payload;
 
-  LocalNotification(
-      {required this.id,
-      required this.title,
-      required this.subtitle,
-      required this.topic,
-      required this.payload});
+  LocalNotification({
+    required this.id,
+    required this.title,
+    required this.subtitle,
+    required this.topic,
+    required this.payload,
+  });
 
   String toJson() {
     return jsonEncode({
@@ -29,5 +30,6 @@ final class LocalNotification {
         payload = payloadJson["payload"],
         id = pendingNotificationRequest.id,
         title = pendingNotificationRequest.title!,
-        subtitle = pendingNotificationRequest.body!;
+        // Only available on Android
+        subtitle = pendingNotificationRequest.body ?? '';
 }
