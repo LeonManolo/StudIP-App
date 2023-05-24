@@ -31,8 +31,8 @@ final class CalendarNotificationsBloc extends HydratedBloc<
     on<CalendarNotificationsSelected>(_onCalendarNotificationsSelected);
     on<CalendarNotificationsSaveAll>(_onCalendarNotificationsSaveAll);
     on<CalendarNotificationSelectedTime>(_onCalendarNotificationSelectedTime);
-    on<CalendarNotificationsDeleteSelections>(
-        _onCalendarNotificationsDeleteSelections,
+    on<CalendarNotificationsDeletePendingNotifications>(
+        _onCalendarNotificationsDeletePendingNotifications,
     );
   }
 
@@ -146,10 +146,10 @@ final class CalendarNotificationsBloc extends HydratedBloc<
 
   /// Handles `CalendarNotificationsDeleteSelections` events.
   /// This function sets every notifications state to false (like a "reset all")
-  FutureOr<void> _onCalendarNotificationsDeleteSelections(
-    CalendarNotificationsDeleteSelections event,
+  FutureOr<void> _onCalendarNotificationsDeletePendingNotifications(
+    CalendarNotificationsDeletePendingNotifications event,
     Emitter<CalendarNotificationsState> emit,
-  ) {
+  ) async {
     if (state
     case CalendarNotificationsPopulated(
     courses: final courses,
@@ -160,6 +160,8 @@ final class CalendarNotificationsBloc extends HydratedBloc<
           courses[i].events[key]?.notificationEnabled = false;
         });
       }
+
+      await LocalNotifications.cancelNotifications(topic: notificationTopic);
 
       emit(
         CalendarNotificationsPopulated(

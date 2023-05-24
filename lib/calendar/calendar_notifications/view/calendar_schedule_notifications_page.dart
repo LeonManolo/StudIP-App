@@ -31,7 +31,7 @@ class CalendarScheduleNotificationsPage extends StatelessWidget {
               builder: (context, state) => IconButton(
                 onPressed: () {
                   context.read<CalendarNotificationsBloc>().add(
-                        const CalendarNotificationsDeleteSelections(),
+                        const CalendarNotificationsDeletePendingNotifications(),
                       );
                 },
                 icon: const Icon(EvaIcons.trashOutline),

@@ -46,8 +46,8 @@ final class CalendarNotificationSelectedTime
   List<Object?> get props => [notificationTime];
 }
 
-final class CalendarNotificationsDeleteSelections extends CalendarNotificationsEvent {
-  const CalendarNotificationsDeleteSelections();
+final class CalendarNotificationsDeletePendingNotifications extends CalendarNotificationsEvent {
+  const CalendarNotificationsDeletePendingNotifications();
 
   @override
   List<Object?> get props => [];
