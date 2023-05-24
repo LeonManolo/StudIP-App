@@ -16,25 +16,24 @@ extension FlutterMethodChannel: FlutterMethodChannelAdapter {
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
         let controller: FlutterViewController = window?.rootViewController as! FlutterViewController
+        let methodChannel = FlutterMethodChannel(
+            name: "de.hsflensburg.studipadawan.calendarCommunication",
+            binaryMessenger: controller.binaryMessenger
+        )
+        CalendarComunicator.shared.initWitMethodChannel(methodChannel)
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
-            let methodChannel = FlutterMethodChannel(
-                name: "de.hsflensburg.studipadawan.calendarCommunication",
-                binaryMessenger: controller.binaryMessenger
-            )
             
-            methodChannel.invokeMethod("loadWidgetCalendarEvents", arguments: nil) { result in
-                fatalError((result as? String) ?? "Result cant be converted to string")
-                if let str = result as? String {
-                    print(str)
-                } else {
-                    print("some other result")
-                }
-            }
+            
+//            methodChannel.invokeMethod("loadWidgetCalendarEvents", arguments: nil) { result in
+//                fatalError((result as? String) ?? "Result cant be converted to string")
+//                if let str = result as? String {
+//                    print(str)
+//                } else {
+//                    print("some other result")
+//                }
+//            }
         }
-        
-       
-//        CalendarComunicator.shared.initWitMethodChannel(methodChannel)
         
         GeneratedPluginRegistrant.register(with: self)
         

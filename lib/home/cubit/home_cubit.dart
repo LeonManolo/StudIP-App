@@ -16,8 +16,6 @@ enum ModuleType {
 
 class HomeCubit extends HydratedCubit<List<Module>> {
   HomeCubit() : super([]);
-  final methodChannel =
-      const MethodChannel("de.hsflensburg.studipadawan.calendarCommunication");
 
   void reorderModules(int oldIndex, int newIndex) {
     final modules = state;
@@ -27,24 +25,6 @@ class HomeCubit extends HydratedCubit<List<Module>> {
   }
 
   void testWidgetKit() {
-    methodChannel.setMethodCallHandler(
-      (call) async {
-        print("some code");
-        switch (call.method) {
-          case 'loadWidgetCalendarEvents':
-            print("hello from flutter app print");
-            return 'hello from flutter app';
-          // final String start = call.arguments['startDateIso8601'] as String;
-          // final String end = call.arguments['endDateIso8601'] as String;
-
-          // return 'Start: $start, Ende: $end';
-
-          default:
-            print("INVALID METHODNAME");
-        }
-      },
-    );
-
     WidgetKit.reloadAllTimelines();
   }
 

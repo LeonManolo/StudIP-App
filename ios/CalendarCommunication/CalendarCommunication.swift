@@ -27,7 +27,7 @@ public class CalendarComunicator {
         print(#function)
         methodChannel?.customInvokeMethod("loadWidgetCalendarEvents", arguments: nil) { result in
             if let str = result as? String {
-                fatalError("Got the following response from the code")
+                fatalError("Got the following response from flutter: " + str)
                 NSLog("Got the following response from the flutter code: " + str)
             } else {
                 fatalError("Got a response but not a string")
