@@ -21,6 +21,7 @@ class IOSWidgetDataProvider {
   final MethodChannel _methodChannel;
 
   void _addMethodChannelListener() {
+    Logger().d('_addMethodChannelListener called');
     _methodChannel.setMethodCallHandler(
       (call) async {
         switch (call.method) {

@@ -23,8 +23,8 @@ public class CalendarComunicator {
         self.methodChannel = methodChannel
     }
     
-    public func loadCalendarEvents(startDate: String, completion: (String) -> Void) {
-        print(#function)
+    public func loadCalendarEvents(startDate: String, completion: @escaping (String) -> Void) {
+        fatalError(#function)
         methodChannel?.customInvokeMethod("loadWidgetCalendarEvents", arguments: ["startDate": startDate]) { result in
             if let str = result as? String {
                 completion(str)
