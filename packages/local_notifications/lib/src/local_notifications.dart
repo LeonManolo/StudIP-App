@@ -28,25 +28,41 @@ final class LocalNotifications {
   static final _flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
-  /// Initialize the notification plugin with specific settings for Android and iOS.
-  /// Also sets the time zone to the given [timezoneName].
+  /// Initializes the local notifications plugin with platform-specific settings.
+  ///
+  /// [androidChannelId] is the ID of the notification channel for Android.
+  ///
+  /// [androidChannelName] is the name of the notification channel for Android.
+  ///
+  /// [androidChannelDescription] is the description of the notification channel for Android.
+  ///
+  /// [requestIOSPermissions] is a boolean value that determines whether or not to request permissions on iOS. It defaults to `false`.
+  ///
+  /// [requestAndroidPermissions] is a boolean value that determines whether or not to request permissions on Android. It defaults to `false`.
+  ///
+  /// [timezoneName] is the timezone to be used for scheduling notifications. It defaults to 'Europe/Berlin'.
   static Future<void> initialize(
-      {
-        required String androidChannelId,
-        required String androidChannelName,
-        required String androidChannelDescription,
-        String timezoneName = 'Europe/Berlin'}) async {
+      {required String androidChannelId,
+      required String androidChannelName,
+      required String androidChannelDescription,
+      bool requestIOSPermissions = false,
+      bool requestAndroidPermissions = false,
+      String timezoneName = 'Europe/Berlin'}) async {
     // Android initialization
     const initializationSettingsAndroid =
         AndroidInitializationSettings('@mipmap/ic_launcher');
 
     _flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
-        AndroidFlutterLocalNotificationsPlugin>()
+            AndroidFlutterLocalNotificationsPlugin>()
         ?.requestPermission();
 
     // iOS initialization
-    const initializationSettingsDarwin = DarwinInitializationSettings();
+    const initializationSettingsDarwin = DarwinInitializationSettings(
+      requestSoundPermission: false,
+      requestBadgePermission: false,
+      requestAlertPermission: false,
+    );
 
     const InitializationSettings initializationSettings =
         InitializationSettings(
@@ -59,18 +75,47 @@ final class LocalNotifications {
 
     await _flutterLocalNotificationsPlugin.initialize(initializationSettings);
 
+    await requestPermissions(
+      android: requestAndroidPermissions, iOS: requestIOSPermissions,
+    );
+
     _androidChannelId = androidChannelId;
     _androidChannelName = androidChannelName;
     AndroidNotificationChannel androidNotificationChannel =
-    AndroidNotificationChannel(
+        AndroidNotificationChannel(
       _androidChannelId,
       _androidChannelName,
       description: androidChannelDescription,
     );
     await _flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
-        AndroidFlutterLocalNotificationsPlugin>()
+            AndroidFlutterLocalNotificationsPlugin>()
         ?.createNotificationChannel(androidNotificationChannel);
+  }
+
+  /// Requests notification permissions on Android and iOS.
+  ///
+  /// [android] is a boolean value that determines whether or not to request permissions on Android. It defaults to `false`.
+  ///
+  /// [iOS] is a boolean value that determines whether or not to request permissions on iOS. It defaults to `false`.
+  static Future<void> requestPermissions(
+      {bool android = false, bool iOS = false}) async {
+    if (android) {
+      await _flutterLocalNotificationsPlugin
+          .resolvePlatformSpecificImplementation<
+              AndroidFlutterLocalNotificationsPlugin>()
+          ?.requestPermission();
+    }
+    if (iOS) {
+      await _flutterLocalNotificationsPlugin
+          .resolvePlatformSpecificImplementation<
+              IOSFlutterLocalNotificationsPlugin>()
+          ?.requestPermissions(
+            alert: true,
+            badge: true,
+            sound: true,
+          );
+    }
   }
 
   /// Schedule a notification to be shown at a specific date and time.
@@ -99,17 +144,19 @@ final class LocalNotifications {
       subtitle: subtitle,
     );
 
-    await _flutterLocalNotificationsPlugin.zonedSchedule(
+    if (scheduledDate.isAfter(tz.TZDateTime.now(timezone))) {
+      await _flutterLocalNotificationsPlugin.zonedSchedule(
         notification.id,
         notification.title,
         notification.subtitle,
         scheduledDate,
-        _buildNotificationDetails(),
+        _buildNotificationDetails(notification.subtitle),
         payload: notification.toJson(),
         androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
         uiLocalNotificationDateInterpretation:
-            UILocalNotificationDateInterpretation.absoluteTime,
-    );
+        UILocalNotificationDateInterpretation.absoluteTime,
+      );
+    }
   }
 
   /// Returns a list of all pending notifications.
@@ -119,7 +166,6 @@ final class LocalNotifications {
   }) async {
     var pendingNotificationRequests =
         await _flutterLocalNotificationsPlugin.pendingNotificationRequests();
-    print(pendingNotificationRequests);
 
     final notifications = <LocalNotification>[];
     for (final pendingNotification in pendingNotificationRequests) {
@@ -147,9 +193,7 @@ final class LocalNotifications {
     if (topic != null) {
       final notifications = await getNotifications(topic: topic);
       for (var notification in notifications) {
-        _flutterLocalNotificationsPlugin.cancel(
-          notification.id
-        );
+        _flutterLocalNotificationsPlugin.cancel(notification.id);
       }
     } else {
       _flutterLocalNotificationsPlugin.cancelAll();
@@ -160,7 +204,7 @@ final class LocalNotifications {
   /// The [excludingTopic] parameter allows to exclude notifications of a specific topic from the count.
   static Future<({int totalNotifications, int availableNotifications})>
       totalNotificationsStatus({String? excludingTopic}) async {
-    var totalNotifications = switch (Platform.isIOS) {
+    final totalNotifications = switch (Platform.isIOS) {
       true => maxPendingIOSNotifications,
       false => maxPendingAndroidNotifications,
     };
@@ -168,7 +212,8 @@ final class LocalNotifications {
     var pendingNotificationsCount = await _notificationCount();
     final notificationsWithTopicCount =
         await _notificationCount(topic: excludingTopic);
-    final totalNonTopicCount = pendingNotificationsCount - notificationsWithTopicCount;
+    final totalNonTopicCount =
+        pendingNotificationsCount - notificationsWithTopicCount;
 
     final availableNotifications =
         totalNotifications - pendingNotificationsCount;
@@ -187,10 +232,14 @@ final class LocalNotifications {
 
   /// Builds and returns a `NotificationDetails` instance with specific details for Android and iOS platforms.
   static NotificationDetails _buildNotificationDetails(
-      ) {
+    String iOSSubtitle,
+  ) {
     return NotificationDetails(
-      android: AndroidNotificationDetails(_androidChannelId, _androidChannelName),
-      iOS: DarwinNotificationDetails(),
+      android:
+          AndroidNotificationDetails(_androidChannelId, _androidChannelName),
+      iOS: DarwinNotificationDetails(
+        //subtitle: iOSSubtitle,
+      ),
     );
   }
 }
