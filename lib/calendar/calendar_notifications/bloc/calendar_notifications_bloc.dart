@@ -9,9 +9,10 @@ import 'package:studipadawan/calendar/calendar_notifications/model/calendar_noti
 import 'package:studipadawan/calendar/calendar_notifications/model/calendar_notifications_course_event.dart';
 
 part 'calendar_notifications_state.dart';
-part '../model/notification_time.dart';
-part 'calendar_notifications_event.dart';
 
+part '../model/notification_time.dart';
+
+part 'calendar_notifications_event.dart';
 
 /// A Bloc handling calendar notifications related events and states.
 final class CalendarNotificationsBloc extends HydratedBloc<
@@ -30,6 +31,9 @@ final class CalendarNotificationsBloc extends HydratedBloc<
     on<CalendarNotificationsSelected>(_onCalendarNotificationsSelected);
     on<CalendarNotificationsSaveAll>(_onCalendarNotificationsSaveAll);
     on<CalendarNotificationSelectedTime>(_onCalendarNotificationSelectedTime);
+    on<CalendarNotificationsDeleteSelections>(
+        _onCalendarNotificationsDeleteSelections,
+    );
   }
 
   /// Used as a topic for local notifications
@@ -78,11 +82,6 @@ final class CalendarNotificationsBloc extends HydratedBloc<
           courses: final courses,
           totalNotifications: final totalNotifications
         )) {
-      emit(
-        CalendarNotificationsLoading(
-          notificationTime: state.notificationTime,
-        ),
-      ); // geht irgendwie nicht ohne
 
       final index =
           courses.indexWhere((course) => course.course.id == event.courseId);
@@ -92,7 +91,7 @@ final class CalendarNotificationsBloc extends HydratedBloc<
 
       emit(
         CalendarNotificationsPopulated(
-          courses: [...courses],
+          courses: courses.map((course) => course.copyWith()).toList(),
           totalNotifications: totalNotifications,
           notificationTime: state.notificationTime,
         ),
@@ -140,6 +139,33 @@ final class CalendarNotificationsBloc extends HydratedBloc<
           courses: courses,
           totalNotifications: totalNotifications,
           notificationTime: event.notificationTime,
+        ),
+      );
+    }
+  }
+
+  /// Handles `CalendarNotificationsDeleteSelections` events.
+  /// This function sets every notifications state to false (like a "reset all")
+  FutureOr<void> _onCalendarNotificationsDeleteSelections(
+    CalendarNotificationsDeleteSelections event,
+    Emitter<CalendarNotificationsState> emit,
+  ) {
+    if (state
+    case CalendarNotificationsPopulated(
+    courses: final courses,
+    totalNotifications: final totalNotifications,
+    )) {
+      for(int i = 0; i < courses.length;i++) {
+        courses[i].events.forEach((key, event) {
+          courses[i].events[key]?.notificationEnabled = false;
+        });
+      }
+
+      emit(
+        CalendarNotificationsPopulated(
+          courses: courses.map((course) => course.copyWith()).toList(),
+          totalNotifications: totalNotifications,
+          notificationTime: state.notificationTime,
         ),
       );
     }
@@ -200,14 +226,17 @@ final class CalendarNotificationsBloc extends HydratedBloc<
     for (final course in courses) {
       course.events.forEach((key, event) async {
         if (event.notificationEnabled) {
-          final notificationDate = event.eventDate.subtract(Duration(
-            minutes: notificationTime.toInt(),
-          ),);
+          final notificationDate = event.eventDate.subtract(
+            Duration(
+              minutes: notificationTime.toInt(),
+            ),
+          );
           await LocalNotifications.scheduleNotification(
-            title: '${course.course.courseDetails.title} startet in ${notificationTime.toInt()} Minuten',
+            title: 'Terminerinnerung',
             topic: notificationTopic,
-            subtitle: course.course.courseDetails.subtitle ?? '',
-            showAt: notificationDate,
+            subtitle:
+                '${course.course.courseDetails.title} startet in ${notificationTime.toInt()} Minuten',
+            showAt: DateTime.now().add(Duration(seconds: 1)),
             payload: {
               'courseId': course.course.id,
               'time': notificationDate.toIso8601String(),
@@ -240,7 +269,7 @@ final class CalendarNotificationsBloc extends HydratedBloc<
     );
 
     final currentSemester = semesters.firstWhere(
-          (semester) =>
+      (semester) =>
           semester.isCurrentSemester(currentDateTime: DateTime.now().toLocal()),
     );
 

@@ -18,16 +18,28 @@ class CalendarScheduleNotificationsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Benachrichtigungen'),
-      ),
-      body: BlocProvider(
-        create: (context) => CalendarNotificationsBloc(
-          authenticationRepository: context.read<AuthenticationRepository>(),
-          courseRepository: context.read<CourseRepository>(),
-        )..add(const CalendarNotificationsRequested()),
-        child:
+    return BlocProvider(
+      create: (context) => CalendarNotificationsBloc(
+        authenticationRepository: context.read<AuthenticationRepository>(),
+        courseRepository: context.read<CourseRepository>(),
+      )..add(const CalendarNotificationsRequested()),
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Benachrichtigungen'),
+          actions: [
+            BlocBuilder<CalendarNotificationsBloc, CalendarNotificationsState>(
+              builder: (context, state) => IconButton(
+                onPressed: () {
+                  context.read<CalendarNotificationsBloc>().add(
+                        const CalendarNotificationsDeleteSelections(),
+                      );
+                },
+                icon: const Icon(EvaIcons.trashOutline),
+              ),
+            ),
+          ],
+        ),
+        body:
             BlocConsumer<CalendarNotificationsBloc, CalendarNotificationsState>(
           listener: (context, state) {
             if (state

@@ -167,9 +167,6 @@ final class LocalNotifications {
     var pendingNotificationRequests =
         await _flutterLocalNotificationsPlugin.pendingNotificationRequests();
 
-    print(pendingNotificationRequests.length);
-    print(pendingNotificationRequests.map((e) => "${e.title} ${e.payload}"));
-
     final notifications = <LocalNotification>[];
     for (final pendingNotification in pendingNotificationRequests) {
       final payloadJson = jsonDecode(pendingNotification.payload ?? '{}');
@@ -241,7 +238,7 @@ final class LocalNotifications {
       android:
           AndroidNotificationDetails(_androidChannelId, _androidChannelName),
       iOS: DarwinNotificationDetails(
-        subtitle: iOSSubtitle,
+        //subtitle: iOSSubtitle,
       ),
     );
   }
