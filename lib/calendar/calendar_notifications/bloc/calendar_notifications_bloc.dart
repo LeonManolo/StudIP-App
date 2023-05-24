@@ -236,7 +236,7 @@ final class CalendarNotificationsBloc extends HydratedBloc<
             topic: notificationTopic,
             subtitle:
                 '${course.course.courseDetails.title} startet in ${notificationTime.toInt()} Minuten',
-            showAt: DateTime.now().add(Duration(seconds: 1)),
+            showAt: notificationDate,
             payload: {
               'courseId': course.course.id,
               'time': notificationDate.toIso8601String(),
