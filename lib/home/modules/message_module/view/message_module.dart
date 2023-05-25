@@ -1,14 +1,18 @@
+import 'dart:async';
+
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:messages_repository/messages_repository.dart';
 import 'package:studipadawan/home/cubit/home_cubit.dart';
 import 'package:studipadawan/home/modules/message_module/bloc/message_module_bloc.dart';
+import 'package:studipadawan/home/modules/message_module/bloc/message_module_event.dart';
 import 'package:studipadawan/home/modules/message_module/bloc/message_module_state.dart';
+import 'package:studipadawan/home/modules/message_module/view/widgets/message_preview_list.dart';
 import 'package:studipadawan/home/modules/module.dart';
 import 'package:studipadawan/home/modules/module_card.dart';
 
-class MessageModule extends StatelessWidget implements Module {
+class MessageModule extends StatefulWidget implements Module {
   const MessageModule({
     super.key,
   });
@@ -16,32 +20,68 @@ class MessageModule extends StatelessWidget implements Module {
   static const type = ModuleType.messages;
 
   @override
-  Widget build(BuildContext context) {
-    return MoudleCard(
-      type: type,
-      child: BlocProvider(
-        create: (context) => MessageModuleBloc(
-          messageRepository: context.read<MessageRepository>(),
-          authenticationRepository: context.read<AuthenticationRepository>(),
-        ),
-        child: BlocBuilder<MessageModuleBloc, MessageModuleState>(
-          builder: (context, state) {
-            return const Text('Content');
-          },
-        ),
-      ),
-    );
-  }
-
-  @override
   ModuleType getType() {
-    return type;
+    return MessageModule.type;
   }
 
   @override
   Map<String, dynamic> toJson() {
     return {
-      'type': type.name,
+      'type': MessageModule.type.name,
     };
+  }
+
+  @override
+  State<MessageModule> createState() => _MessageModuleState();
+}
+
+class _MessageModuleState extends State<MessageModule> {
+  late Timer _refreshTimer;
+  late MessageModuleBloc _messageModuleBloc;
+  @override
+  void initState() {
+    super.initState();
+    _messageModuleBloc = MessageModuleBloc(
+      messageRepository: context.read<MessageRepository>(),
+      authenticationRepository: context.read<AuthenticationRepository>(),
+    )..add(const MessagePreviewRequested());
+    _refreshTimer = Timer.periodic(const Duration(seconds: 30), (timer) {
+      _messageModuleBloc.add(const MessagePreviewRequested());
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _messageModuleBloc.close();
+    _refreshTimer.cancel();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ModuleCard(
+      type: MessageModule.type,
+      child: BlocProvider.value(
+        value: _messageModuleBloc,
+        child: BlocBuilder<MessageModuleBloc, MessageModuleState>(
+          builder: (context, state) {
+            if (state is MessageModuleStateLoading) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            } else if (state is MessageModuleStateDidLoad) {
+              return MessagePreviewList(
+                messageModuleBloc: _messageModuleBloc,
+                messages: state.previewMessages,
+              );
+            } else if (state is MessageModuleStateError) {
+              return Text(state.blocResponse);
+            } else {
+              return Container();
+            }
+          },
+        ),
+      ),
+    );
   }
 }
