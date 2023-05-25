@@ -1,8 +1,13 @@
+import 'package:app_ui/app_ui.dart';
 import 'package:authentication_repository/authentication_repository.dart';
+import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:studipadawan/app/bloc/app_bloc.dart';
 import 'package:studipadawan/login/cubit/login_cubit.dart';
 import 'package:studipadawan/login/cubit/login_state.dart';
+import 'package:studipadawan/login/widgets/login_button.dart';
+import 'package:studipadawan/login/widgets/login_illustration.dart';
 import 'package:studipadawan/utils/loading_indicator.dart';
 import 'package:studipadawan/utils/utils.dart';
 
@@ -24,24 +29,59 @@ class LoginPage extends StatelessWidget {
         builder: (context, state) {
           switch (state) {
             case LoginState.inProgress:
-              return const LoadingIndicator();
+              return const Material(child: LoadingIndicator());
+
             case _:
               return Scaffold(
+                backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
                 appBar: AppBar(
-                  title: const Text('Login'),
                   actions: [
                     IconButton(
-                      onPressed: () {},
-                      icon: const Icon(Icons.close),
+                      onPressed: () {
+                        context.read<AppBloc>().add(const AppLogoutRequested());
+                      },
+                      icon: const Icon(EvaIcons.logOutOutline,
+                        color: Colors.transparent,
+                      ),
                     )
                   ],
                 ),
                 body: Padding(
                   padding: const EdgeInsets.all(8),
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    //mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      _StudIpLoginButton(),
+                      const LoginIllustration(),
+                      Text(
+                        'Anmelden',
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                              fontSize: 30,
+                              fontWeight: FontWeight.w600,
+                            ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          top: AppSpacing.md,
+                          bottom: AppSpacing.xxlg,
+                        ),
+                        child: Text(
+                          'Melde dich jetzt hier mit deinem\nStudIP Account an',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Theme.of(context).hintColor,
+                          ),
+                        ),
+                      ),
+                      LoginButton(
+                        onPressed: () => context.read<LoginCubit>().loginWithStudIp(),
+                      ),
+                      const Spacer(),
+                      const SafeArea(child: Padding(
+                        padding: EdgeInsets.all(AppSpacing.lg),
+                        child: Text('Vitae sapien pellentesque habitant morbi tristique senectus et netus et malesuada fames',
+                        textAlign: TextAlign.center,),
+                      ),),
+                      //_StudIpLoginButton(),
                     ],
                   ),
                 ),
@@ -53,24 +93,6 @@ class LoginPage extends StatelessWidget {
   }
 }
 
-class _StudIpLoginButton extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return ElevatedButton.icon(
-      key: const Key('loginForm_googleLogin_raisedButton'),
-      label: const Text(
-        'SIGN IN WITH STUD IP',
-        style: TextStyle(color: Colors.white),
-      ),
-      style: ElevatedButton.styleFrom(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30),
-        ),
-        backgroundColor: theme.colorScheme.secondary,
-      ),
-      icon: const Icon(Icons.person, color: Colors.white),
-      onPressed: () => context.read<LoginCubit>().loginWithStudIp(),
-    );
-  }
-}
+
+
+
