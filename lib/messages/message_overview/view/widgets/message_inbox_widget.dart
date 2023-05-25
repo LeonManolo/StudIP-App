@@ -8,6 +8,7 @@ import 'package:studipadawan/messages/message_overview/message_inbox_bloc%20/mes
 import 'package:studipadawan/messages/message_overview/message_inbox_bloc%20/message_inbox_state.dart';
 import 'package:studipadawan/messages/message_overview/message_tabbar_bloc%20/message_tabbar_bloc.dart';
 import 'package:studipadawan/messages/message_overview/message_tabbar_bloc%20/message_tabbar_event.dart';
+import 'package:studipadawan/messages/message_overview/view/widgets/message_icon.dart';
 import 'package:studipadawan/utils/empty_view.dart';
 
 import 'package:studipadawan/utils/pagination/pagination.dart';
@@ -31,22 +32,6 @@ class InboxMessageWidget extends StatefulWidget {
 }
 
 class InboxMessageWidgetState extends State<InboxMessageWidget> {
-  Icon messageIcon(BuildContext context, {required bool isRead}) {
-    if (isRead) {
-      return Icon(
-        EvaIcons.emailOutline,
-        color: Theme.of(context).primaryColor,
-        size: 24,
-      );
-    } else {
-      return Icon(
-        EvaIcons.email,
-        color: Theme.of(context).primaryColor,
-        size: 24,
-      );
-    }
-  }
-
   final List<String> _markedInboxMessages = [];
 
   @override
@@ -171,7 +156,6 @@ class InboxMessageWidgetState extends State<InboxMessageWidget> {
       } else {
         message.read();
       }
-      bloc.add(ReadMessageRequested(message: message));
     });
   }
 

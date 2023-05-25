@@ -4,6 +4,7 @@ import 'package:messages_repository/messages_repository.dart';
 import 'package:studipadawan/home/modules/message_module/bloc/message_module_bloc.dart';
 import 'package:studipadawan/home/modules/message_module/bloc/message_module_event.dart';
 import 'package:studipadawan/messages/message_details/view/message_detail_page.dart';
+import 'package:studipadawan/messages/message_overview/view/widgets/message_icon.dart';
 
 class MessagePreviewList extends StatelessWidget {
   const MessagePreviewList({
@@ -48,11 +49,7 @@ class MessagePreviewList extends StatelessWidget {
                 leading: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    Icon(
-                      EvaIcons.email,
-                      color: Theme.of(context).primaryColor,
-                      size: 24,
-                    ),
+                    messageIcon(context, isRead: message.isRead)
                   ],
                 ),
                 title: Text(message.subject),

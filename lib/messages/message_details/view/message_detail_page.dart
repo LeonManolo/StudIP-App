@@ -31,7 +31,7 @@ class MessageDetailpage extends StatelessWidget {
     return BlocProvider(
       create: (context) => MessageDetailsBloc(
         messageRepository: context.read<MessageRepository>(),
-      ),
+      )..add(ReadMessageRequested(message: message)),
       child: BlocConsumer<MessageDetailsBloc, MessageDetailsState>(
         listener: (context, state) {
           if (state.status == MessageDetailsStatus.deleteMessageSucceed) {
