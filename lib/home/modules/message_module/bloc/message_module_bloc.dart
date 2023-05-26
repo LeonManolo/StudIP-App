@@ -27,13 +27,13 @@ class MessageModuleBloc extends Bloc<MessageModuleEvent, MessageModuleState> {
     emit(const MessageModuleStateLoading());
 
     try {
-      final previewmessages = await _messageRepository.getInboxMessages(
+      final previewMessages = await _messageRepository.getInboxMessages(
         userId: _authenticationRepository.currentUser.id,
         offset: 0,
         limit: previewLimit,
         filterUnread: false,
       );
-      emit(MessageModuleStateDidLoad(previewMessages: previewmessages));
+      emit(MessageModuleStateDidLoad(previewMessages: previewMessages));
     } catch (_) {
       emit(const MessageModuleStateError());
     }

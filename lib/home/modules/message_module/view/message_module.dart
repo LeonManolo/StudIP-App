@@ -11,6 +11,7 @@ import 'package:studipadawan/home/modules/message_module/bloc/message_module_sta
 import 'package:studipadawan/home/modules/message_module/view/widgets/message_preview_list.dart';
 import 'package:studipadawan/home/modules/module.dart';
 import 'package:studipadawan/home/modules/module_card.dart';
+import 'package:studipadawan/utils/empty_view.dart';
 
 class MessageModule extends StatefulWidget implements Module {
   const MessageModule({
@@ -65,19 +66,23 @@ class _MessageModuleState extends State<MessageModule> {
         value: _messageModuleBloc,
         child: BlocBuilder<MessageModuleBloc, MessageModuleState>(
           builder: (context, state) {
-            if (state is MessageModuleStateLoading) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            } else if (state is MessageModuleStateDidLoad) {
-              return MessagePreviewList(
-                messageModuleBloc: _messageModuleBloc,
-                messages: state.previewMessages,
-              );
-            } else if (state is MessageModuleStateError) {
-              return Text(state.blocResponse);
-            } else {
-              return Container();
+            switch (state) {
+              case MessageModuleStateInitial _:
+                return Container();
+              case MessageModuleStateLoading _:
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              case MessageModuleStateDidLoad _:
+                return MessagePreviewList(
+                  messageModuleBloc: _messageModuleBloc,
+                  messages: state.previewMessages,
+                );
+              case MessageModuleStateError _:
+                return const EmptyView(
+                  title: 'Es ist ein Fehler aufgetreten',
+                  message: 'Es konnten keine Nachrichten gefetcht werden',
+                );
             }
           },
         ),

@@ -13,10 +13,6 @@ class MessageModuleStateInitial extends MessageModuleState {
 
   @override
   List<Object?> get props => [];
-
-  MessageModuleStateInitial copyWith() {
-    return const MessageModuleStateInitial();
-  }
 }
 
 class MessageModuleStateLoading extends MessageModuleState {
@@ -24,10 +20,6 @@ class MessageModuleStateLoading extends MessageModuleState {
 
   @override
   List<Object?> get props => [];
-
-  MessageModuleStateLoading copyWith() {
-    return const MessageModuleStateLoading();
-  }
 }
 
 class MessageModuleStateDidLoad extends MessageModuleState {
@@ -38,23 +30,10 @@ class MessageModuleStateDidLoad extends MessageModuleState {
 
   @override
   List<Object?> get props => [previewMessages];
-
-  MessageModuleStateDidLoad copyWith({List<Message>? previewMessages}) {
-    return MessageModuleStateDidLoad(
-      previewMessages: previewMessages ?? this.previewMessages,
-    );
-  }
 }
 
 class MessageModuleStateError extends MessageModuleState {
-  const MessageModuleStateError({
-    this.blocResponse = '',
-  });
-  final String blocResponse;
+  const MessageModuleStateError();
   @override
   List<Object?> get props => [];
-
-  MessageModuleStateError copyWith() {
-    return const MessageModuleStateError();
-  }
 }

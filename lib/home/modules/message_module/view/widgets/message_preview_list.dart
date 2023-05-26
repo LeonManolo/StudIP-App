@@ -1,10 +1,11 @@
-import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:messages_repository/messages_repository.dart';
 import 'package:studipadawan/home/modules/message_module/bloc/message_module_bloc.dart';
 import 'package:studipadawan/home/modules/message_module/bloc/message_module_event.dart';
 import 'package:studipadawan/messages/message_details/view/message_detail_page.dart';
 import 'package:studipadawan/messages/message_overview/view/widgets/message_icon.dart';
+import 'package:studipadawan/messages/message_overview/view/widgets/message_tile.dart';
+import 'package:studipadawan/utils/empty_view.dart';
 
 class MessagePreviewList extends StatelessWidget {
   const MessagePreviewList({
@@ -19,7 +20,10 @@ class MessagePreviewList extends StatelessWidget {
   Widget build(BuildContext context) {
     if (messages.isEmpty) {
       return const Center(
-        child: Text('Keine neuen Nachrichten vorhanden'),
+        child: EmptyView(
+          title: 'Keine Nachrichten',
+          message: 'Es sind keine Nachrichten vorhanden',
+        ),
       );
     }
     return SingleChildScrollView(
@@ -31,8 +35,9 @@ class MessagePreviewList extends StatelessWidget {
 
           return Column(
             children: [
-              ListTile(
-                onTap: () {
+              MessageTile(
+                messageIcon: messageIcon(context, isRead: message.isRead),
+                onTapFunction: () => {
                   Navigator.push(
                     context,
                     MaterialPageRoute<MessageDetailpage>(
@@ -43,18 +48,11 @@ class MessagePreviewList extends StatelessWidget {
                             .add(const MessagePreviewRequested()),
                       ),
                     ),
-                  );
+                  )
                 },
-                contentPadding: const EdgeInsets.symmetric(horizontal: 10),
-                leading: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    messageIcon(context, isRead: message.isRead)
-                  ],
-                ),
-                title: Text(message.subject),
-                subtitle: Text(message.sender.formattedName),
-                trailing: Text(message.getTimeAgo()),
+                trailing: message.getTimeAgo(),
+                title: message.subject,
+                subTitle: message.sender.formattedName,
               ),
               if (!isLastMessage) const Divider(),
             ],
