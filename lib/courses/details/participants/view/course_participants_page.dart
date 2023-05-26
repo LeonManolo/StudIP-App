@@ -20,6 +20,7 @@ class CourseParticipantsPage extends StatelessWidget {
                 backgroundColor:
                     Theme.of(context).primaryColor.withOpacity(0.1),
                 child: Padding(
+
                   padding: const EdgeInsets.all(AppSpacing.xxs),
                   child: Text(
                     'M',

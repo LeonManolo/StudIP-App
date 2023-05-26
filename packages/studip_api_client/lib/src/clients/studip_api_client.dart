@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:http_forked/http.dart' as http;
 import 'package:studip_api_client/src/core/studip_api_core.dart';
+import 'package:studip_api_client/src/models/courses/course_participants_response.dart';
 import 'package:studip_api_client/studip_api_client.dart';
 import 'package:logger/logger.dart';
 
@@ -277,6 +278,29 @@ class StudIpApiClient
       );
     }
     return FolderListResponse.fromJson(body).folders.first;
+  }
+
+  Future<CourseParticipantsResponse> getCourseParticipants({
+    required String courseId,
+    required int offset,
+    required int limit,
+  }) async {
+    final response = await _core
+        .get(endpoint: "courses/$courseId/relationships/memberships",
+        queryParameters: {
+      "page[offset]": "$offset",
+      "page[limit]": "$limit",
+    });
+
+    final body = response.json();
+
+    if (response.statusCode != HttpStatus.ok) {
+      throw StudIpApiRequestFailure(
+        body: body,
+        statusCode: response.statusCode,
+      );
+    }
+    return CourseParticipantsResponse.fromJson(body);
   }
 
   @override
