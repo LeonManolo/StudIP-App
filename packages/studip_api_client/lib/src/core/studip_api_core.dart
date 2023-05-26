@@ -8,6 +8,7 @@ import 'package:logger/logger.dart';
 import 'package:oauth2_client/access_token_response.dart';
 import 'package:oauth2_client/oauth2_helper.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:studip_api_client/src/core/custom_token_storage.dart';
 import 'package:studip_api_client/src/exceptions.dart';
 import 'studip_oauth_client.dart';
 import 'package:http_forked/http.dart' as http;
@@ -29,6 +30,7 @@ class StudIpAPICore {
               clientId: "5",
               grantType: OAuth2Helper.authorizationCode,
               scopes: ["api"],
+              tokenBaseStorage: CustomTokenStorage(),
             );
 
   Future<http.Response> get({

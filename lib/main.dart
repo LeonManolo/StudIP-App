@@ -45,7 +45,7 @@ Future<void> main() async {
         : await getApplicationDocumentsDirectory(),
   );
 
-  IOSWidgetDataProvider(
+  final iosWidgetDataProvider = IOSWidgetDataProvider(
     calendarRepository: calenderRepository,
     authRepository: authenticationRepository,
   );
@@ -58,6 +58,7 @@ Future<void> main() async {
       coursesRepository: coursesRepository,
       messageRepository: messagesRepository,
       filesRepository: filesRepository,
+      iosWidgetDataProvider: iosWidgetDataProvider,
     ),
   );
 }

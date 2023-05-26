@@ -13,6 +13,7 @@
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
+		CCB0D1C7BD105A0E06F1AF57 /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E8F552362A20CFD80015377F /* Pods_Runner.framework */; };
 		E779E8C6E01DDEE6065BE4DE /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D028DA0C2ECC029809E1102 /* Pods_Runner.framework */; };
 		E8039ACC2A1E4BA400FC76B7 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E8039ACB2A1E4BA400FC76B7 /* WidgetKit.framework */; };
 		E8039ACE2A1E4BA400FC76B7 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E8039ACD2A1E4BA400FC76B7 /* SwiftUI.framework */; };
@@ -25,6 +26,8 @@
 		E8039AED2A1E4FDA00FC76B7 /* CalendarCommunication.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E8039AE62A1E4FDA00FC76B7 /* CalendarCommunication.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		E8039AF32A1E500B00FC76B7 /* CalendarCommunication.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8039AF22A1E500B00FC76B7 /* CalendarCommunication.swift */; };
 		E8039AF42A1E589900FC76B7 /* CalendarCommunication.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E8039AE62A1E4FDA00FC76B7 /* CalendarCommunication.framework */; };
+		E8F5523D2A210D1D0015377F /* KeychainAccess in Frameworks */ = {isa = PBXBuildFile; productRef = E8F5523C2A210D1D0015377F /* KeychainAccess */; };
+		E8F552402A211C840015377F /* KeychainWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8F5523E2A210D2B0015377F /* KeychainWrapper.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -99,6 +102,8 @@
 		E8039AE62A1E4FDA00FC76B7 /* CalendarCommunication.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CalendarCommunication.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E8039AE82A1E4FDA00FC76B7 /* CalendarCommunication.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CalendarCommunication.h; sourceTree = "<group>"; };
 		E8039AF22A1E500B00FC76B7 /* CalendarCommunication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarCommunication.swift; sourceTree = "<group>"; };
+		E8F552362A20CFD80015377F /* Pods_Runner.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Pods_Runner.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E8F5523E2A210D2B0015377F /* KeychainWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainWrapper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -108,6 +113,7 @@
 			files = (
 				E779E8C6E01DDEE6065BE4DE /* Pods_Runner.framework in Frameworks */,
 				E8039AEC2A1E4FDA00FC76B7 /* CalendarCommunication.framework in Frameworks */,
+				CCB0D1C7BD105A0E06F1AF57 /* Pods_Runner.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -115,6 +121,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E8F5523D2A210D1D0015377F /* KeychainAccess in Frameworks */,
 				E8039AF42A1E589900FC76B7 /* CalendarCommunication.framework in Frameworks */,
 				E8039ACE2A1E4BA400FC76B7 /* SwiftUI.framework in Frameworks */,
 				E8039ACC2A1E4BA400FC76B7 /* WidgetKit.framework in Frameworks */,
@@ -195,6 +202,7 @@
 		ACF4A1D74EC6970A08346B45 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				E8F552362A20CFD80015377F /* Pods_Runner.framework */,
 				0D028DA0C2ECC029809E1102 /* Pods_Runner.framework */,
 				E8039ACB2A1E4BA400FC76B7 /* WidgetKit.framework */,
 				E8039ACD2A1E4BA400FC76B7 /* SwiftUI.framework */,
@@ -209,6 +217,7 @@
 				E8039AD22A1E4BA400FC76B7 /* StudipadawanWidgets.swift */,
 				E8039AD42A1E4BA400FC76B7 /* Assets.xcassets */,
 				E8039AD62A1E4BA400FC76B7 /* Info.plist */,
+				E8F5523E2A210D2B0015377F /* KeychainWrapper.swift */,
 			);
 			path = StudipadawanWidgets;
 			sourceTree = "<group>";
@@ -274,6 +283,9 @@
 			dependencies = (
 			);
 			name = StudipadawanWidgetsExtension;
+			packageProductDependencies = (
+				E8F5523C2A210D1D0015377F /* KeychainAccess */,
+			);
 			productName = StudipadawanWidgetsExtension;
 			productReference = E8039ACA2A1E4BA400FC76B7 /* StudipadawanWidgetsExtension.appex */;
 			productType = "com.apple.product-type.app-extension";
@@ -328,6 +340,9 @@
 				Base,
 			);
 			mainGroup = 97C146E51CF9000F007C117D;
+			packageReferences = (
+				E8F5523B2A210D1D0015377F /* XCRemoteSwiftPackageReference "KeychainAccess" */,
+			);
 			productRefGroup = 97C146EF1CF9000F007C117D /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -455,6 +470,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E8F552402A211C840015377F /* KeychainWrapper.swift in Sources */,
 				E8039AD32A1E4BA400FC76B7 /* StudipadawanWidgets.swift in Sources */,
 				E8039AD12A1E4BA400FC76B7 /* StudipadawanWidgetsBundle.swift in Sources */,
 			);
@@ -1041,6 +1057,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		E8F5523B2A210D1D0015377F /* XCRemoteSwiftPackageReference "KeychainAccess" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kishikawakatsumi/KeychainAccess";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		E8F5523C2A210D1D0015377F /* KeychainAccess */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E8F5523B2A210D1D0015377F /* XCRemoteSwiftPackageReference "KeychainAccess" */;
+			productName = KeychainAccess;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 97C146E61CF9000F007C117D /* Project object */;
 }

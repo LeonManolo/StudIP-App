@@ -686,8 +686,8 @@ packages:
     dependency: transitive
     description:
       path: "."
-      ref: d46af8bdac3eb8101614e2c3d9edbf1ad42fef29
-      resolved-ref: d46af8bdac3eb8101614e2c3d9edbf1ad42fef29
+      ref: "7c2a704eff312338f41fdc500f00a56e04e21afb"
+      resolved-ref: "7c2a704eff312338f41fdc500f00a56e04e21afb"
       url: "https://github.com/finebel/oauth2_client"
     source: git
     version: "3.2.1"

@@ -6,5 +6,9 @@
 	<array>
 		<string>group.studipadwan</string>
 	</array>
+	<key>keychain-access-groups</key>
+	<array>
+		<string>$(AppIdentifierPrefix)de.hsflensburg.studipadawan.sharedKeychain</string>
+	</array>
 </dict>
 </plist>

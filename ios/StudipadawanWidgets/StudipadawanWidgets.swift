@@ -11,19 +11,20 @@ import CalendarCommunication
 
 struct Provider: TimelineProvider {
     func placeholder(in context: Context) -> SimpleEntry {
+        
         print(#function)
         return SimpleEntry(date: Date(), text: "some dummy text")
     }
 
     func getSnapshot(in context: Context, completion: @escaping (SimpleEntry) -> ()) {
-        print(#function)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-            CalendarComunicator.shared.loadCalendarEvents(startDate: Date.now.ISO8601Format()) { updatedDate in
-                let entry = SimpleEntry(date: Date(), text: updatedDate)
-
-                completion(entry)
-            }
-        }
+        print(KeychainWrapper.shared.allItems())
+//        completion(SimpleEntry(date: Date(), text: "some number: \(Int.random(in: 0...100000))"))
+//        CalendarComunicator.shared.loadCalendarEvents(startDate: Date.now.ISO8601Format()) { updatedDate in
+//            let entry = SimpleEntry(date: Date(), text: updatedDate)
+//
+//            completion(entry)
+//        }
+        
     }
 
     func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> ()) {
