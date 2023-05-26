@@ -9,31 +9,32 @@ class IOSWidgetDataProvider {
     required CalenderRepository calendarRepository,
     required AuthenticationRepository authRepository,
   })  : _calendarRepository = calendarRepository,
-        _authRepository = authRepository,
-        _methodChannel = const MethodChannel(
-          'de.hsflensburg.studipadawan.calendarCommunication',
-        ) {
+        _authRepository = authRepository {
     _addMethodChannelListener();
   }
 
   final CalenderRepository _calendarRepository;
   final AuthenticationRepository _authRepository;
-  final MethodChannel _methodChannel;
+  final MethodChannel _methodChannel = const MethodChannel(
+    'de.hsflensburg.studipadawan.calendarCommunication',
+  );
 
   void _addMethodChannelListener() {
     Logger().d('_addMethodChannelListener called');
     _methodChannel.setMethodCallHandler(
       (call) async {
+        Logger().d('Received method call: ${call.method}');
+
         switch (call.method) {
           case 'loadWidgetCalendarEvents':
-            final String? startDate =
-                castOrNull<String>(call.arguments['startDate']);
+            final String? startDate = DateTime.now().toIso8601String();
+            // castOrNull<String>(call.arguments['startDate']);
             if (startDate != null) {
-              final serializedJsonResponse =
-                  await _handleLoadWidgetCalendarEvents(
-                requestedDateTimeIso8601String: startDate,
-              );
-              return serializedJsonResponse;
+              // final serializedJsonResponse =
+              //     await _handleLoadWidgetCalendarEvents(
+              //   requestedDateTimeIso8601String: startDate,
+              // );
+              return 'from flutter'; //serializedJsonResponse;
             } else {
               Logger().e(
                 'Parameter startDate is missing or in wrong format.',

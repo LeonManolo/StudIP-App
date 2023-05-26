@@ -1,6 +1,7 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_widgetkit/flutter_widgetkit.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
+import 'package:logger/logger.dart';
 import 'package:studipadawan/home/modules/module.dart';
 import 'package:studipadawan/home/utils/utils.dart';
 
@@ -25,6 +26,7 @@ class HomeCubit extends HydratedCubit<List<Module>> {
   }
 
   void testWidgetKit() {
+    Logger().d('reload all timelines');
     WidgetKit.reloadAllTimelines();
   }
 

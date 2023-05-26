@@ -24,14 +24,13 @@ public class CalendarComunicator {
     }
     
     public func loadCalendarEvents(startDate: String, completion: @escaping (String) -> Void) {
-        fatalError(#function)
-        methodChannel?.customInvokeMethod("loadWidgetCalendarEvents", arguments: ["startDate": startDate]) { result in
+        methodChannel?.customInvokeMethod("loadWidgetCalendarEvents", arguments: nil) { result in
             if let str = result as? String {
                 completion(str)
-                fatalError("Got the following response from flutter: " + str)
                 NSLog("Got the following response from the flutter code: " + str)
             } else {
-                fatalError("Got a response but not a string")
+                completion("Response not a string")
+                NSLog("Response not a string")
             }
         }
     }

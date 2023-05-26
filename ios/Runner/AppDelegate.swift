@@ -11,22 +11,30 @@ extension FlutterMethodChannel: FlutterMethodChannelAdapter {
 
 @UIApplicationMain
 @objc class AppDelegate: FlutterAppDelegate {
+    private var methodChannel: FlutterMethodChannel?
+    
     override func application(
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
+        GeneratedPluginRegistrant.register(with: self)
+        
         let controller: FlutterViewController = window?.rootViewController as! FlutterViewController
         let methodChannel = FlutterMethodChannel(
             name: "de.hsflensburg.studipadawan.calendarCommunication",
             binaryMessenger: controller.binaryMessenger
         )
+        self.methodChannel = methodChannel
+        
         CalendarComunicator.shared.initWitMethodChannel(methodChannel)
         
-        GeneratedPluginRegistrant.register(with: self)
-        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+            WidgetCenter.shared.reloadAllTimelines()
+            print(#function)
+        }
         
         if #available(iOS 10.0, *) {
-            UNUserNotificationCenter.current().delegate = self as? UNUserNotificationCenterDelegate
+            UNUserNotificationCenter.current().delegate = self
         }
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }
