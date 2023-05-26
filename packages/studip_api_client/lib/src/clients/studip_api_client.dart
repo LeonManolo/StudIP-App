@@ -114,9 +114,7 @@ class StudIpApiClient
 
     final response = await _core.get(
         endpoint: "users/$userId/inbox", queryParameters: queryParameters);
-
     final body = response.json();
-
     if (response.statusCode != HttpStatus.ok) {
       throw StudIpApiRequestFailure(
         body: body,

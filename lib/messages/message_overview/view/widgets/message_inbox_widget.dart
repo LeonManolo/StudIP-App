@@ -8,6 +8,8 @@ import 'package:studipadawan/messages/message_overview/message_inbox_bloc%20/mes
 import 'package:studipadawan/messages/message_overview/message_inbox_bloc%20/message_inbox_state.dart';
 import 'package:studipadawan/messages/message_overview/message_tabbar_bloc%20/message_tabbar_bloc.dart';
 import 'package:studipadawan/messages/message_overview/message_tabbar_bloc%20/message_tabbar_event.dart';
+import 'package:studipadawan/messages/message_overview/view/widgets/message_icon.dart';
+import 'package:studipadawan/messages/message_overview/view/widgets/message_tile.dart';
 import 'package:studipadawan/utils/empty_view.dart';
 
 import 'package:studipadawan/utils/pagination/pagination.dart';
@@ -31,22 +33,6 @@ class InboxMessageWidget extends StatefulWidget {
 }
 
 class InboxMessageWidgetState extends State<InboxMessageWidget> {
-  Icon messageIcon(BuildContext context, {required bool isRead}) {
-    if (isRead) {
-      return Icon(
-        EvaIcons.emailOutline,
-        color: Theme.of(context).primaryColor,
-        size: 24,
-      );
-    } else {
-      return Icon(
-        EvaIcons.email,
-        color: Theme.of(context).primaryColor,
-        size: 24,
-      );
-    }
-  }
-
   final List<String> _markedInboxMessages = [];
 
   @override
@@ -85,13 +71,13 @@ class InboxMessageWidgetState extends State<InboxMessageWidget> {
                   );
                 } else {
                   final message = widget.state.inboxMessages[index];
-
                   return ColoredBox(
                     color: (_markedInboxMessages.contains(message.id))
                         ? Theme.of(context).primaryColor.withOpacity(0.5)
                         : Colors.transparent,
-                    child: ListTile(
-                      onTap: () => {
+                    child: MessageTile(
+                      messageIcon: messageIcon(context, isRead: message.isRead),
+                      onTapFunction: () => {
                         if (_markedInboxMessages.isNotEmpty)
                           {
                             if (_markedInboxMessages.contains(message.id))
@@ -114,16 +100,10 @@ class InboxMessageWidgetState extends State<InboxMessageWidget> {
                             )
                           }
                       },
-                      onLongPress: () => _markMessage(message.id),
-                      leading: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          messageIcon(context, isRead: message.isRead)
-                        ],
-                      ),
-                      trailing: Text(message.getTimeAgo()),
-                      title: Text(message.subject),
-                      subtitle: Text(message.sender.formattedName),
+                      onLongPressFunction: () => _markMessage(message.id),
+                      trailing: message.getTimeAgo(),
+                      title: message.subject,
+                      subTitle: message.sender.formattedName,
                     ),
                   );
                 }
@@ -171,7 +151,6 @@ class InboxMessageWidgetState extends State<InboxMessageWidget> {
       } else {
         message.read();
       }
-      bloc.add(ReadMessageRequested(message: message));
     });
   }
 

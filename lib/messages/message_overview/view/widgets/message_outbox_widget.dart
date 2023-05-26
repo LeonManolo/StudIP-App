@@ -1,4 +1,3 @@
-import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:studipadawan/messages/message_details/view/message_detail_page.dart';
@@ -7,6 +6,8 @@ import 'package:studipadawan/messages/message_overview/message_outbox_bloc/messa
 import 'package:studipadawan/messages/message_overview/message_outbox_bloc/message_outbox_state.dart';
 import 'package:studipadawan/messages/message_overview/message_tabbar_bloc%20/message_tabbar_bloc.dart';
 import 'package:studipadawan/messages/message_overview/message_tabbar_bloc%20/message_tabbar_event.dart';
+import 'package:studipadawan/messages/message_overview/view/widgets/message_icon.dart';
+import 'package:studipadawan/messages/message_overview/view/widgets/message_tile.dart';
 import 'package:studipadawan/utils/empty_view.dart';
 
 import 'package:studipadawan/utils/pagination/pagination.dart';
@@ -28,10 +29,6 @@ class OutboxMessageWidget extends StatefulWidget {
 }
 
 class OutboxMessageWidgetState extends State<OutboxMessageWidget> {
-  Icon messageIcon(Color iconColor) {
-    return Icon(EvaIcons.emailOutline, color: iconColor, size: 24);
-  }
-
   final List<String> _markedOutboxMessages = [];
 
   @override
@@ -71,8 +68,9 @@ class OutboxMessageWidgetState extends State<OutboxMessageWidget> {
                     color: (_markedOutboxMessages.contains(message.id))
                         ? Theme.of(context).primaryColor.withOpacity(0.5)
                         : Colors.transparent,
-                    child: ListTile(
-                      onTap: () => {
+                    child: MessageTile(
+                      messageIcon: messageIcon(context, isRead: message.isRead),
+                      onTapFunction: () => {
                         if (_markedOutboxMessages.isNotEmpty)
                           {
                             if (_markedOutboxMessages.contains(message.id))
@@ -94,16 +92,11 @@ class OutboxMessageWidgetState extends State<OutboxMessageWidget> {
                             )
                           }
                       },
-                      onLongPress: () => _markMessage(context, message.id),
-                      leading: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          messageIcon(Theme.of(context).primaryColor)
-                        ],
-                      ),
-                      trailing: Text(message.getTimeAgo()),
-                      title: Text(message.subject),
-                      subtitle: Text(message.parseRecipients()),
+                      onLongPressFunction: () =>
+                          _markMessage(context, message.id),
+                      title: message.subject,
+                      subTitle: message.parseRecipients(),
+                      trailing: message.getTimeAgo(),
                     ),
                   );
                 }
