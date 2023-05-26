@@ -22,7 +22,6 @@ class InboxMessageBloc extends Bloc<InboxMessageEvent, InboxMessageState> {
         super(const InboxMessageState.initial()) {
     on<InboxMessagesRequested>(_onInboxMessagesRequested);
     on<RefreshInboxRequested>(_onRefreshRequested);
-    on<ReadMessageRequested>(_onReadMessageRequested);
     on<DeleteInboxMessagesRequested>(_onDeleteInboxMessagesRequested);
   }
   final MessageRepository _messageRepository;
@@ -148,13 +147,6 @@ class InboxMessageBloc extends Bloc<InboxMessageEvent, InboxMessageState> {
         ),
       );
     }
-  }
-
-  FutureOr<void> _onReadMessageRequested(
-    ReadMessageRequested event,
-    Emitter<InboxMessageState> emit,
-  ) async {
-    await _messageRepository.readMessage(messageId: event.message.id);
   }
 
   Future<List<Message>> _fetchInboxMessages({

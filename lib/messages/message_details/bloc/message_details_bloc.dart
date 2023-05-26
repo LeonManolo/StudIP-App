@@ -13,6 +13,7 @@ class MessageDetailsBloc
   })  : _messageRepository = messageRepository,
         super(const MessageDetailsState.initial()) {
     on<DeleteMessageRequested>(_onDeleteMessageRequested);
+    on<ReadMessageRequested>(_onReadMessageRequested);
   }
   final MessageRepository _messageRepository;
 
@@ -38,5 +39,12 @@ class MessageDetailsBloc
         ),
       );
     }
+  }
+
+  FutureOr<void> _onReadMessageRequested(
+    ReadMessageRequested event,
+    Emitter<MessageDetailsState> emit,
+  ) async {
+    await _messageRepository.readMessage(messageId: event.message.id);
   }
 }

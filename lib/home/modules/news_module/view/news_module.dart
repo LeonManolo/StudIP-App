@@ -16,7 +16,7 @@ class NewsModule extends StatelessWidget implements Module {
 
   @override
   Widget build(BuildContext context) {
-    return MoudleCard(
+    return ModuleCard(
       type: type,
       child: BlocProvider(
         create: (context) => NewsModuleBloc(
