@@ -19,7 +19,7 @@ struct Provider: TimelineProvider {
     
     func getSnapshot(in context: Context, completion: @escaping (SimpleEntry) -> ()) {
 //        KeychainWrapper.shared.allItems()
-        
+        print(Date().startOfWeek())
         Task {
             do {
                 let res = try await OAuthClient.shared.getSchedule()
@@ -46,6 +46,8 @@ struct Provider: TimelineProvider {
         getSnapshot(in: context) { entry in
             completion(Timeline(entries: [entry], policy: .never))
         }
+        
+        
     }
 }
 

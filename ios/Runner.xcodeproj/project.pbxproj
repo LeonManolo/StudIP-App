@@ -27,9 +27,12 @@
 		E8039AF32A1E500B00FC76B7 /* CalendarCommunication.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8039AF22A1E500B00FC76B7 /* CalendarCommunication.swift */; };
 		E8039AF42A1E589900FC76B7 /* CalendarCommunication.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E8039AE62A1E4FDA00FC76B7 /* CalendarCommunication.framework */; };
 		E858D3032A21D0F200BB6962 /* OAuthClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = E858D3022A21D0F200BB6962 /* OAuthClient.swift */; };
+		E858D3052A22173C00BB6962 /* Calendar+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = E858D3042A22173C00BB6962 /* Calendar+Ext.swift */; };
+		E858D3072A22183200BB6962 /* Date+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = E858D3062A22183200BB6962 /* Date+Ext.swift */; };
+		E858D30A2A22281100BB6962 /* RefreshTokenResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = E858D3092A22281100BB6962 /* RefreshTokenResponse.swift */; };
+		E858D30C2A222ACF00BB6962 /* RefreshTokenRequestBody.swift in Sources */ = {isa = PBXBuildFile; fileRef = E858D30B2A222ACF00BB6962 /* RefreshTokenRequestBody.swift */; };
 		E8F5523D2A210D1D0015377F /* KeychainAccess in Frameworks */ = {isa = PBXBuildFile; productRef = E8F5523C2A210D1D0015377F /* KeychainAccess */; };
 		E8F552402A211C840015377F /* KeychainWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8F5523E2A210D2B0015377F /* KeychainWrapper.swift */; };
-		E8F552432A213DAA0015377F /* OAuthSwift in Frameworks */ = {isa = PBXBuildFile; productRef = E8F552422A213DAA0015377F /* OAuthSwift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -105,6 +108,10 @@
 		E8039AE82A1E4FDA00FC76B7 /* CalendarCommunication.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CalendarCommunication.h; sourceTree = "<group>"; };
 		E8039AF22A1E500B00FC76B7 /* CalendarCommunication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarCommunication.swift; sourceTree = "<group>"; };
 		E858D3022A21D0F200BB6962 /* OAuthClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuthClient.swift; sourceTree = "<group>"; };
+		E858D3042A22173C00BB6962 /* Calendar+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Calendar+Ext.swift"; sourceTree = "<group>"; };
+		E858D3062A22183200BB6962 /* Date+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Ext.swift"; sourceTree = "<group>"; };
+		E858D3092A22281100BB6962 /* RefreshTokenResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshTokenResponse.swift; sourceTree = "<group>"; };
+		E858D30B2A222ACF00BB6962 /* RefreshTokenRequestBody.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshTokenRequestBody.swift; sourceTree = "<group>"; };
 		E8F552362A20CFD80015377F /* Pods_Runner.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Pods_Runner.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E8F5523E2A210D2B0015377F /* KeychainWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainWrapper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -126,7 +133,6 @@
 			files = (
 				E8F5523D2A210D1D0015377F /* KeychainAccess in Frameworks */,
 				E8039AF42A1E589900FC76B7 /* CalendarCommunication.framework in Frameworks */,
-				E8F552432A213DAA0015377F /* OAuthSwift in Frameworks */,
 				E8039ACE2A1E4BA400FC76B7 /* SwiftUI.framework in Frameworks */,
 				E8039ACC2A1E4BA400FC76B7 /* WidgetKit.framework in Frameworks */,
 			);
@@ -217,12 +223,15 @@
 		E8039ACF2A1E4BA400FC76B7 /* StudipadawanWidgets */ = {
 			isa = PBXGroup;
 			children = (
+				E858D3082A2227F700BB6962 /* Models */,
 				E8039AD02A1E4BA400FC76B7 /* StudipadawanWidgetsBundle.swift */,
 				E8039AD22A1E4BA400FC76B7 /* StudipadawanWidgets.swift */,
 				E8039AD42A1E4BA400FC76B7 /* Assets.xcassets */,
 				E8039AD62A1E4BA400FC76B7 /* Info.plist */,
 				E8F5523E2A210D2B0015377F /* KeychainWrapper.swift */,
 				E858D3022A21D0F200BB6962 /* OAuthClient.swift */,
+				E858D3042A22173C00BB6962 /* Calendar+Ext.swift */,
+				E858D3062A22183200BB6962 /* Date+Ext.swift */,
 			);
 			path = StudipadawanWidgets;
 			sourceTree = "<group>";
@@ -234,6 +243,15 @@
 				E8039AF22A1E500B00FC76B7 /* CalendarCommunication.swift */,
 			);
 			path = CalendarCommunication;
+			sourceTree = "<group>";
+		};
+		E858D3082A2227F700BB6962 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				E858D3092A22281100BB6962 /* RefreshTokenResponse.swift */,
+				E858D30B2A222ACF00BB6962 /* RefreshTokenRequestBody.swift */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -290,7 +308,6 @@
 			name = StudipadawanWidgetsExtension;
 			packageProductDependencies = (
 				E8F5523C2A210D1D0015377F /* KeychainAccess */,
-				E8F552422A213DAA0015377F /* OAuthSwift */,
 			);
 			productName = StudipadawanWidgetsExtension;
 			productReference = E8039ACA2A1E4BA400FC76B7 /* StudipadawanWidgetsExtension.appex */;
@@ -348,7 +365,6 @@
 			mainGroup = 97C146E51CF9000F007C117D;
 			packageReferences = (
 				E8F5523B2A210D1D0015377F /* XCRemoteSwiftPackageReference "KeychainAccess" */,
-				E8F552412A213DAA0015377F /* XCRemoteSwiftPackageReference "OAuthSwift" */,
 			);
 			productRefGroup = 97C146EF1CF9000F007C117D /* Products */;
 			projectDirPath = "";
@@ -478,9 +494,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				E858D3032A21D0F200BB6962 /* OAuthClient.swift in Sources */,
+				E858D3052A22173C00BB6962 /* Calendar+Ext.swift in Sources */,
 				E8F552402A211C840015377F /* KeychainWrapper.swift in Sources */,
+				E858D3072A22183200BB6962 /* Date+Ext.swift in Sources */,
 				E8039AD32A1E4BA400FC76B7 /* StudipadawanWidgets.swift in Sources */,
+				E858D30C2A222ACF00BB6962 /* RefreshTokenRequestBody.swift in Sources */,
 				E8039AD12A1E4BA400FC76B7 /* StudipadawanWidgetsBundle.swift in Sources */,
+				E858D30A2A22281100BB6962 /* RefreshTokenResponse.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1075,14 +1095,6 @@
 				kind = branch;
 			};
 		};
-		E8F552412A213DAA0015377F /* XCRemoteSwiftPackageReference "OAuthSwift" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/OAuthSwift/OAuthSwift.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.0.0;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1090,11 +1102,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = E8F5523B2A210D1D0015377F /* XCRemoteSwiftPackageReference "KeychainAccess" */;
 			productName = KeychainAccess;
-		};
-		E8F552422A213DAA0015377F /* OAuthSwift */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = E8F552412A213DAA0015377F /* XCRemoteSwiftPackageReference "OAuthSwift" */;
-			productName = OAuthSwift;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
