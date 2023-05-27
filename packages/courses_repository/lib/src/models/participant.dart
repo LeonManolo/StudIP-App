@@ -1,5 +1,15 @@
 import 'package:studip_api_client/studip_api_client.dart';
 
+class CourseParticipantsData {
+  const CourseParticipantsData({
+    required this.participants,
+    required this.totalParticipants,
+  });
+
+  final int totalParticipants;
+  final List<Participant> participants;
+}
+
 class Participant {
   const Participant({
     required this.id,
@@ -13,21 +23,26 @@ class Participant {
     required this.homepage,
     required this.address,
     required this.avatarUrl,
+    required this.namePrefix,
+    required this.nameSuffix,
   });
 
   factory Participant.fromUserResponse(UserResponse user) {
     return Participant(
-        id: user.id,
-        username: user.username,
-        formattedName: user.formattedName,
-        familyName: user.familyName,
-        givenName: user.givenName,
-        permission: user.permission,
-        email: user.email,
-        phone: user.phone,
-        homepage: user.homepage,
-        address: user.address,
-        avatarUrl: user.avatarUrl,
+      id: user.id,
+      username: user.username,
+      formattedName: user.formattedName,
+      familyName: user.familyName,
+      givenName: user.givenName,
+      permission: user.permission,
+      email: user.email,
+      phone: user.phone,
+      homepage: user.homepage,
+      address: user.address,
+      avatarUrl: user.avatarUrl,
+      namePrefix: user.namePrefix,
+      nameSuffix: user.nameSuffix,
+
     );
   }
 
@@ -42,4 +57,6 @@ class Participant {
   final String? homepage;
   final String? address;
   final String avatarUrl;
+  final String namePrefix;
+  final String nameSuffix;
 }

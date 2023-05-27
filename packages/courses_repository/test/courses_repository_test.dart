@@ -93,6 +93,8 @@ void main() {
         homepage: null,
         address: null,
         avatarUrl: 'avatarUrl_$id',
+        namePrefix: '',
+        nameSuffix: '',
       );
     }
 

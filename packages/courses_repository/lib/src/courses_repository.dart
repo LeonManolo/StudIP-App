@@ -150,7 +150,7 @@ class CourseRepository {
     }
   }
 
-  Future<List<Participant>> getCourseParticipants({
+  Future<CourseParticipantsData> getCourseParticipants({
     required String courseId,
     required int offset,
     required int limit,
@@ -167,7 +167,10 @@ class CourseRepository {
       participants.add(Participant.fromUserResponse(userResponse));
     }
 
-    return participants;
+    return CourseParticipantsData(
+      participants: participants,
+      totalParticipants: participantsResponse.total,
+    );
   }
 
   // ***** Private Helpers *****

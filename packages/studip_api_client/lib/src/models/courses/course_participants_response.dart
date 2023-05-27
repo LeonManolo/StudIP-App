@@ -15,8 +15,9 @@ class CourseParticipantsResponse {
     final int offset = json["meta"]["page"]["offset"];
     final int limit = json["meta"]["page"]["limit"];
     final int total = json["meta"]["page"]["total"];
-    final participants = json["data"].map<List<Map<String, dynamic>>>(
-        (participant) => CourseParticipantResponse.fromJson(participant));
+    final participants = (json["data"] as List)
+        .map((participant) => CourseParticipantResponse.fromJson(participant))
+        .toList();
 
     return CourseParticipantsResponse._(
       offset: offset,
