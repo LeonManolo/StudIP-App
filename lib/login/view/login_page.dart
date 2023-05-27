@@ -49,7 +49,6 @@ class LoginPage extends StatelessWidget {
                 body: Padding(
                   padding: const EdgeInsets.all(8),
                   child: Column(
-                    //mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const LoginIllustration(),
                       Text(
@@ -65,7 +64,7 @@ class LoginPage extends StatelessWidget {
                           bottom: AppSpacing.xxlg,
                         ),
                         child: Text(
-                          'Melde dich jetzt hier mit deinem\nStudIP Account an',
+                          'Melde dich jetzt mit deinem\nStudIP Account an',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             color: Theme.of(context).hintColor,

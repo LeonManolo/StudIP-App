@@ -14,7 +14,7 @@ class LoginButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: FilledButton(
-        onPressed: onPressed, //
+        onPressed: onPressed,
         style: ButtonStyle(
           shape: MaterialStateProperty.all(
             RoundedRectangleBorder(
@@ -33,7 +33,7 @@ class LoginButton extends StatelessWidget {
               ),
               child: Icon(EvaIcons.externalLinkOutline),
             ),
-            Text('Mit StudIP anmelden'),
+            Text('Mit Stud.IP anmelden'),
           ],
         ),
       ),
