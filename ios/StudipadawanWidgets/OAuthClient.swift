@@ -133,8 +133,6 @@ class OAuthClient {
         print(scheduleEntryData?.attributes.title)
         print(calendar.dateComponents([.weekday], from: scheduleEntryData!.attributes.recurrence!.firstOccurence).weekday)
         
-        
-        
         return []
     }
     
@@ -213,6 +211,7 @@ class OAuthClient {
         let encoder = JSONEncoder()
         encoder.keyEncodingStrategy = .convertToSnakeCase
         encoder.dateEncodingStrategy = .custom { date, encoder in
+            // if using .millisecondsSince1970, then it's encoded using Double, which is not compatible with flutter library
             var container = encoder.singleValueContainer()
             try container.encode(Int64(date.timeIntervalSince1970 * 1000))
         }
