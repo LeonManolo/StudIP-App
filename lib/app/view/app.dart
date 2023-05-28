@@ -5,12 +5,10 @@ import 'package:courses_repository/courses_repository.dart';
 import 'package:files_repository/files_repository.dart';
 import 'package:flow_builder/flow_builder.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:messages_repository/messages_repository.dart';
 import 'package:studipadawan/app/bloc/app_bloc.dart';
 import 'package:studipadawan/app/routes/routes.dart';
-import 'package:studipadawan/calendar/ios_widget_data_provider/ios_widget_data_provider.dart';
 import 'package:user_repository/user_repository.dart';
 
 class App extends StatelessWidget {
@@ -22,14 +20,12 @@ class App extends StatelessWidget {
     required MessageRepository messageRepository,
     required CalenderRepository calenderRepository,
     required FilesRepository filesRepository,
-    required IOSWidgetDataProvider iosWidgetDataProvider,
   })  : _authenticationRepository = authenticationRepository,
         _userRepository = userRepository,
         _courseRepository = coursesRepository,
         _messageRepository = messageRepository,
         _calenderRepository = calenderRepository,
-        _filesRepository = filesRepository,
-        _iosWidgetDataProvider = iosWidgetDataProvider;
+        _filesRepository = filesRepository;
 
   final AuthenticationRepository _authenticationRepository;
   final UserRepository _userRepository;
@@ -37,7 +33,6 @@ class App extends StatelessWidget {
   final MessageRepository _messageRepository;
   final CalenderRepository _calenderRepository;
   final FilesRepository _filesRepository;
-  final IOSWidgetDataProvider _iosWidgetDataProvider;
 
   @override
   Widget build(BuildContext context) {

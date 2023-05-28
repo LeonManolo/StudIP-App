@@ -11,7 +11,6 @@ import 'package:messages_repository/messages_repository.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:studip_api_client/studip_api_client.dart';
 import 'package:studipadawan/app/view/app.dart';
-import 'package:studipadawan/calendar/ios_widget_data_provider/ios_widget_data_provider.dart';
 import 'package:user_repository/user_repository.dart';
 
 Future<void> main() async {
@@ -45,11 +44,6 @@ Future<void> main() async {
         : await getApplicationDocumentsDirectory(),
   );
 
-  final iosWidgetDataProvider = IOSWidgetDataProvider(
-    calendarRepository: calenderRepository,
-    authRepository: authenticationRepository,
-  );
-
   runApp(
     App(
       authenticationRepository: authenticationRepository,
@@ -58,7 +52,6 @@ Future<void> main() async {
       coursesRepository: coursesRepository,
       messageRepository: messagesRepository,
       filesRepository: filesRepository,
-      iosWidgetDataProvider: iosWidgetDataProvider,
     ),
   );
 }

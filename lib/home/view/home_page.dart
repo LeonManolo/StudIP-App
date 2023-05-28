@@ -54,11 +54,9 @@ class HomePage extends StatelessWidget {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    homeCubit.testWidgetKit();
-
-                    // showCenteredCupertinoModal(context, (BuildContext _) {
-                    //   return ModuleSelectionModal(homeCubit: homeCubit);
-                    // });
+                    showCenteredCupertinoModal(context, (BuildContext _) {
+                      return ModuleSelectionModal(homeCubit: homeCubit);
+                    });
                   },
                   child: const Text('Module bearbeiten'),
                 ),
