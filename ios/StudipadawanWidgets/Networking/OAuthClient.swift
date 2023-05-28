@@ -104,36 +104,11 @@ class OAuthClient {
     let keychain: Keychain
     let baseUrl: String
     
-//    private var baseComponents: URLComponents {
-//        var components = URLComponents()
-//        components.scheme = "http"
-//        components.host = baseUrl
-//        return components
-//    }
-
     init(tokenUrlString: String, clientId: String, keychain: Keychain, baseUrl: String) {
         self.tokenUrlString = tokenUrlString
         self.clientId = clientId
         self.keychain = keychain
         self.baseUrl = baseUrl
-    }
-    
-    func getSchedule() async throws -> [ScheduleResponse.Data] {
-        let currentUser: UserResponse = try await get(rawUrlString: "http://miezhaus.feste-ip.net:55109/jsonapi.php/v1/users/me")
-        
-        let eventRawUrlString = "http://miezhaus.feste-ip.net:55109/jsonapi.php/v1/users/\(currentUser.data.id)/schedule"
-        let scheduleResponse: ScheduleResponse = try await get(rawUrlString: eventRawUrlString)
-        
-        let scheduleEntryData = scheduleResponse.data.first { data in
-            data.attributes.recurrence?.firstOccurence != nil
-        }
-        
-        var calendar = Calendar(identifier: .iso8601)
-        calendar.locale = Locale(identifier: "de_DE")
-        print(scheduleEntryData?.attributes.title)
-        print(calendar.dateComponents([.weekday], from: scheduleEntryData!.attributes.recurrence!.firstOccurence).weekday)
-        
-        return []
     }
     
     func get<T: Codable>(rawUrlString: String, queryItems: [URLQueryItem] = []) async throws -> T {

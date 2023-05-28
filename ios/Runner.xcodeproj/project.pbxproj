@@ -31,8 +31,10 @@
 		E858D3072A22183200BB6962 /* Date+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = E858D3062A22183200BB6962 /* Date+Ext.swift */; };
 		E858D30A2A22281100BB6962 /* RefreshTokenResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = E858D3092A22281100BB6962 /* RefreshTokenResponse.swift */; };
 		E858D30C2A222ACF00BB6962 /* RefreshTokenRequestBody.swift in Sources */ = {isa = PBXBuildFile; fileRef = E858D30B2A222ACF00BB6962 /* RefreshTokenRequestBody.swift */; };
+		E89FAA122A23483C006CF83E /* DataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = E89FAA112A23483C006CF83E /* DataProvider.swift */; };
+		E89FAA172A234AF7006CF83E /* ScheduleEntryDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = E89FAA162A234AF7006CF83E /* ScheduleEntryDataProvider.swift */; };
+		E89FAA192A234CAE006CF83E /* CacheProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = E89FAA182A234CAE006CF83E /* CacheProvider.swift */; };
 		E8F5523D2A210D1D0015377F /* KeychainAccess in Frameworks */ = {isa = PBXBuildFile; productRef = E8F5523C2A210D1D0015377F /* KeychainAccess */; };
-		E8F552402A211C840015377F /* KeychainWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8F5523E2A210D2B0015377F /* KeychainWrapper.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -112,8 +114,10 @@
 		E858D3062A22183200BB6962 /* Date+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Ext.swift"; sourceTree = "<group>"; };
 		E858D3092A22281100BB6962 /* RefreshTokenResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshTokenResponse.swift; sourceTree = "<group>"; };
 		E858D30B2A222ACF00BB6962 /* RefreshTokenRequestBody.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshTokenRequestBody.swift; sourceTree = "<group>"; };
+		E89FAA112A23483C006CF83E /* DataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataProvider.swift; sourceTree = "<group>"; };
+		E89FAA162A234AF7006CF83E /* ScheduleEntryDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleEntryDataProvider.swift; sourceTree = "<group>"; };
+		E89FAA182A234CAE006CF83E /* CacheProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheProvider.swift; sourceTree = "<group>"; };
 		E8F552362A20CFD80015377F /* Pods_Runner.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Pods_Runner.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		E8F5523E2A210D2B0015377F /* KeychainWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainWrapper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -223,15 +227,12 @@
 		E8039ACF2A1E4BA400FC76B7 /* StudipadawanWidgets */ = {
 			isa = PBXGroup;
 			children = (
+				E89FAA152A234AE7006CF83E /* Widgets */,
+				E89FAA142A234ADF006CF83E /* Extensions */,
+				E89FAA132A234ABF006CF83E /* Networking */,
 				E858D3082A2227F700BB6962 /* Models */,
-				E8039AD02A1E4BA400FC76B7 /* StudipadawanWidgetsBundle.swift */,
-				E8039AD22A1E4BA400FC76B7 /* StudipadawanWidgets.swift */,
 				E8039AD42A1E4BA400FC76B7 /* Assets.xcassets */,
 				E8039AD62A1E4BA400FC76B7 /* Info.plist */,
-				E8F5523E2A210D2B0015377F /* KeychainWrapper.swift */,
-				E858D3022A21D0F200BB6962 /* OAuthClient.swift */,
-				E858D3042A22173C00BB6962 /* Calendar+Ext.swift */,
-				E858D3062A22183200BB6962 /* Date+Ext.swift */,
 			);
 			path = StudipadawanWidgets;
 			sourceTree = "<group>";
@@ -252,6 +253,35 @@
 				E858D30B2A222ACF00BB6962 /* RefreshTokenRequestBody.swift */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		E89FAA132A234ABF006CF83E /* Networking */ = {
+			isa = PBXGroup;
+			children = (
+				E858D3022A21D0F200BB6962 /* OAuthClient.swift */,
+				E89FAA112A23483C006CF83E /* DataProvider.swift */,
+				E89FAA182A234CAE006CF83E /* CacheProvider.swift */,
+			);
+			path = Networking;
+			sourceTree = "<group>";
+		};
+		E89FAA142A234ADF006CF83E /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				E858D3042A22173C00BB6962 /* Calendar+Ext.swift */,
+				E858D3062A22183200BB6962 /* Date+Ext.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		E89FAA152A234AE7006CF83E /* Widgets */ = {
+			isa = PBXGroup;
+			children = (
+				E89FAA162A234AF7006CF83E /* ScheduleEntryDataProvider.swift */,
+				E8039AD02A1E4BA400FC76B7 /* StudipadawanWidgetsBundle.swift */,
+				E8039AD22A1E4BA400FC76B7 /* StudipadawanWidgets.swift */,
+			);
+			path = Widgets;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -494,9 +524,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				E858D3032A21D0F200BB6962 /* OAuthClient.swift in Sources */,
+				E89FAA172A234AF7006CF83E /* ScheduleEntryDataProvider.swift in Sources */,
 				E858D3052A22173C00BB6962 /* Calendar+Ext.swift in Sources */,
-				E8F552402A211C840015377F /* KeychainWrapper.swift in Sources */,
 				E858D3072A22183200BB6962 /* Date+Ext.swift in Sources */,
+				E89FAA192A234CAE006CF83E /* CacheProvider.swift in Sources */,
+				E89FAA122A23483C006CF83E /* DataProvider.swift in Sources */,
 				E8039AD32A1E4BA400FC76B7 /* StudipadawanWidgets.swift in Sources */,
 				E858D30C2A222ACF00BB6962 /* RefreshTokenRequestBody.swift in Sources */,
 				E8039AD12A1E4BA400FC76B7 /* StudipadawanWidgetsBundle.swift in Sources */,

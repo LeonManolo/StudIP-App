@@ -12,4 +12,11 @@ extension Date {
     func startOfWeek(using calendar: Calendar = .german) -> Date {
         calendar.dateComponents([.calendar, .yearForWeekOfYear, .weekOfYear], from: self).date!
     }
+    
+    // https://stackoverflow.com/a/51113983
+    var weekday: Int? {
+        guard let rawWeekday = Calendar.german.dateComponents([.weekday], from: Date()).weekday else { return nil }
+        
+        return rawWeekday == 1 ? 7 : rawWeekday - 1
+    }
 }
