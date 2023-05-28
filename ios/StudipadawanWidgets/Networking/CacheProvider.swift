@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct CacheProvider {
+class CacheProvider {
     let userDefaults: UserDefaults
     private let scheduleItemsKey = "scheduleItems"
     

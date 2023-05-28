@@ -10,12 +10,7 @@ import SwiftUI
 
 struct StudipadawanWidgetsSystemMediumView : View {
     var entry: ScheduleWidgetTimelineEntry
-
-    private let dateFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "HH:mm"
-        return formatter
-    }()
+    let dateFormatter = DateFormatter.hourMinuteFormatter
     
     var body: some View {
         HStack {

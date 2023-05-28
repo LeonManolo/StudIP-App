@@ -10,18 +10,12 @@ import Foundation
 extension Calendar {
     static var german: Calendar = {
         var calendar = Calendar(identifier: .iso8601)
-        calendar.timeZone = TimeZone(secondsFromGMT: 2*3600)!
+        calendar.timeZone = .german
         return calendar
     }()
     
-    private var hourMinuteFormatter: DateFormatter {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "HH:mm"
-        return dateFormatter
-    }
-    
     func today(at hourMinuteString: String) -> Date? {
-        guard let hourMinuteDate = hourMinuteFormatter.date(from: hourMinuteString) else { return nil }
+        guard let hourMinuteDate = DateFormatter.hourMinuteFormatter.date(from: hourMinuteString) else { return nil }
               
         let timeComponents = dateComponents([.hour, .minute], from: hourMinuteDate)
         guard let hourValue = timeComponents.hour,
