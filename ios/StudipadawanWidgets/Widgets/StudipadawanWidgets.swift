@@ -7,7 +7,6 @@
 
 import WidgetKit
 import SwiftUI
-import CalendarCommunication
 
 struct StudipadawanWidgetsSystemMediumView : View {
     var entry: ScheduleWidgetTimelineEntry

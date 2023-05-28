@@ -21,11 +21,6 @@
 		E8039AD32A1E4BA400FC76B7 /* StudipadawanWidgets.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8039AD22A1E4BA400FC76B7 /* StudipadawanWidgets.swift */; };
 		E8039AD52A1E4BA400FC76B7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E8039AD42A1E4BA400FC76B7 /* Assets.xcassets */; };
 		E8039AD92A1E4BA400FC76B7 /* StudipadawanWidgetsExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = E8039ACA2A1E4BA400FC76B7 /* StudipadawanWidgetsExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		E8039AE92A1E4FDA00FC76B7 /* CalendarCommunication.h in Headers */ = {isa = PBXBuildFile; fileRef = E8039AE82A1E4FDA00FC76B7 /* CalendarCommunication.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		E8039AEC2A1E4FDA00FC76B7 /* CalendarCommunication.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E8039AE62A1E4FDA00FC76B7 /* CalendarCommunication.framework */; };
-		E8039AED2A1E4FDA00FC76B7 /* CalendarCommunication.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E8039AE62A1E4FDA00FC76B7 /* CalendarCommunication.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		E8039AF32A1E500B00FC76B7 /* CalendarCommunication.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8039AF22A1E500B00FC76B7 /* CalendarCommunication.swift */; };
-		E8039AF42A1E589900FC76B7 /* CalendarCommunication.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E8039AE62A1E4FDA00FC76B7 /* CalendarCommunication.framework */; };
 		E858D3032A21D0F200BB6962 /* OAuthClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = E858D3022A21D0F200BB6962 /* OAuthClient.swift */; };
 		E858D3052A22173C00BB6962 /* Calendar+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = E858D3042A22173C00BB6962 /* Calendar+Ext.swift */; };
 		E858D3072A22183200BB6962 /* Date+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = E858D3062A22183200BB6962 /* Date+Ext.swift */; };
@@ -45,27 +40,9 @@
 			remoteGlobalIDString = E8039AC92A1E4BA400FC76B7;
 			remoteInfo = StudipadawanWidgetsExtension;
 		};
-		E8039AEA2A1E4FDA00FC76B7 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 97C146E61CF9000F007C117D /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = E8039AE52A1E4FDA00FC76B7;
-			remoteInfo = CalendarCommunication;
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		9705A1C41CF9048500538489 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				E8039AED2A1E4FDA00FC76B7 /* CalendarCommunication.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		E8039ADE2A1E4BA400FC76B7 /* Embed Foundation Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -106,9 +83,6 @@
 		E8039AD62A1E4BA400FC76B7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E8039ADF2A1E4BC900FC76B7 /* StudipadawanWidgetsExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = StudipadawanWidgetsExtension.entitlements; sourceTree = "<group>"; };
 		E8039AE02A1E4BD500FC76B7 /* Runner.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Runner.entitlements; sourceTree = "<group>"; };
-		E8039AE62A1E4FDA00FC76B7 /* CalendarCommunication.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CalendarCommunication.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		E8039AE82A1E4FDA00FC76B7 /* CalendarCommunication.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CalendarCommunication.h; sourceTree = "<group>"; };
-		E8039AF22A1E500B00FC76B7 /* CalendarCommunication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarCommunication.swift; sourceTree = "<group>"; };
 		E858D3022A21D0F200BB6962 /* OAuthClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuthClient.swift; sourceTree = "<group>"; };
 		E858D3042A22173C00BB6962 /* Calendar+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Calendar+Ext.swift"; sourceTree = "<group>"; };
 		E858D3062A22183200BB6962 /* Date+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Ext.swift"; sourceTree = "<group>"; };
@@ -126,7 +100,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				E779E8C6E01DDEE6065BE4DE /* Pods_Runner.framework in Frameworks */,
-				E8039AEC2A1E4FDA00FC76B7 /* CalendarCommunication.framework in Frameworks */,
 				CCB0D1C7BD105A0E06F1AF57 /* Pods_Runner.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -136,16 +109,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				E8F5523D2A210D1D0015377F /* KeychainAccess in Frameworks */,
-				E8039AF42A1E589900FC76B7 /* CalendarCommunication.framework in Frameworks */,
 				E8039ACE2A1E4BA400FC76B7 /* SwiftUI.framework in Frameworks */,
 				E8039ACC2A1E4BA400FC76B7 /* WidgetKit.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		E8039AE32A1E4FDA00FC76B7 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -180,7 +145,6 @@
 				9740EEB11CF90186004384FC /* Flutter */,
 				97C146F01CF9000F007C117D /* Runner */,
 				E8039ACF2A1E4BA400FC76B7 /* StudipadawanWidgets */,
-				E8039AE72A1E4FDA00FC76B7 /* CalendarCommunication */,
 				97C146EF1CF9000F007C117D /* Products */,
 				0174281C6265567A446ACC77 /* Pods */,
 				ACF4A1D74EC6970A08346B45 /* Frameworks */,
@@ -192,7 +156,6 @@
 			children = (
 				97C146EE1CF9000F007C117D /* Runner.app */,
 				E8039ACA2A1E4BA400FC76B7 /* StudipadawanWidgetsExtension.appex */,
-				E8039AE62A1E4FDA00FC76B7 /* CalendarCommunication.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -237,15 +200,6 @@
 			path = StudipadawanWidgets;
 			sourceTree = "<group>";
 		};
-		E8039AE72A1E4FDA00FC76B7 /* CalendarCommunication */ = {
-			isa = PBXGroup;
-			children = (
-				E8039AE82A1E4FDA00FC76B7 /* CalendarCommunication.h */,
-				E8039AF22A1E500B00FC76B7 /* CalendarCommunication.swift */,
-			);
-			path = CalendarCommunication;
-			sourceTree = "<group>";
-		};
 		E858D3082A2227F700BB6962 /* Models */ = {
 			isa = PBXGroup;
 			children = (
@@ -286,17 +240,6 @@
 		};
 /* End PBXGroup section */
 
-/* Begin PBXHeadersBuildPhase section */
-		E8039AE12A1E4FDA00FC76B7 /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				E8039AE92A1E4FDA00FC76B7 /* CalendarCommunication.h in Headers */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXHeadersBuildPhase section */
-
 /* Begin PBXNativeTarget section */
 		97C146ED1CF9000F007C117D /* Runner */ = {
 			isa = PBXNativeTarget;
@@ -307,7 +250,6 @@
 				97C146EA1CF9000F007C117D /* Sources */,
 				97C146EB1CF9000F007C117D /* Frameworks */,
 				97C146EC1CF9000F007C117D /* Resources */,
-				9705A1C41CF9048500538489 /* Embed Frameworks */,
 				3B06AD1E1E4923F5004D2608 /* Thin Binary */,
 				9004CA6F6CFF3AC78579DEBC /* [CP] Embed Pods Frameworks */,
 				E8039ADE2A1E4BA400FC76B7 /* Embed Foundation Extensions */,
@@ -316,7 +258,6 @@
 			);
 			dependencies = (
 				E8039AD82A1E4BA400FC76B7 /* PBXTargetDependency */,
-				E8039AEB2A1E4FDA00FC76B7 /* PBXTargetDependency */,
 			);
 			name = Runner;
 			productName = Runner;
@@ -343,24 +284,6 @@
 			productReference = E8039ACA2A1E4BA400FC76B7 /* StudipadawanWidgetsExtension.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
-		E8039AE52A1E4FDA00FC76B7 /* CalendarCommunication */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = E8039AF12A1E4FDA00FC76B7 /* Build configuration list for PBXNativeTarget "CalendarCommunication" */;
-			buildPhases = (
-				E8039AE12A1E4FDA00FC76B7 /* Headers */,
-				E8039AE22A1E4FDA00FC76B7 /* Sources */,
-				E8039AE32A1E4FDA00FC76B7 /* Frameworks */,
-				E8039AE42A1E4FDA00FC76B7 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = CalendarCommunication;
-			productName = CalendarCommunication;
-			productReference = E8039AE62A1E4FDA00FC76B7 /* CalendarCommunication.framework */;
-			productType = "com.apple.product-type.framework";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -377,10 +300,6 @@
 					};
 					E8039AC92A1E4BA400FC76B7 = {
 						CreatedOnToolsVersion = 14.3;
-					};
-					E8039AE52A1E4FDA00FC76B7 = {
-						CreatedOnToolsVersion = 14.3;
-						LastSwiftMigration = 1430;
 					};
 				};
 			};
@@ -402,7 +321,6 @@
 			targets = (
 				97C146ED1CF9000F007C117D /* Runner */,
 				E8039AC92A1E4BA400FC76B7 /* StudipadawanWidgetsExtension */,
-				E8039AE52A1E4FDA00FC76B7 /* CalendarCommunication */,
 			);
 		};
 /* End PBXProject section */
@@ -424,13 +342,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				E8039AD52A1E4BA400FC76B7 /* Assets.xcassets in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		E8039AE42A1E4FDA00FC76B7 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -536,14 +447,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		E8039AE22A1E4FDA00FC76B7 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				E8039AF32A1E500B00FC76B7 /* CalendarCommunication.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -551,11 +454,6 @@
 			isa = PBXTargetDependency;
 			target = E8039AC92A1E4BA400FC76B7 /* StudipadawanWidgetsExtension */;
 			targetProxy = E8039AD72A1E4BA400FC76B7 /* PBXContainerItemProxy */;
-		};
-		E8039AEB2A1E4FDA00FC76B7 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = E8039AE52A1E4FDA00FC76B7 /* CalendarCommunication */;
-			targetProxy = E8039AEA2A1E4FDA00FC76B7 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -938,141 +836,6 @@
 			};
 			name = Profile;
 		};
-		E8039AEE2A1E4FDA00FC76B7 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = G59VX2UW33;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				ENABLE_MODULE_VERIFIER = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
-				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu11 gnu++20";
-				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
-				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = de.hsflensburg.studipadawan.CalendarCommunication;
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Debug;
-		};
-		E8039AEF2A1E4FDA00FC76B7 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = G59VX2UW33;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				ENABLE_MODULE_VERIFIER = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
-				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu11 gnu++20";
-				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = de.hsflensburg.studipadawan.CalendarCommunication;
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SKIP_INSTALL = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Release;
-		};
-		E8039AF02A1E4FDA00FC76B7 /* Profile */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = G59VX2UW33;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				ENABLE_MODULE_VERIFIER = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
-				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu11 gnu++20";
-				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = de.hsflensburg.studipadawan.CalendarCommunication;
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SKIP_INSTALL = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Profile;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1102,16 +865,6 @@
 				E8039ADB2A1E4BA400FC76B7 /* Debug */,
 				E8039ADC2A1E4BA400FC76B7 /* Release */,
 				E8039ADD2A1E4BA400FC76B7 /* Profile */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		E8039AF12A1E4FDA00FC76B7 /* Build configuration list for PBXNativeTarget "CalendarCommunication" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				E8039AEE2A1E4FDA00FC76B7 /* Debug */,
-				E8039AEF2A1E4FDA00FC76B7 /* Release */,
-				E8039AF02A1E4FDA00FC76B7 /* Profile */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
