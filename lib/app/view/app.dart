@@ -4,8 +4,10 @@ import 'package:calender_repository/calender_repository.dart';
 import 'package:courses_repository/courses_repository.dart';
 import 'package:files_repository/files_repository.dart';
 import 'package:flow_builder/flow_builder.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:messages_repository/messages_repository.dart';
 import 'package:studipadawan/app/bloc/app_bloc.dart';
 import 'package:studipadawan/app/routes/routes.dart';
@@ -64,11 +66,24 @@ class AppView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: const AppTheme().themeData,
-      home: FlowBuilder<AppStatus>(
-        state: context.select((AppBloc bloc) => bloc.state.status),
-        onGeneratePages: onGenerateAppViewPages,
+    return PlatformProvider(
+      settings: PlatformSettingsData(
+          iosUsesMaterialWidgets: true,
+      ),
+      builder: (context) => PlatformTheme(
+        materialLightTheme: const AppTheme().themeData,
+        builder: (context) => PlatformApp(
+          localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
+            DefaultMaterialLocalizations.delegate,
+            DefaultWidgetsLocalizations.delegate,
+            DefaultCupertinoLocalizations.delegate,
+          ],
+          title: 'StudIPadawan',
+          home: FlowBuilder<AppStatus>(
+            state: context.select((AppBloc bloc) => bloc.state.status),
+            onGeneratePages: onGenerateAppViewPages,
+          ),
+        ),
       ),
     );
   }

@@ -3,6 +3,7 @@ import 'package:authentication_repository/authentication_repository.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:studipadawan/app/bloc/app_bloc.dart';
 import 'package:studipadawan/login/cubit/login_cubit.dart';
 import 'package:studipadawan/login/cubit/login_state.dart';
@@ -32,10 +33,11 @@ class LoginPage extends StatelessWidget {
               return const Material(child: LoadingIndicator());
 
             case _:
-              return Scaffold(
+              return PlatformScaffold(
                 backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
-                appBar: AppBar(
-                  actions: [
+                appBar: PlatformAppBar(
+                  backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                  trailingActions: [
                     IconButton(
                       onPressed: () {
                         context.read<AppBloc>().add(const AppLogoutRequested());

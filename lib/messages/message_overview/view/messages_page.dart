@@ -1,6 +1,7 @@
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:messages_repository/messages_repository.dart';
 import 'package:studipadawan/app/bloc/app_bloc.dart';
 import 'package:studipadawan/messages/message_overview/message_inbox_bloc%20/message_inbox_bloc.dart';
@@ -95,7 +96,7 @@ class MessagesPageState extends State<MessagesPage>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return PlatformScaffold(
       appBar: _buildAppBar(),
       key: UniqueKey(),
       body: BlocProvider.value(
@@ -206,10 +207,10 @@ class MessagesPageState extends State<MessagesPage>
     );
   }
 
-  AppBar _buildAppBar() {
-    return AppBar(
+  PlatformAppBar _buildAppBar() {
+    return PlatformAppBar(
       title: const Text('Nachrichten'),
-      actions: <Widget>[
+      trailingActions: <Widget>[
         BlocProvider.value(
           value: _tabBarBloc,
           child: BlocBuilder<TabBarBloc, TabBarState>(

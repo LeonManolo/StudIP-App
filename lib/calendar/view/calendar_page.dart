@@ -4,6 +4,7 @@ import 'package:calender_repository/calender_repository.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:studipadawan/calendar/bloc/calendar_bloc.dart';
 import 'package:studipadawan/calendar/bloc/calendar_event.dart';
@@ -30,10 +31,10 @@ class CalendarPage extends StatelessWidget {
 
     return BlocProvider(
       create: (_) => calendarBloc,
-      child: Scaffold(
-        appBar: AppBar(
+      child: PlatformScaffold(
+        appBar: PlatformAppBar(
           title: const Text('Kalender'),
-          actions: [
+          trailingActions: [
             IconButton(onPressed: () {
               Navigator.of(context).push(MaterialPageRoute(builder: (context) => const CalendarScheduleNotificationsPage()));
             }, icon: const Icon(EvaIcons.bellOutline),),
@@ -67,6 +68,7 @@ class CalendarPage extends StatelessWidget {
         ),
         body: Column(
           children: [
+            Text(""),
             CalendarHeader(
               onDaySelected: (day) {
                 calendarBloc.add(CalendarExactDayRequested(exactDay: day));

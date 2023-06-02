@@ -3,6 +3,7 @@ import 'package:courses_repository/courses_repository.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:studipadawan/courses/bloc/courses_bloc.dart';
 import 'package:studipadawan/courses/bloc/courses_event.dart';
 import 'package:studipadawan/courses/bloc/courses_state.dart';
@@ -23,10 +24,10 @@ class CoursesPage extends StatelessWidget {
       )..add(CoursesRequested()),
       child: BlocBuilder<CoursesBloc, CoursesState>(
         builder: (context, state) {
-          return Scaffold(
-            appBar: AppBar(
+          return PlatformScaffold(
+            appBar: PlatformAppBar(
               title: const Text('Kurse'),
-              actions: switch (state) {
+              trailingActions: switch (state) {
                 CoursesStateLoading _ => [],
                 CoursesStateError _ => [],
                 CoursesStateDidLoad(

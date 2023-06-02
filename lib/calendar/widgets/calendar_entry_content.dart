@@ -3,7 +3,6 @@ import 'package:calender_repository/calender_repository.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:studipadawan/calendar/extensions/list_extensions.dart';
-import 'package:studipadawan/calendar/view/calendar_detail_page.dart';
 
 /// Right side of the Calendar entry, shows the calendar data
 class CalendarEntryContent extends StatelessWidget {
@@ -130,6 +129,6 @@ class CalendarEntryContent extends StatelessWidget {
   }
 
   void _navigateToCalendarDetailPage(BuildContext context) {
-    Navigator.of(context).push(MaterialPageRoute(builder: (context) => const CalendarDetailPage()));
+    //Navigator.of(context).push(MaterialPageRoute(builder: (context) => const CalendarDetailPage()));
   }
 }

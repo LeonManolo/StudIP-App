@@ -83,6 +83,9 @@ dependencies:
   # A collection of loading indicators animated with flutter.
   flutter_spinkit: ^5.1.0
 
+  # Simplifying the use of both Material and Cupertino widgets with a single widget
+  flutter_platform_widgets: ^3.3.4
+
   intl: ^0.18.0
 
   stream_transform: ^2.1.0
