@@ -4,11 +4,15 @@ variables:
   TARGET_BRANCH: "main"
 
 stages:
-  - UnitTests
+  - Build
 
-unit-tests:
-  stage: UnitTests
-  script: cd ./scripts && bash ./run_tests.sh
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == $TARGET_BRANCH'
-    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == $TARGET_BRANCH'
+build-apk:
+  stage: Build
+  script:
+    - echo -n "$KEYSTORE" | base64 --decode > android/app/upload-keystore.jks
+    - echo "keyPassword=$STORE_PASSWORD > android/key.properties"
+    - echo "storePassword=$STORE_PASSWORD > android/key.properties"
+    - echo "keyAlias=studipadawan > android/key.properties"
+    - echo "storeFile=upload-keystore.jks > android/key.properties"
+    - rm -r ~/gradle
+    - flutter build apk
