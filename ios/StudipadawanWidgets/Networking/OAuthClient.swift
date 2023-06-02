@@ -8,88 +8,10 @@
 import Foundation
 import KeychainAccess
 
-/*
- {
-     "api": {
-         "token_type": "Bearer",
-         "expires_in": 3600,
-         "access_token": "...",
-         "refresh_token": "...",
-         "scope": [
-             "api"
-         ],
-         "expiration_date": 1685131006643,
-         "http_status_code": 200
-     }
- }
- */
-
-struct KeychainContent: Codable {
-    let api: API
-    
-    struct API: Codable {
-        let accessToken: String
-        let refreshToken: String
-        let scope: [String]
-        let expirationDate: Date
-        let httpStatusCode: Int
-    }
+enum OAuthClientError: Error {
+    case keychainContentNotReadable(key: String)
+    case invalidUrlString(url: String)
 }
-
-struct UserResponse: Codable {
-    let data: Data
-    
-    struct Data: Codable {
-        let id: String
-    }
-}
-
-enum UserResponseError: Error {
-    case generic
-}
-
-struct ScheduleResponse: Codable {
-    let data: [Data]
-    
-    struct Data: Codable {
-        let type: String
-        let id: String
-        let attributes: Attribute
-        
-        struct Attribute: Codable {
-            let title: String
-            let description: String?
-            let start: String
-            let end: String
-            let weekday: Weekday
-            let locations: [String]?
-            let recurrence: Recurrence?
-            
-            enum Weekday: Int, Codable {
-                case monday = 1
-                case tuesday, wednesday, thursday, friday, saturday, sunday
-            }
-            
-            struct Recurrence: Codable {
-                let freq: String
-                let interval: Int
-                let firstOccurence: Date
-                let lastOccurence: Date
-                let excludedDates: [Date]?
-                
-                private enum CodingKeys: String, CodingKey {
-                    case freq = "FREQ"
-                    case interval = "INTERVAL"
-                    case firstOccurence = "DTSTART"
-                    case lastOccurence = "UNTIL"
-                    case excludedDates = "EXDATES"
-                }
-            }
-        }
-    }
-}
-
-
 
 class OAuthClient {
     static let shared = OAuthClient(
@@ -112,19 +34,17 @@ class OAuthClient {
     }
     
     func get<T: Codable>(rawUrlString: String, queryItems: [URLQueryItem] = []) async throws -> T {
-        guard let rawKeychainContent = keychain[string: tokenUrlString] else { throw UserResponseError.generic }
-        var keychainContent = try jsonDecoder(dateDecodingStrategy: .millisecondsSince1970)
-            .decode(KeychainContent.self, from: rawKeychainContent.data(using: .utf8)!)
+        guard let rawKeychainContentData = keychain[string: tokenUrlString]?.data(using: .utf8) else { throw OAuthClientError.keychainContentNotReadable(key: tokenUrlString) }
+        var keychainContent = try jsonDecoder(dateDecodingStrategy: .millisecondsSince1970).decode(KeychainContent.self, from: rawKeychainContentData)
         
         if keychainContent.api.expirationDate < Date() {
             try await refreshToken()
-            // if token has been refreshed, new keychainContent must be used
-            guard let rawKeychainContent = keychain[string: tokenUrlString] else { throw UserResponseError.generic }
-            keychainContent = try jsonDecoder(dateDecodingStrategy: .millisecondsSince1970)
-                .decode(KeychainContent.self, from: rawKeychainContent.data(using: .utf8)!)
+            // if token has been refreshed, keychainContent must be updated
+            guard let rawKeychainContentData = keychain[string: tokenUrlString]?.data(using: .utf8) else { throw OAuthClientError.keychainContentNotReadable(key: tokenUrlString) }
+            keychainContent = try jsonDecoder(dateDecodingStrategy: .millisecondsSince1970).decode(KeychainContent.self, from: rawKeychainContentData)
         }
         
-        guard var url = URL(string: rawUrlString) else { throw UserResponseError.generic }
+        guard var url = URL(string: rawUrlString) else { throw OAuthClientError.invalidUrlString(url: rawUrlString) }
         url.append(queryItems: queryItems)
         
         var request = URLRequest(url: url)
@@ -136,8 +56,8 @@ class OAuthClient {
     }
     
     private func refreshToken() async throws {
-        guard let rawKeychainContent = keychain[string: tokenUrlString], let tokenUrl = URL(string: tokenUrlString) else { throw UserResponseError.generic }
-        let keychainContent = try jsonDecoder(dateDecodingStrategy: .millisecondsSince1970).decode(KeychainContent.self, from: rawKeychainContent.data(using: .utf8)!)
+        guard let rawKeychainContentData = keychain[string: tokenUrlString]?.data(using: .utf8), let tokenUrl = URL(string: tokenUrlString) else { throw OAuthClientError.keychainContentNotReadable(key: tokenUrlString) }
+        let keychainContent = try jsonDecoder(dateDecodingStrategy: .millisecondsSince1970).decode(KeychainContent.self, from: rawKeychainContentData)
         
         let currentRefreshToken = keychainContent.api.refreshToken
         var bodyParamenters = URLComponents()
