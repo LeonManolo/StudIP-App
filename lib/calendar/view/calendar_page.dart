@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:animate_do/animate_do.dart';
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:calender_repository/calender_repository.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
@@ -32,12 +35,14 @@ class CalendarPage extends StatelessWidget {
     return BlocProvider(
       create: (_) => calendarBloc,
       child: PlatformScaffold(
+        iosContentPadding: true,
+        iosContentBottomPadding: true,
         appBar: PlatformAppBar(
           title: const Text('Kalender'),
           trailingActions: [
             IconButton(onPressed: () {
               Navigator.of(context).push(MaterialPageRoute(builder: (context) => const CalendarScheduleNotificationsPage()));
-            }, icon: const Icon(EvaIcons.bellOutline),),
+            }, icon: Icon(Platform.isIOS ? CupertinoIcons.bell : EvaIcons.bellOutline),),
             IconButton(
               onPressed: () {
                 calendarBloc.add(const CalendarSwitchLayoutRequested());
@@ -57,7 +62,7 @@ class CalendarPage extends StatelessWidget {
                     duration: const Duration(milliseconds: 800),
                     key: GlobalKey(),
                     child: Icon(
-                      EvaIcons.repeatOutline,
+                      Platform.isIOS ? CupertinoIcons.arrow_2_squarepath : EvaIcons.repeatOutline,
                       color: color,
                     ),
                   );
@@ -68,7 +73,6 @@ class CalendarPage extends StatelessWidget {
         ),
         body: Column(
           children: [
-            Text(""),
             CalendarHeader(
               onDaySelected: (day) {
                 calendarBloc.add(CalendarExactDayRequested(exactDay: day));

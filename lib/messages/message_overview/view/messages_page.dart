@@ -101,10 +101,10 @@ class MessagesPageState extends State<MessagesPage>
       key: UniqueKey(),
       body: BlocProvider.value(
         value: _tabBarBloc,
-        child: Scaffold(
-          appBar: PreferredSize(
-            preferredSize: const Size.fromHeight(kToolbarHeight),
-            child: MessageTabBar(controller: _tabController),
+        child: PlatformScaffold(
+          appBar: PlatformAppBar(
+            //preferredSize: const Size.fromHeight(kToolbarHeight),
+            title: MessageTabBar(controller: _tabController),
           ),
           key: UniqueKey(),
           body: TabBarView(
@@ -175,33 +175,7 @@ class MessagesPageState extends State<MessagesPage>
               )
             ],
           ),
-          floatingActionButton: Row(
-            children: [
-              const Spacer(),
-              BlocProvider.value(
-                value: _tabBarBloc,
-                child: BlocBuilder<TabBarBloc, TabBarState>(
-                  builder: (context, state) {
-                    return Row(
-                      children: [
-                        Visibility(
-                          visible: !state.menuIconVisible,
-                          child: const MessageAddButton(),
-                        ),
-                        Visibility(
-                          visible: state.menuIconVisible,
-                          child: MessageDeleteButton(
-                            deleteMessages: _deleteMessages,
-                          ),
-                        )
-                      ],
-                    );
-                  },
-                ),
-              )
-            ],
-          ),
-          floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+
         ),
       ),
     );

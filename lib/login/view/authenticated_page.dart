@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:studipadawan/calendar/view/calendar_page.dart';
@@ -41,6 +44,8 @@ class _AuthenticatedPageState extends State<AuthenticatedPage> {
   @override
   Widget build(BuildContext context) {
     return PlatformTabScaffold(
+      iosContentPadding: true,
+      iosContentBottomPadding: true,
       tabController: tabController,
       material: (context, index) => MaterialTabScaffoldData(
         bodyBuilder: (_, __) => IndexedStack(
@@ -52,26 +57,26 @@ class _AuthenticatedPageState extends State<AuthenticatedPage> {
         bodyBuilder: (context, index) => tabPages[index],
       ),
 
-      items: const [
+      items: [
         BottomNavigationBarItem(
           label: 'Home',
-          icon: Icon(EvaIcons.homeOutline),
-          activeIcon: Icon(EvaIcons.home),
+          icon: Icon(Platform.isIOS ? CupertinoIcons.house : EvaIcons.homeOutline),
+          activeIcon: Icon(Platform.isIOS ? CupertinoIcons.house_fill : EvaIcons.home),
         ),
         BottomNavigationBarItem(
           label: 'Kurse',
-          icon: Icon(EvaIcons.bookOpenOutline),
-          activeIcon: Icon(EvaIcons.bookOpen),
+          icon: Icon(Platform.isIOS ? CupertinoIcons.rectangle_stack : EvaIcons.calendarOutline),
+          activeIcon: Icon(Platform.isIOS ? CupertinoIcons.rectangle_stack_fill : EvaIcons.calendarOutline),
         ),
         BottomNavigationBarItem(
           label: 'Nachrichten',
-          icon: Icon(EvaIcons.emailOutline),
-          activeIcon: Icon(EvaIcons.email),
+          icon: Icon(Platform.isIOS ? CupertinoIcons.mail : EvaIcons.emailOutline),
+          activeIcon: Icon(Platform.isIOS ? CupertinoIcons.mail_solid : EvaIcons.email),
         ),
         BottomNavigationBarItem(
           label: 'Kalender',
-          icon: Icon(EvaIcons.calendarOutline),
-          activeIcon: Icon(EvaIcons.calendar),
+          icon: Icon(Platform.isIOS ? CupertinoIcons.calendar : EvaIcons.calendarOutline),
+          activeIcon: Icon(Platform.isIOS ? CupertinoIcons.calendar : EvaIcons.calendar),
         ),
       ],
       //type: BottomNavigationBarType.fixed,

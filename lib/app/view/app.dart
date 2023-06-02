@@ -66,12 +66,50 @@ class AppView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final materialDarkTheme = ThemeData.dark();
+    final materialLightTheme = ThemeData.light();
+
+
+    const darkDefaultCupertinoTheme =
+    CupertinoThemeData(brightness: Brightness.dark);
+    final cupertinoDarkTheme = MaterialBasedCupertinoThemeData(
+      materialTheme: materialDarkTheme.copyWith(
+        useMaterial3: true,
+        cupertinoOverrideTheme: CupertinoThemeData(
+          brightness: Brightness.dark,
+          barBackgroundColor: darkDefaultCupertinoTheme.barBackgroundColor,
+          textTheme: CupertinoTextThemeData(
+            primaryColor: Colors.white,
+            navActionTextStyle:
+            darkDefaultCupertinoTheme.textTheme.navActionTextStyle.copyWith(
+              color: const Color(0xF0F9F9F9),
+            ),
+            navLargeTitleTextStyle: darkDefaultCupertinoTheme
+                .textTheme.navLargeTitleTextStyle
+                .copyWith(color: Colors.red),
+          ),
+        ),
+      ),
+    );
+    final cupertinoDarkTheme2 = CupertinoThemeData(
+      brightness: Brightness.dark,
+      //applyThemeToAll: true,
+    );
+
+    final cupertinoLightTheme =
+    MaterialBasedCupertinoThemeData(materialTheme: materialLightTheme);
+
     return PlatformProvider(
       settings: PlatformSettingsData(
           iosUsesMaterialWidgets: true,
       ),
       builder: (context) => PlatformTheme(
+        themeMode: ThemeMode.system,
         materialLightTheme: const AppTheme().themeData,
+        materialDarkTheme: materialDarkTheme,
+        cupertinoDarkTheme: cupertinoDarkTheme2,
+        cupertinoLightTheme: cupertinoLightTheme,
+        matchCupertinoSystemChromeBrightness: false,
         builder: (context) => PlatformApp(
           localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
             DefaultMaterialLocalizations.delegate,
