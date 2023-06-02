@@ -71,7 +71,7 @@ dependencies:
 
   eva_icons_flutter: ^3.1.0
 
-  flutter_widgetkit: ^1.0.3
+  home_widget: ^0.2.1
 
   # Highly customizable, feature-packed calendar widget for Flutter.
   table_calendar: ^3.0.9

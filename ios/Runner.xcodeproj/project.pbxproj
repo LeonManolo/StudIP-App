@@ -23,6 +23,8 @@
 		E8039AD92A1E4BA400FC76B7 /* StudipadawanWidgetsExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = E8039ACA2A1E4BA400FC76B7 /* StudipadawanWidgetsExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		E83C939D2A23C91500D92A27 /* Timezone+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = E83C939C2A23C91500D92A27 /* Timezone+Ext.swift */; };
 		E83C939F2A23C9C600D92A27 /* DateFormatter+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = E83C939E2A23C9C600D92A27 /* DateFormatter+Ext.swift */; };
+		E83D55012A29DC3E006D47A2 /* CalendarEntryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E83D55002A29DC3E006D47A2 /* CalendarEntryView.swift */; };
+		E83D55032A29DFFE006D47A2 /* Color+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = E83D55022A29DFFE006D47A2 /* Color+Ext.swift */; };
 		E858D3032A21D0F200BB6962 /* OAuthClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = E858D3022A21D0F200BB6962 /* OAuthClient.swift */; };
 		E858D3052A22173C00BB6962 /* Calendar+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = E858D3042A22173C00BB6962 /* Calendar+Ext.swift */; };
 		E858D3072A22183200BB6962 /* Date+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = E858D3062A22183200BB6962 /* Date+Ext.swift */; };
@@ -87,6 +89,8 @@
 		E8039AE02A1E4BD500FC76B7 /* Runner.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Runner.entitlements; sourceTree = "<group>"; };
 		E83C939C2A23C91500D92A27 /* Timezone+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Timezone+Ext.swift"; sourceTree = "<group>"; };
 		E83C939E2A23C9C600D92A27 /* DateFormatter+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DateFormatter+Ext.swift"; sourceTree = "<group>"; };
+		E83D55002A29DC3E006D47A2 /* CalendarEntryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarEntryView.swift; sourceTree = "<group>"; };
+		E83D55022A29DFFE006D47A2 /* Color+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Ext.swift"; sourceTree = "<group>"; };
 		E858D3022A21D0F200BB6962 /* OAuthClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuthClient.swift; sourceTree = "<group>"; };
 		E858D3042A22173C00BB6962 /* Calendar+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Calendar+Ext.swift"; sourceTree = "<group>"; };
 		E858D3062A22183200BB6962 /* Date+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Ext.swift"; sourceTree = "<group>"; };
@@ -194,7 +198,7 @@
 		E8039ACF2A1E4BA400FC76B7 /* StudipadawanWidgets */ = {
 			isa = PBXGroup;
 			children = (
-				E89FAA152A234AE7006CF83E /* Widgets */,
+				E89FAA152A234AE7006CF83E /* Widget */,
 				E89FAA142A234ADF006CF83E /* Extensions */,
 				E89FAA132A234ABF006CF83E /* Networking */,
 				E858D3082A2227F700BB6962 /* Models */,
@@ -230,18 +234,20 @@
 				E858D3062A22183200BB6962 /* Date+Ext.swift */,
 				E83C939C2A23C91500D92A27 /* Timezone+Ext.swift */,
 				E83C939E2A23C9C600D92A27 /* DateFormatter+Ext.swift */,
+				E83D55022A29DFFE006D47A2 /* Color+Ext.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
 		};
-		E89FAA152A234AE7006CF83E /* Widgets */ = {
+		E89FAA152A234AE7006CF83E /* Widget */ = {
 			isa = PBXGroup;
 			children = (
 				E89FAA162A234AF7006CF83E /* ScheduleEntryDataProvider.swift */,
 				E8039AD02A1E4BA400FC76B7 /* StudipadawanWidgetsBundle.swift */,
 				E8039AD22A1E4BA400FC76B7 /* StudipadawanWidgets.swift */,
+				E83D55002A29DC3E006D47A2 /* CalendarEntryView.swift */,
 			);
-			path = Widgets;
+			path = Widget;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -441,9 +447,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				E83C939D2A23C91500D92A27 /* Timezone+Ext.swift in Sources */,
+				E83D55032A29DFFE006D47A2 /* Color+Ext.swift in Sources */,
 				E858D3032A21D0F200BB6962 /* OAuthClient.swift in Sources */,
 				E89FAA172A234AF7006CF83E /* ScheduleEntryDataProvider.swift in Sources */,
 				E858D3052A22173C00BB6962 /* Calendar+Ext.swift in Sources */,
+				E83D55012A29DC3E006D47A2 /* CalendarEntryView.swift in Sources */,
 				E858D3072A22183200BB6962 /* Date+Ext.swift in Sources */,
 				E89FAA192A234CAE006CF83E /* CacheProvider.swift in Sources */,
 				E89FAA122A23483C006CF83E /* DataProvider.swift in Sources */,

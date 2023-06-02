@@ -1,10 +1,13 @@
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
+import 'package:home_widget/home_widget.dart';
 import 'package:studipadawan/login/cubit/login_state.dart';
 
 class LoginCubit extends Cubit<LoginState> {
-  LoginCubit(this._authenticationRepository) : super(LoginState.idle);
+  factory LoginCubit(AuthenticationRepository authenticationRepository) {
+    return LoginCubit._(authenticationRepository);
+  }
+  LoginCubit._(this._authenticationRepository) : super(LoginState.idle);
 
   final AuthenticationRepository _authenticationRepository;
 
@@ -13,11 +16,6 @@ class LoginCubit extends Cubit<LoginState> {
     try {
       await _authenticationRepository.loginWithStudIp();
       emit(LoginState.success);
-    } on Exception {
-      // LogInWithGoogleFailure
-      emit(
-        LoginState.failure,
-      );
     } catch (_) {
       emit(LoginState.failure);
     }

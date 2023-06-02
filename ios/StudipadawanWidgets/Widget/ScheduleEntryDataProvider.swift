@@ -15,7 +15,12 @@ struct ScheduleWidgetTimelineEntry: TimelineEntry {
     static let placeholder = ScheduleWidgetTimelineEntry(
         date: Date(),
         items: [
-            .init(startDate: Date(), endDate: Date(), title: "Softwarearchitektur", locations: nil)
+            .init(
+                startDate: DateFormatter.hourMinuteFormatter.date(from: "14:30")!,
+                endDate: DateFormatter.hourMinuteFormatter.date(from: "15:45")!,
+                title: "Softwarearchitektur",
+                locations: nil
+            )
         ]
     )
 }

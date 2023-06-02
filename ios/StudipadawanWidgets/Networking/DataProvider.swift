@@ -30,7 +30,8 @@ class DataProvider {
                 let attributes = scheduleData.attributes
                 guard currentDay == attributes.weekday.rawValue,
                       let startDate = Calendar.german.today(at: attributes.start),
-                      let endDate = Calendar.german.today(at: attributes.end) else { return nil }
+                      let endDate = Calendar.german.today(at: attributes.end),
+                      startDate >= Date() else { return nil }
                 
                 if Calendar.german.isDate(in: attributes.recurrence, date: startDate) ?? true {
                     return ScheduleItem(
@@ -43,8 +44,11 @@ class DataProvider {
                     return nil
                 }
             }
+            .sorted { $0.startDate < $1.startDate }
         
         cacheProvider.save(scheduleItems: scheduleItems)
+        scheduleItems.forEach { print($0) }
+        print("--")
         return scheduleItems
     }
     

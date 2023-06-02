@@ -475,14 +475,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.10.0"
-  flutter_widgetkit:
-    dependency: "direct main"
-    description:
-      name: flutter_widgetkit
-      sha256: "63844c74c642d5c950d34b17b40038a1ef21d4d0a65abd59a04e860f0981956d"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.3"
   frontend_server_client:
     dependency: transitive
     description:
@@ -515,6 +507,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.2.3"
+  home_widget:
+    dependency: "direct main"
+    description:
+      name: home_widget
+      sha256: "2ef64c73c7cf3b7cbfdf8233a0a46055a66d6289de58ae40912f9801f9282d79"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.1"
   html:
     dependency: transitive
     description:

@@ -20,7 +20,7 @@ extension Calendar {
         let timeComponents = dateComponents([.hour, .minute], from: hourMinuteDate)
         guard let hourValue = timeComponents.hour,
               let minuteValue = timeComponents.minute,
-              let date = date(bySetting: .hour, value: hourValue, of: Date()) else { return nil }
+              let date = date(bySetting: .hour, value: hourValue, of: Calendar.german.startOfDay(for: Date())) else { return nil }
         
         return self.date(bySetting: .minute, value: minuteValue, of: date)
     }

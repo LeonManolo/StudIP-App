@@ -14,4 +14,11 @@ extension DateFormatter {
         dateFormatter.timeZone = .german
         return dateFormatter
     }()
+    
+    static let widgetTitleTodayFormatter: DateFormatter = {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "EEEE, d. MMM"
+        dateFormatter.timeZone = .german
+        return dateFormatter
+    }()
 }
