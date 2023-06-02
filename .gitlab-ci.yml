@@ -14,5 +14,4 @@ build-apk:
     - echo "storePassword=$STORE_PASSWORD > android/key.properties"
     - echo "keyAlias=studipadawan > android/key.properties"
     - echo "storeFile=upload-keystore.jks > android/key.properties"
-    - rm -r ~/gradle
     - flutter build apk
