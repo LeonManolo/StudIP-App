@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:home_widget/home_widget.dart';
@@ -15,6 +17,8 @@ class LoginCubit extends Cubit<LoginState> {
     emit(LoginState.inProgress);
     try {
       await _authenticationRepository.loginWithStudIp();
+      unawaited(HomeWidget.updateWidget(iOSName: 'StudipadawanWidgets'));
+
       emit(LoginState.success);
     } catch (_) {
       emit(LoginState.failure);

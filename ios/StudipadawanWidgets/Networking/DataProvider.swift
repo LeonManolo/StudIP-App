@@ -47,8 +47,6 @@ class DataProvider {
             .sorted { $0.startDate < $1.startDate }
         
         cacheProvider.save(scheduleItems: scheduleItems)
-        scheduleItems.forEach { print($0) }
-        print("--")
         return scheduleItems
     }
     
