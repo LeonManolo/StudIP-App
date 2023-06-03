@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
@@ -24,7 +25,6 @@ class _AdaptiveTabScaffoldState extends State<AdaptiveTabScaffold> {
 
   @override
   Widget build(BuildContext context) {
-    print(BottomNavigationBarTheme.of(context).backgroundColor);
     return PlatformTabScaffold(
       tabController: _tabController,
       material: (context, index) => MaterialTabScaffoldData(
@@ -39,7 +39,7 @@ class _AdaptiveTabScaffoldState extends State<AdaptiveTabScaffold> {
       cupertinoTabs: (context, index) => CupertinoTabBarData(
         iconSize: widget.iOSTabBarIconSize,
       ),
-      materialTabs: (_,__) => MaterialNavBarData(
+      materialTabs: (_, __) => MaterialNavBarData(
         type: BottomNavigationBarType.fixed,
       ),
       items: widget.items,
@@ -57,7 +57,3 @@ class _AdaptiveTabScaffoldState extends State<AdaptiveTabScaffold> {
     super.dispose();
   }
 }
-
-/*
-
- */

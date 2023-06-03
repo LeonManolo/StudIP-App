@@ -44,6 +44,7 @@ class _CalendarTimeframesBodyState extends State<CalendarTimeframesBody> {
     return Padding(
       padding: const EdgeInsets.only(right: AppSpacing.lg),
       child: ScrollablePositionedList.builder(
+        padding: const EdgeInsets.only(top: AppSpacing.lg),
         itemCount: widget.scheduleStructure.length,
         itemScrollController: controller,
         itemBuilder: (context, index) {

@@ -16,6 +16,9 @@ import 'package:studipadawan/utils/widgets/non_empty_listview_builder.dart';
 class CalendarScheduleNotificationsPage extends StatelessWidget {
   const CalendarScheduleNotificationsPage({super.key});
 
+  static Page<void> page() =>
+      const MaterialPage<void>(child: CalendarScheduleNotificationsPage());
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(

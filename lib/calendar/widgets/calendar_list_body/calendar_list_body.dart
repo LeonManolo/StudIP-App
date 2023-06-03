@@ -26,20 +26,19 @@ class CalendarListBody extends StatelessWidget {
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
-      child: ListView.separated(
+      child: ListView.builder(
+        padding: EdgeInsets.zero,
         itemCount: scheduleData.length,
-        separatorBuilder: (_, __) {
-          return const Padding(
-            padding: EdgeInsets.only(bottom: AppSpacing.lg),
-          );
-        },
         itemBuilder: (context, index) {
-          return SlideInLeft(
-            from: MediaQuery.of(context).size.width,
-            delay: Duration(milliseconds: 300 + (index * 200)),
-            child: CalendarEntryContent(
-              timeframe: scheduleData[index].timeframe,
-              calendarEntryData: scheduleData[index],
+          return Padding(
+            padding: const EdgeInsets.only(top: AppSpacing.lg),
+            child: SlideInLeft(
+              from: MediaQuery.of(context).size.width,
+              delay: Duration(milliseconds: 300 + (index * 200)),
+              child: CalendarEntryContent(
+                timeframe: scheduleData[index].timeframe,
+                calendarEntryData: scheduleData[index],
+              ),
             ),
           );
         },

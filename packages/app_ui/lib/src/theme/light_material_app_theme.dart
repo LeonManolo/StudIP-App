@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class AppTheme {
-  const AppTheme();
+class LightMaterialAppTheme {
+  const LightMaterialAppTheme();
 
   ThemeData get themeData {
     return ThemeData(

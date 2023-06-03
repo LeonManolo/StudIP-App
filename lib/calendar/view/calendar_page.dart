@@ -42,12 +42,17 @@ class CalendarPage extends StatelessWidget {
           //backgroundColor: Platform.isIOS ? Theme.of(context).scaffoldBackgroundColor : null,
           title: const Text('Kalender'),
           trailingActions: [
-            IconButton(onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) => const CalendarScheduleNotificationsPage()));
-            }, icon: Icon(Platform.isIOS ? CupertinoIcons.bell : EvaIcons.bellOutline),),
+            AdaptiveAppBarIconButton(
+                cupertinoIcon: CupertinoIcons.bell,
+                materialIcon: EvaIcons.bellOutline,
+                onPressed: () {
+                  Navigator.of(context).push(CalendarScheduleNotificationsPage.page().createRoute(context));
+                },
+            ),
             IconButton(
               onPressed: () {
                 calendarBloc.add(const CalendarSwitchLayoutRequested());
+
               },
               icon: BlocBuilder<CalendarBloc, CalendarState>(
                 bloc: calendarBloc,
@@ -64,8 +69,9 @@ class CalendarPage extends StatelessWidget {
                     duration: const Duration(milliseconds: 800),
                     key: GlobalKey(),
                     child: Icon(
-                      Platform.isIOS ? CupertinoIcons.arrow_2_squarepath : EvaIcons.repeatOutline,
+                      Platform.isIOS ? CupertinoIcons.arrow_2_circlepath_circle : EvaIcons.repeatOutline,
                       color: color,
+                      size: Platform.isIOS ? 27 : null,
                     ),
                   );
                 },

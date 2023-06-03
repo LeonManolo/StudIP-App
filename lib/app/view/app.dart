@@ -106,11 +106,12 @@ class AppView extends StatelessWidget {
       ),
       builder: (context) => PlatformTheme(
         themeMode: ThemeMode.light,
-        materialLightTheme: const AppTheme().themeData,
+        materialLightTheme: const LightMaterialAppTheme().themeData,
         materialDarkTheme: materialDarkTheme,
         cupertinoDarkTheme: cupertinoDarkTheme2,
-        cupertinoLightTheme: CupertinoThemeData(
+        cupertinoLightTheme: const CupertinoThemeData(
           brightness: Brightness.light,
+          primaryColor: CupertinoColors.systemIndigo,
         ),
         matchCupertinoSystemChromeBrightness: false,
         builder: (context) => PlatformApp(

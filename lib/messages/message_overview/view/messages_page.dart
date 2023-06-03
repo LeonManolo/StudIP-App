@@ -1,4 +1,6 @@
+import 'package:app_ui/app_ui.dart';
 import 'package:authentication_repository/authentication_repository.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
@@ -97,86 +99,104 @@ class MessagesPageState extends State<MessagesPage>
   @override
   Widget build(BuildContext context) {
     return PlatformScaffold(
-      appBar: _buildAppBar(),
-      key: UniqueKey(),
-      body: BlocProvider.value(
-        value: _tabBarBloc,
-        child: PlatformScaffold(
-          appBar: PlatformAppBar(
-            //preferredSize: const Size.fromHeight(kToolbarHeight),
-            title: MessageTabBar(controller: _tabController),
-          ),
-          key: UniqueKey(),
-          body: TabBarView(
-            controller: _tabController,
-            physics: const ScrollPhysics(),
-            children: [
-              BlocProvider.value(
-                value: _inboxMessageBloc,
-                child: BlocConsumer<InboxMessageBloc, InboxMessageState>(
-                  listener: (context, state) {
-                    if (state.status ==
-                        InboxMessageStatus.deleteInboxMessagesSucceed) {
-                      buildSnackBar(
-                        context,
-                        state.blocResponse,
-                        Colors.green,
-                      );
-                    }
-                    if (state.status ==
-                        InboxMessageStatus.deleteInboxMessagesFailure) {
-                      buildSnackBar(
-                        context,
-                        state.blocResponse,
-                        Colors.red,
-                      );
-                    }
-                  },
-                  builder: (context, state) {
-                    return InboxMessageWidget(
-                      key: _inboxWidgetKey,
-                      state: state,
-                      unmarkAll: _unmarkAll,
-                      scrollController: _inboxScrollController,
-                    );
-                  },
-                ),
-              ),
-              BlocProvider.value(
-                value: _outboxMessageBloc,
-                child: BlocConsumer<OutboxMessageBloc, OutboxMessageState>(
-                  listener: (context, state) {
-                    if (state.status ==
-                        OutboxMessageStatus.deleteOutboxMessagesSucceed) {
-                      buildSnackBar(
-                        context,
-                        state.blocResponse,
-                        Colors.green,
-                      );
-                    }
-                    if (state.status ==
-                        OutboxMessageStatus.deleteOutboxMessagesFailure) {
-                      buildSnackBar(
-                        context,
-                        state.blocResponse,
-                        Colors.red,
-                      );
-                    }
-                  },
-                  builder: (context, state) {
-                    return OutboxMessageWidget(
-                      key: _outboxWidgetKey,
-                      unmarkAll: _unmarkAll,
-                      state: state,
-                      scrollController: _outboxScrollController,
-                    );
-                  },
-                ),
-              )
-            ],
-          ),
-
+      appBar: PlatformAppBar(
+        cupertino: (_,__) => CupertinoNavigationBarData(
+          border: Border.all(color: Colors.transparent),
+          title: Text("Nachrichten"),
         ),
+      ),
+      body: Column(
+        children: [
+          const CupertinoNavigationBar(
+            automaticallyImplyLeading: false,
+            transitionBetweenRoutes: false,
+            heroTag: '____none',
+            border: null,
+            middle: Padding(
+              padding: EdgeInsets.only(left: 8, right: 8, bottom: 8),
+              child: SizedBox.expand(
+                child: AdaptiveTabBar(tabs: [
+                  (title: 'Empfangen', widget: Tab(
+                    icon: Icon(Icons.all_inbox),
+                  )),
+                  (title: 'Gesendet', widget: Tab(
+                    icon: Icon(Icons.outbox),
+                  )),
+                ]),
+              ),
+            ),
+          ),
+          Expanded(
+            child: TabBarView(
+              controller: _tabController,
+              physics: const ScrollPhysics(),
+              children: [
+                BlocProvider.value(
+                  value: _inboxMessageBloc,
+                  child: BlocConsumer<InboxMessageBloc, InboxMessageState>(
+                    listener: (context, state) {
+                      if (state.status ==
+                          InboxMessageStatus.deleteInboxMessagesSucceed) {
+                        buildSnackBar(
+                          context,
+                          state.blocResponse,
+                          Colors.green,
+                        );
+                      }
+                      if (state.status ==
+                          InboxMessageStatus.deleteInboxMessagesFailure) {
+                        buildSnackBar(
+                          context,
+                          state.blocResponse,
+                          Colors.red,
+                        );
+                      }
+                    },
+                    builder: (context, state) {
+                      return InboxMessageWidget(
+                        key: _inboxWidgetKey,
+                        state: state,
+                        unmarkAll: _unmarkAll,
+                        scrollController: _inboxScrollController,
+                      );
+                    },
+                  ),
+                ),
+                BlocProvider.value(
+                  value: _outboxMessageBloc,
+                  child: BlocConsumer<OutboxMessageBloc, OutboxMessageState>(
+                    listener: (context, state) {
+                      if (state.status ==
+                          OutboxMessageStatus.deleteOutboxMessagesSucceed) {
+                        buildSnackBar(
+                          context,
+                          state.blocResponse,
+                          Colors.green,
+                        );
+                      }
+                      if (state.status ==
+                          OutboxMessageStatus.deleteOutboxMessagesFailure) {
+                        buildSnackBar(
+                          context,
+                          state.blocResponse,
+                          Colors.red,
+                        );
+                      }
+                    },
+                    builder: (context, state) {
+                      return OutboxMessageWidget(
+                        key: _outboxWidgetKey,
+                        unmarkAll: _unmarkAll,
+                        state: state,
+                        scrollController: _outboxScrollController,
+                      );
+                    },
+                  ),
+                )
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

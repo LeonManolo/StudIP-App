@@ -62,8 +62,8 @@ class _CalendarHeaderState extends State<CalendarHeader> {
           onDaySelected: _onDaySelected,
         ),
         const Padding(
-          padding: EdgeInsets.all(AppSpacing.lg),
-          child: Divider(),
+          padding: EdgeInsets.only(top: AppSpacing.lg, left: AppSpacing.lg, right: AppSpacing.lg),
+          child: Divider(height: 1,),
         ),
       ],
     );

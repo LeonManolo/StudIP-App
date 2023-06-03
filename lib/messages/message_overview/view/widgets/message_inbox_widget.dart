@@ -58,6 +58,7 @@ class InboxMessageWidgetState extends State<InboxMessageWidget> {
           child: RefreshIndicator(
             onRefresh: () async => _refreshInboxMessages(),
             child: ListView.separated(
+              padding: EdgeInsets.zero,
               physics: const AlwaysScrollableScrollPhysics(),
               itemCount: widget.state.inboxMessages.length + 1,
               separatorBuilder: (context, index) => const Divider(
