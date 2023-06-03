@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:app_ui/app_ui.dart';
 import 'package:calender_repository/calender_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:studipadawan/calendar/widgets/calendar_timeframes_body/calendar_break_entry.dart';
@@ -51,7 +52,7 @@ class _CalendarEntryLayoutState extends State<CalendarEntryLayout> {
           opacity: opacity,
           calendarEntryTimeKey: startTimeKey,
           currentTimeIndicatorKey: currentTimeIndicatorKey,
-          color: Theme.of(context).primaryColor,
+          color: context.adaptivePrimaryColor,
           calendarEntryData: widget.calendarEntryData,
           timeFrame: widget.timeframe,
         ),

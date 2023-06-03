@@ -21,7 +21,7 @@ class CalendarEntryContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bgColor = backgroundColor ?? Theme.of(context).primaryColor;
+    final bgColor = backgroundColor ?? context.adaptivePrimaryColor;
     return Opacity(
       opacity: calendarEntryData == null ? 0 : 1,
       child: Column(

@@ -4,11 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class CalendarHeader extends StatefulWidget {
-  const CalendarHeader({super.key, required this.onDaySelected, required this.initialSelectedDay});
+  const CalendarHeader(
+      {super.key,
+      required this.onDaySelected,
+      required this.initialSelectedDay});
 
   final void Function(DateTime selectedDay) onDaySelected;
   final DateTime initialSelectedDay;
-
 
   @override
   State<CalendarHeader> createState() => _CalendarHeaderState();
@@ -24,7 +26,6 @@ class _CalendarHeaderState extends State<CalendarHeader> {
     super.initState();
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -38,8 +39,15 @@ class _CalendarHeaderState extends State<CalendarHeader> {
             });
           },
           calendarStyle: CalendarStyle(
+            todayDecoration: BoxDecoration(
+              border: Border.all(
+                color: context.adaptivePrimaryColor,
+                width: 1.5,
+              ),
+              shape: BoxShape.circle,
+            ),
             selectedDecoration: BoxDecoration(
-              color: Theme.of(context).primaryColor,
+              color: context.adaptivePrimaryColor,
               shape: BoxShape.circle,
             ),
           ),
@@ -68,4 +76,3 @@ class _CalendarHeaderState extends State<CalendarHeader> {
     widget.onDaySelected(_selectedDay);
   }
 }
-

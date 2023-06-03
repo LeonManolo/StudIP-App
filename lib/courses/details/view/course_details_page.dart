@@ -3,6 +3,7 @@ import 'package:courses_repository/courses_repository.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:studipadawan/courses/details/bloc/course_details_bloc.dart';
 import 'package:studipadawan/courses/details/news/view/course_news_page.dart';
 
@@ -13,12 +14,13 @@ class CourseDetailsPage extends StatelessWidget {
   const CourseDetailsPage({super.key, required this.course});
   final Course course;
 
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
+    return PlatformScaffold(
+      appBar: PlatformAppBar(
         title: const Text('Details'),
-        actions: [
+        trailingActions: [
           IconButton(
             icon: const Icon(EvaIcons.bellOutline),
             onPressed: () {

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:animate_do/animate_do.dart';
+import 'package:app_ui/app_ui.dart';
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:calender_repository/calender_repository.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
@@ -38,6 +39,7 @@ class CalendarPage extends StatelessWidget {
         iosContentPadding: true,
         iosContentBottomPadding: true,
         appBar: PlatformAppBar(
+          //backgroundColor: Platform.isIOS ? Theme.of(context).scaffoldBackgroundColor : null,
           title: const Text('Kalender'),
           trailingActions: [
             IconButton(onPressed: () {
@@ -56,7 +58,7 @@ class CalendarPage extends StatelessWidget {
                   Color? color;
                   if (calendarBloc.state.layout ==
                       CalendarBodyType.timeframes) {
-                    color = Theme.of(context).primaryColor;
+                    color = context.adaptivePrimaryColor;
                   }
                   return Spin(
                     duration: const Duration(milliseconds: 800),
@@ -94,7 +96,7 @@ class CalendarPage extends StatelessWidget {
                     return Center(
                       child: SpinKitThreeBounce(
                         size: 25,
-                        color: Theme.of(context).primaryColor,
+                        color: context.adaptivePrimaryColor,
                       ),
                     );
                   }

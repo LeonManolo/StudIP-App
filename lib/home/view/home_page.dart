@@ -57,8 +57,7 @@ class HomePage extends StatelessWidget {
                   },
                   child: const Text('Module bearbeiten'),
                 ),
-                SizedBox(height: 400,),
-
+                Image.network("https://imageproxy.wolt.com/venue/60d995ef9f5d9a22b6f99a86/dbbc59fe-da56-11eb-b04c-322545135063_food_brothers_close_up_2.jpg"),
               ],
             );
           },

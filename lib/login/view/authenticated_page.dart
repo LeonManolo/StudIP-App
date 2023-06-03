@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:app_ui/app_ui.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -10,53 +11,25 @@ import 'package:studipadawan/home/view/home_page.dart';
 
 import 'package:studipadawan/messages/message_overview/view/messages_page.dart';
 
-class AuthenticatedPage extends StatefulWidget {
+class AuthenticatedPage extends StatelessWidget {
   const AuthenticatedPage({super.key});
 
   static Page<void> page() =>
       const MaterialPage<void>(child: AuthenticatedPage());
 
-  @override
-  State<AuthenticatedPage> createState() => _AuthenticatedPageState();
-}
 
-class _AuthenticatedPageState extends State<AuthenticatedPage> {
-  int _selectedTab = 0;
-  final List<Widget> tabPages = const [
+  List<Widget> get tabPages => const [
     HomePage(),
     CoursesPage(),
     MessagesPage(),
     CalendarPage(),
   ];
 
-  late PlatformTabController tabController;
-
-  @override
-  void initState() {
-    super.initState();
-
-    // If you want further control of the tabs have one of these
-    tabController = PlatformTabController(
-      initialIndex: 1,
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
-    return PlatformTabScaffold(
-      iosContentPadding: true,
-      iosContentBottomPadding: true,
-      tabController: tabController,
-      material: (context, index) => MaterialTabScaffoldData(
-        bodyBuilder: (_, __) => IndexedStack(
-          index: _selectedTab,
-          children: tabPages,
-        ),
-      ),
-      cupertino: (_,__) => CupertinoTabScaffoldData(
-        bodyBuilder: (context, index) => tabPages[index],
-      ),
-
+    return AdaptiveTabScaffold(
+      tabs: tabPages,
       items: [
         BottomNavigationBarItem(
           label: 'Home',
@@ -79,12 +52,7 @@ class _AuthenticatedPageState extends State<AuthenticatedPage> {
           activeIcon: Icon(Platform.isIOS ? CupertinoIcons.calendar : EvaIcons.calendar),
         ),
       ],
-      //type: BottomNavigationBarType.fixed,
-      itemChanged: (value) {
-        setState(() {
-          _selectedTab = value;
-        });
-      },
     );
   }
 }
+

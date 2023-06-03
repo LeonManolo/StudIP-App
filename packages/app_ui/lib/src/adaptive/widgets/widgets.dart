@@ -1,1 +1,1 @@
-export 'adaptive_app.dart';
+export 'adaptive_tab_scaffold.dart';

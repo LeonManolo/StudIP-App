@@ -93,6 +93,7 @@ class AppView extends StatelessWidget {
     );
     final cupertinoDarkTheme2 = CupertinoThemeData(
       brightness: Brightness.dark,
+      //barBackgroundColor: Color(0xf0f9f9f9),
       //applyThemeToAll: true,
     );
 
@@ -104,11 +105,13 @@ class AppView extends StatelessWidget {
           iosUsesMaterialWidgets: true,
       ),
       builder: (context) => PlatformTheme(
-        themeMode: ThemeMode.system,
+        themeMode: ThemeMode.light,
         materialLightTheme: const AppTheme().themeData,
         materialDarkTheme: materialDarkTheme,
         cupertinoDarkTheme: cupertinoDarkTheme2,
-        cupertinoLightTheme: cupertinoLightTheme,
+        cupertinoLightTheme: CupertinoThemeData(
+          brightness: Brightness.light,
+        ),
         matchCupertinoSystemChromeBrightness: false,
         builder: (context) => PlatformApp(
           localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
