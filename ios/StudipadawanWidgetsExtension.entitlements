@@ -4,11 +4,11 @@
 <dict>
 	<key>com.apple.security.application-groups</key>
 	<array>
-		<string>group.studipadwan</string>
+		<string>group.de.hs-flensburg.studipadawan</string>
 	</array>
 	<key>keychain-access-groups</key>
 	<array>
-		<string>$(AppIdentifierPrefix)de.hsflensburg.studipadawan.sharedKeychain</string>
+		<string>$(AppIdentifierPrefix)de.hs-flensburg.studipadawan.sharedKeychain</string>
 	</array>
 </dict>
 </plist>

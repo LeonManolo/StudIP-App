@@ -63,7 +63,7 @@ struct StudipadawanWidgets: Widget {
     let kind: String = "StudipadawanWidgets"
     private let dataProvider = DataProvider(
         oauthClient: OAuthClient.shared,
-        cacheProvider: CacheProvider(userDefaults: UserDefaults(suiteName: "group.studipadawan") ?? UserDefaults.standard)
+        cacheProvider: CacheProvider(userDefaults: UserDefaults(suiteName: "group.de.hs-flensburg.studipadawan") ?? UserDefaults.standard)
     )
     
     var body: some WidgetConfiguration {

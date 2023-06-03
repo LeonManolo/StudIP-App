@@ -6,7 +6,7 @@ class CustomTokenStorage implements BaseStorage {
     aOptions: AndroidOptions(encryptedSharedPreferences: true),
     iOptions: IOSOptions(
       accessibility: KeychainAccessibility.first_unlock,
-      groupId: "G59VX2UW33.de.hsflensburg.studipadawan.sharedKeychain",
+      groupId: "N9XSF4AL84.de.hs-flensburg.studipadawan.sharedKeychain",
     ),
   );
 
