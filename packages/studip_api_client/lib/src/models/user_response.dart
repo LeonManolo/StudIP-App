@@ -45,7 +45,7 @@ class UserResponse {
       address: attributes['address'] as String?,
       avatarUrl: data['meta']['avatar']['medium'] as String,
       namePrefix: attributes['name-prefix'] as String,
-      nameSuffix: attributes['name-suffix'],
+      nameSuffix: attributes['name-suffix'] as String,
     );
   }
 }

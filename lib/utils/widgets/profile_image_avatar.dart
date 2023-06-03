@@ -25,7 +25,7 @@ class ProfileImageAvatar extends StatelessWidget {
       radius: radius,
       minRadius: minRadius,
       maxRadius: maxRadius,
-      backgroundImage: switch (getImageUrl()) {
+      backgroundImage: switch (_getImageUrl()) {
         final String url => NetworkImage(url),
         _ => null,
       },
@@ -33,7 +33,7 @@ class ProfileImageAvatar extends StatelessWidget {
           backgroundColor ?? Theme.of(context).primaryColor.withOpacity(0.1),
       child: Padding(
         padding: const EdgeInsets.all(AppSpacing.xxs),
-        child: switch (getImageUrl()) {
+        child: switch (_getImageUrl()) {
           null => _FirstLetterText(letter: replacementLetter),
           _ => null,
         },
@@ -45,7 +45,7 @@ class ProfileImageAvatar extends StatelessWidget {
     return profileImageUrl?.contains('pictures/user/nobody') ?? false;
   }
 
-  String? getImageUrl() {
+  String? _getImageUrl() {
     if (_isDefaultImageUrl()) {
       return null;
     }

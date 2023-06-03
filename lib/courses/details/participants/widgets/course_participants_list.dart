@@ -41,7 +41,6 @@ class _CourseParticipantsListState extends State<CourseParticipantsList> {
         },
         separatorBuilder: (context, index) {
           return const Divider(
-            //height: 1,
             indent: AppSpacing.xxlg + AppSpacing.sm,
           );
         },
