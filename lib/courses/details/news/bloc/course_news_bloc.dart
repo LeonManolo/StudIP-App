@@ -6,6 +6,7 @@ import 'package:logger/logger.dart';
 import 'package:studipadawan/utils/throttle_droppable.dart';
 
 part 'course_news_event.dart';
+
 part 'course_news_state.dart';
 
 class CourseNewsBloc extends Bloc<CourseNewsEvent, CourseNewsState> {

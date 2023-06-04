@@ -1,3 +1,5 @@
+import 'package:studip_api_client/src/models/courses/course_participants_response.dart';
+
 import '../models/models.dart';
 
 abstract class StudIPCoursesClient {
@@ -21,6 +23,12 @@ abstract class StudIPCoursesClient {
   Future<UserResponse> getUser({required String userId});
 
   Future<CourseWikiPagesListResponse> getCourseWikiPages({
+    required String courseId,
+    required int offset,
+    required int limit,
+  });
+
+  Future<CourseParticipantsResponse> getCourseParticipants({
     required String courseId,
     required int offset,
     required int limit,

@@ -10,6 +10,8 @@ class UserResponse {
   final String? homepage;
   final String? address;
   final String avatarUrl;
+  final String namePrefix;
+  final String nameSuffix;
 
   UserResponse({
     required this.id,
@@ -23,6 +25,8 @@ class UserResponse {
     required this.homepage,
     required this.address,
     required this.avatarUrl,
+    required this.namePrefix,
+    required this.nameSuffix,
   });
 
   factory UserResponse.fromJson(Map<String, dynamic> json) {
@@ -40,6 +44,8 @@ class UserResponse {
       homepage: attributes['homepage'] as String?,
       address: attributes['address'] as String?,
       avatarUrl: data['meta']['avatar']['medium'] as String,
+      namePrefix: attributes['name-prefix'] as String,
+      nameSuffix: attributes['name-suffix'] as String,
     );
   }
 }
