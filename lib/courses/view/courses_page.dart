@@ -1,6 +1,8 @@
+import 'package:app_ui/app_ui.dart';
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:courses_repository/courses_repository.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
@@ -25,6 +27,7 @@ class CoursesPage extends StatelessWidget {
       child: BlocBuilder<CoursesBloc, CoursesState>(
         builder: (context, state) {
           return PlatformScaffold(
+            iosContentBottomPadding: true,
             appBar: PlatformAppBar(
               title: const Text('Kurse'),
               trailingActions: switch (state) {
@@ -35,8 +38,9 @@ class CoursesPage extends StatelessWidget {
                   semesterSortOrder: final currentSortOrder
                 ) =>
                   [
-                    IconButton(
-                      icon: const Icon(EvaIcons.funnelOutline),
+                    AdaptiveAppBarIconButton(
+                      materialIcon: EvaIcons.funnelOutline,
+                      cupertinoIcon: CupertinoIcons.ellipsis,
                       onPressed: () {
                         _showSemesterSortFilterModal(
                           context: context,

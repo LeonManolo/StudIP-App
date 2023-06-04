@@ -1,6 +1,7 @@
 import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
 import 'package:intl/intl.dart';
 import 'package:messages_repository/messages_repository.dart';
@@ -10,6 +11,7 @@ import 'package:studipadawan/messages/message_details/bloc/message_details_state
 import 'package:studipadawan/messages/message_details/view/widgets/message_details_menu_button.dart';
 
 import 'package:studipadawan/messages/message_send/view/message_send_page.dart';
+import 'package:studipadawan/utils/loading_indicator.dart';
 import 'package:studipadawan/utils/utils.dart';
 
 class MessageDetailpage extends StatelessWidget {
@@ -53,17 +55,17 @@ class MessageDetailpage extends StatelessWidget {
                 children: [
                   Expanded(
                     child: Center(
-                      child: CircularProgressIndicator(),
+                      child: LoadingIndicator(),
                     ),
                   )
                 ],
               ),
             );
           }
-          return Scaffold(
-            appBar: AppBar(
+          return PlatformScaffold(
+            appBar: PlatformAppBar(
               title: const Text('Nachrichten'),
-              actions: [
+              trailingActions: [
                 MessageDetailsMenuButton(
                   isInbox: isInbox,
                   answerMessage: () {

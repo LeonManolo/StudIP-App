@@ -5,6 +5,7 @@ import 'package:studipadawan/courses/bloc/courses_event.dart';
 import 'package:studipadawan/courses/bloc/courses_state.dart';
 import 'package:studipadawan/courses/details/view/course_details_page.dart';
 import 'package:studipadawan/courses/view/widgets/semester_list.dart';
+import 'package:studipadawan/utils/loading_indicator.dart';
 
 class CoursesPageBody extends StatelessWidget {
   const CoursesPageBody({super.key});
@@ -15,7 +16,7 @@ class CoursesPageBody extends StatelessWidget {
       builder: (context, state) {
         switch (state) {
           case CoursesStateLoading _:
-            return _loadingWidget();
+            return const LoadingIndicator();
           case CoursesStateDidLoad(items: final items):
             return CoursesList(
               listItems: items,
@@ -34,12 +35,6 @@ class CoursesPageBody extends StatelessWidget {
             return _failureWidget(context);
         }
       },
-    );
-  }
-
-  Widget _loadingWidget() {
-    return const Center(
-      child: CircularProgressIndicator(),
     );
   }
 

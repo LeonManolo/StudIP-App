@@ -12,11 +12,7 @@ class SemesterCell extends StatelessWidget {
       children: [
         Text(
           semester.title,
-          style: TextStyle(
-            fontSize: 22,
-            fontWeight: FontWeight.w600,
-            color: Theme.of(context).primaryColor,
-          ),
+          style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
         ),
         GestureDetector(
           child: Icon(

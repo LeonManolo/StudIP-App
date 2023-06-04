@@ -1,6 +1,7 @@
 import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:messages_repository/messages_repository.dart';
 import 'package:studipadawan/messages/message_send/message_send_bloc/message_send_bloc.dart';
@@ -61,9 +62,9 @@ class _MessageSendPageState extends State<MessageSendPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return PlatformScaffold(
       key: UniqueKey(),
-      appBar: AppBar(title: const Text('Senden')),
+      appBar: PlatformAppBar(title: const Text('Senden')),
       body: BlocProvider<MessageSendBloc>.value(
         value: _messageSendBloc,
         child: BlocConsumer<MessageSendBloc, MessageSendState>(

@@ -1,3 +1,4 @@
+import 'package:app_ui/app_ui.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -21,46 +22,76 @@ class HomePage extends StatelessWidget {
     return BlocProvider(
       create: (_) => homeCubit,
       child: PlatformScaffold(
-        appBar: PlatformAppBar(
-          title: const Text('Home'),
-          trailingActions: <Widget>[
-            IconButton(
-              key: const Key('homePage_logout_iconButton'),
-              icon: const Icon(Icons.exit_to_app),
-              onPressed: () {
-                context.read<AppBloc>().add(const AppLogoutRequested());
-              },
-            )
-          ],
-        ),
-        body: BlocBuilder<HomeCubit, List<Module>>(
-          builder: (context, modules) {
-            return ListView(
-              children: [
-                SizedBox(height: 400,),
-                if (modules.isEmpty) const Center(
-                        child: EmptyView(
-                          title: 'Keine Module vorhanden',
-                          message: 'Es sind keine Module vorhanden',
-                        ),
-                      ) else Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
-                        child: ReorderableModuleListView(
-                          modules: modules,
-                        ),
-                      ),
-                ElevatedButton(
-                  onPressed: () {
-                    showCenteredCupertinoModal(context, (BuildContext _) {
-                      return ModuleSelectionModal(homeCubit: homeCubit);
-                    });
-                  },
-                  child: const Text('Module bearbeiten'),
+        body: CustomScrollView(
+          slivers: [
+            PlatformWidget(
+              material: (context, _) => SliverAppBar(
+                pinned: true,
+                forceElevated: true,
+                expandedHeight: 150,
+                actions: [
+                  AdaptiveAppBarIconButton(
+                    key: const Key('homePage_logout_iconButton'),
+                    materialIcon: Icons.exit_to_app,
+                    cupertinoIcon: CupertinoIcons.square_arrow_right,
+                    onPressed: () {
+                      context.read<AppBloc>().add(const AppLogoutRequested());
+                    },
+                  ),
+                ],
+                flexibleSpace: const FlexibleSpaceBar(
+                  title: Text('Home'),
                 ),
-                Image.network("https://imageproxy.wolt.com/venue/60d995ef9f5d9a22b6f99a86/dbbc59fe-da56-11eb-b04c-322545135063_food_brothers_close_up_2.jpg"),
-              ],
-            );
-          },
+              ),
+              cupertino: (context, _) => CupertinoSliverNavigationBar(
+                largeTitle: const Text('Home'),
+                trailing: AdaptiveAppBarIconButton(
+                  key: const Key('homePage_logout_iconButton'),
+                  materialIcon: Icons.exit_to_app,
+                  cupertinoIcon: CupertinoIcons.square_arrow_right,
+                  onPressed: () {
+                    context.read<AppBloc>().add(const AppLogoutRequested());
+                  },
+                ),
+              ),
+            ),
+            SliverSafeArea(
+              top: false, // Top safe area is consumed by the navigation bar.
+              sliver: SliverList(
+                delegate: SliverChildListDelegate([
+                  BlocBuilder<HomeCubit, List<Module>>(
+                    builder: (context, modules) {
+                      return Column(
+                        children: [
+                          const SizedBox(height: 400,),
+                          if (modules.isEmpty) const Center(
+                            child: EmptyView(
+                              title: 'Keine Module vorhanden',
+                              message: 'Es sind keine Module vorhanden',
+                            ),
+                          ) else Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            child: ReorderableModuleListView(
+                              modules: modules,
+                            ),
+                          ),
+                          PlatformElevatedButton(
+                            onPressed: () {
+                              showCenteredCupertinoModal(context, (BuildContext _) {
+                                return ModuleSelectionModal(homeCubit: homeCubit);
+                              });
+                            },
+                            child: const Text('Module bearbeiten'),
+                          ),
+                          //Image.network('https://imageproxy.wolt.com/venue/60d995ef9f5d9a22b6f99a86/dbbc59fe-da56-11eb-b04c-322545135063_food_brothers_close_up_2.jpg'),
+                        ],
+                      );
+                    },
+                  )
+                ]),
+              ),
+            ),
+          ],
         ),
       ),
     );

@@ -23,14 +23,14 @@ class CalendarNotificationSaveButton extends StatelessWidget {
     return InkWell(
       onTap: maxReached ? () => _showErrorSnackBar(context) : onTap,
       child: Container(
-        color: maxReached ? Colors.red : Theme.of(context).primaryColor,
+        color: maxReached ? Colors.red : context.adaptivePrimaryColor,
         alignment: Alignment.center,
-        width: double.maxFinite,
+        width: MediaQuery.of(context).size.width,
         padding: const EdgeInsets.only(
           left: AppSpacing.sm,
           right: AppSpacing.sm,
           top: AppSpacing.xlg,
-          bottom: AppSpacing.lg,
+          bottom: AppSpacing.xlg,
         ),
         child: SafeArea(
           child: Text(

@@ -112,37 +112,63 @@ class MessagesPageState extends State<MessagesPage>
         ),
       ],
       child: PlatformScaffold(
-        appBar: PlatformAppBar(
-          material: (_,__) => MaterialAppBarData(
-            title: const Text('Nachrichten'),
+        material: (_, __) => MaterialScaffoldData(
+          floatingActionButton: FloatingActionButton(onPressed: () {}),
+          appBar: AppBar(title: const Text('Nachrichten'), actions: [
+            BlocBuilder<TabBarBloc, TabBarState>(
+              builder: (context, state) {
+                return Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Visibility(
+                      visible: state.filterIconVisible,
+                      child: MessageFilterButton(
+                        setFilter: _handleFilterSelection,
+                        currentFilter: _inboxMessageBloc.state.currentFilter,
+                      ),
+                    ),
+                    Visibility(
+                      visible: state.menuIconVisible,
+                      child: MessageMenuButton(
+                        markAll: _markAll,
+                        unmarkAll: _unmarkAll,
+                      ),
+                    ),
+                  ],
+                );
+              },
+            ),
+          ],
           ),
-          cupertino: (_, __) => CupertinoNavigationBarData(
-              border: Border.all(color: Colors.transparent),
-              title: const Text('Nachrichten'),
-              trailing: BlocBuilder<TabBarBloc, TabBarState>(
-                builder: (context, state) {
-                  return Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Visibility(
-                        visible: state.filterIconVisible,
-                        child: MessageFilterButton(
-                          setFilter: _handleFilterSelection,
-                          currentFilter: _inboxMessageBloc.state.currentFilter,
-                        ),
-                      ),
-                      Visibility(
-                        visible: state.menuIconVisible,
-                        child: MessageMenuButton(
-                          markAll: _markAll,
-                          unmarkAll: _unmarkAll,
-                        ),
-                      ),
-                    ],
-                  );
-                },
-              )),
         ),
+        cupertino: (_, __) => CupertinoPageScaffoldData(
+            navigationBar: CupertinoNavigationBar(
+                border: Border.all(color: Colors.transparent),
+                middle: const Text('Nachrichten'),
+                trailing: BlocBuilder<TabBarBloc, TabBarState>(
+                  builder: (context, state) {
+                    return Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Visibility(
+                          visible: state.filterIconVisible,
+                          child: MessageFilterButton(
+                            setFilter: _handleFilterSelection,
+                            currentFilter:
+                                _inboxMessageBloc.state.currentFilter,
+                          ),
+                        ),
+                        Visibility(
+                          visible: state.menuIconVisible,
+                          child: MessageMenuButton(
+                            markAll: _markAll,
+                            unmarkAll: _unmarkAll,
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                ))),
         body: Column(
           children: [
             MessageTabBar(tabController: _tabController),
@@ -213,46 +239,6 @@ class MessagesPageState extends State<MessagesPage>
           ],
         ),
       ),
-    );
-  }
-
-  PlatformAppBar _buildAppBar() {
-    return PlatformAppBar(
-      title: const Text('Nachrichten'),
-      trailingActions: <Widget>[
-        BlocProvider.value(
-          value: _tabBarBloc,
-          child: BlocBuilder<TabBarBloc, TabBarState>(
-            builder: (context, state) {
-              return Row(
-                children: [
-                  Visibility(
-                    visible: state.filterIconVisible,
-                    child: MessageFilterButton(
-                      setFilter: _handleFilterSelection,
-                      currentFilter: _inboxMessageBloc.state.currentFilter,
-                    ),
-                  ),
-                  Visibility(
-                    visible: state.menuIconVisible,
-                    child: MessageMenuButton(
-                      markAll: _markAll,
-                      unmarkAll: _unmarkAll,
-                    ),
-                  ),
-                  IconButton(
-                    key: const Key('homePage_logout_iconButton'),
-                    icon: const Icon(Icons.exit_to_app),
-                    onPressed: () {
-                      context.read<AppBloc>().add(const AppLogoutRequested());
-                    },
-                  )
-                ],
-              );
-            },
-          ),
-        )
-      ],
     );
   }
 

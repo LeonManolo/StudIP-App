@@ -1,6 +1,7 @@
 import 'package:app_ui/app_ui.dart';
 import 'package:courses_repository/courses_repository.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
@@ -21,8 +22,9 @@ class CourseDetailsPage extends StatelessWidget {
       appBar: PlatformAppBar(
         title: const Text('Details'),
         trailingActions: [
-          IconButton(
-            icon: const Icon(EvaIcons.bellOutline),
+          AdaptiveAppBarIconButton(
+            materialIcon: EvaIcons.bellOutline,
+            cupertinoIcon: CupertinoIcons.info,
             onPressed: () {
               Navigator.push(
                 context,
