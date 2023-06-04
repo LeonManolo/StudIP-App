@@ -38,7 +38,6 @@ Future<void> main() async {
     androidChannelDescription: 'Kurs Benachrichtigungen',
   );
 
-
   HydratedBloc.storage = await HydratedStorage.build(
     storageDirectory: kIsWeb
         ? HydratedStorage.webStorageDirectory

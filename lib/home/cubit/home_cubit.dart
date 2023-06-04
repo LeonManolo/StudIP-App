@@ -14,6 +14,7 @@ enum ModuleType {
 
 class HomeCubit extends HydratedCubit<List<Module>> {
   HomeCubit() : super([]);
+
   void reorderModules(int oldIndex, int newIndex) {
     final modules = state;
     final module = modules.removeAt(oldIndex);

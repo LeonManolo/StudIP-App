@@ -6,8 +6,10 @@ import 'package:http_parser/http_parser.dart';
 import 'package:jwt_decode/jwt_decode.dart';
 import 'package:logger/logger.dart';
 import 'package:oauth2_client/access_token_response.dart';
+import 'package:oauth2_client/oauth2_exception.dart';
 import 'package:oauth2_client/oauth2_helper.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:studip_api_client/src/core/custom_token_storage.dart';
 import 'package:studip_api_client/src/exceptions.dart';
 import 'studip_oauth_client.dart';
 import 'package:http_forked/http.dart' as http;
@@ -29,6 +31,7 @@ class StudIpAPICore {
               clientId: "5",
               grantType: OAuth2Helper.authorizationCode,
               scopes: ["api"],
+              tokenBaseStorage: CustomTokenStorage(),
             );
 
   Future<http.Response> get({
@@ -258,8 +261,11 @@ class StudIpAPICore {
       Map<String, dynamic> decodedToken = Jwt.parseJwt(accessToken);
       String userId = decodedToken["sub"];
       return userId;
+    } on OAuth2Exception catch (oAuthException) {
+      Logger().e(oAuthException.error, oAuthException);
+      return null;
     } catch (e) {
-      Logger().e(e, e);
+      Logger().e(e);
       return null;
     }
   }
