@@ -279,6 +279,29 @@ class StudIpApiClient
     return FolderListResponse.fromJson(body).folders.first;
   }
 
+  Future<CourseParticipantsResponse> getCourseParticipants({
+    required String courseId,
+    required int offset,
+    required int limit,
+  }) async {
+    final response = await _core
+        .get(endpoint: "courses/$courseId/relationships/memberships",
+        queryParameters: {
+      "page[offset]": "$offset",
+      "page[limit]": "$limit",
+    });
+
+    final body = response.json();
+
+    if (response.statusCode != HttpStatus.ok) {
+      throw StudIpApiRequestFailure(
+        body: body,
+        statusCode: response.statusCode,
+      );
+    }
+    return CourseParticipantsResponse.fromJson(body);
+  }
+
   @override
   Future<FileListResponse> getFiles(
       {required String folderId,

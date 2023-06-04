@@ -1,4 +1,5 @@
 import 'package:courses_repository/src/models/models.dart';
+import 'package:courses_repository/src/models/participant.dart';
 import 'package:studip_api_client/studip_api_client.dart'
     hide CourseNewsListResponse, CourseWikiPagesListResponse;
 
@@ -113,8 +114,6 @@ class CourseRepository {
         },
       );
 
-
-
       final Map<String, List<CourseResponse>> semesterToCourses = {};
       for (final course in courses) {
         if (semesterToCourses.containsKey(course.semesterId)) {
@@ -149,6 +148,29 @@ class CourseRepository {
     } catch (error, stackTrace) {
       Error.throwWithStackTrace(error, stackTrace);
     }
+  }
+
+  Future<CourseParticipantsData> getCourseParticipants({
+    required String courseId,
+    required int offset,
+    required int limit,
+  }) async {
+    final participantsResponse = await _apiClient.getCourseParticipants(
+      courseId: courseId,
+      offset: offset,
+      limit: limit,
+    );
+    final participants = <Participant>[];
+    for (final participantResponse in participantsResponse.participants) {
+      final UserResponse userResponse =
+          await _apiClient.getUser(userId: participantResponse.id);
+      participants.add(Participant.fromUserResponse(userResponse));
+    }
+
+    return CourseParticipantsData(
+      participants: participants,
+      totalParticipants: participantsResponse.total,
+    );
   }
 
   // ***** Private Helpers *****
