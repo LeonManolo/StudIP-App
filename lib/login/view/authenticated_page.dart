@@ -17,14 +17,12 @@ class AuthenticatedPage extends StatelessWidget {
   static Page<void> page() =>
       const MaterialPage<void>(child: AuthenticatedPage());
 
-
   List<Widget> get tabPages => const [
     HomePage(),
     CoursesPage(),
     MessagesPage(),
     CalendarPage(),
   ];
-
 
   @override
   Widget build(BuildContext context) {

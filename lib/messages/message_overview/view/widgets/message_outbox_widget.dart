@@ -47,65 +47,60 @@ class OutboxMessageWidgetState extends State<OutboxMessageWidget> {
       );
     }
 
-    return Column(
-      children: [
-        Expanded(
-          child: RefreshIndicator(
-            onRefresh: () async => _refreshOutboxMessages(),
-            child: ListView.separated(
-              physics: const AlwaysScrollableScrollPhysics(),
-              itemCount: widget.state.outboxMessages.length + 1,
-              separatorBuilder: (context, index) => const Divider(height: 0.5),
-              itemBuilder: (context, index) {
-                if (index == widget.state.outboxMessages.length) {
-                  return PaginationLoadingIndicator(
-                    visible: widget.state.status ==
-                        OutboxMessageStatus.paginationLoading,
-                  );
-                } else {
-                  final message = widget.state.outboxMessages[index];
-                  return ColoredBox(
-                    color: (_markedOutboxMessages.contains(message.id))
-                        ? Theme.of(context).primaryColor.withOpacity(0.5)
-                        : Colors.transparent,
-                    child: MessageTile(
-                      messageIcon: messageIcon(context, isRead: message.isRead),
-                      onTapFunction: () => {
-                        if (_markedOutboxMessages.isNotEmpty)
-                          {
-                            if (_markedOutboxMessages.contains(message.id))
-                              _unmarkMessage(context, message.id)
-                            else
-                              _markMessage(context, message.id)
-                          }
-                        else
-                          {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute<MessageDetailpage>(
-                                builder: (context) => MessageDetailpage(
-                                  isInbox: false,
-                                  message: message,
-                                  refreshMessages: _refreshOutboxMessages,
-                                ),
-                              ),
-                            )
-                          }
-                      },
-                      onLongPressFunction: () =>
-                          _markMessage(context, message.id),
-                      title: message.subject,
-                      subTitle: message.parseRecipients(),
-                      trailing: message.getTimeAgo(),
-                    ),
-                  );
-                }
-              },
-              controller: widget.scrollController,
-            ),
-          ),
-        )
-      ],
+    return RefreshIndicator(
+      onRefresh: () async => _refreshOutboxMessages(),
+      child: ListView.separated(
+        padding: EdgeInsets.zero,
+        physics: const AlwaysScrollableScrollPhysics(),
+        itemCount: widget.state.outboxMessages.length + 1,
+        separatorBuilder: (context, index) => const Divider(height: 0.5),
+        itemBuilder: (context, index) {
+          if (index == widget.state.outboxMessages.length) {
+            return PaginationLoadingIndicator(
+              visible: widget.state.status ==
+                  OutboxMessageStatus.paginationLoading,
+            );
+          } else {
+            final message = widget.state.outboxMessages[index];
+            return ColoredBox(
+              color: (_markedOutboxMessages.contains(message.id))
+                  ? Theme.of(context).primaryColor.withOpacity(0.5)
+                  : Colors.transparent,
+              child: MessageTile(
+                messageIcon: messageIcon(context, isRead: message.isRead),
+                onTapFunction: () => {
+                  if (_markedOutboxMessages.isNotEmpty)
+                    {
+                      if (_markedOutboxMessages.contains(message.id))
+                        _unmarkMessage(context, message.id)
+                      else
+                        _markMessage(context, message.id)
+                    }
+                  else
+                    {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute<MessageDetailpage>(
+                          builder: (context) => MessageDetailpage(
+                            isInbox: false,
+                            message: message,
+                            refreshMessages: _refreshOutboxMessages,
+                          ),
+                        ),
+                      )
+                    }
+                },
+                onLongPressFunction: () =>
+                    _markMessage(context, message.id),
+                title: message.subject,
+                subTitle: message.parseRecipients(),
+                trailing: message.getTimeAgo(),
+              ),
+            );
+          }
+        },
+        controller: widget.scrollController,
+      ),
     );
   }
 

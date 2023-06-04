@@ -22,6 +22,7 @@ import 'package:studipadawan/messages/message_overview/view/widgets/message_filt
 import 'package:studipadawan/messages/message_overview/view/widgets/message_inbox_widget.dart';
 import 'package:studipadawan/messages/message_overview/view/widgets/message_menu_button.dart';
 import 'package:studipadawan/messages/message_overview/view/widgets/message_outbox_widget.dart';
+import 'package:studipadawan/messages/message_overview/view/widgets/message_tab_bar.dart';
 import 'package:studipadawan/utils/utils.dart';
 
 final _outboxWidgetKey = GlobalKey<OutboxMessageWidgetState>();
@@ -98,42 +99,59 @@ class MessagesPageState extends State<MessagesPage>
 
   @override
   Widget build(BuildContext context) {
-    return PlatformScaffold(
-      appBar: PlatformAppBar(
-        cupertino: (_,__) => CupertinoNavigationBarData(
-          border: Border.all(color: Colors.transparent),
-          title: Text("Nachrichten"),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (_) => _tabBarBloc,
         ),
-      ),
-      body: Column(
-        children: [
-          const CupertinoNavigationBar(
-            automaticallyImplyLeading: false,
-            transitionBetweenRoutes: false,
-            heroTag: '____none',
-            border: null,
-            middle: Padding(
-              padding: EdgeInsets.only(left: 8, right: 8, bottom: 8),
-              child: SizedBox.expand(
-                child: AdaptiveTabBar(tabs: [
-                  (title: 'Empfangen', widget: Tab(
-                    icon: Icon(Icons.all_inbox),
-                  )),
-                  (title: 'Gesendet', widget: Tab(
-                    icon: Icon(Icons.outbox),
-                  )),
-                ]),
-              ),
-            ),
+        BlocProvider(
+          create: (_) => _outboxMessageBloc,
+        ),
+        BlocProvider(
+          create: (_) => _inboxMessageBloc,
+        ),
+      ],
+      child: PlatformScaffold(
+        appBar: PlatformAppBar(
+          material: (_,__) => MaterialAppBarData(
+            title: const Text('Nachrichten'),
           ),
-          Expanded(
-            child: TabBarView(
-              controller: _tabController,
-              physics: const ScrollPhysics(),
-              children: [
-                BlocProvider.value(
-                  value: _inboxMessageBloc,
-                  child: BlocConsumer<InboxMessageBloc, InboxMessageState>(
+          cupertino: (_, __) => CupertinoNavigationBarData(
+              border: Border.all(color: Colors.transparent),
+              title: const Text('Nachrichten'),
+              trailing: BlocBuilder<TabBarBloc, TabBarState>(
+                builder: (context, state) {
+                  return Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Visibility(
+                        visible: state.filterIconVisible,
+                        child: MessageFilterButton(
+                          setFilter: _handleFilterSelection,
+                          currentFilter: _inboxMessageBloc.state.currentFilter,
+                        ),
+                      ),
+                      Visibility(
+                        visible: state.menuIconVisible,
+                        child: MessageMenuButton(
+                          markAll: _markAll,
+                          unmarkAll: _unmarkAll,
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              )),
+        ),
+        body: Column(
+          children: [
+            MessageTabBar(tabController: _tabController),
+            Expanded(
+              child: TabBarView(
+                controller: _tabController,
+                physics: const ScrollPhysics(),
+                children: [
+                  BlocConsumer<InboxMessageBloc, InboxMessageState>(
                     listener: (context, state) {
                       if (state.status ==
                           InboxMessageStatus.deleteInboxMessagesSucceed) {
@@ -161,10 +179,7 @@ class MessagesPageState extends State<MessagesPage>
                       );
                     },
                   ),
-                ),
-                BlocProvider.value(
-                  value: _outboxMessageBloc,
-                  child: BlocConsumer<OutboxMessageBloc, OutboxMessageState>(
+                  BlocConsumer<OutboxMessageBloc, OutboxMessageState>(
                     listener: (context, state) {
                       if (state.status ==
                           OutboxMessageStatus.deleteOutboxMessagesSucceed) {
@@ -191,12 +206,12 @@ class MessagesPageState extends State<MessagesPage>
                         scrollController: _outboxScrollController,
                       );
                     },
-                  ),
-                )
-              ],
+                  )
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -29,7 +29,6 @@ class _AdaptiveTabBarState extends State<AdaptiveTabBar> {
   Widget build(BuildContext context) {
     if (Platform.isIOS) {
       return CupertinoSlidingSegmentedControl<int>(
-        //backgroundColor: CupertinoColors.systemGrey2,
         groupValue: _selectedItem,
         onValueChanged: (int? value) {
           if (value != null) {

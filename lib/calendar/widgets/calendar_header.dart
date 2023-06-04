@@ -46,6 +46,7 @@ class _CalendarHeaderState extends State<CalendarHeader> {
               ),
               shape: BoxShape.circle,
             ),
+            todayTextStyle: TextStyle(color: context.adaptivePrimaryColor, fontSize: 16.0),
             selectedDecoration: BoxDecoration(
               color: context.adaptivePrimaryColor,
               shape: BoxShape.circle,

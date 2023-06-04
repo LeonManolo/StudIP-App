@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class MessageTabBar extends StatelessWidget {
-  const MessageTabBar({
+class MessageBar extends StatelessWidget {
+  const MessageBar({
     super.key,
     required this.controller,
   });
