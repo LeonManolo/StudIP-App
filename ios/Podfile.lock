@@ -42,6 +42,8 @@ PODS:
     - Flutter
   - flutter_web_auth_2 (1.1.1):
     - Flutter
+  - home_widget (0.0.1):
+    - Flutter
   - open_filex (0.0.2):
     - Flutter
   - path_provider_foundation (0.0.1):
@@ -61,6 +63,7 @@ DEPENDENCIES:
   - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
   - flutter_secure_storage (from `.symlinks/plugins/flutter_secure_storage/ios`)
   - flutter_web_auth_2 (from `.symlinks/plugins/flutter_web_auth_2/ios`)
+  - home_widget (from `.symlinks/plugins/home_widget/ios`)
   - open_filex (from `.symlinks/plugins/open_filex/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
   - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
@@ -85,6 +88,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_secure_storage/ios"
   flutter_web_auth_2:
     :path: ".symlinks/plugins/flutter_web_auth_2/ios"
+  home_widget:
+    :path: ".symlinks/plugins/home_widget/ios"
   open_filex:
     :path: ".symlinks/plugins/open_filex/ios"
   path_provider_foundation:
@@ -101,6 +106,7 @@ SPEC CHECKSUMS:
   flutter_local_notifications: 0c0b1ae97e741e1521e4c1629a459d04b9aec743
   flutter_secure_storage: 23fc622d89d073675f2eaa109381aefbcf5a49be
   flutter_web_auth_2: a1bc00762c408a8f80b72a538cd7ff5b601c3e71
+  home_widget: 0434835a4c9a75704264feff6be17ea40e0f0d57
   open_filex: 6e26e659846ec990262224a12ef1c528bb4edbe4
   path_provider_foundation: c68054786f1b4f3343858c1e1d0caaded73f0be9
   SDWebImage: 25bac438318faf37e35650619ebc288a9061d292
@@ -109,4 +115,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 7368163408c647b7eb699d0d788ba6718e18fb8d
 
-COCOAPODS: 1.11.3
+COCOAPODS: 1.12.0
