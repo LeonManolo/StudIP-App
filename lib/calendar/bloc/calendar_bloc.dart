@@ -90,7 +90,7 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
   }
 
   Future<CalendarWeekData> _fetchCalendarSchedule(DateTime day) async {
-    return _calendarRepository.getCalenderSchedule(
+    return _calendarRepository.getCalendarSchedule(
       userId: _authenticationRepository.currentUser.id,
       requestedSemester: day,
       currentDateTime: DateTime.now(),

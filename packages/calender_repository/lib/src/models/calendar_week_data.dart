@@ -23,7 +23,7 @@ class CalendarWeekData {
             currentDateTime.day,
             timeframe.start.hours,
             timeframe.start.minutes,
-          );
+          ).toUtc();
           if (!_shouldIncludeScheduleEntry(
             scheduleEntryData: scheduleData,
             scheduleEntryStart: startDate,

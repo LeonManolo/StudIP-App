@@ -7,7 +7,7 @@ class CalenderRepository {
   }) : _apiClient = apiClient;
   final StudIPCalendarClient _apiClient;
 
-  Future<CalendarWeekData> getCalenderSchedule({
+  Future<CalendarWeekData> getCalendarSchedule({
     required String userId,
     required DateTime currentDateTime,
     DateTime? requestedSemester,
