@@ -33,7 +33,7 @@ class DataProvider {
                       let endDate = Calendar.german.today(at: attributes.end),
                       startDate >= Date() else { return nil }
                 
-                if Calendar.german.isDate(in: attributes.recurrence, date: startDate) ?? true {
+                if Calendar.german.is(date: startDate, in: attributes.recurrence) ?? true {
                     return ScheduleItem(
                         startDate: startDate,
                         endDate: endDate,

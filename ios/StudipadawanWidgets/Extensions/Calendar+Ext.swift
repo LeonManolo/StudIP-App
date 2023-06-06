@@ -27,7 +27,7 @@ extension Calendar {
     
     typealias ReccurenceInfo = ScheduleResponse.Data.Attribute.Recurrence
     
-    func isDate(in reccurenceInfo: ReccurenceInfo?, date: Date) -> Bool? {
+    func `is`(date: Date, in reccurenceInfo: ReccurenceInfo?) -> Bool? {
         guard let reccurenceInfo, reccurenceInfo.freq == "WEEKLY" else { return nil }
         guard date >= reccurenceInfo.firstOccurence, date <= reccurenceInfo.lastOccurence else { return false }
         

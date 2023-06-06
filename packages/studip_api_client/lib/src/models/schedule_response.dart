@@ -3,26 +3,26 @@
 /// data : [{"type":"schedule-entries","id":"1","attributes":{"title":"Meeting","description":"Meeting am Mittwoch","start":"12:15","end":"13:45","weekday":3,"color":"12"},"relationships":{"owner":{"links":{"related":"/jsonapi.php/v1/users/4924eb9d441c495ebeaf237567f17aa2"},"data":{"type":"users","id":"4924eb9d441c495ebeaf237567f17aa2"}}},"links":{"self":"/jsonapi.php/v1/schedule-entries/1"}},{"type":"seminar-cycle-dates","id":"14d7461f94f9a86dfb21537d0ff1dada","attributes":{"title":"Theoretische Informatik","description":null,"start":"10:00","end":"11:30","weekday":3,"recurrence":{"FREQ":"WEEKLY","INTERVAL":1,"DTSTART":"2023-04-12T10:00:00+02:00","UNTIL":"2023-07-12T10:00:00+02:00"},"locations":["HÃ¶rsaal 1"]},"relationships":{"owner":{"links":{"related":"/jsonapi.php/v1/courses/076ef4c2a9b3e0f99d73c5333d54d22a"},"data":{"type":"courses","id":"076ef4c2a9b3e0f99d73c5333d54d22a"}}},"links":{"self":"/jsonapi.php/v1/seminar-cycle-dates/14d7461f94f9a86dfb21537d0ff1dada"}},{"type":"seminar-cycle-dates","id":"d5ff07b569cc369b0e0ff8dc2c95f1bf","attributes":{"title":"Software-Architektur","description":null,"start":"10:00","end":"11:30","weekday":4,"recurrence":{"FREQ":"WEEKLY","INTERVAL":1,"DTSTART":"2023-04-13T10:00:00+02:00","UNTIL":"2023-07-13T10:00:00+02:00","EXDATES":["2023-05-18T10:00:00+02:00"]},"locations":["Seminarraum 1"]},"relationships":{"owner":{"links":{"related":"/jsonapi.php/v1/courses/7532b23f5aebe38cf14c7a50a412c47b"},"data":{"type":"courses","id":"7532b23f5aebe38cf14c7a50a412c47b"}}},"links":{"self":"/jsonapi.php/v1/seminar-cycle-dates/d5ff07b569cc369b0e0ff8dc2c95f1bf"}}]
 
 class ScheduleResponse {
-  ScheduleResponse({required this.meta, required this.data});
+  ScheduleResponse({required this.meta, required this.scheduleEntries});
 
   factory ScheduleResponse.fromJson(Map<String, dynamic> json) {
     final meta = Meta.fromJson(json['meta']);
-    final List<Data> data = [];
+    final List<ScheduleEntryData> data = [];
     if (json['data'] != null) {
       json['data'].forEach((v) {
-        data.add(Data.fromJson(v));
+        data.add(ScheduleEntryData.fromJson(v));
       });
     }
-    return ScheduleResponse(meta: meta, data: data);
+    return ScheduleResponse(meta: meta, scheduleEntries: data);
   }
 
   Meta meta;
-  List<Data> data;
+  List<ScheduleEntryData> scheduleEntries;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['meta'] = meta.toJson();
-    map['data'] = data.map((v) => v.toJson()).toList();
+    map['data'] = scheduleEntries.map((v) => v.toJson()).toList();
     return map;
   }
 }
@@ -33,8 +33,8 @@ class ScheduleResponse {
 /// relationships : {"owner":{"links":{"related":"/jsonapi.php/v1/users/4924eb9d441c495ebeaf237567f17aa2"},"data":{"type":"users","id":"4924eb9d441c495ebeaf237567f17aa2"}}}
 /// links : {"self":"/jsonapi.php/v1/schedule-entries/1"}
 
-class Data {
-  Data({
+class ScheduleEntryData {
+  ScheduleEntryData({
     required this.type,
     required this.id,
     this.attributes,
@@ -42,7 +42,7 @@ class Data {
     this.links,
   });
 
-  factory Data.fromJson(Map<String, dynamic> json) {
+  factory ScheduleEntryData.fromJson(Map<String, dynamic> json) {
     final String type = json['type'];
     final String id = json['id'];
     final attributes = json['attributes'] != null
@@ -52,7 +52,7 @@ class Data {
         ? Relationships.fromJson(json['relationships'])
         : null;
     final links = json['links'] != null ? Links.fromJson(json['links']) : null;
-    return Data(
+    return ScheduleEntryData(
         type: type,
         id: id,
         attributes: attributes,
