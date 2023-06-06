@@ -1,3 +1,4 @@
+import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:studipadawan/messages/message_details/view/message_detail_page.dart';
@@ -78,16 +79,11 @@ class OutboxMessageWidgetState extends State<OutboxMessageWidget> {
                     }
                   else
                     {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute<MessageDetailpage>(
-                          builder: (context) => MessageDetailpage(
-                            isInbox: false,
-                            message: message,
-                            refreshMessages: _refreshOutboxMessages,
-                          ),
-                        ),
-                      )
+                  Navigator.of(context).pushAdaptive(context, MessageDetailpage(
+                isInbox: false,
+                message: message,
+                refreshMessages: _refreshOutboxMessages,
+              ))
                     }
                 },
                 onLongPressFunction: () =>

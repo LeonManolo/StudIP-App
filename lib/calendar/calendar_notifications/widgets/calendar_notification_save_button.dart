@@ -20,27 +20,22 @@ class CalendarNotificationSaveButton extends StatelessWidget {
     final selectedNotifications = _selectedNotificationsCount();
     final maxReached = selectedNotifications > totalNotifications;
 
-    return InkWell(
-      onTap: maxReached ? () => _showErrorSnackBar(context) : onTap,
-      child: Container(
-        color: maxReached ? Colors.red : context.adaptivePrimaryColor,
-        alignment: Alignment.center,
-        width: MediaQuery.of(context).size.width,
-        padding: const EdgeInsets.only(
-          left: AppSpacing.sm,
-          right: AppSpacing.sm,
-          top: AppSpacing.xlg,
-          bottom: AppSpacing.xlg,
-        ),
-        child: SafeArea(
-          child: Text(
-            '$selectedNotifications/$totalNotifications Benachrichtigungen speichern',
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w500,
-                ),
-          ),
-        ),
+    return Container(
+      color: maxReached ? Colors.red : context.adaptivePrimaryColor,
+      alignment: Alignment.center,
+      width: MediaQuery.of(context).size.width,
+      padding: const EdgeInsets.only(
+        left: AppSpacing.sm,
+        right: AppSpacing.sm,
+        top: AppSpacing.xlg,
+        bottom: AppSpacing.xlg,
+      ),
+      child: Text(
+        '$selectedNotifications/$totalNotifications Benachrichtigungen speichern',
+        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+              color: Colors.white,
+              fontWeight: FontWeight.w500,
+            ),
       ),
     );
   }

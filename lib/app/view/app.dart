@@ -105,7 +105,7 @@ class AppView extends StatelessWidget {
           iosUsesMaterialWidgets: true,
       ),
       builder: (context) => PlatformTheme(
-        themeMode: ThemeMode.light,
+        themeMode: ThemeMode.system,
         materialLightTheme: const LightMaterialAppTheme().themeData,
         materialDarkTheme: materialDarkTheme,
         cupertinoDarkTheme: cupertinoDarkTheme2,

@@ -1,5 +1,6 @@
 import 'package:app_ui/app_ui.dart';
 import 'package:authentication_repository/authentication_repository.dart';
+import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -114,7 +115,9 @@ class MessagesPageState extends State<MessagesPage>
       child: PlatformScaffold(
         material: (_, __) => MaterialScaffoldData(
           floatingActionButton: FloatingActionButton(onPressed: () {}),
-          appBar: AppBar(title: const Text('Nachrichten'), actions: [
+          ),
+        appBar: PlatformAppBar(
+          trailingActions: [
             BlocBuilder<TabBarBloc, TabBarState>(
               builder: (context, state) {
                 return Row(
@@ -122,24 +125,32 @@ class MessagesPageState extends State<MessagesPage>
                   children: [
                     Visibility(
                       visible: state.filterIconVisible,
-                      child: MessageFilterButton(
-                        setFilter: _handleFilterSelection,
-                        currentFilter: _inboxMessageBloc.state.currentFilter,
+                      child: PlatformPopupMenu(
+                        options: [
+                          PopupMenuOption(label: 'Alle Nachrichten', onTap: (_) {
+                            _handleFilterSelection(MessageFilter.none);
+                          },),
+                          PopupMenuOption(label: 'Unglesene Nachrichten', onTap: (_) {
+                            _handleFilterSelection(MessageFilter.unread);
+                          },),
+                        ],
+                        icon: Icon(
+                          EvaIcons.moreVerticalOutline,
+                        ),
                       ),
                     ),
-                    Visibility(
-                      visible: state.menuIconVisible,
-                      child: MessageMenuButton(
-                        markAll: _markAll,
-                        unmarkAll: _unmarkAll,
-                      ),
-                    ),
+                    // Visibility(
+                    //   visible: state.menuIconVisible,
+                    //   child: MessageMenuButton(
+                    //     markAll: _markAll,
+                    //     unmarkAll: _unmarkAll,
+                    //   ),
+                    // ),
                   ],
                 );
               },
-            ),
+            )
           ],
-          ),
         ),
         cupertino: (_, __) => CupertinoPageScaffoldData(
             navigationBar: CupertinoNavigationBar(
@@ -152,19 +163,27 @@ class MessagesPageState extends State<MessagesPage>
                       children: [
                         Visibility(
                           visible: state.filterIconVisible,
-                          child: MessageFilterButton(
-                            setFilter: _handleFilterSelection,
-                            currentFilter:
-                                _inboxMessageBloc.state.currentFilter,
+                          child: PlatformPopupMenu(
+                            options: [
+                              PopupMenuOption(label: 'Alle Nachrichten', onTap: (_) {
+                                _handleFilterSelection(MessageFilter.none);
+                              },),
+                              PopupMenuOption(label: 'Unglesene Nachrichten', onTap: (_) {
+                                _handleFilterSelection(MessageFilter.unread);
+                              },),
+                            ],
+                            icon: const Icon(
+                              CupertinoIcons.ellipsis,
+                            ),
                           ),
                         ),
-                        Visibility(
-                          visible: state.menuIconVisible,
-                          child: MessageMenuButton(
-                            markAll: _markAll,
-                            unmarkAll: _unmarkAll,
-                          ),
-                        ),
+                        // Visibility(
+                        //   visible: state.menuIconVisible,
+                        //   child: MessageMenuButton(
+                        //     markAll: _markAll,
+                        //     unmarkAll: _unmarkAll,
+                        //   ),
+                        // ),
                       ],
                     );
                   },

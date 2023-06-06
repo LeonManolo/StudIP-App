@@ -46,7 +46,14 @@ class CalendarPage extends StatelessWidget {
                 cupertinoIcon: CupertinoIcons.bell,
                 materialIcon: EvaIcons.bellOutline,
                 onPressed: () {
-                  Navigator.of(context).push(CalendarScheduleNotificationsPage.page().createRoute(context));
+
+                  Navigator.of(context).pushAdaptive(
+                    context,
+                    const CalendarScheduleNotificationsPage(),
+                  );
+
+
+                  //Navigator.of(context).push(CalendarScheduleNotificationsPage.page().createRoute(context));
                 },
             ),
             IconButton(

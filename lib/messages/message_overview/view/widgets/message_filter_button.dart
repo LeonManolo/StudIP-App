@@ -27,15 +27,11 @@ class MessageFilterButton extends StatelessWidget {
       onSelected: (newFilter) => {setFilter(newFilter)},
       itemBuilder: (context) => [
         PopupMenuItem<MessageFilter>(
-          value: MessageFilter.none,
-          child: FilterItem(
-            isSelected: currentFilter == MessageFilter.none,
-            filter: MessageFilter.none,
-            funnelIcon:
-                funnelIcon(currentFilter, Colors.black),
-            filterDescription: MessageFilter.none.description,
-          ),
-        ),
+            value: MessageFilter.none,
+            child: ListTile(
+            title: Text(MessageFilter.none.description),
+            trailing: currentFilter == MessageFilter.none ? const Icon(EvaIcons.checkmark) : null,
+        )),
         PopupMenuItem<MessageFilter>(
           value: MessageFilter.unread,
           child: FilterItem(
