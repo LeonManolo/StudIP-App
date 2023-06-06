@@ -7,31 +7,32 @@
 
 import Foundation
 
-class DataProvider {
+public class DataProvider {
     private let oauthClient: OAuthClient
     private let cacheProvider: CacheProvider
     
-    init(oauthClient: OAuthClient, cacheProvider: CacheProvider) {
+    public init(oauthClient: OAuthClient, cacheProvider: CacheProvider) {
         self.oauthClient = oauthClient
         self.cacheProvider = cacheProvider
     }
     
-    func loadRemoteScheduleItems() async throws -> [ScheduleItem] {
-        let currentUser: UserResponse = try await oauthClient.get(rawUrlString: "http://miezhaus.feste-ip.net:55109/jsonapi.php/v1/users/me")
+    /// - Parameter date: The current Date. Injectable for testing purposes
+    public func loadRemoteScheduleItems(for date: Date) async throws -> [ScheduleItem] {
+        let currentUser: UserResponse = try await oauthClient.get(rawUrlString: "http://miezhaus.feste-ip.net:55109/jsonapi.php/v1/users/me", queryItems: [])
         
         let eventRawUrlString = "http://miezhaus.feste-ip.net:55109/jsonapi.php/v1/users/\(currentUser.data.id)/schedule"
-        let scheduleResponse: ScheduleResponse = try await oauthClient.get(rawUrlString: eventRawUrlString)
+        let scheduleResponse: ScheduleResponse = try await oauthClient.get(rawUrlString: eventRawUrlString, queryItems: [])
         
         
-        guard let currentDay = Date().weekday else { return [] }
+        guard let currentDay = date.weekday else { return [] }
         
         let scheduleItems: [ScheduleItem] = scheduleResponse.data
             .compactMap { scheduleData in
                 let attributes = scheduleData.attributes
                 guard currentDay == attributes.weekday.rawValue,
-                      let startDate = Calendar.german.today(at: attributes.start),
-                      let endDate = Calendar.german.today(at: attributes.end),
-                      startDate >= Date() else { return nil }
+                      let startDate = Calendar.german.set(hourMinuteFrom: attributes.start, for: date),
+                      let endDate = Calendar.german.set(hourMinuteFrom: attributes.end, for: date),
+                      startDate >= date else { return nil }
                 
                 if Calendar.german.is(date: startDate, in: attributes.recurrence) ?? true {
                     return ScheduleItem(
@@ -50,8 +51,7 @@ class DataProvider {
         return scheduleItems
     }
     
-    func fetchLocalScheduleItems() -> [ScheduleItem] {
+    public func fetchLocalScheduleItems() -> [ScheduleItem] {
         cacheProvider.scheduleItems()
     }
-    
 }

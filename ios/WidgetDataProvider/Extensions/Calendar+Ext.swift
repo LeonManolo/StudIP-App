@@ -14,15 +14,15 @@ extension Calendar {
         return calendar
     }()
     
-    func today(at hourMinuteString: String) -> Date? {
+    func set(hourMinuteFrom hourMinuteString: String, for baseDate: Date) -> Date? {
         guard let hourMinuteDate = DateFormatter.hourMinuteFormatter.date(from: hourMinuteString) else { return nil }
               
         let timeComponents = dateComponents([.hour, .minute], from: hourMinuteDate)
         guard let hourValue = timeComponents.hour,
               let minuteValue = timeComponents.minute,
-              let date = date(bySetting: .hour, value: hourValue, of: Calendar.german.startOfDay(for: Date())) else { return nil }
+              let newBaseDate = self.date(bySetting: .hour, value: hourValue, of: Calendar.german.startOfDay(for: baseDate)) else { return nil }
         
-        return self.date(bySetting: .minute, value: minuteValue, of: date)
+        return self.date(bySetting: .minute, value: minuteValue, of: newBaseDate)
     }
     
     typealias ReccurenceInfo = ScheduleResponse.Data.Attribute.Recurrence
@@ -33,14 +33,17 @@ extension Calendar {
         
         var currentOccurence = reccurenceInfo.firstOccurence
         var allOccurences = [Date]()
+        let excludedDates = reccurenceInfo.excludedDates ?? []
+        
         while currentOccurence <= reccurenceInfo.lastOccurence {
-            allOccurences.append(currentOccurence)
+            if !excludedDates.contains(currentOccurence) {
+                allOccurences.append(currentOccurence)
+            }
+            
             guard let newOccurence = self.date(byAdding: .weekOfYear, value: reccurenceInfo.interval, to: currentOccurence) else { break }
             currentOccurence = newOccurence
         }
         
-        return allOccurences.first { occurence in
-            isDate(date, inSameDayAs: occurence) // to avoid issues with different timezones
-        } != nil
+        return allOccurences.contains(date)
     }
 }

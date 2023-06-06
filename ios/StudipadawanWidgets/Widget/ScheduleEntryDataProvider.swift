@@ -7,6 +7,7 @@
 
 import SwiftUI
 import WidgetKit
+import WidgetDataProvider
 
 struct ScheduleWidgetTimelineEntry: TimelineEntry {
     let date: Date
@@ -25,13 +26,6 @@ struct ScheduleWidgetTimelineEntry: TimelineEntry {
     )
 }
 
-struct ScheduleItem: Hashable, Codable {
-    let startDate: Date
-    let endDate: Date
-    let title: String
-    let locations: [String]?
-}
-
 struct ScheduleEntryDataProvider: TimelineProvider {
     let dataProvider: DataProvider
     
@@ -48,7 +42,7 @@ struct ScheduleEntryDataProvider: TimelineProvider {
 
     func getTimeline(in context: Context, completion: @escaping (Timeline<ScheduleWidgetTimelineEntry>) -> ()) {
         Task {
-            let currentItems = (try? await dataProvider.loadRemoteScheduleItems()) ?? []
+            let currentItems = (try? await dataProvider.loadRemoteScheduleItems(for: Date())) ?? []
             let entry = ScheduleWidgetTimelineEntry(date: Date(), items: currentItems)
 
             if let nextReloadDate = Calendar.current.date(byAdding: .minute, value: 30, to: Date()) {

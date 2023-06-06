@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import WidgetDataProvider
 
 struct CalendarEntryView: View {
     let hourMinuteDateFormatter: DateFormatter
