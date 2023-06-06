@@ -1,4 +1,3 @@
-
 /// meta : {"semester":"/jsonapi.php/v1/semesters/322f640f3f4643ebe514df65f1163eb1"}
 /// links : {"self":"/jsonapi.php/v1/users/4924eb9d441c495ebeaf237567f17aa2/schedule?filter%5Btimestamp%5D=1680300000"}
 /// data : [{"type":"schedule-entries","id":"1","attributes":{"title":"Meeting","description":"Meeting am Mittwoch","start":"12:15","end":"13:45","weekday":3,"color":"12"},"relationships":{"owner":{"links":{"related":"/jsonapi.php/v1/users/4924eb9d441c495ebeaf237567f17aa2"},"data":{"type":"users","id":"4924eb9d441c495ebeaf237567f17aa2"}}},"links":{"self":"/jsonapi.php/v1/schedule-entries/1"}},{"type":"seminar-cycle-dates","id":"14d7461f94f9a86dfb21537d0ff1dada","attributes":{"title":"Theoretische Informatik","description":null,"start":"10:00","end":"11:30","weekday":3,"recurrence":{"FREQ":"WEEKLY","INTERVAL":1,"DTSTART":"2023-04-12T10:00:00+02:00","UNTIL":"2023-07-12T10:00:00+02:00"},"locations":["HÃ¶rsaal 1"]},"relationships":{"owner":{"links":{"related":"/jsonapi.php/v1/courses/076ef4c2a9b3e0f99d73c5333d54d22a"},"data":{"type":"courses","id":"076ef4c2a9b3e0f99d73c5333d54d22a"}}},"links":{"self":"/jsonapi.php/v1/seminar-cycle-dates/14d7461f94f9a86dfb21537d0ff1dada"}},{"type":"seminar-cycle-dates","id":"d5ff07b569cc369b0e0ff8dc2c95f1bf","attributes":{"title":"Software-Architektur","description":null,"start":"10:00","end":"11:30","weekday":4,"recurrence":{"FREQ":"WEEKLY","INTERVAL":1,"DTSTART":"2023-04-13T10:00:00+02:00","UNTIL":"2023-07-13T10:00:00+02:00","EXDATES":["2023-05-18T10:00:00+02:00"]},"locations":["Seminarraum 1"]},"relationships":{"owner":{"links":{"related":"/jsonapi.php/v1/courses/7532b23f5aebe38cf14c7a50a412c47b"},"data":{"type":"courses","id":"7532b23f5aebe38cf14c7a50a412c47b"}}},"links":{"self":"/jsonapi.php/v1/seminar-cycle-dates/d5ff07b569cc369b0e0ff8dc2c95f1bf"}}]
@@ -197,6 +196,7 @@ class Attributes {
     this.weekday,
     this.color,
     required this.locations,
+    required this.recurrence,
   });
 
   Attributes.fromJson(Map<String, dynamic> json) {
@@ -206,7 +206,11 @@ class Attributes {
     end = json['end'];
     weekday = json['weekday'];
     color = json['color'];
-    locations = json['locations'] != null ? json['locations'].cast<String>() : [];
+    locations =
+        json['locations'] != null ? json['locations'].cast<String>() : [];
+    recurrence = json['recurrence'] != null
+        ? Recurrence.fromJson(json['recurrence'])
+        : null;
   }
 
   late final String? title;
@@ -216,6 +220,7 @@ class Attributes {
   late final int? weekday;
   late final String? color;
   late final List<String> locations;
+  late final Recurrence? recurrence;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
@@ -229,7 +234,32 @@ class Attributes {
   }
 }
 
-/// semester : "/jsonapi.php/v1/semesters/322f640f3f4643ebe514df65f1163eb1"
+class Recurrence {
+  final String freq;
+  final int interval;
+  final String firstOccurenceDateString;
+  final String lastOccurenceDateString;
+  final List<String> excludedDates;
+
+  Recurrence({
+    required this.freq,
+    required this.interval,
+    required this.firstOccurenceDateString,
+    required this.lastOccurenceDateString,
+    required this.excludedDates,
+  });
+
+  factory Recurrence.fromJson(Map<String, dynamic> json) {
+    return Recurrence(
+      freq: json["FREQ"],
+      interval: json["INTERVAL"],
+      firstOccurenceDateString: json["DTSTART"],
+      lastOccurenceDateString: json["UNTIL"],
+      excludedDates:
+          json["EXDATES"] != null ? json["EXDATES"].cast<String>() : [],
+    );
+  }
+}
 
 class Meta {
   Meta({

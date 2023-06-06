@@ -14,7 +14,7 @@ class CalendarTimeframesBody extends StatefulWidget {
   });
   final DateTime date;
   final List<CalendarTimeframe> scheduleStructure;
-  final Map<Weekdays, Map<String, List<CalendarEntryData>>> scheduleData;
+  final Map<Weekday, Map<String, List<CalendarEntryData>>> scheduleData;
 
   @override
   State<CalendarTimeframesBody> createState() => _CalendarTimeframesBodyState();
@@ -39,7 +39,7 @@ class _CalendarTimeframesBodyState extends State<CalendarTimeframesBody> {
 
   @override
   Widget build(BuildContext context) {
-    final weekday = Weekdays.indexToWeekday(widget.date.weekday - 1);
+    final weekday = Weekday.fromIndex(widget.date.weekday - 1);
 
     return Padding(
       padding: const EdgeInsets.only(right: AppSpacing.lg),
