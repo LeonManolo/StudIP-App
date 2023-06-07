@@ -25,10 +25,10 @@ public class DefaultOAuthClient: OAuthClient {
         baseUrl: "http://miezhaus.feste-ip.net:55109/jsonapi.php/v1/"
     )
     
-    let tokenUrlString: String
-    let clientId: String
-    let keychain: Keychain
-    let baseUrl: String
+    private let tokenUrlString: String
+    private let clientId: String
+    private let keychain: Keychain
+    private let baseUrl: String
     
     public init(tokenUrlString: String, clientId: String, keychain: Keychain, baseUrl: String) {
         self.tokenUrlString = tokenUrlString
@@ -37,6 +37,13 @@ public class DefaultOAuthClient: OAuthClient {
         self.baseUrl = baseUrl
     }
     
+    /// Generic method to execute a GET Request for the given `rawUrlString` with the passed `queryItems`
+    /// If a token refresh is required, it's automatically executed before the GET-Request.
+    /// If no Refresh- and/or Access-Token is present, this method fails.
+    /// - Parameters:
+    ///   - rawUrlString: Full URL-String
+    ///   - queryItems: Query-Items to use
+    /// - Returns: Decoded Result based on `T`
     public func get<T: Codable>(rawUrlString: String, queryItems: [URLQueryItem] = []) async throws -> T {
         guard let rawKeychainContentData = keychain[string: tokenUrlString]?.data(using: .utf8) else { throw OAuthClientError.keychainContentNotReadable(key: tokenUrlString) }
         var keychainContent = try jsonDecoder(dateDecodingStrategy: .millisecondsSince1970).decode(KeychainContent.self, from: rawKeychainContentData)
@@ -59,6 +66,7 @@ public class DefaultOAuthClient: OAuthClient {
         return try jsonDecoder(dateDecodingStrategy: .iso8601).decode(T.self, from: data)
     }
     
+    /// Refreshes the Access-Token with the stored Refresh-Token. After a successfull refresh both tokens are updated and stored in the keychain.
     private func refreshToken() async throws {
         guard let rawKeychainContentData = keychain[string: tokenUrlString]?.data(using: .utf8), let tokenUrl = URL(string: tokenUrlString) else { throw OAuthClientError.keychainContentNotReadable(key: tokenUrlString) }
         let keychainContent = try jsonDecoder(dateDecodingStrategy: .millisecondsSince1970).decode(KeychainContent.self, from: rawKeychainContentData)

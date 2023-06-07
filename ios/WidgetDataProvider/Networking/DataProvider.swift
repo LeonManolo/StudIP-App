@@ -16,7 +16,10 @@ public class DataProvider {
         self.cacheProvider = cacheProvider
     }
     
+    /// This method can be used to load all `ScheduleItem`s for a given `date` from Stud.IP. The result is filtered based on interval and excluded dates.
+    /// Only schedule entries which have a later `startDate` compared to the injected `date` are returned.
     /// - Parameter date: The current Date. Injectable for testing purposes
+    /// - Returns: Loaded `ScheduleItem`s sorted ascending based on `startDate`
     public func loadRemoteScheduleItems(for date: Date) async throws -> [ScheduleItem] {
         let currentUser: UserResponse = try await oauthClient.get(rawUrlString: "http://miezhaus.feste-ip.net:55109/jsonapi.php/v1/users/me", queryItems: [])
         
@@ -51,6 +54,7 @@ public class DataProvider {
         return scheduleItems
     }
     
+    /// Fetches the current cached `ScheduleItem`s
     public func fetchLocalScheduleItems() -> [ScheduleItem] {
         cacheProvider.scheduleItems()
     }
