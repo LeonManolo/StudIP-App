@@ -13,7 +13,7 @@ final class DataProviderTests: XCTestCase {
     private var cacheProvider: MockedCacheProvider!
     private var sut: DataProvider!
     
-    private func setUpSut() {
+    private func setupSut() {
         oauthClient = MockedOAuthClient()
         cacheProvider = MockedCacheProvider()
         sut = DataProvider(oauthClient: oauthClient, cacheProvider: cacheProvider)
@@ -22,7 +22,7 @@ final class DataProviderTests: XCTestCase {
     // MARK: - loadRemoteScheduleItems
     
     func test_loadRemoteScheduleItems_returnScheduleEntry() async throws {
-        setUpSut()
+        setupSut()
 
         let date = try XCTUnwrap(Calendar.german.date(from: DateComponents(year: 2023, month: 5, day: 15, hour: 14, minute: 0)))
         let scheduleItems = try await sut.loadRemoteScheduleItems(for: date)
@@ -32,7 +32,7 @@ final class DataProviderTests: XCTestCase {
     }
     
     func test_loadRemoteScheduleItems_returnNoScheduleEntry_tooLate() async throws {
-        setUpSut()
+        setupSut()
 
         let date = try XCTUnwrap(Calendar.german.date(from: DateComponents(year: 2023, month: 5, day: 15, hour: 14, minute: 1)))
         let scheduleItems = try await sut.loadRemoteScheduleItems(for: date)
@@ -41,7 +41,7 @@ final class DataProviderTests: XCTestCase {
     }
     
     func test_loadRemoteScheduleItems_returnNoScheduleEntry_excludedDate() async throws {
-        setUpSut()
+        setupSut()
 
         let date = try XCTUnwrap(Calendar.german.date(from: DateComponents(year: 2023, month: 5, day: 1, hour: 14, minute: 0)))
         let scheduleItems = try await sut.loadRemoteScheduleItems(for: date)
@@ -50,7 +50,7 @@ final class DataProviderTests: XCTestCase {
     }
     
     func test_loadRemoteScheduleItems_returnNoScheduleEntry_2WeekInterval() async throws {
-        setUpSut()
+        setupSut()
 
         let date = try XCTUnwrap(Calendar.german.date(from: DateComponents(year: 2023, month: 6, day: 19, hour: 14, minute: 0)))
         let scheduleItems = try await sut.loadRemoteScheduleItems(for: date)

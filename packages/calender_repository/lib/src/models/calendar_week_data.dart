@@ -66,27 +66,27 @@ class CalendarWeekData {
     final recurrenceInfo = scheduleEntryData.attributes?.recurrence;
     if (recurrenceInfo == null) return true;
 
-    final firstOccurence =
-        DateTime.parse(recurrenceInfo.firstOccurenceDateString);
-    final lastOccurence =
-        DateTime.parse(recurrenceInfo.lastOccurenceDateString);
+    final firstOccurrence =
+        DateTime.parse(recurrenceInfo.firstOccurrenceDateString);
+    final lastOccurrence =
+        DateTime.parse(recurrenceInfo.lastOccurrenceDateString);
 
-    final List<DateTime> allOccurences = [];
+    final List<DateTime> allOccurrences = [];
     final List<DateTime> excludedDates =
         recurrenceInfo.excludedDates.map(DateTime.parse).toList();
 
-    var currentOccurence = firstOccurence;
-    while (currentOccurence.isBefore(lastOccurence) ||
-        currentOccurence.isAtSameMomentAs(lastOccurence)) {
-      if (!excludedDates.contains(currentOccurence)) {
-        allOccurences.add(currentOccurence);
+    var currentOccurrence = firstOccurrence;
+    while (currentOccurrence.isBefore(lastOccurrence) ||
+        currentOccurrence.isAtSameMomentAs(lastOccurrence)) {
+      if (!excludedDates.contains(currentOccurrence)) {
+        allOccurrences.add(currentOccurrence);
       }
 
-      currentOccurence =
-          currentOccurence.add(Duration(days: 7 * recurrenceInfo.interval));
+      currentOccurrence =
+          currentOccurrence.add(Duration(days: 7 * recurrenceInfo.interval));
     }
 
-    return allOccurences.contains(scheduleEntryStart);
+    return allOccurrences.contains(scheduleEntryStart);
   }
 
   static CalendarTimeframe? _toCalenderTimeframe(Attributes? attributes) {

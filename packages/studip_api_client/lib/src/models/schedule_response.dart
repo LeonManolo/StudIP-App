@@ -237,15 +237,15 @@ class Attributes {
 class Recurrence {
   final String freq;
   final int interval;
-  final String firstOccurenceDateString;
-  final String lastOccurenceDateString;
+  final String firstOccurrenceDateString;
+  final String lastOccurrenceDateString;
   final List<String> excludedDates;
 
   Recurrence({
     required this.freq,
     required this.interval,
-    required this.firstOccurenceDateString,
-    required this.lastOccurenceDateString,
+    required this.firstOccurrenceDateString,
+    required this.lastOccurrenceDateString,
     required this.excludedDates,
   });
 
@@ -253,8 +253,8 @@ class Recurrence {
     return Recurrence(
       freq: json["FREQ"],
       interval: json["INTERVAL"],
-      firstOccurenceDateString: json["DTSTART"],
-      lastOccurenceDateString: json["UNTIL"],
+      firstOccurrenceDateString: json["DTSTART"],
+      lastOccurrenceDateString: json["UNTIL"],
       excludedDates:
           json["EXDATES"] != null ? json["EXDATES"].cast<String>() : [],
     );

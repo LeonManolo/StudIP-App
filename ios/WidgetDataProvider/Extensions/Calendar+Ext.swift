@@ -29,21 +29,21 @@ extension Calendar {
     
     func `is`(date: Date, in reccurenceInfo: ReccurenceInfo?) -> Bool? {
         guard let reccurenceInfo, reccurenceInfo.freq == "WEEKLY" else { return nil }
-        guard date >= reccurenceInfo.firstOccurence, date <= reccurenceInfo.lastOccurence else { return false }
+        guard date >= reccurenceInfo.firstOccurrence, date <= reccurenceInfo.lastOccurrence else { return false }
         
-        var currentOccurence = reccurenceInfo.firstOccurence
-        var allOccurences = [Date]()
+        var currentOccurrence = reccurenceInfo.firstOccurrence
+        var allOccurrences = [Date]()
         let excludedDates = reccurenceInfo.excludedDates ?? []
         
-        while currentOccurence <= reccurenceInfo.lastOccurence {
-            if !excludedDates.contains(currentOccurence) {
-                allOccurences.append(currentOccurence)
+        while currentOccurrence <= reccurenceInfo.lastOccurrence {
+            if !excludedDates.contains(currentOccurrence) {
+                allOccurrences.append(currentOccurrence)
             }
             
-            guard let newOccurence = self.date(byAdding: .weekOfYear, value: reccurenceInfo.interval, to: currentOccurence) else { break }
-            currentOccurence = newOccurence
+            guard let newOccurrence = self.date(byAdding: .weekOfYear, value: reccurenceInfo.interval, to: currentOccurrence) else { break }
+            currentOccurrence = newOccurrence
         }
         
-        return allOccurences.contains(date)
+        return allOccurrences.contains(date)
     }
 }
