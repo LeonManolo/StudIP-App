@@ -34,9 +34,14 @@ class CalendarPage extends StatelessWidget {
         appBar: AppBar(
           title: const Text('Kalender'),
           actions: [
-            IconButton(onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) => const CalendarScheduleNotificationsPage()));
-            }, icon: const Icon(EvaIcons.bellOutline),),
+            IconButton(
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) =>
+                        const CalendarScheduleNotificationsPage()));
+              },
+              icon: const Icon(EvaIcons.bellOutline),
+            ),
             IconButton(
               onPressed: () {
                 calendarBloc.add(const CalendarSwitchLayoutRequested());
@@ -68,6 +73,7 @@ class CalendarPage extends StatelessWidget {
         body: Column(
           children: [
             CalendarHeader(
+              key: UniqueKey(),
               onDaySelected: (day) {
                 calendarBloc.add(CalendarExactDayRequested(exactDay: day));
               },

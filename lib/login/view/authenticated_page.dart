@@ -20,6 +20,13 @@ class AuthenticatedPage extends StatefulWidget {
 
 class _AuthenticatedPageState extends State<AuthenticatedPage> {
   int _selectedTab = 0;
+  late Key calendarPageKey;
+
+  @override
+  void initState() {
+    calendarPageKey = GlobalKey();
+    super.initState();
+  }
 
   @override
   void didChangeDependencies() {
@@ -37,6 +44,7 @@ class _AuthenticatedPageState extends State<AuthenticatedPage> {
     Logger().d(uri);
     setState(() {
       _selectedTab = 3;
+      calendarPageKey = GlobalKey();
     });
   }
 
@@ -45,11 +53,11 @@ class _AuthenticatedPageState extends State<AuthenticatedPage> {
     return Scaffold(
       body: IndexedStack(
         index: _selectedTab,
-        children: const [
-          HomePage(),
-          CoursesPage(),
-          MessagesPage(),
-          CalendarPage(),
+        children: [
+          const HomePage(),
+          const CoursesPage(),
+          const MessagesPage(),
+          CalendarPage(key: calendarPageKey),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
