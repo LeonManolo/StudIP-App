@@ -1,5 +1,7 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:home_widget/home_widget.dart';
+import 'package:logger/logger.dart';
 import 'package:studipadawan/calendar/view/calendar_page.dart';
 import 'package:studipadawan/courses/view/courses_page.dart';
 import 'package:studipadawan/home/view/home_page.dart';
@@ -18,6 +20,25 @@ class AuthenticatedPage extends StatefulWidget {
 
 class _AuthenticatedPageState extends State<AuthenticatedPage> {
   int _selectedTab = 0;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _checkForWidgetLaunch();
+    HomeWidget.widgetClicked.listen(_launchedFromWidget);
+  }
+
+  void _checkForWidgetLaunch() {
+    HomeWidget.initiallyLaunchedFromHomeWidget().then(_launchedFromWidget);
+  }
+
+  void _launchedFromWidget(Uri? uri) {
+    if (uri == null) return;
+    Logger().d(uri);
+    setState(() {
+      _selectedTab = 3;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
