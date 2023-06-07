@@ -83,16 +83,22 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
           ),
         );
       } catch (e) {
-        emit(CalendarFailure(
-            failureMessage: e.toString(), layout: state.layout));
+        emit(
+          CalendarFailure(
+            failureMessage: e.toString(),
+            layout: state.layout,
+          ),
+        );
       }
     }
   }
 
-  Future<CalendarWeekData> _fetchCalendarSchedule(DateTime day) async {
+  Future<CalendarWeekData> _fetchCalendarSchedule(
+    DateTime semesterDateTime,
+  ) async {
     return _calendarRepository.getCalendarSchedule(
       userId: _authenticationRepository.currentUser.id,
-      requestedSemester: day,
+      requestedSemester: semesterDateTime,
       currentDateTime: DateTime.now(),
     );
   }
