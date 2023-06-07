@@ -4,6 +4,7 @@ import 'package:courses_repository/courses_repository.dart';
 import 'package:files_repository/files_repository.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:home_widget/home_widget.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:local_notifications/local_notifications.dart';
@@ -43,6 +44,8 @@ Future<void> main() async {
         ? HydratedStorage.webStorageDirectory
         : await getApplicationDocumentsDirectory(),
   );
+
+  await HomeWidget.setAppGroupId('group.de.hs-flensburg.studipadawan');
 
   runApp(
     App(

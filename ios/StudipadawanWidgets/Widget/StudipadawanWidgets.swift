@@ -74,6 +74,7 @@ struct StudipadawanWidgets: Widget {
         ) { entry in
             StudipadawanWidgetsSystemMediumView(entry: entry)
                 .background(.ultraThinMaterial)
+                .widgetURL(URL(string: "studipadawan://tappedWidget?homeWidget"))
         }
         .configurationDisplayName("Stundenplan")
         .description("Alle Einträge des heutigen Stundenplans")
