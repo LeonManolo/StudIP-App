@@ -15,3 +15,6 @@ build-apk:
     - echo -e "keyAlias=upload" >> android/key.properties
     - echo -e "storeFile=upload-keystore.jks" >> android/key.properties
     - flutter build apk
+  artifacts:
+    paths:
+      - build/app/outputs/flutter-apk/
