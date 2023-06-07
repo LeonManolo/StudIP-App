@@ -1,16 +1,10 @@
-image: docker.miezhaus/studipadawan_flutter_arm64
+image: aljoscha992/studipadawan_flutter_amd64:latest
 
 variables:
   TARGET_BRANCH: "main"
 
 stages:
-  - Debug
   - Build
-
-debug:
-  stage: Debug
-  script:
-    - ls /home/developer/flutter/bin/cache/artifacts/engine/android-x64-release/linux-arm64/
 
 build-apk:
   stage: Build

@@ -39,13 +39,3 @@ RUN git clone https://github.com/flutter/flutter.git -b stable \
   && flutter config --android-sdk "$ANDROID_HOME" \
   && yes | flutter doctor --android-licenses \
   && flutter doctor
-
-# Patch flutter engine with glsl shaders
-RUN mkdir tmp \
-  && cd tmp \
-  && curl -O https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_$FLUTTER_VERSION-stable.tar.xz \
-  && tar -xvf flutter_linux_$FLUTTER_VERSION-stable.tar.xz flutter/bin/cache/artifacts/engine/linux-x64/shader_lib \
-  && tar -xvf flutter_linux_$FLUTTER_VERSION-stable.tar.xz flutter/bin/cache/artifacts/engine/android-arm64-release \
-  && cp -R flutter/bin/cache/artifacts/engine/linux-x64/shader_lib $FLUTTER_HOME/bin/cache/artifacts/engine/linux-arm64 \
-  && cp -R flutter/bin/cache/artifacts/engine/android-arm64-release $FLUTTER_HOME/bin/cache/artifacts/engine/
-
