@@ -1,4 +1,4 @@
-image: docker.miezhaus/studipadawan_flutter_arm64
+image: aljoscha992/studipadawan_flutter_amd64:latest
 
 variables:
   TARGET_BRANCH: "main"
