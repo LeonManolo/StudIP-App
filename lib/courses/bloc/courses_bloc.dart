@@ -11,10 +11,12 @@ class CoursesBloc extends HydratedBloc<CourseEvent, CoursesState> {
   CoursesBloc({
     required CourseRepository courseRepository,
     required AuthenticationRepository authenticationRepository,
+    required DateTime todayDateTime,
     SemesterSortOrder? initialSortOrder,
     SemesterFilter? initialFilter,
   })  : _courseRepository = courseRepository,
         _authenticationRepository = authenticationRepository,
+        _todayDateTime = todayDateTime,
         super(
           CoursesStateLoading(
             semesterFilter: initialFilter ?? SemesterFilter.all,
@@ -27,6 +29,7 @@ class CoursesBloc extends HydratedBloc<CourseEvent, CoursesState> {
   }
   final CourseRepository _courseRepository;
   final AuthenticationRepository _authenticationRepository;
+  final DateTime _todayDateTime;
   List<Semester> _allSemesters = [];
 
   @override
@@ -173,7 +176,7 @@ class CoursesBloc extends HydratedBloc<CourseEvent, CoursesState> {
           return true;
         case SemesterFilter.current:
           return semester.isCurrentSemester(
-            currentDateTime: DateTime.now().toLocal(),
+            currentDateTime: _todayDateTime.toLocal(),
           );
       }
     }).toList();

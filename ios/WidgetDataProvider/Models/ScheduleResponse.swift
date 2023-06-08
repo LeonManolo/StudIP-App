@@ -32,15 +32,15 @@ struct ScheduleResponse: Codable {
             struct Recurrence: Codable {
                 let freq: String
                 let interval: Int
-                let firstOccurence: Date
-                let lastOccurence: Date
+                let firstOccurrence: Date
+                let lastOccurrence: Date
                 let excludedDates: [Date]?
                 
                 private enum CodingKeys: String, CodingKey {
                     case freq = "FREQ"
                     case interval = "INTERVAL"
-                    case firstOccurence = "DTSTART"
-                    case lastOccurence = "UNTIL"
+                    case firstOccurrence = "DTSTART"
+                    case lastOccurrence = "UNTIL"
                     case excludedDates = "EXDATES"
                 }
             }

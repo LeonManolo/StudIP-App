@@ -20,6 +20,7 @@ class CoursesPage extends StatelessWidget {
       create: (context) => CoursesBloc(
         courseRepository: context.read<CourseRepository>(),
         authenticationRepository: context.read<AuthenticationRepository>(),
+        todayDateTime: DateTime.now(),
       )..add(CoursesRequested()),
       child: BlocBuilder<CoursesBloc, CoursesState>(
         builder: (context, state) {

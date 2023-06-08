@@ -57,7 +57,8 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
           ),
         );
       } catch (e) {
-        emit(CalendarFailure(failureMessage: e.toString(), layout: state.layout));
+        emit(CalendarFailure(
+            failureMessage: e.toString(), layout: state.layout));
       }
     }
   }
@@ -82,15 +83,23 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
           ),
         );
       } catch (e) {
-        emit(CalendarFailure(failureMessage: e.toString(), layout: state.layout));
+        emit(
+          CalendarFailure(
+            failureMessage: e.toString(),
+            layout: state.layout,
+          ),
+        );
       }
     }
   }
 
-  Future<CalendarWeekData> _fetchCalendarSchedule(DateTime day) async {
-    return _calendarRepository.getCalenderSchedule(
+  Future<CalendarWeekData> _fetchCalendarSchedule(
+    DateTime semesterDateTime,
+  ) async {
+    return _calendarRepository.getCalendarSchedule(
       userId: _authenticationRepository.currentUser.id,
-      dateTime: day,
+      requestedSemester: semesterDateTime,
+      currentDateTime: DateTime.now(),
     );
   }
 
@@ -114,7 +123,9 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
   }
 
   FutureOr<void> _onCalendarSwitchLayoutRequested(
-      CalendarSwitchLayoutRequested event, Emitter<CalendarState> emit,) {
+    CalendarSwitchLayoutRequested event,
+    Emitter<CalendarState> emit,
+  ) {
     if (state is CalendarPopulated) {
       final currentState = state as CalendarPopulated;
       final layout = currentState.layout == CalendarBodyType.list

@@ -7,21 +7,26 @@
 
 import Foundation
 
-class CacheProvider {
+public protocol CacheProvider {
+    func save(scheduleItems: [ScheduleItem])
+    func scheduleItems() -> [ScheduleItem]
+}
+
+public class DefaultCacheProvider: CacheProvider {
     let userDefaults: UserDefaults
     private let scheduleItemsKey = "scheduleItems"
     
-    init(userDefaults: UserDefaults) {
+    public init(userDefaults: UserDefaults) {
         self.userDefaults = userDefaults
     }
     
-    func save(scheduleItems: [ScheduleItem]) {
+    public func save(scheduleItems: [ScheduleItem]) {
         guard let encodedScheduleItems = try? JSONEncoder().encode(scheduleItems) else { return }
         
         userDefaults.set(encodedScheduleItems, forKey: scheduleItemsKey)
     }
     
-    func scheduleItems() -> [ScheduleItem] {
+    public func scheduleItems() -> [ScheduleItem] {
         guard let rawScheduleItems = userDefaults.data(forKey: scheduleItemsKey) else { return [] }
         
         return (try? JSONDecoder().decode([ScheduleItem].self, from: rawScheduleItems)) ?? []

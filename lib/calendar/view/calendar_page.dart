@@ -34,9 +34,14 @@ class CalendarPage extends StatelessWidget {
         appBar: AppBar(
           title: const Text('Kalender'),
           actions: [
-            IconButton(onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) => const CalendarScheduleNotificationsPage()));
-            }, icon: const Icon(EvaIcons.bellOutline),),
+            IconButton(
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) =>
+                        const CalendarScheduleNotificationsPage()));
+              },
+              icon: const Icon(EvaIcons.bellOutline),
+            ),
             IconButton(
               onPressed: () {
                 calendarBloc.add(const CalendarSwitchLayoutRequested());
@@ -93,8 +98,7 @@ class CalendarPage extends StatelessWidget {
                     );
                   }
                   if (state is CalendarPopulated) {
-                    final day =
-                        Weekdays.indexToWeekday(state.currentDay.weekday - 1);
+                    final day = Weekday.fromIndex(state.currentDay.weekday - 1);
                     final calendarWeekData = _transformCalendarData(state);
                     final calendarDayData = calendarWeekData[day] ?? [];
 
@@ -129,7 +133,7 @@ class CalendarPage extends StatelessWidget {
     );
   }
 
-  Map<Weekdays, List<CalendarEntryData>> _transformCalendarData(
+  Map<Weekday, List<CalendarEntryData>> _transformCalendarData(
     CalendarPopulated state,
   ) {
     return state.calendarWeekData.data.map(
