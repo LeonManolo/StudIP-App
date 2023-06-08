@@ -73,6 +73,7 @@ void main() {
       final sut = CoursesBloc(
         courseRepository: mockedCourseRepository,
         authenticationRepository: mockedAuthenticationRepository,
+        todayDateTime: DateTime(2023, 5, 28),
       );
 
       // all and asc
@@ -101,6 +102,7 @@ void main() {
       final sut = CoursesBloc(
         courseRepository: mockedCourseRepository,
         authenticationRepository: mockedAuthenticationRepository,
+        todayDateTime: DateTime(2023, 5, 28),
       );
 
       // all and asc
@@ -136,6 +138,7 @@ void main() {
         authenticationRepository: mockedAuthenticationRepository,
         initialFilter: SemesterFilter.all,
         initialSortOrder: SemesterSortOrder.asc,
+        todayDateTime: DateTime(2023, 5, 28),
       ),
       act: (bloc) => bloc.add(CoursesRequested()),
       expect: () => [
@@ -169,6 +172,7 @@ void main() {
         authenticationRepository: mockedAuthenticationRepository,
         initialFilter: SemesterFilter.all,
         initialSortOrder: SemesterSortOrder.desc,
+        todayDateTime: DateTime(2023, 5, 28),
       ),
       act: (bloc) => bloc.add(CoursesRequested()),
       expect: () => [
@@ -202,6 +206,7 @@ void main() {
         authenticationRepository: mockedAuthenticationRepository,
         initialFilter: SemesterFilter.current,
         initialSortOrder: SemesterSortOrder.desc,
+        todayDateTime: DateTime(2023, 5, 28),
       ),
       act: (bloc) => bloc.add(CoursesRequested()),
       expect: () => [
@@ -237,6 +242,7 @@ void main() {
         authenticationRepository: mockedAuthenticationRepository,
         initialFilter: SemesterFilter.current,
         initialSortOrder: SemesterSortOrder.desc,
+        todayDateTime: DateTime(2023, 5, 28),
       ),
       act: (bloc) => bloc
         ..add(CoursesRequested())
@@ -283,6 +289,7 @@ void main() {
         authenticationRepository: mockedAuthenticationRepository,
         initialFilter: SemesterFilter.all,
         initialSortOrder: SemesterSortOrder.asc,
+        todayDateTime: DateTime(2023, 5, 28),
       ),
       act: (bloc) => bloc
         ..add(CoursesRequested())

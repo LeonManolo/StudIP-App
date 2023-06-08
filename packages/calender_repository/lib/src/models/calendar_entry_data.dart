@@ -1,7 +1,6 @@
 import 'package:calender_repository/calender_repository.dart';
 
 class CalendarEntryData {
-
   const CalendarEntryData({
     required this.id,
     required this.type,
@@ -15,7 +14,7 @@ class CalendarEntryData {
   final String id;
   final String? title;
   final String? description;
-  final Weekdays weekday;
+  final Weekday weekday;
   final List<String> locations;
   final CalendarTimeframe timeframe;
 }

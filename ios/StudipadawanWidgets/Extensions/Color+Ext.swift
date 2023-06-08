@@ -1,8 +1,8 @@
 //
 //  Color+Ext.swift
-//  StudipadawanWidgetsExtension
+//  WidgetDataProvider
 //
-//  Created by Finn Ebeling on 02.06.23.
+//  Created by Finn Ebeling on 06.06.23.
 //
 
 import SwiftUI

@@ -46,7 +46,7 @@ class CalendarTimeframe {
         !_end.equals(hourMinute);
   }
 
-  //TODO: tests schreiben
+  // TODO: tests schreiben
   double determinePercentageElapsedByHourMinute(HourMinute hourMinute) {
     if (!containsHourMinute(hourMinute)) {
       return 0;

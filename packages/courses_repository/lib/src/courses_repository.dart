@@ -1,5 +1,4 @@
 import 'package:courses_repository/src/models/models.dart';
-import 'package:courses_repository/src/models/participant.dart';
 import 'package:studip_api_client/studip_api_client.dart'
     hide CourseNewsListResponse, CourseWikiPagesListResponse;
 

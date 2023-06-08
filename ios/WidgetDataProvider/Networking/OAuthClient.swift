@@ -8,32 +8,43 @@
 import Foundation
 import KeychainAccess
 
-enum OAuthClientError: Error {
+public enum OAuthClientError: Error {
     case keychainContentNotReadable(key: String)
     case invalidUrlString(url: String)
 }
 
-class OAuthClient {
-    static let shared = OAuthClient(
+public protocol OAuthClient {
+    func get<T: Codable>(rawUrlString: String, queryItems: [URLQueryItem]) async throws -> T
+}
+
+public class DefaultOAuthClient: OAuthClient {
+    public static let shared = DefaultOAuthClient(
         tokenUrlString: "http://miezhaus.feste-ip.net:55109/dispatch.php/api/oauth2/token",
         clientId: "5",
         keychain: Keychain(service: "flutter_secure_storage_service", accessGroup: "N9XSF4AL84.de.hs-flensburg.studipadawan.sharedKeychain"),
         baseUrl: "http://miezhaus.feste-ip.net:55109/jsonapi.php/v1/"
     )
     
-    let tokenUrlString: String
-    let clientId: String
-    let keychain: Keychain
-    let baseUrl: String
+    private let tokenUrlString: String
+    private let clientId: String
+    private let keychain: Keychain
+    private let baseUrl: String
     
-    init(tokenUrlString: String, clientId: String, keychain: Keychain, baseUrl: String) {
+    public init(tokenUrlString: String, clientId: String, keychain: Keychain, baseUrl: String) {
         self.tokenUrlString = tokenUrlString
         self.clientId = clientId
         self.keychain = keychain
         self.baseUrl = baseUrl
     }
     
-    func get<T: Codable>(rawUrlString: String, queryItems: [URLQueryItem] = []) async throws -> T {
+    /// Generic method to execute a GET Request for the given `rawUrlString` with the passed `queryItems`
+    /// If a token refresh is required, it's automatically executed before the GET-Request.
+    /// If no Refresh- and/or Access-Token is present, this method fails.
+    /// - Parameters:
+    ///   - rawUrlString: Full URL-String
+    ///   - queryItems: Query-Items to use
+    /// - Returns: Decoded Result based on `T`
+    public func get<T: Codable>(rawUrlString: String, queryItems: [URLQueryItem] = []) async throws -> T {
         guard let rawKeychainContentData = keychain[string: tokenUrlString]?.data(using: .utf8) else { throw OAuthClientError.keychainContentNotReadable(key: tokenUrlString) }
         var keychainContent = try jsonDecoder(dateDecodingStrategy: .millisecondsSince1970).decode(KeychainContent.self, from: rawKeychainContentData)
         
@@ -55,6 +66,7 @@ class OAuthClient {
         return try jsonDecoder(dateDecodingStrategy: .iso8601).decode(T.self, from: data)
     }
     
+    /// Refreshes the Access-Token with the stored Refresh-Token. After a successfull refresh both tokens are updated and stored in the keychain.
     private func refreshToken() async throws {
         guard let rawKeychainContentData = keychain[string: tokenUrlString]?.data(using: .utf8), let tokenUrl = URL(string: tokenUrlString) else { throw OAuthClientError.keychainContentNotReadable(key: tokenUrlString) }
         let keychainContent = try jsonDecoder(dateDecodingStrategy: .millisecondsSince1970).decode(KeychainContent.self, from: rawKeychainContentData)

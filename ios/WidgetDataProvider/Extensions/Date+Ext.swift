@@ -15,7 +15,7 @@ extension Date {
     
     // https://stackoverflow.com/a/51113983
     var weekday: Int? {
-        guard let rawWeekday = Calendar.german.dateComponents([.weekday], from: Date()).weekday else { return nil }
+        guard let rawWeekday = Calendar.german.dateComponents([.weekday], from: self).weekday else { return nil }
         
         return rawWeekday == 1 ? 7 : rawWeekday - 1
     }
