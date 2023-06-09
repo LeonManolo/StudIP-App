@@ -1,6 +1,42 @@
 import 'package:calender_repository/calender_repository.dart';
 import 'package:equatable/equatable.dart';
-import 'package:table_calendar/table_calendar.dart';
+import 'package:table_calendar/table_calendar.dart' as table_calendar;
+
+/// Possible formats for Calendar (based on TableCalendar)
+enum CalendarFormat {
+  month,
+  twoWeeks,
+  week;
+
+  table_calendar.CalendarFormat toTableCalendarFormat() {
+    switch (this) {
+      case CalendarFormat.month:
+        return table_calendar.CalendarFormat.month;
+      case CalendarFormat.twoWeeks:
+        return table_calendar.CalendarFormat.twoWeeks;
+      case CalendarFormat.week:
+        return table_calendar.CalendarFormat.week;
+    }
+  }
+
+  static CalendarFormat fromTableCalendarFormat({
+    required table_calendar.CalendarFormat format,
+  }) {
+    switch (format) {
+      case table_calendar.CalendarFormat.month:
+        return CalendarFormat.month;
+      case table_calendar.CalendarFormat.twoWeeks:
+        return CalendarFormat.twoWeeks;
+      case table_calendar.CalendarFormat.week:
+        return CalendarFormat.week;
+    }
+  }
+}
+
+enum CalendarBodyType {
+  timeframes,
+  list,
+}
 
 sealed class CalendarState extends Equatable {
   const CalendarState(
@@ -15,10 +51,11 @@ sealed class CalendarState extends Equatable {
   @override
   List<Object?> get props => [layout, currentDay, calendarFormat];
 
-  CalendarState copyWith(
-      {CalendarBodyType? layout,
-      DateTime? currentDay,
-      CalendarFormat? calendarFormat});
+  CalendarState copyWith({
+    CalendarBodyType? layout,
+    DateTime? currentDay,
+    CalendarFormat? calendarFormat,
+  });
 }
 
 class CalendarLoading extends CalendarState {
@@ -109,9 +146,4 @@ class CalendarFailure extends CalendarState {
 
   @override
   List<Object?> get props => [failureMessage, ...super.props];
-}
-
-enum CalendarBodyType {
-  timeframes,
-  list,
 }

@@ -3,16 +3,6 @@ import 'package:calender_repository/calender_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-// class CalendarHeader extends StatefulWidget {
-//   const CalendarHeader({super.key, required this.onDaySelected, required this.initialSelectedDay});
-
-//   final void Function(DateTime selectedDay) onDaySelected;
-//   final DateTime initialSelectedDay;
-
-//   @override
-//   State<CalendarHeader> createState() => _CalendarHeaderState();
-// }
-
 class CalendarHeader extends StatelessWidget {
   const CalendarHeader({
     super.key,

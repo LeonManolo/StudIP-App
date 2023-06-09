@@ -37,7 +37,7 @@ struct StudipadawanWidgetsSystemMediumView : View {
                 Spacer()
                 HStack {
                     Spacer()
-                    Text("Keine Einträge vorhanden")
+                    Text("Keine weiteren Einträge vorhanden")
                         .foregroundColor(.gray)
                         .font(.system(size: 16))
                     Spacer()

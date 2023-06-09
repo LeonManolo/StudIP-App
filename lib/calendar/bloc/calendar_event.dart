@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
 import 'package:studipadawan/calendar/bloc/calendar_state.dart';
-import 'package:table_calendar/table_calendar.dart';
 
 abstract class CalendarEvent extends Equatable {
   const CalendarEvent();

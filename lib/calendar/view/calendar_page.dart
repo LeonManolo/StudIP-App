@@ -1,5 +1,4 @@
 import 'package:animate_do/animate_do.dart';
-import 'package:authentication_repository/authentication_repository.dart';
 import 'package:calender_repository/calender_repository.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
@@ -70,10 +69,16 @@ class CalendarPage extends StatelessWidget {
                   calendarBloc.add(CalendarExactDayRequested(exactDay: day));
                 },
                 onFormatChanged: (selectedFormat) {
-                  calendarBloc.add(CalendarFormatChangeRequest(selectedFormat));
+                  calendarBloc.add(
+                    CalendarFormatChangeRequest(
+                      CalendarFormat.fromTableCalendarFormat(
+                        format: selectedFormat,
+                      ),
+                    ),
+                  );
                 },
                 selectedDay: state.currentDay,
-                calendarFormat: state.calendarFormat,
+                calendarFormat: state.calendarFormat.toTableCalendarFormat(),
               );
             },
           ),
