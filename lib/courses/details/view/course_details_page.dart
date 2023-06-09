@@ -5,19 +5,34 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:studipadawan/courses/details/bloc/course_details_bloc.dart';
+import 'package:studipadawan/courses/details/files/view/course_files_page.dart';
+import 'package:studipadawan/courses/details/info/view/course_info_page.dart';
 import 'package:studipadawan/courses/details/news/view/course_news_page.dart';
+import 'package:studipadawan/courses/details/participants/view/course_participants_page.dart';
 import 'package:studipadawan/courses/details/view/widgets/course_detail_tab.dart';
 import 'package:studipadawan/courses/details/view/widgets/course_details_main_content.dart';
+import 'package:studipadawan/courses/details/wiki/view/course_wiki_page.dart'
+    as wiki_widget;
 
-class CourseDetailsPage extends StatelessWidget {
+class CourseDetailsPage extends StatefulWidget {
   const CourseDetailsPage({super.key, required this.course});
+
   final Course course;
+
+  @override
+  State<CourseDetailsPage> createState() => _CourseDetailsPageState();
+}
+
+class _CourseDetailsPageState extends State<CourseDetailsPage> {
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: AutoSizeText(course.courseDetails.title, maxLines: 2,),
+        title: AutoSizeText(
+          widget.course.courseDetails.title,
+          maxLines: 2,
+        ),
         actions: [
           IconButton(
             icon: const Icon(EvaIcons.bellOutline),
@@ -26,7 +41,7 @@ class CourseDetailsPage extends StatelessWidget {
                 context,
                 MaterialPageRoute<CourseNewsPage>(
                   builder: (context) => CourseNewsPage(
-                    courseId: course.id,
+                    courseId: widget.course.id,
                   ),
                   fullscreenDialog: true,
                 ),
@@ -37,19 +52,19 @@ class CourseDetailsPage extends StatelessWidget {
       ),
       body: SafeArea(
         child: BlocProvider(
-          create: (context) => CourseDetailsBloc(course: course),
+          create: (context) => CourseDetailsBloc(course: widget.course),
           child: BlocBuilder<CourseDetailsBloc, CourseDetailsState>(
             builder: (context, state) {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-
                   const SizedBox(
                     height: AppSpacing.md,
                   ),
                   SizedBox(
-                    height: 70,
+                    height: 120,
                     child: ListView.separated(
+                      shrinkWrap: true,
                       padding:
                           const EdgeInsets.symmetric(horizontal: AppSpacing.md),
                       separatorBuilder: (context, index) => const SizedBox(
@@ -75,10 +90,26 @@ class CourseDetailsPage extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: AppSpacing.md),
-                  const Expanded(
+                  Expanded(
                     child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: AppSpacing.md),
-                      child: CourseDetailsMainContent(),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: AppSpacing.md),
+                      child: PageView(
+                        onPageChanged: (page) {
+                          context.read<CourseDetailsBloc>().add(
+                            CourseDetailsSelectTabEvent(
+                              selectedTab: CourseDetailsTab
+                                  .values[page],
+                            ),
+                          );
+                        },
+                        children: const [
+                          CourseInfoPage(),
+                          CourseFilesPage(),
+                          CourseParticipantsPage(),
+                          wiki_widget.CourseWikiPage()
+                        ],
+                      ),
                     ),
                   )
                 ],

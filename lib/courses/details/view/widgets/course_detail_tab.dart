@@ -1,3 +1,4 @@
+import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:studipadawan/courses/details/bloc/course_details_bloc.dart';
 
@@ -8,35 +9,47 @@ class CourseDetailTabView extends StatelessWidget {
     required this.isSelected,
     required this.onSelection,
   });
+
   final CourseDetailsTab tab;
   final bool isSelected;
   final void Function() onSelection;
 
   @override
   Widget build(BuildContext context) {
+    final bgColor =  Theme.of(context).hintColor.withOpacity(0.04);
     return GestureDetector(
       onTap: onSelection,
       child: Container(
+        padding: EdgeInsets.all(AppSpacing.md),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16),
-          color: isSelected ? Theme.of(context).primaryColor : Colors.black12,
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: isSelected ? Theme.of(context).primaryColor : Theme.of(context).scaffoldBackgroundColor, width: 2),
+          color: isSelected ? null  : bgColor,
         ),
-        width: 100,
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
+        width: 105,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(AppSpacing.sm),
+              child: Icon(
                 tab.icon,
-                color: isSelected ? Colors.white : Colors.black,
+                color: Theme.of(context).primaryColor,
+                size: 30,
               ),
-              Text(
-                tab.title,
-                style:
-                    TextStyle(color: isSelected ? Colors.white : Colors.black),
-              )
-            ],
-          ),
+              decoration: BoxDecoration(
+                  color: isSelected ? Theme.of(context).primaryColor.withOpacity(0.08) : Theme.of(context).scaffoldBackgroundColor ,
+                  borderRadius: BorderRadius.all(Radius.circular(8))),
+            ),
+            Text(
+              tab.title,
+              style: TextStyle(
+                  fontWeight: FontWeight.w600,
+              ),
+            )
+          ],
         ),
       ),
     );
