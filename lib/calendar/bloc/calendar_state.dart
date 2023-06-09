@@ -1,50 +1,114 @@
 import 'package:calender_repository/calender_repository.dart';
 import 'package:equatable/equatable.dart';
+import 'package:table_calendar/table_calendar.dart';
 
-abstract class CalendarState extends Equatable {
-  const CalendarState(this.layout);
+sealed class CalendarState extends Equatable {
+  const CalendarState(
+      {required this.layout,
+      required this.currentDay,
+      required this.calendarFormat});
 
   final CalendarBodyType layout;
-}
-
-class CalendarInitial extends CalendarState {
-  const CalendarInitial({required CalendarBodyType layout}) : super(layout);
+  final DateTime currentDay;
+  final CalendarFormat calendarFormat;
 
   @override
-  List<Object?> get props => [layout];
+  List<Object?> get props => [layout, currentDay, calendarFormat];
+
+  CalendarState copyWith(
+      {CalendarBodyType? layout,
+      DateTime? currentDay,
+      CalendarFormat? calendarFormat});
 }
 
 class CalendarLoading extends CalendarState {
-  const CalendarLoading({required CalendarBodyType layout}) : super(layout);
+  const CalendarLoading({
+    required super.layout,
+    required super.currentDay,
+    required super.calendarFormat,
+  });
+  factory CalendarLoading.fromState(CalendarState state) => CalendarLoading(
+        layout: state.layout,
+        currentDay: state.currentDay,
+        calendarFormat: state.calendarFormat,
+      );
 
   @override
-  List<Object?> get props => [layout];
+  CalendarLoading copyWith(
+      {CalendarBodyType? layout,
+      DateTime? currentDay,
+      CalendarFormat? calendarFormat}) {
+    return CalendarLoading(
+      layout: layout ?? this.layout,
+      currentDay: currentDay ?? this.currentDay,
+      calendarFormat: calendarFormat ?? this.calendarFormat,
+    );
+  }
 }
 
 class CalendarPopulated extends CalendarState {
   const CalendarPopulated({
     required this.calendarWeekData,
-    required this.currentDay,
-    required CalendarBodyType layout,
-  }) : super(layout);
+    required super.currentDay,
+    required super.layout,
+    required super.calendarFormat,
+  });
 
   final CalendarWeekData calendarWeekData;
-  final DateTime currentDay;
 
   @override
-  List<Object?> get props => [calendarWeekData, currentDay, layout];
+  CalendarPopulated copyWith({
+    CalendarBodyType? layout,
+    DateTime? currentDay,
+    CalendarWeekData? calendarWeekData,
+    CalendarFormat? calendarFormat,
+  }) {
+    return CalendarPopulated(
+        layout: layout ?? this.layout,
+        currentDay: currentDay ?? this.currentDay,
+        calendarWeekData: calendarWeekData ?? this.calendarWeekData,
+        calendarFormat: calendarFormat ?? this.calendarFormat);
+  }
+
+  @override
+  List<Object?> get props => [calendarWeekData, ...super.props];
 }
 
 class CalendarFailure extends CalendarState {
-  const CalendarFailure({
-    required this.failureMessage,
-    required CalendarBodyType layout,
-  }) : super(layout);
+  const CalendarFailure(
+      {required this.failureMessage,
+      required super.layout,
+      required super.currentDay,
+      required super.calendarFormat});
+
+  factory CalendarFailure.fromState(
+          {required String failureMessage, required CalendarState state}) =>
+      CalendarFailure(
+        failureMessage: failureMessage,
+        layout: state.layout,
+        currentDay: state.currentDay,
+        calendarFormat: state.calendarFormat,
+      );
 
   final String failureMessage;
 
   @override
-  List<Object?> get props => [failureMessage];
+  CalendarFailure copyWith({
+    CalendarBodyType? layout,
+    DateTime? currentDay,
+    String? failureMessage,
+    CalendarFormat? calendarFormat,
+  }) {
+    return CalendarFailure(
+      layout: layout ?? this.layout,
+      currentDay: currentDay ?? this.currentDay,
+      failureMessage: failureMessage ?? this.failureMessage,
+      calendarFormat: calendarFormat ?? this.calendarFormat,
+    );
+  }
+
+  @override
+  List<Object?> get props => [failureMessage, ...super.props];
 }
 
 enum CalendarBodyType {

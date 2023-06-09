@@ -21,9 +21,9 @@ public class DataProvider {
     /// - Parameter date: The current Date. Injectable for testing purposes
     /// - Returns: Loaded `ScheduleItem`s sorted ascending based on `startDate`
     public func loadRemoteScheduleItems(for date: Date) async throws -> [ScheduleItem] {
-        let currentUser: UserResponse = try await oauthClient.get(rawUrlString: "http://miezhaus.feste-ip.net:55109/jsonapi.php/v1/users/me", queryItems: [])
+        let currentUser: UserResponse = try await oauthClient.get(rawUrlString: "http://miezhaus.feste-ip.net:32555/jsonapi.php/v1/users/me", queryItems: [])
         
-        let eventRawUrlString = "http://miezhaus.feste-ip.net:55109/jsonapi.php/v1/users/\(currentUser.data.id)/schedule"
+        let eventRawUrlString = "http://miezhaus.feste-ip.net:32555/jsonapi.php/v1/users/\(currentUser.data.id)/schedule"
         let scheduleResponse: ScheduleResponse = try await oauthClient.get(rawUrlString: eventRawUrlString, queryItems: [])
         
         
