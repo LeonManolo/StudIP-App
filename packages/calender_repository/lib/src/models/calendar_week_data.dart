@@ -50,7 +50,8 @@ class CalendarWeekData {
             // Check if the list for this timeframe key exists. If not, create it.
             data[weekday]![timeframe.combinedKey()] ??= [];
 
-            data[weekday]![timeframe.combinedKey()]!.add(entryData);
+            data[weekday]![timeframe.combinedKey()]!
+                .insertAndMaintainSortOrder(entryData);
           }
         }
       }
