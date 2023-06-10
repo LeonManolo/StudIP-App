@@ -1,0 +1,110 @@
+import 'package:app_ui/app_ui.dart';
+import 'package:eva_icons_flutter/eva_icons_flutter.dart';
+import 'package:flutter/material.dart';
+import 'package:studipadawan/courses/details/view/widgets/course_page_view_header.dart';
+import 'package:studipadawan/courses/details/view/widgets/course_page_view_tab_item.dart';
+
+class CoursePageView extends StatefulWidget {
+  const CoursePageView({super.key, this.children = const []});
+
+  final List<Widget> children;
+
+  @override
+  State<CoursePageView> createState() => _CoursePageViewState();
+}
+
+class _CoursePageViewState extends State<CoursePageView> {
+  final tabWidth = 105.0;
+  final animationDuration = const Duration(milliseconds: 200);
+  final animationCurve = Curves.easeInOut;
+
+  final _pageController = PageController();
+  final _scrollController = ScrollController();
+  var _pageIndex = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(top: AppSpacing.md),
+          child: CoursePageViewHeader(
+            controller: _scrollController,
+            onTabChanged: (tabIndex) {
+              _scrollToTabIndex(tabIndex);
+              _pageController.animateToPage(
+                tabIndex,
+                duration: animationDuration,
+                curve: animationCurve,
+              );
+            },
+            tabItems: [
+              CoursePageViewTabItem(
+                icon: EvaIcons.folderOutline,
+                active: 0 == _pageIndex,
+                title: 'Dateien',
+              ),
+              CoursePageViewTabItem(
+                icon: EvaIcons.personOutline,
+                active: 1 == _pageIndex,
+                title: 'Teilnehmer',
+              ),
+              CoursePageViewTabItem(
+                icon: EvaIcons.bulbOutline,
+                active: 2 == _pageIndex,
+                title: 'Wiki',
+              ),
+              CoursePageViewTabItem(
+                icon: EvaIcons.infoOutline,
+                active: 3 == _pageIndex,
+                title: 'Info',
+              ),
+            ],
+          ),
+        ),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.only(
+              left: AppSpacing.md,
+              right: AppSpacing.md,
+              top: AppSpacing.md,
+            ),
+            child: PageView(
+              onPageChanged: _onPageChange,
+              controller: _pageController,
+              children: widget.children,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  void _onPageChange(int index) {
+    _scrollToTabIndex(index);
+    setState(() {
+      _pageIndex = index;
+    });
+  }
+
+  void _scrollToTabIndex(int index) {
+    _scrollController.animateTo(
+      _setScrollOffset(index),
+      duration: animationDuration,
+      curve: animationCurve,
+    );
+  }
+
+  double _setScrollOffset(int index) {
+    final maxScroll = _scrollController.position.maxScrollExtent;
+    final offset = index * tabWidth;
+    return offset > maxScroll ? maxScroll : offset;
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    _scrollController.dispose();
+    super.dispose();
+  }
+}

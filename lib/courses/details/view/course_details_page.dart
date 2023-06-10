@@ -11,6 +11,7 @@ import 'package:studipadawan/courses/details/news/view/course_news_page.dart';
 import 'package:studipadawan/courses/details/participants/view/course_participants_page.dart';
 import 'package:studipadawan/courses/details/view/widgets/course_detail_tab.dart';
 import 'package:studipadawan/courses/details/view/widgets/course_details_main_content.dart';
+import 'package:studipadawan/courses/details/view/widgets/course_page_view.dart';
 import 'package:studipadawan/courses/details/wiki/view/course_wiki_page.dart'
     as wiki_widget;
 
@@ -53,68 +54,13 @@ class _CourseDetailsPageState extends State<CourseDetailsPage> {
       body: SafeArea(
         child: BlocProvider(
           create: (context) => CourseDetailsBloc(course: widget.course),
-          child: BlocBuilder<CourseDetailsBloc, CourseDetailsState>(
-            builder: (context, state) {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  const SizedBox(
-                    height: AppSpacing.md,
-                  ),
-                  SizedBox(
-                    height: 120,
-                    child: ListView.separated(
-                      shrinkWrap: true,
-                      padding:
-                          const EdgeInsets.symmetric(horizontal: AppSpacing.md),
-                      separatorBuilder: (context, index) => const SizedBox(
-                        width: AppSpacing.lg,
-                      ),
-                      scrollDirection: Axis.horizontal,
-                      itemCount:
-                          context.read<CourseDetailsBloc>().allTabs.length,
-                      itemBuilder: (context, index) {
-                        final bloc = context.read<CourseDetailsBloc>();
-                        final tab = bloc.allTabs.elementAt(index);
-
-                        return CourseDetailTabView(
-                          tab: tab,
-                          isSelected: bloc.state.selectedTab == tab,
-                          onSelection: () => {
-                            bloc.add(
-                              CourseDetailsSelectTabEvent(selectedTab: tab),
-                            )
-                          },
-                        );
-                      },
-                    ),
-                  ),
-                  const SizedBox(height: AppSpacing.md),
-                  Expanded(
-                    child: Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: AppSpacing.md),
-                      child: PageView(
-                        onPageChanged: (page) {
-                          context.read<CourseDetailsBloc>().add(
-                            CourseDetailsSelectTabEvent(
-                              selectedTab: CourseDetailsTab
-                                  .values[page],
-                            ),
-                          );
-                        },
-                        children: const [
-                          CourseInfoPage(),
-                          CourseFilesPage(),
-                          CourseParticipantsPage(),
-                          wiki_widget.CourseWikiPage()
-                        ],
-                      ),
-                    ),
-                  )
-                ],
-              );
-            },
+          child: const CoursePageView(
+            children: [
+              CourseFilesPage(),
+              CourseParticipantsPage(),
+              wiki_widget.CourseWikiPage(),
+              CourseInfoPage(),
+            ],
           ),
         ),
       ),
