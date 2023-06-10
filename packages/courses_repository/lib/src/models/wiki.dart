@@ -30,7 +30,7 @@ class CourseWikiPageData {
   }
 
   final String id;
-  final String title;
+  String title;
   final String content;
   final ItemAuthor lastEditorAuthor;
   final DateTime lastEditedAt;

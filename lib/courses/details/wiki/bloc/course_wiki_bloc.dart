@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:collection/collection.dart';
 import 'package:courses_repository/courses_repository.dart';
 import 'package:equatable/equatable.dart';
 import 'package:logger/logger.dart';
@@ -28,6 +29,18 @@ class CourseWikiBloc extends Bloc<CourseWikiEvent, CourseWikiState> {
       final wikiPages = await _courseRepository.getWikiPages(
         courseId: courseId,
       );
+
+      final wikiStartPageIndex =
+          wikiPages.indexWhere((wikiPage) => wikiPage.title == 'WikiWikiWeb');
+      if (wikiStartPageIndex >= 0) {
+        wikiPages[wikiStartPageIndex].title = 'Startseite';
+      }
+
+      wikiPages.sort(
+        (wikiPage1, wikiPage2) =>
+            wikiPage2.lastEditedAt.compareTo(wikiPage1.lastEditedAt),
+      );
+
       emit(CourseWikiStateDidLoad(wikiPages: wikiPages));
     } catch (e) {
       Logger().e(e);
