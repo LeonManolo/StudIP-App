@@ -15,7 +15,7 @@ class CourseWikiList extends StatelessWidget {
         switch (state) {
           case final CourseWikiStateDidLoad s when s.wikiPages.isEmpty:
             return RefreshableContent(
-              callback: () => context
+              callback: () async => context
                   .read<CourseWikiBloc>()
                   .add(CourseWikiReloadRequested()),
               child: const EmptyView(
@@ -25,8 +25,8 @@ class CourseWikiList extends StatelessWidget {
               ),
             );
           case CourseWikiStateDidLoad _:
-            return RefreshableContent(
-              callback: () async => context
+            return RefreshIndicator(
+              onRefresh: () async => context
                   .read<CourseWikiBloc>()
                   .add(CourseWikiReloadRequested()),
               child: ListView.builder(
@@ -41,10 +41,15 @@ class CourseWikiList extends StatelessWidget {
             );
 
           case CourseWikiStateError _:
-            return Center(
-              child: Text(
-                state.errorMessage,
-                textAlign: TextAlign.center,
+            return RefreshableContent(
+              callback: () async => context
+                  .read<CourseWikiBloc>()
+                  .add(CourseWikiReloadRequested()),
+              child: Center(
+                child: Text(
+                  state.errorMessage,
+                  textAlign: TextAlign.center,
+                ),
               ),
             );
 
