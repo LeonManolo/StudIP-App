@@ -68,20 +68,23 @@ class CourseRepository {
     }
   }
 
-  Future<CourseWikiPagesListResponse> getWikiPages({
-    required String courseId,
-    required int limit,
-    required int offset,
-  }) async {
+  Future<List<CourseWikiPage>> getWikiPages({required String courseId}) async {
     try {
-      final wikiPagesResponse = await _apiClient.getCourseWikiPages(
-        courseId: courseId,
-        offset: offset,
-        limit: limit,
+      final List<CourseWikiPageResponse> wikiPagesResponse = await _getResponse(
+        id: courseId,
+        loadItems: ({required id, required limit, required offset}) async {
+          return _apiClient.getCourseWikiPages(
+            courseId: courseId,
+            offset: offset,
+            limit: limit,
+          );
+        },
       );
 
       final List<CourseWikiPageData> wikiPageItems = await Future.wait(
         wikiPagesResponse.wikiPages.map((rawWikiPage) async {
+      return await Future.wait(
+        wikiPagesResponse.map((rawWikiPage) async {
           final userResponse =
               await _apiClient.getUser(userId: rawWikiPage.lastEditorId);
           return CourseWikiPageData.fromCourseWikiPageResponse(
@@ -89,11 +92,6 @@ class CourseRepository {
             userResponse: userResponse,
           );
         }),
-      );
-
-      return CourseWikiPagesListResponse(
-        totalNumberOfWikiPages: wikiPagesResponse.total,
-        wikiPages: wikiPageItems,
       );
     } catch (error, stackTrace) {
       Error.throwWithStackTrace(error, stackTrace);

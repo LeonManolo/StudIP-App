@@ -16,19 +16,7 @@ class CourseWikiPage extends StatelessWidget {
         courseId: course.id,
         courseRepository: context.read<CourseRepository>(),
       )..add(CourseWikiReloadRequested()),
-      child: const CourseWikiPageBody(),
-    );
-  }
-}
-
-class CourseWikiPageBody extends StatelessWidget {
-  const CourseWikiPageBody({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return CourseWikiList(
-      reachedBottom: () =>
-          context.read<CourseWikiBloc>().add(CourseWikiReachedBottom()),
+      child: const CourseWikiList(),
     );
   }
 }

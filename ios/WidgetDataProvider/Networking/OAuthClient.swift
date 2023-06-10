@@ -19,10 +19,10 @@ public protocol OAuthClient {
 
 public class DefaultOAuthClient: OAuthClient {
     public static let shared = DefaultOAuthClient(
-        tokenUrlString: "http://miezhaus.feste-ip.net:55109/dispatch.php/api/oauth2/token",
+        tokenUrlString: "http://miezhaus.feste-ip.net:32555/dispatch.php/api/oauth2/token",
         clientId: "5",
         keychain: Keychain(service: "flutter_secure_storage_service", accessGroup: "N9XSF4AL84.de.hs-flensburg.studipadawan.sharedKeychain"),
-        baseUrl: "http://miezhaus.feste-ip.net:55109/jsonapi.php/v1/"
+        baseUrl: "http://miezhaus.feste-ip.net:32555/jsonapi.php/v1/"
     )
     
     private let tokenUrlString: String
