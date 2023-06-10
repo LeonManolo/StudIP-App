@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -63,17 +65,18 @@ class _MessageSendPageState extends State<MessageSendPage> {
   @override
   Widget build(BuildContext context) {
     return PlatformScaffold(
+      iosContentPadding: true,
       key: UniqueKey(),
       appBar: PlatformAppBar(title: const Text('Senden')),
       body: BlocProvider<MessageSendBloc>.value(
         value: _messageSendBloc,
         child: BlocConsumer<MessageSendBloc, MessageSendState>(
           listener: (context, state) {
-            if (state.status == MessageSendStatus.failure) {
+            if (state.status == MessageSendStatus.failure && Platform.isAndroid) {
               buildSnackBar(context, state.blocResponse, Colors.red);
             }
             if (state.status == MessageSendStatus.populated) {
-              buildSnackBar(context, state.blocResponse, Colors.green);
+              //buildSnackBar(context, state.blocResponse, Colors.green);
               Navigator.pop(context);
             }
             if (state.status == MessageSendStatus.recipientsChanged) {
@@ -82,8 +85,9 @@ class _MessageSendPageState extends State<MessageSendPage> {
             if (state.status == MessageSendStatus.userSuggestionsFetched) {
               _triggerSuggestionCallback();
             }
-            if (state.status == MessageSendStatus.userSuggestionsFailure) {
+            if (state.status == MessageSendStatus.userSuggestionsFailure && Platform.isAndroid) {
               buildSnackBar(context, state.blocResponse, Colors.red);
+              // TODO: Error state
             }
           },
           builder: (context, state) {
@@ -171,7 +175,7 @@ class _MessageSendPageState extends State<MessageSendPage> {
                     child: Row(
                       children: [
                         const Spacer(),
-                        ElevatedButton(
+                        PlatformElevatedButton(
                           onPressed: () {
                             final String subject = _subjectController.text;
                             final String text = _messageController.text;

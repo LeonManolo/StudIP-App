@@ -114,9 +114,12 @@ class MessagesPageState extends State<MessagesPage>
       ],
       child: PlatformScaffold(
         material: (_, __) => MaterialScaffoldData(
-          floatingActionButton: FloatingActionButton(onPressed: () {}),
+          floatingActionButton: FloatingActionButton(
+            child: const Icon(EvaIcons.plus),
+              onPressed: () {}),
           ),
         appBar: PlatformAppBar(
+          title: const Text('Nachrichten'),
           trailingActions: [
             BlocBuilder<TabBarBloc, TabBarState>(
               builder: (context, state) {
@@ -134,7 +137,7 @@ class MessagesPageState extends State<MessagesPage>
                             _handleFilterSelection(MessageFilter.unread);
                           },),
                         ],
-                        icon: Icon(
+                        icon: const Icon(
                           EvaIcons.moreVerticalOutline,
                         ),
                       ),
@@ -152,11 +155,12 @@ class MessagesPageState extends State<MessagesPage>
             )
           ],
         ),
-        cupertino: (_, __) => CupertinoPageScaffoldData(
+        cupertino: (cupertinoContext, __) => CupertinoPageScaffoldData(
             navigationBar: CupertinoNavigationBar(
                 border: Border.all(color: Colors.transparent),
                 middle: const Text('Nachrichten'),
                 trailing: BlocBuilder<TabBarBloc, TabBarState>(
+                  bloc: cupertinoContext.read<TabBarBloc>(),
                   builder: (context, state) {
                     return Row(
                       mainAxisSize: MainAxisSize.min,

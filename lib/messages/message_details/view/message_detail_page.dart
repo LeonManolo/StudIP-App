@@ -63,6 +63,7 @@ class MessageDetailpage extends StatelessWidget {
             );
           }
           return PlatformScaffold(
+            iosContentPadding: true,
             appBar: PlatformAppBar(
               title: const Text('Nachrichten'),
               trailingActions: [

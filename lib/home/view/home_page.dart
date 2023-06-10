@@ -39,8 +39,8 @@ class HomePage extends StatelessWidget {
                     },
                   ),
                 ],
-                flexibleSpace: const FlexibleSpaceBar(
-                  title: Text('Home'),
+                flexibleSpace: FlexibleSpaceBar(
+                  title: Text('Home', style: Theme.of(context).textTheme.titleLarge,),
                 ),
               ),
               cupertino: (context, _) => CupertinoSliverNavigationBar(
