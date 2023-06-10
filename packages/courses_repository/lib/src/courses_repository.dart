@@ -80,11 +80,11 @@ class CourseRepository {
         limit: limit,
       );
 
-      final List<CourseWikiPage> wikiPageItems = await Future.wait(
+      final List<CourseWikiPageData> wikiPageItems = await Future.wait(
         wikiPagesResponse.wikiPages.map((rawWikiPage) async {
           final userResponse =
               await _apiClient.getUser(userId: rawWikiPage.lastEditorId);
-          return CourseWikiPage.fromCourseWikiPageResponse(
+          return CourseWikiPageData.fromCourseWikiPageResponse(
             courseWikiPageResponse: rawWikiPage,
             userResponse: userResponse,
           );

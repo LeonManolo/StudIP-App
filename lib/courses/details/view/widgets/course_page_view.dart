@@ -80,6 +80,9 @@ class _CoursePageViewState extends State<CoursePageView> {
     );
   }
 
+  /// Callback for PageView's onPageChanged event.
+  /// Changes the active tab based on the provided [index]
+  /// and scrolls the header to the correct position.
   void _onPageChange(int index) {
     _scrollToTabIndex(index);
     setState(() {
@@ -87,6 +90,7 @@ class _CoursePageViewState extends State<CoursePageView> {
     });
   }
 
+  /// Animates the CoursePageViewHeader's ScrollController to the provided [index].
   void _scrollToTabIndex(int index) {
     _scrollController.animateTo(
       _setScrollOffset(index),
@@ -95,6 +99,10 @@ class _CoursePageViewState extends State<CoursePageView> {
     );
   }
 
+  /// Sets the ScrollController's offset based on the given [index].
+  /// Returns the scroll offset that corresponds to the [index].
+  /// If the offset is more than the maximum scroll extent,
+  /// then the maximum scroll extent is returned.
   double _setScrollOffset(int index) {
     final maxScroll = _scrollController.position.maxScrollExtent;
     final offset = index * tabWidth;

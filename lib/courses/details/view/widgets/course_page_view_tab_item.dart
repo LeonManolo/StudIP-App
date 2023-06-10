@@ -17,19 +17,17 @@ class CoursePageViewTabItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bgColor = Theme
-        .of(context)
-        .hintColor
-        .withOpacity(0.04);
+    final bgColor = Theme.of(context).hintColor.withOpacity(0.04);
     return Container(
       padding: const EdgeInsets.all(AppSpacing.md),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: active ? Theme
-            .of(context)
-            .primaryColor : Theme
-            .of(context)
-            .scaffoldBackgroundColor, width: 2),
+        border: Border.all(
+          color: active
+              ? Theme.of(context).primaryColor
+              : Theme.of(context).scaffoldBackgroundColor,
+          width: 2,
+        ),
         color: active ? null : bgColor,
       ),
       width: width,
@@ -41,18 +39,13 @@ class CoursePageViewTabItem extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(AppSpacing.sm),
             decoration: BoxDecoration(
-                color: active ? Theme
-                    .of(context)
-                    .primaryColor
-                    .withOpacity(0.08) : Theme
-                    .of(context)
-                    .scaffoldBackgroundColor,
+                color: active
+                    ? Theme.of(context).primaryColor.withOpacity(0.08)
+                    : Theme.of(context).scaffoldBackgroundColor,
                 borderRadius: const BorderRadius.all(Radius.circular(8))),
             child: Icon(
               icon,
-              color: Theme
-                  .of(context)
-                  .primaryColor,
+              color: Theme.of(context).primaryColor,
               size: 30,
             ),
           ),

@@ -2,19 +2,20 @@ import 'package:app_ui/app_ui.dart';
 import 'package:courses_repository/courses_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:studipadawan/courses/details/bloc/course_details_bloc.dart';
 import 'package:studipadawan/courses/details/info/bloc/course_info_bloc.dart';
 import 'package:studipadawan/courses/details/info/view/widgets/events_section.dart';
 import 'package:studipadawan/courses/details/info/view/widgets/general_info_section.dart';
 
 class CourseInfoPage extends StatelessWidget {
-  const CourseInfoPage({super.key});
+  const CourseInfoPage({super.key, required this.course});
+
+  final Course course;
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => CourseInfoBloc(
-        course: context.read<CourseDetailsBloc>().course,
+        course: course,
         courseRepository: context.read<CourseRepository>(),
       )..add(TriggerInitialLoadEvent()),
       child: BlocBuilder<CourseInfoBloc, CourseInfoState>(
