@@ -1,13 +1,14 @@
 import 'package:app_ui/app_ui.dart';
+import 'package:collection/collection.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:studipadawan/courses/details/view/widgets/course_page_view_header.dart';
 import 'package:studipadawan/courses/details/view/widgets/course_page_view_tab_item.dart';
 
 class CoursePageView extends StatefulWidget {
-  const CoursePageView({super.key, this.children = const []});
+  const CoursePageView({super.key, required this.content});
 
-  final List<Widget> children;
+  final List<CoursePageViewData> content;
 
   @override
   State<CoursePageView> createState() => _CoursePageViewState();
@@ -39,25 +40,12 @@ class _CoursePageViewState extends State<CoursePageView> {
               );
             },
             tabItems: [
-              CoursePageViewTabItem(
-                icon: EvaIcons.folderOutline,
-                active: 0 == _pageIndex,
-                title: 'Dateien',
-              ),
-              CoursePageViewTabItem(
-                icon: EvaIcons.personOutline,
-                active: 1 == _pageIndex,
-                title: 'Teilnehmer',
-              ),
-              CoursePageViewTabItem(
-                icon: EvaIcons.bulbOutline,
-                active: 2 == _pageIndex,
-                title: 'Wiki',
-              ),
-              CoursePageViewTabItem(
-                icon: EvaIcons.infoOutline,
-                active: 3 == _pageIndex,
-                title: 'Info',
+              ...widget.content.mapIndexed(
+                (index, tabItem) => CoursePageViewTabItem(
+                  icon: tabItem.tab.icon,
+                  active: _pageIndex == index,
+                  title: tabItem.tab.title,
+                ),
               ),
             ],
           ),
@@ -72,7 +60,9 @@ class _CoursePageViewState extends State<CoursePageView> {
             child: PageView(
               onPageChanged: _onPageChange,
               controller: _pageController,
-              children: widget.children,
+              children: [
+                ...widget.content.map((pageViewData) => pageViewData.content)
+              ],
             ),
           ),
         ),
@@ -115,4 +105,26 @@ class _CoursePageViewState extends State<CoursePageView> {
     _scrollController.dispose();
     super.dispose();
   }
+}
+
+class CoursePageViewData {
+  const CoursePageViewData({
+    required this.content,
+    required this.tab,
+  });
+
+  final Widget content;
+  final CoursePageViewTabData tab;
+}
+
+class CoursePageViewTabData {
+  const CoursePageViewTabData({
+    this.color,
+    required this.icon,
+    required this.title,
+  });
+
+  final Color? color;
+  final IconData icon;
+  final String title;
 }

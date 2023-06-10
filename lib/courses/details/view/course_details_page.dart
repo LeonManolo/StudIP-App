@@ -41,11 +41,35 @@ class CourseDetailsPage extends StatelessWidget {
       ),
       body: SafeArea(
         child: CoursePageView(
-          children: [
-            CourseFilesPage(course: course),
-            CourseParticipantsPage(course: course),
-            CourseWikiPage(course: course),
-            CourseInfoPage(course: course),
+          content: [
+            CoursePageViewData(
+              tab: const CoursePageViewTabData(
+                icon: EvaIcons.folderOutline,
+                title: 'Dateien',
+              ),
+              content: CourseFilesPage(course: course),
+            ),
+            CoursePageViewData(
+              tab: const CoursePageViewTabData(
+                icon: EvaIcons.personOutline,
+                title: 'Teilnehmer',
+              ),
+              content: CourseParticipantsPage(course: course),
+            ),
+            CoursePageViewData(
+              tab: const CoursePageViewTabData(
+                icon: EvaIcons.bulbOutline,
+                title: 'Wiki',
+              ),
+              content: CourseWikiPage(course: course),
+            ),
+            CoursePageViewData(
+              tab: const CoursePageViewTabData(
+                icon: EvaIcons.infoOutline,
+                title: 'Info',
+              ),
+              content: CourseInfoPage(course: course),
+            ),
           ],
         ),
       ),
