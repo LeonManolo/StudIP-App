@@ -8,5 +8,3 @@ abstract class CourseWikiEvent extends Equatable {
 }
 
 class CourseWikiReloadRequested extends CourseWikiEvent {}
-
-class CourseWikiReachedBottom extends CourseWikiEvent {}

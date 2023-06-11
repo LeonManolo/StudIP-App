@@ -10,28 +10,12 @@ class CourseWikiStateLoading extends CourseWikiState {
 class CourseWikiStateDidLoad extends CourseWikiState {
   CourseWikiStateDidLoad({
     required this.wikiPages,
-    required this.maxReached,
-    required this.paginationLoading,
   });
 
   final List<CourseWikiPageData> wikiPages;
-  final bool maxReached;
-  final bool paginationLoading;
-
-  CourseWikiStateDidLoad copyWith({
-    List<CourseWikiPageData>? wikiPages,
-    bool? maxReached,
-    bool? paginationLoading,
-  }) {
-    return CourseWikiStateDidLoad(
-      wikiPages: wikiPages ?? this.wikiPages,
-      maxReached: maxReached ?? this.maxReached,
-      paginationLoading: paginationLoading ?? this.paginationLoading,
-    );
-  }
 
   @override
-  List<Object?> get props => [wikiPages, maxReached, paginationLoading];
+  List<Object?> get props => [wikiPages];
 }
 
 class CourseWikiStateError extends CourseWikiState {
