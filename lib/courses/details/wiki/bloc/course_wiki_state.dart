@@ -14,12 +14,12 @@ class CourseWikiStateDidLoad extends CourseWikiState {
     required this.paginationLoading,
   });
 
-  final List<CourseWikiPage> wikiPages;
+  final List<CourseWikiPageData> wikiPages;
   final bool maxReached;
   final bool paginationLoading;
 
   CourseWikiStateDidLoad copyWith({
-    List<CourseWikiPage>? wikiPages,
+    List<CourseWikiPageData>? wikiPages,
     bool? maxReached,
     bool? paginationLoading,
   }) {

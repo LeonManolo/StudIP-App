@@ -1,23 +1,27 @@
-import 'package:app_ui/app_ui.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:courses_repository/courses_repository.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:studipadawan/courses/details/bloc/course_details_bloc.dart';
+import 'package:studipadawan/courses/details/files/view/course_files_page.dart';
+import 'package:studipadawan/courses/details/info/view/course_info_page.dart';
 import 'package:studipadawan/courses/details/news/view/course_news_page.dart';
-import 'package:studipadawan/courses/details/view/widgets/course_detail_tab.dart';
-import 'package:studipadawan/courses/details/view/widgets/course_details_main_content.dart';
+import 'package:studipadawan/courses/details/participants/view/course_participants_page.dart';
+import 'package:studipadawan/courses/details/view/widgets/course_page_view.dart';
+import 'package:studipadawan/courses/details/wiki/view/course_wiki_page.dart';
 
 class CourseDetailsPage extends StatelessWidget {
   const CourseDetailsPage({super.key, required this.course});
+
   final Course course;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: AutoSizeText(course.courseDetails.title, maxLines: 2,),
+        title: AutoSizeText(
+          course.courseDetails.title,
+          maxLines: 2,
+        ),
         actions: [
           IconButton(
             icon: const Icon(EvaIcons.bellOutline),
@@ -36,55 +40,37 @@ class CourseDetailsPage extends StatelessWidget {
         ],
       ),
       body: SafeArea(
-        child: BlocProvider(
-          create: (context) => CourseDetailsBloc(course: course),
-          child: BlocBuilder<CourseDetailsBloc, CourseDetailsState>(
-            builder: (context, state) {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-
-                  const SizedBox(
-                    height: AppSpacing.md,
-                  ),
-                  SizedBox(
-                    height: 70,
-                    child: ListView.separated(
-                      padding:
-                          const EdgeInsets.symmetric(horizontal: AppSpacing.md),
-                      separatorBuilder: (context, index) => const SizedBox(
-                        width: AppSpacing.lg,
-                      ),
-                      scrollDirection: Axis.horizontal,
-                      itemCount:
-                          context.read<CourseDetailsBloc>().allTabs.length,
-                      itemBuilder: (context, index) {
-                        final bloc = context.read<CourseDetailsBloc>();
-                        final tab = bloc.allTabs.elementAt(index);
-
-                        return CourseDetailTabView(
-                          tab: tab,
-                          isSelected: bloc.state.selectedTab == tab,
-                          onSelection: () => {
-                            bloc.add(
-                              CourseDetailsSelectTabEvent(selectedTab: tab),
-                            )
-                          },
-                        );
-                      },
-                    ),
-                  ),
-                  const SizedBox(height: AppSpacing.md),
-                  const Expanded(
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: AppSpacing.md),
-                      child: CourseDetailsMainContent(),
-                    ),
-                  )
-                ],
-              );
-            },
-          ),
+        child: CoursePageView(
+          content: [
+            CoursePageViewData(
+              tab: const CoursePageViewTabData(
+                icon: EvaIcons.folderOutline,
+                title: 'Dateien',
+              ),
+              content: CourseFilesPage(course: course),
+            ),
+            CoursePageViewData(
+              tab: const CoursePageViewTabData(
+                icon: EvaIcons.personOutline,
+                title: 'Teilnehmer',
+              ),
+              content: CourseParticipantsPage(course: course),
+            ),
+            CoursePageViewData(
+              tab: const CoursePageViewTabData(
+                icon: EvaIcons.bulbOutline,
+                title: 'Wiki',
+              ),
+              content: CourseWikiPage(course: course),
+            ),
+            CoursePageViewData(
+              tab: const CoursePageViewTabData(
+                icon: EvaIcons.infoOutline,
+                title: 'Info',
+              ),
+              content: CourseInfoPage(course: course),
+            ),
+          ],
         ),
       ),
     );
