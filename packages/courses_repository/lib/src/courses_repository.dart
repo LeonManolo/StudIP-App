@@ -68,7 +68,8 @@ class CourseRepository {
     }
   }
 
-  Future<List<CourseWikiPage>> getWikiPages({required String courseId}) async {
+  Future<List<CourseWikiPageData>> getWikiPages(
+      {required String courseId}) async {
     try {
       final List<CourseWikiPageResponse> wikiPagesResponse = await _getResponse(
         id: courseId,
@@ -81,8 +82,6 @@ class CourseRepository {
         },
       );
 
-      final List<CourseWikiPageData> wikiPageItems = await Future.wait(
-        wikiPagesResponse.wikiPages.map((rawWikiPage) async {
       return await Future.wait(
         wikiPagesResponse.map((rawWikiPage) async {
           final userResponse =
