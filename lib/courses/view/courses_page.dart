@@ -20,10 +20,12 @@ class CoursesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => CoursesBloc(
+      create: (context) =>
+      CoursesBloc(
         courseRepository: context.read<CourseRepository>(),
         authenticationRepository: context.read<AuthenticationRepository>(),
-      )..add(CoursesRequested()),
+      )
+        ..add(CoursesRequested()),
       child: BlocBuilder<CoursesBloc, CoursesState>(
         builder: (context, state) {
           return PlatformScaffold(
@@ -34,22 +36,22 @@ class CoursesPage extends StatelessWidget {
                 CoursesStateLoading _ => [],
                 CoursesStateError _ => [],
                 CoursesStateDidLoad(
-                  semesterFilter: final currentFilter,
-                  semesterSortOrder: final currentSortOrder
+                semesterFilter: final currentFilter,
+                semesterSortOrder: final currentSortOrder
                 ) =>
-                  [
-                    AdaptiveAppBarIconButton(
-                      materialIcon: EvaIcons.funnelOutline,
-                      cupertinoIcon: CupertinoIcons.ellipsis,
-                      onPressed: () {
-                        _showSemesterSortFilterModal(
-                          context: context,
-                          currentFilter: currentFilter,
-                          currentSortOrder: currentSortOrder,
-                        );
-                      },
-                    )
-                  ]
+                [
+                  AdaptiveAppBarIconButton(
+                    materialIcon: EvaIcons.funnelOutline,
+                    cupertinoIcon: CupertinoIcons.arrow_up_arrow_down_circle,
+                    onPressed: () {
+                      _showSemesterSortFilterModal(
+                        context: context,
+                        currentFilter: currentFilter,
+                        currentSortOrder: currentSortOrder,
+                      );
+                    },
+                  )
+                ]
               },
             ),
             body: const CoursesPageBody(),
@@ -64,30 +66,23 @@ class CoursesPage extends StatelessWidget {
     required SemesterFilter currentFilter,
     required SemesterSortOrder currentSortOrder,
   }) {
-    return showModalBottomSheet<void>(
+    return showPlatformModalSheet<void>(
       context: context,
-      isScrollControlled: true,
-      showDragHandle: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(12),
-        ),
-      ),
-      builder: (_) {
+      builder: (modalContext) {
         return SemesterSortFilterModalSheet(
           onSemesterFilterSelectionChanged: (newFilter) {
             context.read<CoursesBloc>().add(
-                  SemesterFilterChanged(
-                    selectedSemesterFilter: newFilter,
-                  ),
-                );
+              SemesterFilterChanged(
+                selectedSemesterFilter: newFilter,
+              ),
+            );
           },
           onSemesterSortOrderSelectionChanged: (newSortOrder) {
             context.read<CoursesBloc>().add(
-                  SemesterSortOrderChanged(
-                    selectedSemesterSortOrder: newSortOrder,
-                  ),
-                );
+              SemesterSortOrderChanged(
+                selectedSemesterSortOrder: newSortOrder,
+              ),
+            );
           },
           currentSemesterFilter: currentFilter,
           currentSemesterSortOrder: currentSortOrder,
