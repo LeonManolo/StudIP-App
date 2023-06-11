@@ -2,16 +2,6 @@ import 'package:courses_repository/src/models/news.dart';
 import 'package:studip_api_client/studip_api_client.dart' as studip_api_client;
 import 'package:timeago/timeago.dart' as timeago;
 
-class CourseWikiPagesListResponse {
-  CourseWikiPagesListResponse({
-    required this.totalNumberOfWikiPages,
-    required this.wikiPages,
-  });
-
-  final int totalNumberOfWikiPages;
-  final List<CourseWikiPageData> wikiPages;
-}
-
 class CourseWikiPageData {
   CourseWikiPageData({
     required this.id,
@@ -40,7 +30,7 @@ class CourseWikiPageData {
   }
 
   final String id;
-  final String title;
+  String title;
   final String content;
   final ItemAuthor lastEditorAuthor;
   final DateTime lastEditedAt;
