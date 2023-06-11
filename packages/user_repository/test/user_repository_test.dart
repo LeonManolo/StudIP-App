@@ -34,10 +34,6 @@ void main() {
 
       test('throws when getCurrentUser (repository) fails', () async {
         final exception = Exception('oops');
-        final user = MockUserResponse();
-        when(() => studIPUserClient.getCurrentUser()).thenAnswer(
-          (_) async => user,
-        );
         when(
           () => studIPUserClient.getCurrentUser(),
         ).thenThrow(exception);
@@ -94,7 +90,7 @@ void main() {
         );
       });
 
-      test('returns correct weather on according to search', () async {
+      test('returns correct users according to search', () async {
         final users = [
           generateUserResponse(id: '1', username: 'hallo'),
           generateUserResponse(id: '2', username: 'peter'),

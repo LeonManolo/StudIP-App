@@ -22,7 +22,9 @@ class UserRepository {
 
   /// Retrieves a list of users.
   ///
-  /// Takes an optional [searchParams] parameter for filtering the search.
+  /// Takes an optional [searchParams] parameter for filtering the
+  /// search (the search term to find users).
+  ///
   /// Returns [UserListResponse] containing the list of users.
   Future<UserListResponse> getUsers(String? searchParams) async {
     return _apiClient.getUsers(searchParams);
