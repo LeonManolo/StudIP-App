@@ -37,7 +37,7 @@ struct StudipadawanWidgetsSystemMediumView : View {
                 Spacer()
                 HStack {
                     Spacer()
-                    Text("Keine Einträge vorhanden")
+                    Text("Keine weiteren Einträge vorhanden")
                         .foregroundColor(.gray)
                         .font(.system(size: 16))
                     Spacer()
@@ -74,6 +74,7 @@ struct StudipadawanWidgets: Widget {
         ) { entry in
             StudipadawanWidgetsSystemMediumView(entry: entry)
                 .background(.ultraThinMaterial)
+                .widgetURL(URL(string: "studipadawan://tappedWidget?homeWidget"))
         }
         .configurationDisplayName("Stundenplan")
         .description("Alle Einträge des heutigen Stundenplans")

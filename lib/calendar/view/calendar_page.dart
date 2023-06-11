@@ -1,5 +1,4 @@
 import 'package:animate_do/animate_do.dart';
-import 'package:authentication_repository/authentication_repository.dart';
 import 'package:calender_repository/calender_repository.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
@@ -14,90 +13,96 @@ import 'package:studipadawan/calendar/widgets/calendar_list_body/calendar_list_b
 import 'package:studipadawan/calendar/widgets/calendar_timeframes_body/calendar_timeframes_body.dart';
 
 class CalendarPage extends StatelessWidget {
-  const CalendarPage({super.key});
+  const CalendarPage({super.key, required this.calendarBloc});
+  final CalendarBloc calendarBloc;
 
   @override
   Widget build(BuildContext context) {
-    final calendarBloc = CalendarBloc(
-      calendarRepository: context.read<CalenderRepository>(),
-      authenticationRepository: context.read<AuthenticationRepository>(),
-    )..add(
-        CalendarRequested(
-          day: DateTime.now(),
-          layout: CalendarBodyType.list,
-        ),
-      );
-
-    return BlocProvider(
-      create: (_) => calendarBloc,
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Kalender'),
-          actions: [
-            IconButton(
-              onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) =>
-                        const CalendarScheduleNotificationsPage()));
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Kalender'),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute<CalendarScheduleNotificationsPage>(
+                  builder: (context) =>
+                      const CalendarScheduleNotificationsPage(),
+                ),
+              );
+            },
+            icon: const Icon(EvaIcons.bellOutline),
+          ),
+          IconButton(
+            onPressed: () {
+              calendarBloc.add(const CalendarSwitchLayoutRequested());
+            },
+            icon: BlocBuilder<CalendarBloc, CalendarState>(
+              bloc: calendarBloc,
+              buildWhen: (previous, current) {
+                return previous.layout != current.layout;
               },
-              icon: const Icon(EvaIcons.bellOutline),
+              builder: (context, state) {
+                Color? color;
+                if (calendarBloc.state.layout == CalendarBodyType.timeframes) {
+                  color = Theme.of(context).primaryColor;
+                }
+                return Spin(
+                  duration: const Duration(milliseconds: 800),
+                  key: GlobalKey(),
+                  child: Icon(
+                    EvaIcons.repeatOutline,
+                    color: color,
+                  ),
+                );
+              },
             ),
-            IconButton(
-              onPressed: () {
-                calendarBloc.add(const CalendarSwitchLayoutRequested());
-              },
-              icon: BlocBuilder<CalendarBloc, CalendarState>(
-                bloc: calendarBloc,
-                buildWhen: (previous, current) {
-                  return previous.layout != current.layout;
+          ),
+        ],
+      ),
+      body: Column(
+        children: [
+          BlocBuilder<CalendarBloc, CalendarState>(
+            builder: (context, state) {
+              return CalendarHeader(
+                onDaySelected: (day) {
+                  calendarBloc.add(CalendarExactDayRequested(exactDay: day));
                 },
-                builder: (context, state) {
-                  Color? color;
-                  if (calendarBloc.state.layout ==
-                      CalendarBodyType.timeframes) {
-                    color = Theme.of(context).primaryColor;
-                  }
-                  return Spin(
-                    duration: const Duration(milliseconds: 800),
-                    key: GlobalKey(),
-                    child: Icon(
-                      EvaIcons.repeatOutline,
-                      color: color,
+                onFormatChanged: (selectedFormat) {
+                  calendarBloc.add(
+                    CalendarFormatChangeRequest(
+                      CalendarFormat.fromTableCalendarFormat(
+                        format: selectedFormat,
+                      ),
                     ),
                   );
                 },
-              ),
-            ),
-          ],
-        ),
-        body: Column(
-          children: [
-            CalendarHeader(
-              onDaySelected: (day) {
-                calendarBloc.add(CalendarExactDayRequested(exactDay: day));
+                selectedDay: state.currentDay,
+                calendarFormat: state.calendarFormat.toTableCalendarFormat(),
+              );
+            },
+          ),
+          Expanded(
+            child: BlocConsumer<CalendarBloc, CalendarState>(
+              bloc: calendarBloc,
+              listener: (context, state) {
+                if (state is CalendarFailure) {
+                  final snackBar =
+                      SnackBar(content: Text(state.failureMessage));
+                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                }
               },
-              initialSelectedDay: DateTime.now(),
-            ),
-            Expanded(
-              child: BlocConsumer<CalendarBloc, CalendarState>(
-                bloc: calendarBloc,
-                listener: (context, state) {
-                  if (state is CalendarFailure) {
-                    final snackBar =
-                        SnackBar(content: Text(state.failureMessage));
-                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                  }
-                },
-                builder: (context, state) {
-                  if (state is CalendarLoading) {
+              builder: (context, state) {
+                switch (state) {
+                  case CalendarLoading _:
                     return Center(
                       child: SpinKitThreeBounce(
                         size: 25,
                         color: Theme.of(context).primaryColor,
                       ),
                     );
-                  }
-                  if (state is CalendarPopulated) {
+
+                  case CalendarPopulated _:
                     final day = Weekday.fromIndex(state.currentDay.weekday - 1);
                     final calendarWeekData = _transformCalendarData(state);
                     final calendarDayData = calendarWeekData[day] ?? [];
@@ -107,28 +112,25 @@ class CalendarPage extends StatelessWidget {
                         selectedDay: state.currentDay,
                         scheduleData: calendarDayData,
                       );
+                    } else {
+                      return FadeInDown(
+                        from: -200,
+                        key: GlobalKey(),
+                        child: CalendarTimeframesBody(
+                          date: state.currentDay,
+                          scheduleData: state.calendarWeekData.data,
+                          scheduleStructure: _calendarSchedule(),
+                        ),
+                      );
                     }
 
-                    return FadeInDown(
-                      from: -200,
-                      key: GlobalKey(),
-                      child: CalendarTimeframesBody(
-                        date: state.currentDay,
-                        scheduleData: state.calendarWeekData.data,
-                        scheduleStructure: _calendarSchedule(),
-                      ),
-                    );
-                  }
-
-                  if (state is CalendarFailure) {
+                  case CalendarFailure _:
                     return Text(state.failureMessage);
-                  }
-                  return const Text('nothing');
-                },
-              ),
+                }
+              },
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
