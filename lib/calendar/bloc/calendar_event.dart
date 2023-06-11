@@ -1,4 +1,3 @@
-
 import 'package:equatable/equatable.dart';
 import 'package:studipadawan/calendar/bloc/calendar_state.dart';
 
@@ -7,8 +6,7 @@ abstract class CalendarEvent extends Equatable {
 }
 
 final class CalendarRequested extends CalendarEvent {
-
-  const CalendarRequested({ required this.day, required this.layout});
+  const CalendarRequested({required this.day, required this.layout});
   final DateTime day;
   final CalendarBodyType layout;
 
@@ -17,7 +15,6 @@ final class CalendarRequested extends CalendarEvent {
 }
 
 final class CalendarNextDayRequested extends CalendarEvent {
-
   const CalendarNextDayRequested();
 
   @override
@@ -25,7 +22,6 @@ final class CalendarNextDayRequested extends CalendarEvent {
 }
 
 final class CalendarPreviousDayRequested extends CalendarEvent {
-
   const CalendarPreviousDayRequested();
 
   @override
@@ -33,7 +29,6 @@ final class CalendarPreviousDayRequested extends CalendarEvent {
 }
 
 final class CalendarExactDayRequested extends CalendarEvent {
-
   const CalendarExactDayRequested({required this.exactDay});
   final DateTime exactDay;
 
@@ -42,12 +37,19 @@ final class CalendarExactDayRequested extends CalendarEvent {
 }
 
 final class CalendarSwitchLayoutRequested extends CalendarEvent {
-
   const CalendarSwitchLayoutRequested();
 
   @override
   List<Object?> get props => [];
 }
 
+final class CalendarFormatChangeRequest extends CalendarEvent {
+  const CalendarFormatChangeRequest(this.requestedCalendarFormat);
+
+  final CalendarFormat requestedCalendarFormat;
+
+  @override
+  List<Object?> get props => [requestedCalendarFormat];
+}
 
 //TODO: Pull to refresh? CalendarRefreshRequested

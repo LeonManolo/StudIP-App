@@ -263,9 +263,11 @@ class StudIpAPICore {
       return userId;
     } on OAuth2Exception catch (oAuthException) {
       Logger().e(oAuthException.error, oAuthException);
+      removeAllTokens();
       return null;
     } catch (e) {
       Logger().e(e);
+      removeAllTokens();
       return null;
     }
   }
