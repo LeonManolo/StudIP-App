@@ -139,11 +139,16 @@ class CalendarPage extends StatelessWidget {
     return state.calendarWeekData.data.map(
       (key, value) => MapEntry(
         key,
-        value.values.fold<List<CalendarEntryData>>(
-          [],
-          (previousValue, current) =>
-              previousValue.followedBy(current).toList(),
-        ),
+        value.values.fold<List<CalendarEntryData>>([],
+            (previousValue, current) {
+          final newList = previousValue;
+
+          for (int i = 0; i < current.length; i++) {
+            newList.insertAndMaintainSortOrder(current.elementAt(i));
+          }
+
+          return newList;
+        }),
       ),
     );
   }
