@@ -9,11 +9,11 @@ class CourseWikiPagesListResponse {
   });
 
   final int totalNumberOfWikiPages;
-  final List<CourseWikiPage> wikiPages;
+  final List<CourseWikiPageData> wikiPages;
 }
 
-class CourseWikiPage {
-  CourseWikiPage({
+class CourseWikiPageData {
+  CourseWikiPageData({
     required this.id,
     required this.title,
     required this.content,
@@ -21,11 +21,11 @@ class CourseWikiPage {
     required this.lastEditedAt,
   });
 
-  factory CourseWikiPage.fromCourseWikiPageResponse({
+  factory CourseWikiPageData.fromCourseWikiPageResponse({
     required studip_api_client.CourseWikiPageResponse courseWikiPageResponse,
     required studip_api_client.UserResponse userResponse,
   }) {
-    return CourseWikiPage(
+    return CourseWikiPageData(
       id: courseWikiPageResponse.id,
       title: courseWikiPageResponse.title,
       content: courseWikiPageResponse.content,

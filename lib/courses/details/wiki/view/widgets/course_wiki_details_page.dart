@@ -6,7 +6,7 @@ import 'package:studipadawan/utils/user_title_content_view.dart';
 class CourseWikiDetailsPage extends StatelessWidget {
   const CourseWikiDetailsPage({super.key, required this.wikiPage});
 
-  final CourseWikiPage wikiPage;
+  final CourseWikiPageData wikiPage;
 
   @override
   Widget build(BuildContext context) {

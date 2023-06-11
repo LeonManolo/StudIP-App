@@ -1,21 +1,22 @@
 import 'package:courses_repository/courses_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:studipadawan/courses/details/bloc/course_details_bloc.dart';
 import 'package:studipadawan/courses/details/participants/bloc/course_participants_bloc.dart';
 import 'package:studipadawan/courses/details/participants/widgets/course_participants_list.dart';
 import 'package:studipadawan/utils/loading_indicator.dart';
 import 'package:studipadawan/utils/snackbar.dart';
 
 class CourseParticipantsPage extends StatelessWidget {
-  const CourseParticipantsPage({super.key});
+  const CourseParticipantsPage({super.key, required this.course});
+
+  final Course course;
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => CourseParticipantsBloc(
         courseRepository: context.read<CourseRepository>(),
-        courseId: context.read<CourseDetailsBloc>().course.id,
+        courseId: course.id,
       )..add(CourseParticipantsRequested()),
       child: BlocConsumer<CourseParticipantsBloc, CourseParticipantsState>(
         listener: (context, state) {

@@ -5,7 +5,7 @@ import 'package:studipadawan/courses/details/wiki/view/widgets/course_wiki_detai
 class CourseWikiListRow extends StatelessWidget {
   const CourseWikiListRow({super.key, required this.wikiPage});
 
-  final CourseWikiPage wikiPage;
+  final CourseWikiPageData wikiPage;
 
   @override
   Widget build(BuildContext context) {
