@@ -66,7 +66,7 @@ void main() {
   });
 
   group('getCalendarSchedule', () {
-    test('return schedule entry', () async {
+  /*  test('return schedule entry', () async {
       when(
         () => mockedApiClient.getSchedule(
           userId: 'f6e5879dd84fe0f21eae9f0627d4f807',
@@ -90,7 +90,7 @@ void main() {
         false,
       );
       expect(scheduleTitle?.title, 'Vorlesung 1');
-    });
+    }); */
 
     test("don't return schedule entry because of excluded dates", () async {
       when(

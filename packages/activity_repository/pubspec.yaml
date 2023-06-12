@@ -1,0 +1,19 @@
+name: activity_repository
+description: A starting point for Dart libraries or applications.
+version: 0.0.1
+publish_to: none
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+
+dependencies:
+  intl: ^0.18.0
+  studip_api_client:
+    path: ../studip_api_client
+  timeago: ^3.4.0
+
+  courses_repository:
+    path: ../courses_repository
+dev_dependencies:
+  lints: ^2.0.0
+  very_good_analysis: ^4.0.0+1

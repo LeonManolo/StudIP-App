@@ -1,3 +1,4 @@
+import 'package:activity_repository/activity_repository.dart';
 import 'package:app_ui/app_ui.dart';
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:calender_repository/calender_repository.dart';
@@ -19,17 +20,20 @@ class App extends StatelessWidget {
     required CourseRepository coursesRepository,
     required MessageRepository messageRepository,
     required CalenderRepository calenderRepository,
+    required ActivityRepository activityRepository,
     required FilesRepository filesRepository,
   })  : _authenticationRepository = authenticationRepository,
         _userRepository = userRepository,
         _courseRepository = coursesRepository,
         _messageRepository = messageRepository,
+        _activityRepository = activityRepository,
         _calenderRepository = calenderRepository,
         _filesRepository = filesRepository;
 
   final AuthenticationRepository _authenticationRepository;
   final UserRepository _userRepository;
   final CourseRepository _courseRepository;
+  final ActivityRepository _activityRepository;
   final MessageRepository _messageRepository;
   final CalenderRepository _calenderRepository;
   final FilesRepository _filesRepository;
@@ -42,6 +46,7 @@ class App extends StatelessWidget {
         RepositoryProvider.value(value: _userRepository),
         RepositoryProvider.value(value: _courseRepository),
         RepositoryProvider.value(value: _messageRepository),
+        RepositoryProvider.value(value: _activityRepository),
         RepositoryProvider.value(value: _calenderRepository),
         RepositoryProvider.value(value: _filesRepository)
       ],

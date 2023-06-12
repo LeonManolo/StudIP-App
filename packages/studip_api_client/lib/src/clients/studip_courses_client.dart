@@ -1,5 +1,3 @@
-import 'package:studip_api_client/src/models/courses/course_participants_response.dart';
-
 import '../models/models.dart';
 
 abstract class StudIPCoursesClient {
@@ -9,10 +7,15 @@ abstract class StudIPCoursesClient {
     required int limit,
   });
 
-  Future<SemesterResponse> getSemester({required String semesterId});
+  Future<SemesterResponse> getSemester({
+    required String semesterId,
+  });
 
-  Future<CourseNewsListResponse> getCourseNews(
-      {required String courseId, required int limit, required int offset});
+  Future<CourseNewsListResponse> getCourseNews({
+    required String courseId,
+    required int limit,
+    required int offset,
+  });
 
   Future<CourseEventListResponse> getCourseEvents({
     required String courseId,

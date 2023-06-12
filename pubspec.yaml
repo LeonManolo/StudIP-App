@@ -50,6 +50,9 @@ dependencies:
   files_repository:
     path: packages/files_repository
 
+  activity_repository:
+    path: packages/activity_repository
+
   studip_api_client:
     path: packages/studip_api_client
 
