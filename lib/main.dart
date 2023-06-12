@@ -1,3 +1,4 @@
+import 'package:activity_repository/activity_repository.dart';
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:calender_repository/calender_repository.dart';
 import 'package:courses_repository/courses_repository.dart';
@@ -31,6 +32,8 @@ Future<void> main() async {
 
   final filesRepository = FilesRepository(apiClient: apiClient);
 
+  final activityRepository = ActivityRepository(apiClient: apiClient);
+
   await initializeDateFormatting();
 
   await LocalNotifications.initialize(
@@ -51,6 +54,7 @@ Future<void> main() async {
     App(
       authenticationRepository: authenticationRepository,
       calenderRepository: calenderRepository,
+      activityRepository: activityRepository,
       userRepository: userRepository,
       coursesRepository: coursesRepository,
       messageRepository: messagesRepository,

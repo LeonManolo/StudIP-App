@@ -47,6 +47,7 @@ class _MessageModuleState extends State<MessageModule> {
       authenticationRepository: context.read<AuthenticationRepository>(),
     )..add(const MessagePreviewRequested());
     _refreshTimer = Timer.periodic(const Duration(seconds: 30), (timer) {
+      // TODO: Adjust delay
       _messageModuleBloc.add(const MessagePreviewRequested());
     });
   }
@@ -81,7 +82,7 @@ class _MessageModuleState extends State<MessageModule> {
               case MessageModuleStateError _:
                 return const EmptyView(
                   title: 'Es ist ein Fehler aufgetreten',
-                  message: 'Es konnten keine Nachrichten gefetcht werden',
+                  message: 'Es konnten keine Nachrichten abgerufen werden',
                 );
             }
           },

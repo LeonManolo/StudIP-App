@@ -13,7 +13,8 @@ class StudIpApiClient
         StudIPCoursesClient,
         StudIPCalendarClient,
         StudIPUserClient,
-        StudIPFilesClient {
+        StudIPFilesClient,
+        StudIPActivityClient {
   StudIpApiClient._({
     StudIpAPICore? core,
   }) : _core = core ?? StudIpAPICore();
@@ -182,6 +183,21 @@ class StudIpApiClient
   }
 
   @override
+  Future<CourseResponse> getCourse({
+    required String courseId,
+  }) async {
+    final response = await _core.get(endpoint: "courses/$courseId");
+    final body = response.json();
+    if (response.statusCode != HttpStatus.ok) {
+      throw StudIpApiRequestFailure(
+        body: body,
+        statusCode: response.statusCode,
+      );
+    }
+    return CourseResponse.fromJson(body["data"]);
+  }
+
+  @override
   Future<SemesterResponse> getSemester({required String semesterId}) async {
     final response = await _core.get(endpoint: "semesters/$semesterId");
 
@@ -259,6 +275,28 @@ class StudIpApiClient
     return CourseWikiPagesListResponse.fromJson(body);
   }
 
+  // **** Activitys ****
+  @override
+  Future<FileActivityListResponse> getFileActivities({
+    required String userId,
+    required int limit,
+  }) async {
+    final response = await _core.get(
+        endpoint: "users/$userId/activitystream",
+        queryParameters: {
+          "filter[activity-type]": "documents",
+          "page[limit]": limit.toString()
+        });
+    final body = response.json();
+    if (response.statusCode != HttpStatus.ok) {
+      throw StudIpApiRequestFailure(
+        body: body,
+        statusCode: response.statusCode,
+      );
+    }
+    return FileActivityListResponse.fromJson(body);
+  }
+
   // **** Files ****
 
   @override
@@ -279,17 +317,18 @@ class StudIpApiClient
     return FolderListResponse.fromJson(body).folders.first;
   }
 
+  @override
   Future<CourseParticipantsResponse> getCourseParticipants({
     required String courseId,
     required int offset,
     required int limit,
   }) async {
-    final response = await _core
-        .get(endpoint: "courses/$courseId/relationships/memberships",
+    final response = await _core.get(
+        endpoint: "courses/$courseId/relationships/memberships",
         queryParameters: {
-      "page[offset]": "$offset",
-      "page[limit]": "$limit",
-    });
+          "page[offset]": "$offset",
+          "page[limit]": "$limit",
+        });
 
     final body = response.json();
 
@@ -322,6 +361,23 @@ class StudIpApiClient
       );
     }
     return FileListResponse.fromJson(body);
+  }
+
+  @override
+  Future<FileResponse> getFileRef({
+    required String fileId,
+  }) async {
+    final response = await _core.get(endpoint: "file-refs/$fileId");
+
+    final body = response.json();
+
+    if (response.statusCode != HttpStatus.ok) {
+      throw StudIpApiRequestFailure(
+        body: body,
+        statusCode: response.statusCode,
+      );
+    }
+    return FileResponse.fromJson(body["data"]);
   }
 
   @override
