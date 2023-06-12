@@ -1,3 +1,4 @@
+import 'package:activity_repository/activity_repository.dart';
 import 'package:equatable/equatable.dart';
 
 sealed class FilesModuleState extends Equatable {
@@ -22,14 +23,13 @@ class FilesModuleStateLoading extends FilesModuleState {
 }
 
 class FilesModuleStateDidLoad extends FilesModuleState {
-  const FilesModuleStateDidLoad();
+  const FilesModuleStateDidLoad({
+    this.fileActivities = const [],
+  });
+  final List<FileActivity> fileActivities;
 
   @override
-  List<Object?> get props => [];
-
-  FilesModuleStateDidLoad copyWith() {
-    return const FilesModuleStateDidLoad();
-  }
+  List<Object?> get props => [fileActivities];
 }
 
 class FilesModuleStateError extends FilesModuleState {
@@ -37,8 +37,4 @@ class FilesModuleStateError extends FilesModuleState {
 
   @override
   List<Object?> get props => [];
-
-  FilesModuleStateError copyWith() {
-    return const FilesModuleStateError();
-  }
 }
