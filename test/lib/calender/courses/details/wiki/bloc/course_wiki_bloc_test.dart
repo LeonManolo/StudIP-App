@@ -2,7 +2,6 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:courses_repository/courses_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:studip_api_client/studip_api_client.dart';
 import 'package:studipadawan/courses/details/wiki/bloc/course_wiki_bloc.dart';
 
 class MockCourseRepository extends Mock implements CourseRepository {}

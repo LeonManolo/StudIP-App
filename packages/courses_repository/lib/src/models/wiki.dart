@@ -4,7 +4,7 @@ import 'package:studip_api_client/studip_api_client.dart' as studip_api_client;
 import 'package:timeago/timeago.dart' as timeago;
 
 class CourseWikiPageData extends Equatable {
-  CourseWikiPageData({
+  const CourseWikiPageData({
     required this.id,
     required this.title,
     required this.content,
