@@ -1,8 +1,9 @@
 import 'package:courses_repository/src/models/news.dart';
+import 'package:equatable/equatable.dart';
 import 'package:studip_api_client/studip_api_client.dart' as studip_api_client;
 import 'package:timeago/timeago.dart' as timeago;
 
-class CourseWikiPageData {
+class CourseWikiPageData extends Equatable {
   CourseWikiPageData({
     required this.id,
     required this.title,
@@ -32,7 +33,7 @@ class CourseWikiPageData {
   }
 
   final String id;
-  String title;
+  final String title;
   final String content;
   final ItemAuthor lastEditorAuthor;
   final DateTime lastEditedAt;
@@ -41,4 +42,18 @@ class CourseWikiPageData {
     timeago.setLocaleMessages('de', timeago.DeMessages());
     return timeago.format(lastEditedAt, locale: 'de');
   }
+
+  CourseWikiPageData updateTitle({required String newTitle}) {
+    return CourseWikiPageData(
+      id: id,
+      title: newTitle,
+      content: content,
+      lastEditorAuthor: lastEditorAuthor,
+      lastEditedAt: lastEditedAt,
+    );
+  }
+
+  @override
+  List<Object?> get props =>
+      [id, title, content, lastEditorAuthor, lastEditedAt];
 }
