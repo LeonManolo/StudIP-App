@@ -40,7 +40,8 @@ class LoginPage extends StatelessWidget {
                       onPressed: () {
                         context.read<AppBloc>().add(const AppLogoutRequested());
                       },
-                      icon: const Icon(EvaIcons.logOutOutline,
+                      icon: const Icon(
+                        EvaIcons.logOutOutline,
                         color: Colors.transparent,
                       ),
                     )
@@ -72,14 +73,19 @@ class LoginPage extends StatelessWidget {
                         ),
                       ),
                       LoginButton(
-                        onPressed: () => context.read<LoginCubit>().loginWithStudIp(),
+                        onPressed: () =>
+                            context.read<LoginCubit>().loginWithStudIp(),
                       ),
                       const Spacer(),
-                      const SafeArea(child: Padding(
-                        padding: EdgeInsets.all(AppSpacing.lg),
-                        child: Text('Vitae sapien pellentesque habitant morbi tristique senectus et netus et malesuada fames',
-                        textAlign: TextAlign.center,),
-                      ),),
+                      const SafeArea(
+                        child: Padding(
+                          padding: EdgeInsets.all(AppSpacing.lg),
+                          child: Text(
+                            'Vitae sapien pellentesque habitant morbi tristique senectus et netus et malesuada fames',
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ),
                       //_StudIpLoginButton(),
                     ],
                   ),
@@ -91,7 +97,3 @@ class LoginPage extends StatelessWidget {
     );
   }
 }
-
-
-
-
