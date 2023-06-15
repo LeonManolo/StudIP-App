@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:messages_repository/messages_repository.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:studipadawan/app/bloc/app_bloc.dart';
 import 'package:studipadawan/app/routes/routes.dart';
 import 'package:user_repository/user_repository.dart';
@@ -66,65 +67,32 @@ class AppView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final materialDarkTheme = ThemeData.dark();
-    final materialLightTheme = ThemeData.light();
-
-
-    const darkDefaultCupertinoTheme =
-    CupertinoThemeData(brightness: Brightness.dark);
-    final cupertinoDarkTheme = MaterialBasedCupertinoThemeData(
-      materialTheme: materialDarkTheme.copyWith(
-        useMaterial3: true,
-        cupertinoOverrideTheme: CupertinoThemeData(
-          brightness: Brightness.dark,
-          barBackgroundColor: darkDefaultCupertinoTheme.barBackgroundColor,
-          textTheme: CupertinoTextThemeData(
-            primaryColor: Colors.white,
-            navActionTextStyle:
-            darkDefaultCupertinoTheme.textTheme.navActionTextStyle.copyWith(
-              color: const Color(0xF0F9F9F9),
-            ),
-            navLargeTitleTextStyle: darkDefaultCupertinoTheme
-                .textTheme.navLargeTitleTextStyle
-                .copyWith(color: Colors.red),
-          ),
-        ),
-      ),
-    );
-    final cupertinoDarkTheme2 = CupertinoThemeData(
-      brightness: Brightness.dark,
-      //barBackgroundColor: Color(0xf0f9f9f9),
-      //applyThemeToAll: true,
-    );
-
-    final cupertinoLightTheme =
-    MaterialBasedCupertinoThemeData(materialTheme: materialLightTheme);
 
     return PlatformProvider(
       settings: PlatformSettingsData(
-          iosUsesMaterialWidgets: true,
+        iosUsesMaterialWidgets: true,
       ),
       builder: (context) => PlatformTheme(
         themeMode: ThemeMode.system,
         materialLightTheme: const LightMaterialAppTheme().themeData,
-        materialDarkTheme: materialDarkTheme,
-        cupertinoDarkTheme: cupertinoDarkTheme2,
-        cupertinoLightTheme: const CupertinoThemeData(
-          brightness: Brightness.light,
-          primaryColor: CupertinoColors.systemIndigo,
-        ),
+        materialDarkTheme: const DarkMaterialAppTheme().themeData,
+        cupertinoLightTheme: const LightCupertinoAppTheme().themeData,
+        cupertinoDarkTheme: const DarkCupertinoAppTheme().themeData,
         matchCupertinoSystemChromeBrightness: false,
         builder: (context) => PlatformApp(
+          // needed to get the cupertino modal shrink effect
+          onGenerateRoute: (settings) => MaterialWithModalsPageRoute(
+              builder: (context) => FlowBuilder<AppStatus>(
+                    state: context.select((AppBloc bloc) => bloc.state.status),
+                    onGeneratePages: onGenerateAppViewPages,
+                  ),
+          ),
           localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
             DefaultMaterialLocalizations.delegate,
             DefaultWidgetsLocalizations.delegate,
             DefaultCupertinoLocalizations.delegate,
           ],
           title: 'StudIPadawan',
-          home: FlowBuilder<AppStatus>(
-            state: context.select((AppBloc bloc) => bloc.state.status),
-            onGeneratePages: onGenerateAppViewPages,
-          ),
         ),
       ),
     );

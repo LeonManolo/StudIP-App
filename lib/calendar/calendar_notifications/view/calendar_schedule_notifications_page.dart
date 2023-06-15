@@ -70,9 +70,10 @@ class CalendarScheduleNotificationsPage extends StatelessWidget {
                         courses: final courses,
                         totalNotifications: final totalNotifications
                       ):
-                      return Column(
+                      return Stack(
+                        alignment: Alignment.bottomCenter,
                         children: [
-                          Expanded(
+                          Positioned.fill(
                             child: NonEmptyListViewBuilder(
                               header: Column(
                                 mainAxisSize: MainAxisSize.min,
@@ -135,14 +136,19 @@ class CalendarScheduleNotificationsPage extends StatelessWidget {
                               },
                             ),
                           ),
-                          CalendarNotificationSaveButton(
-                            totalNotifications: totalNotifications,
-                            courses: courses,
-                            onTap: () {
-                              context.read<CalendarNotificationsBloc>().add(
-                                    const CalendarNotificationsSaveAll(),
-                                  );
-                            },
+                          Column(
+                            children: [
+                              const Spacer(),
+                              CalendarNotificationSaveButton(
+                                totalNotifications: totalNotifications,
+                                courses: courses,
+                                onTap: () {
+                                  context.read<CalendarNotificationsBloc>().add(
+                                        const CalendarNotificationsSaveAll(),
+                                      );
+                                },
+                              ),
+                            ],
                           ),
                         ],
                       );

@@ -86,6 +86,8 @@ dependencies:
   # Simplifying the use of both Material and Cupertino widgets with a single widget
   flutter_platform_widgets: ^3.3.4
 
+  modal_bottom_sheet: ^3.0.0-pre
+
 
   intl: ^0.18.0
 

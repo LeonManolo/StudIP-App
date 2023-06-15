@@ -36,8 +36,8 @@ class AuthenticatedPage extends StatelessWidget {
         ),
         BottomNavigationBarItem(
           label: 'Kurse',
-          icon: Icon(Platform.isIOS ? CupertinoIcons.rectangle_stack : EvaIcons.calendarOutline),
-          activeIcon: Icon(Platform.isIOS ? CupertinoIcons.rectangle_stack_fill : EvaIcons.calendarOutline),
+          icon: Icon(Platform.isIOS ? CupertinoIcons.rectangle_stack : EvaIcons.bookOpenOutline),
+          activeIcon: Icon(Platform.isIOS ? CupertinoIcons.rectangle_stack_fill : EvaIcons.bookOpen),
         ),
         BottomNavigationBarItem(
           label: 'Nachrichten',

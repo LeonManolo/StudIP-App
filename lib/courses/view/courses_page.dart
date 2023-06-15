@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:studipadawan/courses/bloc/courses_bloc.dart';
 import 'package:studipadawan/courses/bloc/courses_event.dart';
 import 'package:studipadawan/courses/bloc/courses_state.dart';
@@ -29,7 +30,6 @@ class CoursesPage extends StatelessWidget {
       child: BlocBuilder<CoursesBloc, CoursesState>(
         builder: (context, state) {
           return PlatformScaffold(
-            iosContentBottomPadding: true,
             appBar: PlatformAppBar(
               title: const Text('Kurse'),
               trailingActions: switch (state) {
@@ -54,7 +54,7 @@ class CoursesPage extends StatelessWidget {
                 ]
               },
             ),
-            body: const CoursesPageBody(),
+            body: CoursesPageBody(),
           );
         },
       ),
@@ -65,9 +65,37 @@ class CoursesPage extends StatelessWidget {
     required BuildContext context,
     required SemesterFilter currentFilter,
     required SemesterSortOrder currentSortOrder,
-  }) {
+  }) async {
+
+    showCupertinoModalBottomSheet(
+      expand: true,
+      useRootNavigator: true,
+      context: context, builder: (context) => CupertinoPageScaffold(
+        backgroundColor: CupertinoTheme.of(context).barBackgroundColor,
+        navigationBar: CupertinoNavigationBar(
+          automaticallyImplyLeading: true,
+          border: Border.all(width: 0, color: Colors.transparent),
+          middle: Text("Hallo"),
+          //leading: Text("Abbrechen", style: CupertinoTheme.of(context).textTheme.navActionTextStyle,),
+          leading: CupertinoButton(
+            padding: EdgeInsets.zero,
+            onPressed: () {
+              Navigator.pop(context);
+            }, child: Text("Cancel"),),
+        ),
+        child: ListView(children: [
+          Center(child: Text("Moin"))
+        ],)),
+    );
+
+
+    //CupertinoNavigationBar
+/*
     return showPlatformModalSheet<void>(
       context: context,
+      cupertino: CupertinoModalSheetData(
+        semanticsDismissible: true,
+      ),
       builder: (modalContext) {
         return SemesterSortFilterModalSheet(
           onSemesterFilterSelectionChanged: (newFilter) {
@@ -89,5 +117,8 @@ class CoursesPage extends StatelessWidget {
         );
       },
     );
+
+ */
+
   }
 }

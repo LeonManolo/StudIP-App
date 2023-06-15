@@ -18,7 +18,7 @@ class StudIpAPICore {
   final OAuth2Helper _oauth2Helper;
   final Dio _dio;
   final _apiBaseUrl = "jsonapi.php/v1";
-  static final _defaultBaseUrl = "http://miezhaus.feste-ip.net:32555";
+  static final _defaultBaseUrl = "http://studip.miezhaus.net";
 
   StudIpAPICore({String? baseUrl, Dio? dio, OAuth2Helper? oauth2Helper})
       : _baseUrl = baseUrl ?? _defaultBaseUrl,

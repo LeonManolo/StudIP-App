@@ -9,6 +9,7 @@ class LightMaterialAppTheme {
       primaryColor: Colors.indigo,
       primarySwatch: Colors.indigo,
       appBarTheme: _appBarTheme,
+      brightness: Brightness.light,
       bottomNavigationBarTheme: _bottomNavigationBarThemeData,
     );
   }
