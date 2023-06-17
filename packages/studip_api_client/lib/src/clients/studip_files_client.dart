@@ -9,7 +9,7 @@ import 'package:studip_api_client/src/extensions/extensions.dart';
 
 import '../models/models.dart';
 
-abstract class StudIPFilesClient {
+abstract interface class StudIPFilesClient {
   Future<FolderResponse> getCourseRootFolder({required String courseId});
 
   Future<FolderListResponse> getFolders({

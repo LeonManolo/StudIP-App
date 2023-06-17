@@ -7,7 +7,7 @@ import 'package:studip_api_client/src/extensions/extensions.dart';
 
 import '../models/models.dart';
 
-abstract class StudIPMessagesClient {
+abstract interface class StudIPMessagesClient {
   Future<MessageListResponse> getOutboxMessages({
     required String userId,
     required int limit,

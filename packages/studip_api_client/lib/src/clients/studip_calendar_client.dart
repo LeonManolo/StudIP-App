@@ -7,7 +7,7 @@ import 'package:studip_api_client/src/extensions/extensions.dart';
 import 'package:studip_api_client/src/exceptions.dart';
 import 'package:studip_api_client/src/models/models.dart';
 
-abstract class StudIPCalendarClient {
+abstract interface class StudIPCalendarClient {
   Future<ScheduleResponse> getSchedule(
       {required String userId, DateTime? semesterStart});
 }

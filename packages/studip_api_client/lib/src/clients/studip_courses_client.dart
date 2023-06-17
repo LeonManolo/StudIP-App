@@ -7,7 +7,7 @@ import 'package:studip_api_client/src/extensions/extensions.dart';
 import '../core/interfaces/studip_http_request_core.dart';
 import '../models/models.dart';
 
-abstract class StudIPCoursesClient {
+abstract interface class StudIPCoursesClient {
   Future<CourseListResponse> getCourses({
     required String userId,
     required int offset,

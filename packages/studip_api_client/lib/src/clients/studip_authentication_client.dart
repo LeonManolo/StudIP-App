@@ -1,7 +1,7 @@
 import 'package:studip_api_client/src/core/interfaces/interfaces.dart';
 import 'package:studip_api_client/src/core/studip_api_core.dart';
 
-abstract class StudIPAuthenticationClient {
+abstract interface class StudIPAuthenticationClient {
   Future<void> removeAllTokens();
 
   Future<String?> restoreUser();

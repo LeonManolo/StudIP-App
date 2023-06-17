@@ -1,6 +1,6 @@
 import 'package:http_forked/http.dart' as http;
 
-abstract class StudIpHttpCore {
+abstract interface class StudIpHttpCore {
   Future<http.Response> get({
     required String endpoint,
     Map<String, String>? queryParameters,

@@ -8,7 +8,7 @@ import 'package:studip_api_client/src/extensions/extensions.dart';
 
 import '../models/models.dart';
 
-abstract class StudIPActivityClient {
+abstract interface class StudIPActivityClient {
   Future<FileActivityListResponse> getFileActivities({
     required String userId,
     required int limit,

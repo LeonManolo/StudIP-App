@@ -7,7 +7,7 @@ import 'package:studip_api_client/src/extensions/extensions.dart';
 
 import '../models/models.dart';
 
-abstract class StudIPUserClient {
+abstract interface class StudIPUserClient {
   Future<UserResponse> getCurrentUser();
   Future<UserListResponse> getUsers(String? searchparam);
   Future<UserResponse> getUser({required String userId});

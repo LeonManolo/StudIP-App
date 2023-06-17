@@ -1,6 +1,6 @@
 import 'dart:async';
 
-abstract class StudIpFilesCore {
+abstract interface class StudIpFilesCore {
   /// Downloads a given file and returns the local storage path
   Future<String?> downloadFile({
     required String fileId,
