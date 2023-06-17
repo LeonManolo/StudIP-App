@@ -18,21 +18,38 @@ import 'package:user_repository/user_repository.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  final apiClient = StudIpApiClient();
+  final authenticationClient = StudIPAuthenticationClientImpl();
+  final authenticationRepository =
+      AuthenticationRepository(client: authenticationClient);
 
-  final authenticationRepository = AuthenticationRepository(client: apiClient);
+  final userClient = StudIPUserClientImpl();
+  // TODO: studIpApiClient <- Naming anpassen
+  final userRepository = UserRepository(studIpApiClient: userClient);
 
-  final userRepository = UserRepository(studIpApiClient: apiClient);
+  final coursesClient = StudIPCoursesClientImpl();
+  final coursesRepository = CourseRepository(
+    coursesApiClient: coursesClient,
+    userApiClient: userClient,
+  );
 
-  final coursesRepository = CourseRepository(apiClient: apiClient);
+  final messageClient = StudIPMessagesClientImpl();
+  final messagesRepository = MessageRepository(
+    messageClient: messageClient,
+    userClient: userClient,
+  );
 
-  final messagesRepository = MessageRepository(apiClient: apiClient);
+  final calendarClient = StudIPCalendarClientImpl();
+  final calenderRepository = CalenderRepository(apiClient: calendarClient);
 
-  final calenderRepository = CalenderRepository(apiClient: apiClient);
+  final filesClient = StudIPFilesClientImpl();
+  final filesRepository = FilesRepository(apiClient: filesClient);
 
-  final filesRepository = FilesRepository(apiClient: apiClient);
-
-  final activityRepository = ActivityRepository(apiClient: apiClient);
+  final activityClient = StudIPActivityClientImpl();
+  final activityRepository = ActivityRepository(
+    activityClient: activityClient,
+    courseClient: coursesClient,
+    filesClient: filesClient,
+  );
 
   await initializeDateFormatting();
 

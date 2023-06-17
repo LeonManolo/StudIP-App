@@ -1,18 +1,37 @@
 import 'dart:async';
 
+import 'package:studip_api_client/src/core/interfaces/interfaces.dart';
+import 'package:studip_api_client/src/core/studip_api_core.dart';
+import 'package:studip_api_client/src/extensions/extensions.dart';
+
 import '../models/models.dart';
 
-abstract class StudIPActivityClient {
+abstract interface class StudIPActivityClient {
   Future<FileActivityListResponse> getFileActivities({
     required String userId,
     required int limit,
   });
+}
 
-  Future<CourseResponse> getCourse({
-    required String courseId,
-  });
+class StudIPActivityClientImpl implements StudIPActivityClient {
+  final StudIpHttpCore _core;
 
-  Future<FileResponse> getFileRef({
-    required String fileId,
-  });
+  StudIPActivityClientImpl({StudIpHttpCore? core})
+      : _core = core ?? StudIpAPICore.shared;
+  @override
+  Future<FileActivityListResponse> getFileActivities({
+    required String userId,
+    required int limit,
+  }) async {
+    final response = await _core.get(
+        endpoint: "users/$userId/activitystream",
+        queryParameters: {
+          "filter[activity-type]": "documents",
+          "page[limit]": limit.toString()
+        });
+    final body = response.json();
+    response.throwIfInvalidHttpStatus(body: body);
+
+    return FileActivityListResponse.fromJson(body);
+  }
 }

@@ -1,6 +1,5 @@
 import 'package:app_ui/app_ui.dart';
 import 'package:collection/collection.dart';
-import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:studipadawan/courses/details/view/widgets/course_page_view_header.dart';
 import 'package:studipadawan/courses/details/view/widgets/course_page_view_tab_item.dart';

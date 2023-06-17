@@ -45,7 +45,7 @@ class CoursePageViewTabItem extends StatelessWidget {
                 color: active
                     ? highlightColor.withOpacity(0.08)
                     : Theme.of(context).scaffoldBackgroundColor,
-                borderRadius: const BorderRadius.all(Radius.circular(8))),
+                borderRadius: const BorderRadius.all(Radius.circular(8)),),
             child: Icon(
               icon,
               color: highlightColor,
