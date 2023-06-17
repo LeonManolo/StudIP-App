@@ -122,7 +122,7 @@ void main() {
       );
       when(
         () => mockedCoursesClient.getCourseNews(
-            courseId: '1', limit: 5, offset: 0),
+            courseId: '1', limit: 5, offset: 0,),
       ).thenAnswer((_) async {
         return CourseNewsListResponse(
           news: List.generate(
@@ -197,7 +197,7 @@ void main() {
     test('courses which belong to same semester are grouped together',
         () async {
       when(() =>
-              mockedCoursesClient.getCourses(userId: '1', offset: 0, limit: 30))
+              mockedCoursesClient.getCourses(userId: '1', offset: 0, limit: 30),)
           .thenAnswer((_) async {
         return CourseListResponse(
           courses: courses.getRange(0, 30).toList(),
@@ -207,7 +207,7 @@ void main() {
         );
       });
       when(() => mockedCoursesClient.getCourses(
-          userId: '1', offset: 30, limit: 30)).thenAnswer((_) async {
+          userId: '1', offset: 30, limit: 30,),).thenAnswer((_) async {
         return CourseListResponse(
           courses: courses.getRange(30, 35).toList(),
           offset: 30,

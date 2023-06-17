@@ -42,7 +42,7 @@ sealed class CalendarState extends Equatable {
   const CalendarState(
       {required this.layout,
       required this.currentDay,
-      required this.calendarFormat});
+      required this.calendarFormat,});
 
   final CalendarBodyType layout;
   final DateTime currentDay;
@@ -74,7 +74,7 @@ class CalendarLoading extends CalendarState {
   CalendarLoading copyWith(
       {CalendarBodyType? layout,
       DateTime? currentDay,
-      CalendarFormat? calendarFormat}) {
+      CalendarFormat? calendarFormat,}) {
     return CalendarLoading(
       layout: layout ?? this.layout,
       currentDay: currentDay ?? this.currentDay,
@@ -104,7 +104,7 @@ class CalendarPopulated extends CalendarState {
         layout: layout ?? this.layout,
         currentDay: currentDay ?? this.currentDay,
         calendarWeekData: calendarWeekData ?? this.calendarWeekData,
-        calendarFormat: calendarFormat ?? this.calendarFormat);
+        calendarFormat: calendarFormat ?? this.calendarFormat,);
   }
 
   @override
@@ -116,10 +116,10 @@ class CalendarFailure extends CalendarState {
       {required this.failureMessage,
       required super.layout,
       required super.currentDay,
-      required super.calendarFormat});
+      required super.calendarFormat,});
 
   factory CalendarFailure.fromState(
-          {required String failureMessage, required CalendarState state}) =>
+          {required String failureMessage, required CalendarState state,}) =>
       CalendarFailure(
         failureMessage: failureMessage,
         layout: state.layout,

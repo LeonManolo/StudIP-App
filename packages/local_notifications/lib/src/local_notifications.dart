@@ -7,7 +7,6 @@ import 'package:timezone/timezone.dart' as tz;
 import 'dart:io';
 
 import 'models/local_notification.dart';
-import 'extensions/max_int.dart';
 
 /// Provides local notification services using `FlutterLocalNotificationsPlugin`.
 final class LocalNotifications {

@@ -15,7 +15,7 @@ class ActivityRepository {
   final StudIPFilesClient _filesClient;
 
   Future<List<FileActivity>> getFileActivities(
-      {required String userId, required int limit}) async {
+      {required String userId, required int limit,}) async {
     try {
       final fileActivityListResponse = await _activityClient.getFileActivities(
         userId: userId,
@@ -23,10 +23,10 @@ class ActivityRepository {
       );
       final fileActivities = fileActivityListResponse.fileActivities
           .map((fileActivityResponse) => FileActivity.fromFileActivityResponse(
-              fileActivityResponse: fileActivityResponse))
+              fileActivityResponse: fileActivityResponse,),)
           .toList();
 
-      for (var fileActivity in fileActivities) {
+      for (final fileActivity in fileActivities) {
         final course = await getCourse(
           courseId: fileActivity.courseId,
         );

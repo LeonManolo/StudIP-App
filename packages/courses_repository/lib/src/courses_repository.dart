@@ -73,7 +73,7 @@ class CourseRepository {
   }
 
   Future<List<CourseWikiPageData>> getWikiPages(
-      {required String courseId}) async {
+      {required String courseId,}) async {
     try {
       final List<CourseWikiPageResponse> wikiPagesResponse = await _getResponse(
         id: courseId,
