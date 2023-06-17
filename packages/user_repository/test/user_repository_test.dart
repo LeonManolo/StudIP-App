@@ -102,7 +102,7 @@ void main() {
           return UserListResponse(
             userResponses: users
                 .where((user) =>
-                    user.username.toLowerCase().contains(search.toLowerCase()))
+                    user.username.toLowerCase().contains(search.toLowerCase()),)
                 .toList(),
           );
         });

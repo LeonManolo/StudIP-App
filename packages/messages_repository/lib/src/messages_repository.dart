@@ -5,9 +5,13 @@ import 'package:studip_api_client/studip_api_client.dart';
 
 class MessageRepository {
   const MessageRepository({
-    required StudIPMessagesClient apiClient,
-  }) : _apiClient = apiClient;
-  final StudIPMessagesClient _apiClient;
+    required StudIPMessagesClient messageClient,
+    required StudIPUserClient userClient,
+  })  : _messagesClient = messageClient,
+        _userClient = userClient;
+
+  final StudIPMessagesClient _messagesClient;
+  final StudIPUserClient _userClient;
 
   Future<List<Message>> getInboxMessages({
     required String userId,
@@ -16,7 +20,7 @@ class MessageRepository {
     required bool filterUnread,
   }) async {
     try {
-      final response = await _apiClient.getInboxMessages(
+      final response = await _messagesClient.getInboxMessages(
         userId: userId,
         offset: offset,
         limit: limit,
@@ -27,8 +31,8 @@ class MessageRepository {
       final Map<String, MessageUser> knownUsers = {};
       for (final message in messages) {
         message
-        ..sender = await _fetchUser(knownUsers, message.sender.id)
-        ..recipients = await _fetchUsers(knownUsers, message.recipients);
+          ..sender = await _fetchUser(knownUsers, message.sender.id)
+          ..recipients = await _fetchUsers(knownUsers, message.recipients);
       }
       return messages;
     } catch (error, stackTrace) {
@@ -42,7 +46,7 @@ class MessageRepository {
     required int limit,
   }) async {
     try {
-      final response = await _apiClient.getOutboxMessages(
+      final response = await _messagesClient.getOutboxMessages(
         userId: userId,
         offset: offset,
         limit: limit,
@@ -52,8 +56,8 @@ class MessageRepository {
       final Map<String, MessageUser> knownUsers = {};
       for (final message in messages) {
         message
-        ..sender = await _fetchUser(knownUsers, message.sender.id)
-        ..recipients = await _fetchUsers(knownUsers, message.recipients);
+          ..sender = await _fetchUser(knownUsers, message.sender.id)
+          ..recipients = await _fetchUsers(knownUsers, message.recipients);
       }
       return messages;
     } catch (error, stackTrace) {
@@ -81,7 +85,7 @@ class MessageRepository {
     });
     try {
       final MessageResponse response =
-          await _apiClient.sendMessage(message: message);
+          await _messagesClient.sendMessage(message: message);
       return Message.fromMessageResponse(response);
     } catch (error, stackTrace) {
       Error.throwWithStackTrace(error, stackTrace);
@@ -98,7 +102,7 @@ class MessageRepository {
       },
     });
     try {
-      await _apiClient.readMessage(messageId: messageId, message: message);
+      await _messagesClient.readMessage(messageId: messageId, message: message);
     } catch (error, stackTrace) {
       Error.throwWithStackTrace(error, stackTrace);
     }
@@ -115,15 +119,14 @@ class MessageRepository {
   }
 
   Future<List<MessageUser>> searchUsers({required String searchParam}) async {
-    final usersResponse = await _apiClient.getUsers(searchParam);
+    final usersResponse = await _userClient.getUsers(searchParam);
     return usersResponse.userResponses
-              .map(MessageUser.fromUserResponse)
-              .toList();
-
+        .map(MessageUser.fromUserResponse)
+        .toList();
   }
 
   Future<void> deleteMessage({required String messageId}) async {
-    await _apiClient.deleteMessage(messageId: messageId);
+    await _messagesClient.deleteMessage(messageId: messageId);
   }
 
   Future<List<MessageUser>> _fetchUsers(
@@ -148,7 +151,7 @@ class MessageRepository {
     String userId,
   ) async {
     if (knownUsers[userId] == null) {
-      final userResponse = await _apiClient.getUser(userId: userId);
+      final userResponse = await _userClient.getUser(userId: userId);
       knownUsers[userId] = MessageUser.fromUserResponse(userResponse);
       return knownUsers[userId]!;
     } else {

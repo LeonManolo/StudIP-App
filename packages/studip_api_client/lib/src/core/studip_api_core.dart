@@ -10,17 +10,21 @@ import 'package:oauth2_client/oauth2_exception.dart';
 import 'package:oauth2_client/oauth2_helper.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:studip_api_client/src/core/custom_token_storage.dart';
+import 'package:studip_api_client/src/core/interfaces/interfaces.dart';
 import 'package:studip_api_client/src/exceptions.dart';
 import 'studip_oauth_client.dart';
 import 'package:http_forked/http.dart' as http;
 import 'dart:io';
 
-class StudIpAPICore {
+class StudIpAPICore
+    implements StudIpAuthenticationCore, StudIpHttpCore, StudIpFilesCore {
+  static final shared = StudIpAPICore();
+
   final String _baseUrl;
   final OAuth2Helper _oauth2Helper;
   final Dio _dio;
   final _apiBaseUrl = "jsonapi.php/v1";
-  static final _defaultBaseUrl = "http://miezhaus.feste-ip.net:32555";
+  static final _defaultBaseUrl = "http://studip.miezhaus.net";
 
   StudIpAPICore({String? baseUrl, Dio? dio, OAuth2Helper? oauth2Helper})
       : _baseUrl = baseUrl ?? _defaultBaseUrl,
@@ -34,6 +38,7 @@ class StudIpAPICore {
               tokenBaseStorage: CustomTokenStorage(),
             );
 
+  @override
   Future<http.Response> get({
     required String endpoint,
     Map<String, String>? queryParameters,
@@ -47,6 +52,7 @@ class StudIpAPICore {
     });
   }
 
+  @override
   Future<http.Response> delete({
     required String endpoint,
     Map<String, String>? queryParameters,
@@ -60,6 +66,7 @@ class StudIpAPICore {
     });
   }
 
+  @override
   Future<http.Response> patch(
       {required String endpoint,
       Map<String, String>? bodyParameters,
@@ -74,6 +81,7 @@ class StudIpAPICore {
         body: jsonString ?? jsonEncode(bodyParameters));
   }
 
+  @override
   Future<http.Response> post(
       {required String endpoint,
       Map<String, String>? bodyParameters,
@@ -89,6 +97,7 @@ class StudIpAPICore {
   }
 
   /// Downloads a given file and returns the local storage path
+  @override
   Future<String?> downloadFile({
     required String fileId,
     required String fileName,
@@ -122,6 +131,7 @@ class StudIpAPICore {
   }
 
   /// Uploads all files passed in [localFilePaths]. If upload fails it throws an error.
+  @override
   Future<void> uploadFiles({
     required String parentFolderId,
     required Iterable<String> localFilePaths,
@@ -175,6 +185,7 @@ class StudIpAPICore {
   }
 
   /// Checks whether File exists and isn't outdated. If [deleteOutdatedVersion] is set to true, outdated file versions are deleted.
+  @override
   Future<bool> isFilePresentAndUpToDate({
     required String fileId,
     required String fileName,
@@ -197,6 +208,7 @@ class StudIpAPICore {
     return false;
   }
 
+  @override
   Future<String> localFilePath({
     required String? fileId,
     required String? fileName,
@@ -211,6 +223,7 @@ class StudIpAPICore {
   }
 
   /// This method can be used to automatically delete persisted data which was deleted in the backend
+  @override
   FutureOr<void> cleanup({
     required List<String> parentFolderIds,
     required List<String> expectedIds,
@@ -240,7 +253,7 @@ class StudIpAPICore {
   }
 
   // ***** AUTHENTICATION *****
-
+  @override
   Future<String?> restoreUser() async {
     if ((await _oauth2Helper.getTokenFromStorage()) != null) {
       // Only if a token is present a automatic refresh should be tried (if needed)
@@ -250,6 +263,7 @@ class StudIpAPICore {
     }
   }
 
+  @override
   Future<String?> loginWithStudIp() async {
     try {
       AccessTokenResponse? tokenResponse = await _oauth2Helper.getToken();
@@ -272,6 +286,7 @@ class StudIpAPICore {
     }
   }
 
+  @override
   Future<void> removeAllTokens() async {
     await _oauth2Helper.removeAllTokens();
   }
