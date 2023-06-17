@@ -4,9 +4,13 @@ import 'package:studip_api_client/studip_api_client.dart'
 
 class CourseRepository {
   const CourseRepository({
-    required StudIPCoursesClient apiClient,
-  }) : _apiClient = apiClient;
-  final StudIPCoursesClient _apiClient;
+    required StudIPCoursesClient coursesApiClient,
+    required StudIPUserClient userApiClient,
+  })  : _coursesApiClient = coursesApiClient,
+        _userApiClient = userApiClient;
+
+  final StudIPCoursesClient _coursesApiClient;
+  final StudIPUserClient _userApiClient;
 
   Future<List<StudIPCourseEvent>> getCourseEvents({
     required String courseId,
@@ -16,7 +20,7 @@ class CourseRepository {
           await _getResponse<CourseEventResponse>(
         id: courseId,
         loadItems: ({required id, required limit, required offset}) async {
-          return _apiClient.getCourseEvents(
+          return _coursesApiClient.getCourseEvents(
             courseId: id,
             offset: offset,
             limit: limit,
@@ -42,7 +46,7 @@ class CourseRepository {
     required int offset,
   }) async {
     try {
-      final newsResponse = await _apiClient.getCourseNews(
+      final newsResponse = await _coursesApiClient.getCourseNews(
         courseId: courseId,
         limit: limit,
         offset: offset,
@@ -51,7 +55,7 @@ class CourseRepository {
       final List<CourseNews> newsItems = await Future.wait(
         newsResponse.news.map((rawNewsResponse) async {
           final UserResponse userResponse =
-              await _apiClient.getUser(userId: rawNewsResponse.authorId);
+              await _userApiClient.getUser(userId: rawNewsResponse.authorId);
           return CourseNews.fromCourseNewsResponse(
             courseNewsResponse: rawNewsResponse,
             userResponse: userResponse,
@@ -74,7 +78,7 @@ class CourseRepository {
       final List<CourseWikiPageResponse> wikiPagesResponse = await _getResponse(
         id: courseId,
         loadItems: ({required id, required limit, required offset}) async {
-          return _apiClient.getCourseWikiPages(
+          return _coursesApiClient.getCourseWikiPages(
             courseId: courseId,
             offset: offset,
             limit: limit,
@@ -85,7 +89,7 @@ class CourseRepository {
       return await Future.wait(
         wikiPagesResponse.map((rawWikiPage) async {
           final userResponse =
-              await _apiClient.getUser(userId: rawWikiPage.lastEditorId);
+              await _userApiClient.getUser(userId: rawWikiPage.lastEditorId);
           return CourseWikiPageData.fromCourseWikiPageResponse(
             courseWikiPageResponse: rawWikiPage,
             userResponse: userResponse,
@@ -102,7 +106,7 @@ class CourseRepository {
       final List<CourseResponse> courses = await _getResponse(
         id: userId,
         loadItems: ({required id, required limit, required offset}) async {
-          return _apiClient.getCourses(
+          return _coursesApiClient.getCourses(
             userId: id,
             offset: offset,
             limit: limit,
@@ -121,7 +125,7 @@ class CourseRepository {
 
       final semestersResponse = await Future.wait(
         semesterToCourses.keys.map(
-          (semesterId) => _apiClient.getSemester(semesterId: semesterId),
+          (semesterId) => _coursesApiClient.getSemester(semesterId: semesterId),
         ),
       );
 
@@ -151,7 +155,7 @@ class CourseRepository {
     required int offset,
     required int limit,
   }) async {
-    final participantsResponse = await _apiClient.getCourseParticipants(
+    final participantsResponse = await _coursesApiClient.getCourseParticipants(
       courseId: courseId,
       offset: offset,
       limit: limit,
@@ -159,7 +163,7 @@ class CourseRepository {
     final participants = <Participant>[];
     for (final participantResponse in participantsResponse.participants) {
       final UserResponse userResponse =
-          await _apiClient.getUser(userId: participantResponse.id);
+          await _userApiClient.getUser(userId: participantResponse.id);
       participants.add(Participant.fromUserResponse(userResponse));
     }
 

@@ -6,13 +6,20 @@ import 'package:studip_api_client/studip_api_client.dart';
 
 class MockStudIPCoursesClient extends Mock implements StudIPCoursesClient {}
 
+class MockStudIPUserClient extends Mock implements StudIPUserClient {}
+
 void main() {
   late CourseRepository sut;
-  late MockStudIPCoursesClient mockedApiClient;
+  late MockStudIPCoursesClient mockedCoursesClient;
+  late MockStudIPUserClient mockedUserClient;
 
   setUp(() {
-    mockedApiClient = MockStudIPCoursesClient();
-    sut = CourseRepository(apiClient: mockedApiClient);
+    mockedCoursesClient = MockStudIPCoursesClient();
+    mockedUserClient = MockStudIPUserClient();
+    sut = CourseRepository(
+      coursesApiClient: mockedCoursesClient,
+      userApiClient: mockedUserClient,
+    );
   });
 
   group('getCourseEvents', () {
@@ -28,8 +35,13 @@ void main() {
     }
 
     test('handle multi page request', () async {
-      when(() => mockedApiClient.getCourseEvents(
-          courseId: '1', offset: 0, limit: 30,),).thenAnswer((_) async {
+      when(
+        () => mockedCoursesClient.getCourseEvents(
+          courseId: '1',
+          offset: 0,
+          limit: 30,
+        ),
+      ).thenAnswer((_) async {
         return CourseEventListResponse(
           events: List.generate(
             30,
@@ -41,7 +53,7 @@ void main() {
         );
       });
       when(
-        () => mockedApiClient.getCourseEvents(
+        () => mockedCoursesClient.getCourseEvents(
           courseId: '1',
           offset: 30,
           limit: 30,
@@ -100,7 +112,7 @@ void main() {
 
     test('get last 5 course news', () async {
       when(
-        () => mockedApiClient.getUser(
+        () => mockedUserClient.getUser(
           userId: any(named: 'userId', that: isNotNull),
         ),
       ).thenAnswer(
@@ -109,7 +121,8 @@ void main() {
         ),
       );
       when(
-        () => mockedApiClient.getCourseNews(courseId: '1', limit: 5, offset: 0),
+        () => mockedCoursesClient.getCourseNews(
+            courseId: '1', limit: 5, offset: 0),
       ).thenAnswer((_) async {
         return CourseNewsListResponse(
           news: List.generate(
@@ -183,7 +196,8 @@ void main() {
 
     test('courses which belong to same semester are grouped together',
         () async {
-      when(() => mockedApiClient.getCourses(userId: '1', offset: 0, limit: 30))
+      when(() =>
+              mockedCoursesClient.getCourses(userId: '1', offset: 0, limit: 30))
           .thenAnswer((_) async {
         return CourseListResponse(
           courses: courses.getRange(0, 30).toList(),
@@ -192,8 +206,8 @@ void main() {
           total: 35,
         );
       });
-      when(() => mockedApiClient.getCourses(userId: '1', offset: 30, limit: 30))
-          .thenAnswer((_) async {
+      when(() => mockedCoursesClient.getCourses(
+          userId: '1', offset: 30, limit: 30)).thenAnswer((_) async {
         return CourseListResponse(
           courses: courses.getRange(30, 35).toList(),
           offset: 30,
@@ -202,7 +216,7 @@ void main() {
         );
       });
       when(
-        () => mockedApiClient.getSemester(
+        () => mockedCoursesClient.getSemester(
           semesterId: any(that: isNotNull, named: 'semesterId'),
         ),
       ).thenAnswer((invocation) async {
