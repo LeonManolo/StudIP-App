@@ -13,9 +13,9 @@ abstract class StudIPCalendarClient {
 }
 
 class StudIPCalendarClientImpl implements StudIPCalendarClient {
-  final StudIpAPIHttpCore _core;
+  final StudIpHttpCore _core;
 
-  StudIPCalendarClientImpl({StudIpAPIHttpCore? core})
+  StudIPCalendarClientImpl({StudIpHttpCore? core})
       : _core = core ?? StudIpAPICore.shared;
 
   @override

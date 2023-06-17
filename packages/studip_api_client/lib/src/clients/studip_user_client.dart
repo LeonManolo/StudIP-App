@@ -14,9 +14,9 @@ abstract class StudIPUserClient {
 }
 
 class StudIPUserClientImpl implements StudIPUserClient {
-  final StudIpAPIHttpCore _core;
+  final StudIpHttpCore _core;
 
-  StudIPUserClientImpl({StudIpAPIHttpCore? core})
+  StudIPUserClientImpl({StudIpHttpCore? core})
       : _core = core ?? StudIpAPICore.shared;
 
   @override

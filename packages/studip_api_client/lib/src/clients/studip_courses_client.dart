@@ -4,7 +4,7 @@ import 'package:studip_api_client/src/core/studip_api_core.dart';
 import 'package:studip_api_client/src/exceptions.dart';
 import 'package:studip_api_client/src/extensions/extensions.dart';
 
-import '../core/interfaces/studip_api_http_request_core.dart';
+import '../core/interfaces/studip_http_request_core.dart';
 import '../models/models.dart';
 
 abstract class StudIPCoursesClient {
@@ -48,9 +48,9 @@ abstract class StudIPCoursesClient {
 }
 
 class StudIPCoursesClientImpl implements StudIPCoursesClient {
-  final StudIpAPIHttpCore _core;
+  final StudIpHttpCore _core;
 
-  StudIPCoursesClientImpl({StudIpAPIHttpCore? core})
+  StudIPCoursesClientImpl({StudIpHttpCore? core})
       : _core = core ?? StudIpAPICore.shared;
   @override
   Future<CourseListResponse> getCourses(

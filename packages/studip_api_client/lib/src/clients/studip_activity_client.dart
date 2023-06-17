@@ -16,9 +16,9 @@ abstract class StudIPActivityClient {
 }
 
 class StudIPActivityClientImpl implements StudIPActivityClient {
-  final StudIpAPIHttpCore _core;
+  final StudIpHttpCore _core;
 
-  StudIPActivityClientImpl({StudIpAPIHttpCore? core})
+  StudIPActivityClientImpl({StudIpHttpCore? core})
       : _core = core ?? StudIpAPICore.shared;
   @override
   Future<FileActivityListResponse> getFileActivities({

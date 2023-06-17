@@ -1,4 +1,4 @@
-abstract class StudIpAPIAuthenticationCore {
+abstract class StudIpAuthenticationCore {
   Future<void> removeAllTokens();
 
   Future<String?> restoreUser();

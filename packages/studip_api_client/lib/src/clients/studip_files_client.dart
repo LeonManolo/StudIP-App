@@ -67,11 +67,10 @@ abstract class StudIPFilesClient {
 }
 
 class StudIPFilesClientImpl implements StudIPFilesClient {
-  final StudIpAPIHttpCore _httpCore;
-  final StudIpAPIFilesCore _filesCore;
+  final StudIpHttpCore _httpCore;
+  final StudIpFilesCore _filesCore;
 
-  StudIPFilesClientImpl(
-      {StudIpAPIHttpCore? httpCore, StudIpAPIFilesCore? filesCore})
+  StudIPFilesClientImpl({StudIpHttpCore? httpCore, StudIpFilesCore? filesCore})
       : _httpCore = httpCore ?? StudIpAPICore.shared,
         _filesCore = filesCore ?? StudIpAPICore.shared;
 

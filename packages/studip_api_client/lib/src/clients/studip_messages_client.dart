@@ -28,9 +28,9 @@ abstract class StudIPMessagesClient {
 }
 
 class StudIPMessagesClientImpl implements StudIPMessagesClient {
-  final StudIpAPIHttpCore _core;
+  final StudIpHttpCore _core;
 
-  StudIPMessagesClientImpl({StudIpAPIHttpCore? core})
+  StudIPMessagesClientImpl({StudIpHttpCore? core})
       : _core = core ?? StudIpAPICore.shared;
 
   @override

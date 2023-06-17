@@ -17,10 +17,7 @@ import 'package:http_forked/http.dart' as http;
 import 'dart:io';
 
 class StudIpAPICore
-    implements
-        StudIpAPIAuthenticationCore,
-        StudIpAPIHttpCore,
-        StudIpAPIFilesCore {
+    implements StudIpAuthenticationCore, StudIpHttpCore, StudIpFilesCore {
   static final shared = StudIpAPICore();
 
   final String _baseUrl;

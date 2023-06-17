@@ -10,9 +10,9 @@ abstract class StudIPAuthenticationClient {
 }
 
 class StudIPAuthenticationClientImpl implements StudIPAuthenticationClient {
-  final StudIpAPIAuthenticationCore _core;
+  final StudIpAuthenticationCore _core;
 
-  StudIPAuthenticationClientImpl({StudIpAPIAuthenticationCore? core})
+  StudIPAuthenticationClientImpl({StudIpAuthenticationCore? core})
       : _core = core ?? StudIpAPICore.shared;
 
   @override
