@@ -1,7 +1,5 @@
-import 'dart:io';
 
 import 'package:studip_api_client/src/core/studip_api_core.dart';
-import 'package:studip_api_client/src/exceptions.dart';
 import 'package:studip_api_client/src/extensions/extensions.dart';
 
 import '../core/interfaces/studip_http_request_core.dart';
@@ -62,13 +60,8 @@ class StudIPCoursesClientImpl implements StudIPCoursesClient {
     });
 
     final body = response.json();
+    response.throwIfInvalidHttpStatus(body: body);
 
-    if (response.statusCode != HttpStatus.ok) {
-      throw StudIpApiRequestFailure(
-        body: body,
-        statusCode: response.statusCode,
-      );
-    }
     return CourseListResponse.fromJson(body);
   }
 
@@ -77,11 +70,8 @@ class StudIPCoursesClientImpl implements StudIPCoursesClient {
     final response = await _core.get(endpoint: "semesters/$semesterId");
 
     final body = response.json();
+    response.throwIfInvalidHttpStatus(body: body);
 
-    if (response.statusCode != HttpStatus.ok) {
-      throw StudIpApiRequestFailure(
-          body: body, statusCode: response.statusCode);
-    }
     return SemesterResponse.fromJson(body);
   }
 
@@ -96,11 +86,8 @@ class StudIPCoursesClientImpl implements StudIPCoursesClient {
         queryParameters: {"page[limit]": "$limit", "page[offset]": "$offset"});
 
     final body = response.json();
+    response.throwIfInvalidHttpStatus(body: body);
 
-    if (response.statusCode != HttpStatus.ok) {
-      throw StudIpApiRequestFailure(
-          body: body, statusCode: response.statusCode);
-    }
     return CourseNewsListResponse.fromJson(body);
   }
 
@@ -117,13 +104,8 @@ class StudIPCoursesClientImpl implements StudIPCoursesClient {
     });
 
     final body = response.json();
+    response.throwIfInvalidHttpStatus(body: body);
 
-    if (response.statusCode != HttpStatus.ok) {
-      throw StudIpApiRequestFailure(
-        body: body,
-        statusCode: response.statusCode,
-      );
-    }
     return CourseEventListResponse.fromJson(body);
   }
 
@@ -140,13 +122,8 @@ class StudIPCoursesClientImpl implements StudIPCoursesClient {
     });
 
     final body = response.json();
+    response.throwIfInvalidHttpStatus(body: body);
 
-    if (response.statusCode != HttpStatus.ok) {
-      throw StudIpApiRequestFailure(
-        body: body,
-        statusCode: response.statusCode,
-      );
-    }
     return CourseWikiPagesListResponse.fromJson(body);
   }
 
@@ -164,13 +141,8 @@ class StudIPCoursesClientImpl implements StudIPCoursesClient {
         });
 
     final body = response.json();
+    response.throwIfInvalidHttpStatus(body: body);
 
-    if (response.statusCode != HttpStatus.ok) {
-      throw StudIpApiRequestFailure(
-        body: body,
-        statusCode: response.statusCode,
-      );
-    }
     return CourseParticipantsResponse.fromJson(body);
   }
 
@@ -180,12 +152,8 @@ class StudIPCoursesClientImpl implements StudIPCoursesClient {
   }) async {
     final response = await _core.get(endpoint: "courses/$courseId");
     final body = response.json();
-    if (response.statusCode != HttpStatus.ok) {
-      throw StudIpApiRequestFailure(
-        body: body,
-        statusCode: response.statusCode,
-      );
-    }
+    response.throwIfInvalidHttpStatus(body: body);
+
     return CourseResponse.fromJson(body["data"]);
   }
 }

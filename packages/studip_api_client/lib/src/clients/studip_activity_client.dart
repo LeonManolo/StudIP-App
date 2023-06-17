@@ -1,9 +1,7 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:studip_api_client/src/core/interfaces/interfaces.dart';
 import 'package:studip_api_client/src/core/studip_api_core.dart';
-import 'package:studip_api_client/src/exceptions.dart';
 import 'package:studip_api_client/src/extensions/extensions.dart';
 
 import '../models/models.dart';
@@ -32,12 +30,8 @@ class StudIPActivityClientImpl implements StudIPActivityClient {
           "page[limit]": limit.toString()
         });
     final body = response.json();
-    if (response.statusCode != HttpStatus.ok) {
-      throw StudIpApiRequestFailure(
-        body: body,
-        statusCode: response.statusCode,
-      );
-    }
+    response.throwIfInvalidHttpStatus(body: body);
+
     return FileActivityListResponse.fromJson(body);
   }
 }

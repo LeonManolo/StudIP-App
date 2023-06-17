@@ -1,10 +1,7 @@
-import 'dart:io';
 
-import 'package:logger/logger.dart';
 import 'package:studip_api_client/src/core/interfaces/interfaces.dart';
 import 'package:studip_api_client/src/core/studip_api_core.dart';
 import 'package:studip_api_client/src/extensions/extensions.dart';
-import 'package:studip_api_client/src/exceptions.dart';
 import 'package:studip_api_client/src/models/models.dart';
 
 abstract interface class StudIPCalendarClient {
@@ -35,15 +32,8 @@ class StudIPCalendarClientImpl implements StudIPCalendarClient {
         });
 
     final body = response.json();
+    response.throwIfInvalidHttpStatus(body: body);
 
-    if (response.statusCode != HttpStatus.ok) {
-      final failure = StudIpApiRequestFailure(
-        body: body,
-        statusCode: response.statusCode,
-      );
-      Logger().e("Unexpected Response status code", failure);
-      throw failure;
-    }
     return ScheduleResponse.fromJson(body);
   }
 }

@@ -1,10 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:studip_api_client/src/core/interfaces/interfaces.dart';
 import 'package:studip_api_client/src/core/studip_api_core.dart';
-import 'package:studip_api_client/src/exceptions.dart';
 import 'package:studip_api_client/src/extensions/extensions.dart';
 
 import '../models/models.dart';
@@ -82,13 +80,8 @@ class StudIPFilesClientImpl implements StudIPFilesClient {
     });
 
     final body = response.json();
+    response.throwIfInvalidHttpStatus(body: body);
 
-    if (response.statusCode != HttpStatus.ok) {
-      throw StudIpApiRequestFailure(
-        body: body,
-        statusCode: response.statusCode,
-      );
-    }
     return FolderListResponse.fromJson(body).folders.first;
   }
 
@@ -104,13 +97,8 @@ class StudIPFilesClientImpl implements StudIPFilesClient {
     });
 
     final body = response.json();
+    response.throwIfInvalidHttpStatus(body: body);
 
-    if (response.statusCode != HttpStatus.ok) {
-      throw StudIpApiRequestFailure(
-        body: body,
-        statusCode: response.statusCode,
-      );
-    }
     return FileListResponse.fromJson(body);
   }
 
@@ -126,13 +114,8 @@ class StudIPFilesClientImpl implements StudIPFilesClient {
     });
 
     final body = response.json();
+    response.throwIfInvalidHttpStatus(body: body);
 
-    if (response.statusCode != HttpStatus.ok) {
-      throw StudIpApiRequestFailure(
-        body: body,
-        statusCode: response.statusCode,
-      );
-    }
     return FolderListResponse.fromJson(body);
   }
 
@@ -217,13 +200,8 @@ class StudIPFilesClientImpl implements StudIPFilesClient {
     final response = await _httpCore.get(endpoint: "file-refs/$fileId");
 
     final body = response.json();
+    response.throwIfInvalidHttpStatus(body: body);
 
-    if (response.statusCode != HttpStatus.ok) {
-      throw StudIpApiRequestFailure(
-        body: body,
-        statusCode: response.statusCode,
-      );
-    }
     return FileResponse.fromJson(body["data"]);
   }
 
