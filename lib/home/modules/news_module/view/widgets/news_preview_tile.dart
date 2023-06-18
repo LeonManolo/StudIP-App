@@ -10,7 +10,7 @@ class NewsPreviewTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: Text('Neue Ankündigung im Kurs ${newsActivity.course?.courseDetails.title}'),
+      title: Text('Kurs: ${newsActivity.course?.courseDetails.title}'),
       subtitle: Text('Von: ${newsActivity.userName}'),
       leading: const Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -22,16 +22,16 @@ class NewsPreviewTile extends StatelessWidget {
           Text(newsActivity.getTimeAgo()),
         ],
       ),
-       onTap: () {
-         Navigator.push(
-                context,
-                MaterialPageRoute<CourseNewsPage>(
-                  builder: (context) => CourseNewsPage(
-                    courseId: newsActivity.course!.id,
-                  ),
-                  fullscreenDialog: true,
-                ),
-              );
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute<CourseNewsPage>(
+            builder: (context) => CourseNewsPage(
+              courseId: newsActivity.course!.id,
+            ),
+            fullscreenDialog: true,
+          ),
+        );
       },
     );
   }

@@ -29,7 +29,8 @@ class ActivityRepository {
       final fileActivities = fileActivityListResponse.fileActivities
           .map(
             (fileActivityResponse) => FileActivity.fromFileActivityResponse(
-                fileActivityResponse: fileActivityResponse),
+              fileActivityResponse: fileActivityResponse,
+            ),
           )
           .toList();
 
