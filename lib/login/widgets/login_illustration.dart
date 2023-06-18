@@ -16,13 +16,13 @@ class LoginIllustration extends StatelessWidget {
         bottom: AppSpacing.xxlg,
       ),
       decoration: BoxDecoration(
-        color: Theme.of(context).primaryColor.withOpacity(0.1),
+        color: context.adaptivePrimaryColor.withOpacity(0.1),
         borderRadius: const BorderRadius.all(Radius.circular(12)),
       ),
       child: Icon(
         EvaIcons.logInOutline,
         size: MediaQuery.of(context).size.width * 0.18,
-        color: Theme.of(context).primaryColor,
+        color: context.adaptivePrimaryColor,
       ),
     );
   }

@@ -42,82 +42,68 @@ class _SemesterSortFilterModalSheetState
 
   @override
   Widget build(BuildContext context) {
-    return PlatformScaffold(
-      iosContentPadding: true,
-      appBar: PlatformAppBar(
-        automaticallyImplyLeading: false,
-        title: const Text('Filter'),
-        leading: Align(
-          widthFactor: 1.0,
-          alignment: Alignment.center,
-          child: GestureDetector(
-            onTap: () =>  Navigator.pop(context),
-              child: Text('abbrechen', style: TextStyle(color: context.adaptivePrimaryColor),)),
-        ),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(AppSpacing.lg),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Text(
-              'Filter',
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
-            const SizedBox(height: AppSpacing.md),
-            SegmentedButton(
-              style: _segmentedButtonStyle(),
-              segments: const [
-                ButtonSegment(
-                  value: SemesterFilter.all,
-                  label: Text('Alle Semester'),
-                ),
-                ButtonSegment(
-                  value: SemesterFilter.current,
-                  label: Text('Aktuelles Semester'),
-                ),
-              ],
-              selected: {currentSemesterFilter},
-              onSelectionChanged: (selectedFilters) {
-                {
-                  setState(
-                        () => currentSemesterFilter = selectedFilters.first,
-                  );
-                  onSemesterFilterSelectionChanged(selectedFilters.first);
-                }
-              },
-            ),
-            const SizedBox(height: AppSpacing.xlg),
-            Text(
-              'Sortierung',
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
-            const SizedBox(height: AppSpacing.md),
-            SegmentedButton(
-              style: _segmentedButtonStyle(),
-              segments: const [
-                ButtonSegment(
-                  value: SemesterSortOrder.asc,
-                  label: Text('Aufsteigend'),
-                ),
-                ButtonSegment(
-                  value: SemesterSortOrder.desc,
-                  label: Text('Absteigend'),
-                ),
-              ],
-              selected: {currentSemesterSortOrder},
-              onSelectionChanged: (selectedSortOrders) {
+    return Padding(
+      padding: const EdgeInsets.all(AppSpacing.lg),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(
+            'Filter',
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
+          const SizedBox(height: AppSpacing.md),
+          SegmentedButton(
+            style: _segmentedButtonStyle(),
+            segments: const [
+              ButtonSegment(
+                value: SemesterFilter.all,
+                label: Text('Alle Semester'),
+              ),
+              ButtonSegment(
+                value: SemesterFilter.current,
+                label: Text('Aktuelles Semester'),
+              ),
+            ],
+            selected: {currentSemesterFilter},
+            onSelectionChanged: (selectedFilters) {
+              {
                 setState(
-                      () => currentSemesterSortOrder = selectedSortOrders.first,
+                  () => currentSemesterFilter = selectedFilters.first,
                 );
-                onSemesterSortOrderSelectionChanged(selectedSortOrders.first);
-              },
-            ),
-            const SizedBox(
-              height: 50,
-            )
-          ],
-        ),
+                onSemesterFilterSelectionChanged(selectedFilters.first);
+              }
+            },
+          ),
+          const SizedBox(height: AppSpacing.xlg),
+          Text(
+            'Sortierung',
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
+          const SizedBox(height: AppSpacing.md),
+          SegmentedButton(
+            style: _segmentedButtonStyle(),
+            segments: const [
+              ButtonSegment(
+                value: SemesterSortOrder.asc,
+                label: Text('Aufsteigend'),
+              ),
+              ButtonSegment(
+                value: SemesterSortOrder.desc,
+                label: Text('Absteigend'),
+              ),
+            ],
+            selected: {currentSemesterSortOrder},
+            onSelectionChanged: (selectedSortOrders) {
+              setState(
+                () => currentSemesterSortOrder = selectedSortOrders.first,
+              );
+              onSemesterSortOrderSelectionChanged(selectedSortOrders.first);
+            },
+          ),
+          const SizedBox(
+            height: 50,
+          )
+        ],
       ),
     );
   }

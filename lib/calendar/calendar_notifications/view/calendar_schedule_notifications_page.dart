@@ -13,7 +13,6 @@ import 'package:studipadawan/calendar/calendar_notifications/widgets/calendar_no
 import 'package:studipadawan/calendar/calendar_notifications/widgets/headline.dart';
 import 'package:studipadawan/utils/empty_view.dart';
 import 'package:studipadawan/utils/loading_indicator.dart';
-import 'package:studipadawan/utils/snackbar.dart';
 import 'package:studipadawan/utils/widgets/non_empty_listview_builder.dart';
 
 class CalendarScheduleNotificationsPage extends StatelessWidget {
@@ -30,134 +29,118 @@ class CalendarScheduleNotificationsPage extends StatelessWidget {
         courseRepository: context.read<CourseRepository>(),
       )..add(const CalendarNotificationsRequested()),
       child: PlatformScaffold(
-        iosContentBottomPadding: true,
         appBar: PlatformAppBar(
           title: const Text('Benachrichtigungen'),
-          trailingActions: const [
-            _DeleteButton()
-          ],
+          trailingActions: const [_DeleteButton()],
         ),
-        body:
-            SafeArea(
-              child: BlocConsumer<CalendarNotificationsBloc, CalendarNotificationsState>(
-          listener: (context, state) {
-              if (state
-                  case CalendarNotificationsPopulated(notificationsSaved: true)) {
-                buildSnackBar(context, 'Benachrichtigungen gespeichert', null);
-                Navigator.of(context).pop();
-              }
-          },
-          builder: (context, state) {
-              return BlocBuilder<CalendarNotificationsBloc,
-                  CalendarNotificationsState>(
-                builder: (context, state) {
-                  switch (state) {
-                    case CalendarNotificationsFailure():
-                      return const Center(child: Text('Fehler'));
+        body: SafeArea(
+          child: BlocBuilder<CalendarNotificationsBloc,
+              CalendarNotificationsState>(
+            builder: (context, state) {
+              switch (state) {
+                case CalendarNotificationsFailure():
+                  return const EmptyView(
+                    title: 'Fehler',
+                    message: 'Fehler beim laden der Benachrichtigungen',
+                  );
 
-                    case CalendarNotificationsInitial() ||
-                          CalendarNotificationsLoading():
-                      return const LoadingIndicator();
+                case CalendarNotificationsInitial() ||
+                      CalendarNotificationsLoading():
+                  return const LoadingIndicator();
 
-                    case CalendarNotificationsPopulated(courses: final courses)
-                        when courses.isEmpty:
-                      return const EmptyView(
-                        title: 'Kein Semester',
-                        message: 'Es wurde kein Semester gefunden.',
-                      );
+                case CalendarNotificationsPopulated(courses: final courses)
+                    when courses.isEmpty:
+                  return const EmptyView(
+                    title: 'Kein Semester',
+                    message: 'Es wurde kein Semester gefunden.',
+                  );
 
-                    case CalendarNotificationsPopulated(
-                        courses: final courses,
-                        totalNotifications: final totalNotifications
-                      ):
-                      return Stack(
-                        alignment: Alignment.bottomCenter,
-                        children: [
-                          Positioned.fill(
-                            child: NonEmptyListViewBuilder(
-                              header: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Headline('Erinnerungen'),
-                                  CalendarNotificationTimeSelection(
-                                    onChanged: (selectedNotificationTime) {
-                                      context
-                                          .read<CalendarNotificationsBloc>()
-                                          .add(
-                                            CalendarNotificationSelectedTime(
-                                              notificationTime:
-                                                  selectedNotificationTime,
-                                            ),
-                                          );
-                                    },
-                                    activeNotificationTime:
-                                        state.notificationTime,
-                                  ),
-                                  const Headline('Kurse'),
-                                ],
-                              ),
-                              itemCount: courses.length,
-                              itemBuilder: (context, index) {
-                                final events = courses[index].events;
-                                final course = courses[index].course;
-
-                                return ExpansionTile(
-                                  title: Text(course.courseDetails.title),
-                                  children: events.values
-                                      .map(
-                                        (event) => ListTile(
-                                          trailing: Icon(
-                                            event.notificationEnabled
-                                                ? EvaIcons.bell
-                                                : EvaIcons.bellOutline,
-                                          ),
-                                          title:
-                                              Text(_formatDate(event.eventDate)),
-                                          subtitle: const Text('Vorlesung'),
-                                          selected: event.notificationEnabled,
-                                          onTap: () {
-                                            context
-                                                .read<CalendarNotificationsBloc>()
-                                                .add(
-                                                  CalendarNotificationsSelected(
-                                                    courseEventKey:
-                                                        event.combinedKey,
-                                                    courseId: course.id,
-                                                    notificationEnabled: !event
-                                                        .notificationEnabled,
-                                                  ),
-                                                );
-                                          },
-                                        ),
-                                      )
-                                      .toList(),
-                                );
-                              },
-                            ),
-                          ),
-                          Column(
+                case CalendarNotificationsPopulated(
+                    courses: final courses,
+                    totalNotifications: final totalNotifications
+                  ):
+                  return Stack(
+                    alignment: Alignment.bottomCenter,
+                    children: [
+                      Positioned.fill(
+                        child: NonEmptyListViewBuilder(
+                          header: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Spacer(),
-                              CalendarNotificationSaveButton(
-                                totalNotifications: totalNotifications,
-                                courses: courses,
-                                onTap: () {
+                              const Headline('Erinnerungen'),
+                              CalendarNotificationTimeSelection(
+                                onChanged: (selectedNotificationTime) {
                                   context.read<CalendarNotificationsBloc>().add(
-                                        const CalendarNotificationsSaveAll(),
+                                        CalendarNotificationSelectedTime(
+                                          notificationTime:
+                                              selectedNotificationTime,
+                                        ),
                                       );
                                 },
+                                activeNotificationTime: state.notificationTime,
                               ),
+                              const Headline('Kurse'),
                             ],
                           ),
+                          itemCount: courses.length,
+                          itemBuilder: (context, index) {
+                            final events = courses[index].events;
+                            final course = courses[index].course;
+
+                            return ExpansionTile(
+                              title: Text(course.courseDetails.title),
+                              children: events.values
+                                  .map(
+                                    (event) => ListTile(
+                                      trailing: Icon(
+                                        event.notificationEnabled
+                                            ? EvaIcons.bell
+                                            : EvaIcons.bellOutline,
+                                      ),
+                                      title: Text(_formatDate(event.eventDate)),
+                                      subtitle: const Text('Vorlesung'),
+                                      selected: event.notificationEnabled,
+                                      onTap: () {
+                                        context
+                                            .read<CalendarNotificationsBloc>()
+                                            .add(
+                                              CalendarNotificationsSelected(
+                                                courseEventKey:
+                                                    event.combinedKey,
+                                                courseId: course.id,
+                                                notificationEnabled:
+                                                    !event.notificationEnabled,
+                                              ),
+                                            );
+                                      },
+                                    ),
+                                  )
+                                  .toList(),
+                            );
+                          },
+                        ),
+                      ),
+                      Column(
+                        children: [
+                          const Spacer(),
+                          CalendarNotificationSaveButton(
+                            totalNotifications: totalNotifications,
+                            courses: courses,
+                            onTap: () {
+                              context.read<CalendarNotificationsBloc>().add(
+                                    const CalendarNotificationsSaveAll(),
+                                  );
+                            },
+                          ),
                         ],
-                      );
-                  }
-                },
-              );
-          },
+                      ),
+                    ],
+                  );
+              }
+            },
+          ),
         ),
-            ),
       ),
     );
   }
@@ -172,7 +155,6 @@ class _DeleteButton extends StatelessWidget {
     super.key,
   });
 
-
   @override
   Widget build(BuildContext ctx) {
     return SizedBox(
@@ -180,8 +162,8 @@ class _DeleteButton extends StatelessWidget {
       child: AdaptiveAppBarIconButton(
         onPressed: () {
           ctx.read<CalendarNotificationsBloc>().add(
-            const CalendarNotificationsDeletePendingNotifications(),
-          );
+                const CalendarNotificationsDeletePendingNotifications(),
+              );
         },
         materialIcon: EvaIcons.trashOutline,
         cupertinoIcon: CupertinoIcons.trash,

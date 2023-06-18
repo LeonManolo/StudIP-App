@@ -17,6 +17,7 @@ import 'package:studipadawan/calendar/calendar_notifications/view/calendar_sched
 import 'package:studipadawan/calendar/widgets/calendar_header.dart';
 import 'package:studipadawan/calendar/widgets/calendar_list_body/calendar_list_body.dart';
 import 'package:studipadawan/calendar/widgets/calendar_timeframes_body/calendar_timeframes_body.dart';
+import 'package:studipadawan/utils/widgets/error_view/error_view.dart';
 
 class CalendarPage extends StatelessWidget {
   const CalendarPage({super.key});
@@ -37,29 +38,22 @@ class CalendarPage extends StatelessWidget {
       create: (_) => calendarBloc,
       child: PlatformScaffold(
         iosContentPadding: true,
-        iosContentBottomPadding: true,
         appBar: PlatformAppBar(
-          //backgroundColor: Platform.isIOS ? Theme.of(context).scaffoldBackgroundColor : null,
           title: const Text('Kalender'),
           trailingActions: [
             AdaptiveAppBarIconButton(
-                cupertinoIcon: CupertinoIcons.bell,
-                materialIcon: EvaIcons.bellOutline,
-                onPressed: () {
-
-                  Navigator.of(context).pushAdaptive(
-                    context,
-                    const CalendarScheduleNotificationsPage(),
-                  );
-
-
-                  //Navigator.of(context).push(CalendarScheduleNotificationsPage.page().createRoute(context));
-                },
+              cupertinoIcon: CupertinoIcons.bell,
+              materialIcon: EvaIcons.bellOutline,
+              onPressed: () {
+                Navigator.of(context).pushAdaptive(
+                  context,
+                  const CalendarScheduleNotificationsPage(),
+                );
+              },
             ),
             IconButton(
               onPressed: () {
                 calendarBloc.add(const CalendarSwitchLayoutRequested());
-
               },
               icon: BlocBuilder<CalendarBloc, CalendarState>(
                 bloc: calendarBloc,
@@ -76,7 +70,9 @@ class CalendarPage extends StatelessWidget {
                     duration: const Duration(milliseconds: 800),
                     key: GlobalKey(),
                     child: Icon(
-                      Platform.isIOS ? CupertinoIcons.arrow_2_circlepath_circle : EvaIcons.repeatOutline,
+                      Platform.isIOS
+                          ? CupertinoIcons.arrow_2_circlepath_circle
+                          : EvaIcons.repeatOutline,
                       color: color,
                       size: Platform.isIOS ? 27 : null,
                     ),
@@ -105,42 +101,58 @@ class CalendarPage extends StatelessWidget {
                   }
                 },
                 builder: (context, state) {
-                  if (state is CalendarLoading) {
-                    return Center(
-                      child: SpinKitThreeBounce(
-                        size: 25,
-                        color: context.adaptivePrimaryColor,
-                      ),
-                    );
-                  }
-                  if (state is CalendarPopulated) {
-                    final day =
-                        Weekdays.indexToWeekday(state.currentDay.weekday - 1);
-                    final calendarWeekData = _transformCalendarData(state);
-                    final calendarDayData = calendarWeekData[day] ?? [];
-
-                    if (state.layout == CalendarBodyType.list) {
-                      return CalendarListBody(
-                        selectedDay: state.currentDay,
-                        scheduleData: calendarDayData,
+                  switch (state) {
+                    case CalendarLoading() || CalendarInitial():
+                      return Center(
+                        child: SpinKitThreeBounce(
+                          size: 25,
+                          color: context.adaptivePrimaryColor,
+                        ),
                       );
-                    }
 
-                    return FadeInDown(
-                      from: -200,
-                      key: GlobalKey(),
-                      child: CalendarTimeframesBody(
-                        date: state.currentDay,
-                        scheduleData: state.calendarWeekData.data,
-                        scheduleStructure: _calendarSchedule(),
-                      ),
-                    );
-                  }
+                    case CalendarPopulated():
+                      {
+                        final day = Weekdays.indexToWeekday(
+                            state.currentDay.weekday - 1);
+                        final calendarWeekData = _transformCalendarData(state);
+                        final calendarDayData = calendarWeekData[day] ?? [];
 
-                  if (state is CalendarFailure) {
-                    return Text(state.failureMessage);
+                        if (state.layout == CalendarBodyType.list) {
+                          return CalendarListBody(
+                            selectedDay: state.currentDay,
+                            scheduleData: calendarDayData,
+                          );
+                        }
+
+                        return FadeInDown(
+                          from: -200,
+                          key: GlobalKey(),
+                          child: CalendarTimeframesBody(
+                            date: state.currentDay,
+                            scheduleData: state.calendarWeekData.data,
+                            scheduleStructure: _calendarSchedule(),
+                          ),
+                        );
+                      }
+
+                    case CalendarFailure(
+                        failureMessage: final error,
+                        day: final day,
+                        layout: final layout
+                      ):
+                      return ErrorView(
+                        title: 'Fehler',
+                        message: 'Fehler beim Laden des Stundenplans\n($error)',
+                        onRetryPressed: () {
+                          calendarBloc.add(
+                            CalendarRequested(
+                              day: day,
+                              layout: layout,
+                            ),
+                          );
+                        },
+                      );
                   }
-                  return const Text('nothing');
                 },
               ),
             ),

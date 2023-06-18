@@ -5,7 +5,12 @@ import 'package:flutter/material.dart';
 class ErrorIllustration extends StatelessWidget {
   const ErrorIllustration({
     super.key,
+    this.color,
+    required this.iconData,
   });
+
+  final Color? color;
+  final IconData iconData;
 
   @override
   Widget build(BuildContext context) {
@@ -16,13 +21,13 @@ class ErrorIllustration extends StatelessWidget {
         bottom: AppSpacing.xxlg,
       ),
       decoration: BoxDecoration(
-        color: Theme.of(context).primaryColor.withOpacity(0.1),
+        color: (color ?? Colors.red).withOpacity(0.1),
         borderRadius: const BorderRadius.all(Radius.circular(12)),
       ),
       child: Icon(
-        EvaIcons.alertTriangleOutline,
+        iconData,
         size: MediaQuery.of(context).size.width * 0.18,
-        color: Theme.of(context).primaryColor,
+        color: color ?? Colors.red,
       ),
     );
   }

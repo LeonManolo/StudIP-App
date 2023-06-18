@@ -1,7 +1,7 @@
 import 'package:calender_repository/calender_repository.dart';
 import 'package:equatable/equatable.dart';
 
-abstract class CalendarState extends Equatable {
+sealed class CalendarState extends Equatable {
   const CalendarState(this.layout);
 
   final CalendarBodyType layout;
@@ -39,12 +39,14 @@ class CalendarFailure extends CalendarState {
   const CalendarFailure({
     required this.failureMessage,
     required CalendarBodyType layout,
+    required this.day,
   }) : super(layout);
 
   final String failureMessage;
+  final DateTime day;
 
   @override
-  List<Object?> get props => [failureMessage];
+  List<Object?> get props => [failureMessage, layout, day];
 }
 
 enum CalendarBodyType {

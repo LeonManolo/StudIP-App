@@ -115,9 +115,8 @@ class MessagesPageState extends State<MessagesPage>
       child: PlatformScaffold(
         material: (_, __) => MaterialScaffoldData(
           floatingActionButton: FloatingActionButton(
-            child: const Icon(EvaIcons.plus),
-              onPressed: () {}),
-          ),
+              child: const Icon(EvaIcons.plus), onPressed: () {}),
+        ),
         appBar: PlatformAppBar(
           title: const Text('Nachrichten'),
           trailingActions: [
@@ -130,12 +129,18 @@ class MessagesPageState extends State<MessagesPage>
                       visible: state.filterIconVisible,
                       child: PlatformPopupMenu(
                         options: [
-                          PopupMenuOption(label: 'Alle Nachrichten', onTap: (_) {
-                            _handleFilterSelection(MessageFilter.none);
-                          },),
-                          PopupMenuOption(label: 'Unglesene Nachrichten', onTap: (_) {
-                            _handleFilterSelection(MessageFilter.unread);
-                          },),
+                          PopupMenuOption(
+                            label: 'Alle Nachrichten',
+                            onTap: (_) {
+                              _handleFilterSelection(MessageFilter.none);
+                            },
+                          ),
+                          PopupMenuOption(
+                            label: 'Unglesene Nachrichten',
+                            onTap: (_) {
+                              _handleFilterSelection(MessageFilter.unread);
+                            },
+                          ),
                         ],
                         icon: const Icon(
                           EvaIcons.moreVerticalOutline,
@@ -169,12 +174,18 @@ class MessagesPageState extends State<MessagesPage>
                           visible: state.filterIconVisible,
                           child: PlatformPopupMenu(
                             options: [
-                              PopupMenuOption(label: 'Alle Nachrichten', onTap: (_) {
-                                _handleFilterSelection(MessageFilter.none);
-                              },),
-                              PopupMenuOption(label: 'Unglesene Nachrichten', onTap: (_) {
-                                _handleFilterSelection(MessageFilter.unread);
-                              },),
+                              PopupMenuOption(
+                                label: 'Alle Nachrichten',
+                                onTap: (_) {
+                                  _handleFilterSelection(MessageFilter.none);
+                                },
+                              ),
+                              PopupMenuOption(
+                                label: 'Unglesene Nachrichten',
+                                onTap: (_) {
+                                  _handleFilterSelection(MessageFilter.unread);
+                                },
+                              ),
                             ],
                             icon: const Icon(
                               CupertinoIcons.ellipsis,
@@ -192,74 +203,106 @@ class MessagesPageState extends State<MessagesPage>
                     );
                   },
                 ))),
-        body: Column(
-          children: [
-            MessageTabBar(tabController: _tabController),
-            Expanded(
-              child: TabBarView(
-                controller: _tabController,
-                physics: const ScrollPhysics(),
+        body: SafeArea(
+          child: Stack(
+            children: [
+              Column(
                 children: [
-                  BlocConsumer<InboxMessageBloc, InboxMessageState>(
-                    listener: (context, state) {
-                      if (state.status ==
-                          InboxMessageStatus.deleteInboxMessagesSucceed) {
-                        buildSnackBar(
-                          context,
-                          state.blocResponse,
-                          Colors.green,
-                        );
-                      }
-                      if (state.status ==
-                          InboxMessageStatus.deleteInboxMessagesFailure) {
-                        buildSnackBar(
-                          context,
-                          state.blocResponse,
-                          Colors.red,
-                        );
-                      }
-                    },
-                    builder: (context, state) {
-                      return InboxMessageWidget(
-                        key: _inboxWidgetKey,
-                        state: state,
-                        unmarkAll: _unmarkAll,
-                        scrollController: _inboxScrollController,
-                      );
-                    },
+                  MessageTabBar(tabController: _tabController),
+                  Expanded(
+                    child: TabBarView(
+                      controller: _tabController,
+                      physics: const ScrollPhysics(),
+                      children: [
+                        BlocConsumer<InboxMessageBloc, InboxMessageState>(
+                          listener: (context, state) {
+                            if (state.status ==
+                                InboxMessageStatus.deleteInboxMessagesSucceed) {
+                              buildSnackBar(
+                                context,
+                                state.blocResponse,
+                                Colors.green,
+                              );
+                            }
+                            if (state.status ==
+                                InboxMessageStatus.deleteInboxMessagesFailure) {
+                              buildSnackBar(
+                                context,
+                                state.blocResponse,
+                                Colors.red,
+                              );
+                            }
+                          },
+                          builder: (context, state) {
+                            return InboxMessageWidget(
+                              key: _inboxWidgetKey,
+                              state: state,
+                              unmarkAll: _unmarkAll,
+                              scrollController: _inboxScrollController,
+                            );
+                          },
+                        ),
+                        BlocConsumer<OutboxMessageBloc, OutboxMessageState>(
+                          listener: (context, state) {
+                            if (state.status ==
+                                OutboxMessageStatus
+                                    .deleteOutboxMessagesSucceed) {
+                              buildSnackBar(
+                                context,
+                                state.blocResponse,
+                                Colors.green,
+                              );
+                            }
+                            if (state.status ==
+                                OutboxMessageStatus
+                                    .deleteOutboxMessagesFailure) {
+                              buildSnackBar(
+                                context,
+                                state.blocResponse,
+                                Colors.red,
+                              );
+                            }
+                          },
+                          builder: (context, state) {
+                            return OutboxMessageWidget(
+                              key: _outboxWidgetKey,
+                              unmarkAll: _unmarkAll,
+                              state: state,
+                              scrollController: _outboxScrollController,
+                            );
+                          },
+                        )
+                      ],
+                    ),
                   ),
-                  BlocConsumer<OutboxMessageBloc, OutboxMessageState>(
-                    listener: (context, state) {
-                      if (state.status ==
-                          OutboxMessageStatus.deleteOutboxMessagesSucceed) {
-                        buildSnackBar(
-                          context,
-                          state.blocResponse,
-                          Colors.green,
-                        );
-                      }
-                      if (state.status ==
-                          OutboxMessageStatus.deleteOutboxMessagesFailure) {
-                        buildSnackBar(
-                          context,
-                          state.blocResponse,
-                          Colors.red,
-                        );
-                      }
-                    },
-                    builder: (context, state) {
-                      return OutboxMessageWidget(
-                        key: _outboxWidgetKey,
-                        unmarkAll: _unmarkAll,
-                        state: state,
-                        scrollController: _outboxScrollController,
-                      );
-                    },
-                  )
                 ],
               ),
-            ),
-          ],
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                  padding: const EdgeInsets.all(AppSpacing.lg),
+                  child: FilledButton(
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(
+                          context.adaptivePrimaryColor,
+                      ),
+                    ),
+                    onPressed: () {},
+                    child: const Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text('Email schreiben'),
+                        SizedBox(
+                          width: AppSpacing.sm,
+                        ),
+                        Icon(Icons.add),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
