@@ -1,3 +1,4 @@
+import 'package:activity_repository/activity_repository.dart';
 import 'package:equatable/equatable.dart';
 
 sealed class NewsModuleState extends Equatable {
@@ -22,10 +23,13 @@ class NewsModuleStateLoading extends NewsModuleState {
 }
 
 class NewsModuleStateDidLoad extends NewsModuleState {
-  const NewsModuleStateDidLoad();
+  const NewsModuleStateDidLoad({
+    this.newsActivities = const [],
+  });
+  final List<NewsActivity> newsActivities;
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [newsActivities];
 
   NewsModuleStateDidLoad copyWith() {
     return const NewsModuleStateDidLoad();

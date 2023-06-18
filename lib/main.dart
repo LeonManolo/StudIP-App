@@ -48,6 +48,7 @@ Future<void> main() async {
   final activityRepository = ActivityRepository(
     activityClient: activityClient,
     courseClient: coursesClient,
+    userClient: userClient,
     filesClient: filesClient,
   );
 

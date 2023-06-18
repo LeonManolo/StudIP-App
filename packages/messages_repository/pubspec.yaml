@@ -10,6 +10,8 @@ dependencies:
   intl: ^0.18.0
   studip_api_client:
     path: ../studip_api_client
+  courses_repository:
+    path: ../courses_repository
   timeago: ^3.4.0
 
 dev_dependencies:
