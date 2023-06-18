@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:app_ui/app_ui.dart';
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:calender_repository/calender_repository.dart';
@@ -67,25 +69,27 @@ class AppView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return PlatformProvider(
       settings: PlatformSettingsData(
         iosUsesMaterialWidgets: true,
+        //iosUseZeroPaddingForAppbarPlatformIcon: true,
       ),
       builder: (context) => PlatformTheme(
         themeMode: ThemeMode.system,
         materialLightTheme: const LightMaterialAppTheme().themeData,
-        materialDarkTheme: const DarkMaterialAppTheme().themeData,
+        materialDarkTheme:
+        // temporary fix, because material dark mode overrides cupertino dark mode
+            Platform.isAndroid ? const DarkMaterialAppTheme().themeData : null,
         cupertinoLightTheme: const LightCupertinoAppTheme().themeData,
         cupertinoDarkTheme: const DarkCupertinoAppTheme().themeData,
         matchCupertinoSystemChromeBrightness: false,
         builder: (context) => PlatformApp(
           // needed to get the cupertino modal shrink effect
           onGenerateRoute: (settings) => MaterialWithModalsPageRoute(
-              builder: (context) => FlowBuilder<AppStatus>(
-                    state: context.select((AppBloc bloc) => bloc.state.status),
-                    onGeneratePages: onGenerateAppViewPages,
-                  ),
+            builder: (context) => FlowBuilder<AppStatus>(
+              state: context.select((AppBloc bloc) => bloc.state.status),
+              onGeneratePages: onGenerateAppViewPages,
+            ),
           ),
           localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
             DefaultMaterialLocalizations.delegate,

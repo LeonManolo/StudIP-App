@@ -13,7 +13,7 @@ class CourseNewsCard extends StatelessWidget {
     return DecoratedBox(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
-        color: Colors.white,
+        color: Theme.of(context).appBarTheme.backgroundColor,
         boxShadow: [
           BoxShadow(
             color: Colors.black12.withAlpha(12),
@@ -24,7 +24,11 @@ class CourseNewsCard extends StatelessWidget {
         ],
       ),
       child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.lg),
+        padding: const EdgeInsets.only(
+            left: AppSpacing.lg,
+            right: AppSpacing.lg,
+            top: AppSpacing.lg,
+        ),
         child: UserTitleContentView(
           userAvatarUrl: news.author.avatarUrl,
           userFormattedName: news.author.formattedName,

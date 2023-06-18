@@ -7,6 +7,7 @@ class DarkCupertinoAppTheme {
     return const CupertinoThemeData(
       brightness: Brightness.dark,
       primaryColor: CupertinoColors.systemIndigo,
+      //applyThemeToAll: true,
     );
   }
 }

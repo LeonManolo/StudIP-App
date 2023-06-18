@@ -13,8 +13,8 @@ import 'package:studipadawan/courses/details/view/widgets/course_details_main_co
 
 class CourseDetailsPage extends StatelessWidget {
   const CourseDetailsPage({super.key, required this.course});
-  final Course course;
 
+  final Course course;
 
   @override
   Widget build(BuildContext context) {
@@ -26,13 +26,10 @@ class CourseDetailsPage extends StatelessWidget {
             materialIcon: EvaIcons.bellOutline,
             cupertinoIcon: CupertinoIcons.info,
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute<CourseNewsPage>(
-                  builder: (context) => CourseNewsPage(
-                    courseId: course.id,
-                  ),
-                  fullscreenDialog: true,
+              showAdaptiveFullScreenModal(
+                context: context,
+                content: CourseNewsPage(
+                  courseId: course.id,
                 ),
               );
             },

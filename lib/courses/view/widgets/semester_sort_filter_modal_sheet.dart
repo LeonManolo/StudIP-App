@@ -1,4 +1,5 @@
 import 'package:app_ui/app_ui.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:studipadawan/courses/bloc/courses_state.dart';
@@ -42,68 +43,83 @@ class _SemesterSortFilterModalSheetState
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(AppSpacing.lg),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Text(
-            'Filter',
-            style: Theme.of(context).textTheme.titleLarge,
+    return PlatformScaffold(
+      appBar: PlatformAppBar(
+        material: (materialContext, _) => MaterialAppBarData(
+          title: const Text('Filter'),
+        ),
+        cupertino: (cupertinoContext, _) => CupertinoNavigationBarData(
+          title: const Text('Filter'),
+          leading: CupertinoButton(
+            padding: EdgeInsets.zero,
+            child: const Text('Abbrechen'),
+            onPressed: () => Navigator.pop(context),
           ),
-          const SizedBox(height: AppSpacing.md),
-          SegmentedButton(
-            style: _segmentedButtonStyle(),
-            segments: const [
-              ButtonSegment(
-                value: SemesterFilter.all,
-                label: Text('Alle Semester'),
-              ),
-              ButtonSegment(
-                value: SemesterFilter.current,
-                label: Text('Aktuelles Semester'),
-              ),
-            ],
-            selected: {currentSemesterFilter},
-            onSelectionChanged: (selectedFilters) {
-              {
+        ),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(AppSpacing.lg),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(
+              'Filter',
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+            const SizedBox(height: AppSpacing.md),
+            SegmentedButton(
+              style: _segmentedButtonStyle(),
+              segments: const [
+                ButtonSegment(
+                  value: SemesterFilter.all,
+                  label: Text('Alle Semester'),
+                ),
+                ButtonSegment(
+                  value: SemesterFilter.current,
+                  label: Text('Aktuelles Semester'),
+                ),
+              ],
+              selected: {currentSemesterFilter},
+              onSelectionChanged: (selectedFilters) {
+                {
+                  setState(
+                    () => currentSemesterFilter = selectedFilters.first,
+                  );
+                  onSemesterFilterSelectionChanged(selectedFilters.first);
+                }
+              },
+            ),
+            const SizedBox(height: AppSpacing.xlg),
+            Text(
+              'Sortierung',
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+            const SizedBox(height: AppSpacing.md),
+            SegmentedButton(
+              style: _segmentedButtonStyle(),
+              segments: const [
+                ButtonSegment(
+                  value: SemesterSortOrder.asc,
+                  label: Text('Aufsteigend'),
+                ),
+                ButtonSegment(
+                  value: SemesterSortOrder.desc,
+                  label: Text('Absteigend'),
+                ),
+              ],
+              selected: {currentSemesterSortOrder},
+              onSelectionChanged: (selectedSortOrders) {
                 setState(
-                  () => currentSemesterFilter = selectedFilters.first,
+                  () => currentSemesterSortOrder = selectedSortOrders.first,
                 );
-                onSemesterFilterSelectionChanged(selectedFilters.first);
-              }
-            },
-          ),
-          const SizedBox(height: AppSpacing.xlg),
-          Text(
-            'Sortierung',
-            style: Theme.of(context).textTheme.titleLarge,
-          ),
-          const SizedBox(height: AppSpacing.md),
-          SegmentedButton(
-            style: _segmentedButtonStyle(),
-            segments: const [
-              ButtonSegment(
-                value: SemesterSortOrder.asc,
-                label: Text('Aufsteigend'),
-              ),
-              ButtonSegment(
-                value: SemesterSortOrder.desc,
-                label: Text('Absteigend'),
-              ),
-            ],
-            selected: {currentSemesterSortOrder},
-            onSelectionChanged: (selectedSortOrders) {
-              setState(
-                () => currentSemesterSortOrder = selectedSortOrders.first,
-              );
-              onSemesterSortOrderSelectionChanged(selectedSortOrders.first);
-            },
-          ),
-          const SizedBox(
-            height: 50,
-          )
-        ],
+                onSemesterSortOrderSelectionChanged(selectedSortOrders.first);
+              },
+            ),
+            const SizedBox(
+              height: 50,
+            )
+          ],
+        ),
       ),
     );
   }

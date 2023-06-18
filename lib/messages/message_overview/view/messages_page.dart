@@ -1,4 +1,3 @@
-import 'package:app_ui/app_ui.dart';
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/cupertino.dart';
@@ -6,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:messages_repository/messages_repository.dart';
-import 'package:studipadawan/app/bloc/app_bloc.dart';
 import 'package:studipadawan/messages/message_overview/message_inbox_bloc%20/message_inbox_bloc.dart';
 import 'package:studipadawan/messages/message_overview/message_inbox_bloc%20/message_inbox_event.dart';
 import 'package:studipadawan/messages/message_overview/message_inbox_bloc%20/message_inbox_state.dart';
@@ -16,15 +14,11 @@ import 'package:studipadawan/messages/message_overview/message_outbox_bloc/messa
 import 'package:studipadawan/messages/message_overview/message_tabbar_bloc%20/message_tabbar_bloc.dart';
 import 'package:studipadawan/messages/message_overview/message_tabbar_bloc%20/message_tabbar_event.dart';
 import 'package:studipadawan/messages/message_overview/message_tabbar_bloc%20/message_tabbar_state.dart';
-import 'package:studipadawan/messages/message_overview/view/widgets/message_add_button.dart';
-import 'package:studipadawan/messages/message_overview/view/widgets/message_bar.dart';
-import 'package:studipadawan/messages/message_overview/view/widgets/message_delete_button.dart';
-import 'package:studipadawan/messages/message_overview/view/widgets/message_filter_button.dart';
+import 'package:studipadawan/messages/message_overview/view/widgets/floating_button.dart';
 import 'package:studipadawan/messages/message_overview/view/widgets/message_inbox_widget.dart';
-import 'package:studipadawan/messages/message_overview/view/widgets/message_menu_button.dart';
 import 'package:studipadawan/messages/message_overview/view/widgets/message_outbox_widget.dart';
 import 'package:studipadawan/messages/message_overview/view/widgets/message_tab_bar.dart';
-import 'package:studipadawan/utils/utils.dart';
+import 'package:studipadawan/messages/message_send/view/message_send_page.dart';
 
 final _outboxWidgetKey = GlobalKey<OutboxMessageWidgetState>();
 final _inboxWidgetKey = GlobalKey<InboxMessageWidgetState>();
@@ -100,6 +94,7 @@ class MessagesPageState extends State<MessagesPage>
 
   @override
   Widget build(BuildContext context) {
+    print(Theme.of(context).appBarTheme.backgroundColor);
     return MultiBlocProvider(
       providers: [
         BlocProvider(
@@ -113,11 +108,10 @@ class MessagesPageState extends State<MessagesPage>
         ),
       ],
       child: PlatformScaffold(
-        material: (_, __) => MaterialScaffoldData(
-          floatingActionButton: FloatingActionButton(
-              child: const Icon(EvaIcons.plus), onPressed: () {}),
-        ),
         appBar: PlatformAppBar(
+          material: (_,__) => MaterialAppBarData(
+            backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
+          ),
           title: const Text('Nachrichten'),
           trailingActions: [
             BlocBuilder<TabBarBloc, TabBarState>(
@@ -147,13 +141,6 @@ class MessagesPageState extends State<MessagesPage>
                         ),
                       ),
                     ),
-                    // Visibility(
-                    //   visible: state.menuIconVisible,
-                    //   child: MessageMenuButton(
-                    //     markAll: _markAll,
-                    //     unmarkAll: _unmarkAll,
-                    //   ),
-                    // ),
                   ],
                 );
               },
@@ -216,6 +203,7 @@ class MessagesPageState extends State<MessagesPage>
                       children: [
                         BlocConsumer<InboxMessageBloc, InboxMessageState>(
                           listener: (context, state) {
+                            /*
                             if (state.status ==
                                 InboxMessageStatus.deleteInboxMessagesSucceed) {
                               buildSnackBar(
@@ -232,6 +220,8 @@ class MessagesPageState extends State<MessagesPage>
                                 Colors.red,
                               );
                             }
+
+                             */
                           },
                           builder: (context, state) {
                             return InboxMessageWidget(
@@ -244,6 +234,7 @@ class MessagesPageState extends State<MessagesPage>
                         ),
                         BlocConsumer<OutboxMessageBloc, OutboxMessageState>(
                           listener: (context, state) {
+                            /*
                             if (state.status ==
                                 OutboxMessageStatus
                                     .deleteOutboxMessagesSucceed) {
@@ -262,6 +253,7 @@ class MessagesPageState extends State<MessagesPage>
                                 Colors.red,
                               );
                             }
+                            */
                           },
                           builder: (context, state) {
                             return OutboxMessageWidget(
@@ -279,31 +271,38 @@ class MessagesPageState extends State<MessagesPage>
               ),
               Align(
                 alignment: Alignment.bottomCenter,
-                child: Padding(
-                  padding: const EdgeInsets.all(AppSpacing.lg),
-                  child: FilledButton(
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(
-                          context.adaptivePrimaryColor,
-                      ),
-                    ),
-                    onPressed: () {},
-                    child: const Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text('Email schreiben'),
-                        SizedBox(
-                          width: AppSpacing.sm,
-                        ),
-                        Icon(Icons.add),
-                      ],
-                    ),
-                  ),
-                ),
+                child: BlocBuilder<TabBarBloc, TabBarState>(
+                    bloc: _tabBarBloc,
+                    builder: (context, state) {
+                      if (!state.menuIconVisible) {
+                        return FloatingButton(
+                          text: 'Email schreiben',
+                          iconData: Icons.add,
+                          onPressed: _navigateToMessageSendPage,
+                        );
+                      } else {
+                        return FloatingButton(
+                          text: 'E-Mails löschen',
+                          iconData: EvaIcons.trashOutline,
+                          color: Colors.red,
+                          onPressed: _deleteMessages,
+                        );
+                      }
+                    }),
               ),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  void _navigateToMessageSendPage() {
+    Navigator.push(
+      context,
+      MaterialPageRoute<MessageSendPage>(
+        builder: (context) => const MessageSendPage(),
+        fullscreenDialog: true,
       ),
     );
   }

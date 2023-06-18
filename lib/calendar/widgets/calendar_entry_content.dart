@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:app_ui/app_ui.dart';
 import 'package:calender_repository/calender_repository.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:studipadawan/calendar/extensions/list_extensions.dart';
 
@@ -62,19 +65,23 @@ class CalendarEntryContent extends StatelessWidget {
                       calendarEntryData?.title ?? '',
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.bold,
+                            color: _adaptiveTextColor(context),
                           ),
                     ),
                   ),
                   if (calendarEntryData?.description != null)
-                    Text(calendarEntryData!.description!),
+                    Text(
+                      calendarEntryData!.description!,
+                      style: TextStyle(color: _adaptiveTextColor(context)),
+                    ),
                   Padding(
                     padding: const EdgeInsets.only(top: AppSpacing.lg),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Visibility(
-                          visible:
-                              calendarEntryData?.locations.firstOrNull() != null,
+                          visible: calendarEntryData?.locations.firstOrNull() !=
+                              null,
                           child: Row(
                             children: [
                               Icon(
@@ -130,5 +137,13 @@ class CalendarEntryContent extends StatelessWidget {
 
   void _navigateToCalendarDetailPage(BuildContext context) {
     //Navigator.of(context).push(MaterialPageRoute(builder: (context) => const CalendarDetailPage()));
+  }
+
+  Color? _adaptiveTextColor(BuildContext context) {
+    if (Platform.isIOS) {
+      return CupertinoTheme.of(context).textTheme.navTitleTextStyle.color;
+    } else {
+      return Theme.of(context).appBarTheme.titleTextStyle?.color;
+    }
   }
 }

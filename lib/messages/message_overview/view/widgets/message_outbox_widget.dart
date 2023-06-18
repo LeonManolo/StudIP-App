@@ -21,6 +21,7 @@ class OutboxMessageWidget extends StatefulWidget {
     required this.scrollController,
     required this.unmarkAll,
   });
+
   final OutboxMessageState state;
   final ScrollController scrollController;
   final Function unmarkAll;
@@ -58,8 +59,8 @@ class OutboxMessageWidgetState extends State<OutboxMessageWidget> {
         itemBuilder: (context, index) {
           if (index == widget.state.outboxMessages.length) {
             return PaginationLoadingIndicator(
-              visible: widget.state.status ==
-                  OutboxMessageStatus.paginationLoading,
+              visible:
+                  widget.state.status == OutboxMessageStatus.paginationLoading,
             );
           } else {
             final message = widget.state.outboxMessages[index];
@@ -79,15 +80,17 @@ class OutboxMessageWidgetState extends State<OutboxMessageWidget> {
                     }
                   else
                     {
-                  Navigator.of(context).pushAdaptive(context, MessageDetailpage(
-                isInbox: false,
-                message: message,
-                refreshMessages: _refreshOutboxMessages,
-              ))
-                    }
+                      Navigator.of(context).pushAdaptive(
+                        context,
+                        MessageDetailpage(
+                          isInbox: false,
+                          message: message,
+                          refreshMessages: _refreshOutboxMessages,
+                        ),
+                      ),
+                    },
                 },
-                onLongPressFunction: () =>
-                    _markMessage(context, message.id),
+                onLongPressFunction: () => _markMessage(context, message.id),
                 title: message.subject,
                 subTitle: message.parseRecipients(),
                 trailing: message.getTimeAgo(),

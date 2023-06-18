@@ -1,3 +1,5 @@
+
+
 import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
@@ -35,62 +37,11 @@ class UserTitleContentView extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              height: 35,
-              width: 35,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(6),
-                image: DecorationImage(
-                  image: NetworkImage(
-                    userAvatarUrl,
-                  ),
-                  fit: BoxFit.fill,
-                ),
-              ),
-            ),
-            const SizedBox(width: AppSpacing.md),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text.rich(
-                    TextSpan(
-                      text: 'Von ',
-                      children: [
-                        TextSpan(
-                          text: userFormattedName,
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                          children: [
-                            TextSpan(
-                              text: ' ${userAction.description}',
-                              style: const TextStyle(
-                                fontWeight: FontWeight.normal,
-                              ),
-                            )
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: AppSpacing.xxs),
-                  Text(
-                    formattedPublicationDate,
-                    style: const TextStyle(color: Colors.black54),
-                  ),
-                ],
-              ),
-            )
-          ],
-        ),
-        const SizedBox(height: AppSpacing.lg),
         Text(
           title,
           style: Theme.of(context)
               .textTheme
-              .titleMedium
+              .titleLarge
               ?.copyWith(fontWeight: FontWeight.w500),
         ),
         const SizedBox(height: AppSpacing.sm),
@@ -100,8 +51,38 @@ class UserTitleContentView extends StatelessWidget {
             if (!await canLaunchUrlString(url)) return false;
             return launchUrlString(url);
           },
-        )
+        ),
+        ListTile(
+          contentPadding: EdgeInsets.zero,
+          leading: CircleAvatar(
+            backgroundColor: Theme.of(context).primaryColor.withOpacity(0.1),
+            child: Text(userFormattedName.split('').firstOrNull ?? ''),
+          ),
+          title: Text.rich(
+            TextSpan(
+              text: 'Von ',
+              children: [
+                TextSpan(
+                  text: userFormattedName,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                  children: [
+                    TextSpan(
+                      text: ' ${userAction.description}',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.normal,
+                      ),
+                    )
+                  ],
+                )
+              ],
+            ),
+          ),
+          subtitle: Text(
+            formattedPublicationDate,
+          ),
+        ),
       ],
     );
   }
 }
+

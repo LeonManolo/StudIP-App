@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:studipadawan/courses/details/news/bloc/course_news_bloc.dart';
 import 'package:studipadawan/courses/details/news/view/widgets/course_news_card.dart';
 import 'package:studipadawan/utils/empty_view.dart';
+import 'package:studipadawan/utils/loading_indicator.dart';
 import 'package:studipadawan/utils/pagination/pagination.dart';
 import 'package:studipadawan/utils/refreshable_content.dart';
 
@@ -79,7 +80,7 @@ class _CourseNewsListState extends PaginatedListState {
 
           case CourseNewsStateLoading _:
             return const Center(
-              child: CircularProgressIndicator(),
+              child: LoadingIndicator(),
             );
         }
       },

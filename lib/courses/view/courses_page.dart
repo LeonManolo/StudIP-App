@@ -66,21 +66,20 @@ class CoursesPage extends StatelessWidget {
   }) async {
     await showAdaptiveFullScreenModal(
       context: context,
-      title: 'Filter',
-      body: SemesterSortFilterModalSheet(
+      content: SemesterSortFilterModalSheet(
         onSemesterFilterSelectionChanged: (newFilter) {
           context.read<CoursesBloc>().add(
-                SemesterFilterChanged(
-                  selectedSemesterFilter: newFilter,
-                ),
-              );
+            SemesterFilterChanged(
+              selectedSemesterFilter: newFilter,
+            ),
+          );
         },
         onSemesterSortOrderSelectionChanged: (newSortOrder) {
           context.read<CoursesBloc>().add(
-                SemesterSortOrderChanged(
-                  selectedSemesterSortOrder: newSortOrder,
-                ),
-              );
+            SemesterSortOrderChanged(
+              selectedSemesterSortOrder: newSortOrder,
+            ),
+          );
         },
         currentSemesterFilter: currentFilter,
         currentSemesterSortOrder: currentSortOrder,

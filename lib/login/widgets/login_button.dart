@@ -16,6 +16,8 @@ class LoginButton extends StatelessWidget {
       child: FilledButton(
         onPressed: onPressed,
         style: ButtonStyle(
+          backgroundColor:
+              MaterialStatePropertyAll(context.adaptivePrimaryColor),
           shape: MaterialStateProperty.all(
             RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),

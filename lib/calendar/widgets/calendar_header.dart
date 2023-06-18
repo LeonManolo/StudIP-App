@@ -1,5 +1,6 @@
 import 'package:app_ui/app_ui.dart';
 import 'package:calender_repository/calender_repository.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -45,6 +46,9 @@ class _CalendarHeaderState extends State<CalendarHeader> {
                 width: 1.5,
               ),
               shape: BoxShape.circle,
+            ),
+            defaultTextStyle: TextStyle(
+              color: Theme.of(context).textTheme.bodyMedium?.color,
             ),
             todayTextStyle: TextStyle(color: context.adaptivePrimaryColor, fontSize: 16.0),
             selectedDecoration: BoxDecoration(
