@@ -79,7 +79,7 @@ class _NewsModuleState extends State<NewsModule> {
                   child: CircularProgressIndicator(),
                 );
               case NewsModuleStateDidLoad _:
-                return NewspreviewList(
+                return NewsPreviewList(
                   newsActivities: state.newsActivities,
                 );
               case NewsModuleStateError _:

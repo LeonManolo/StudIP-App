@@ -13,12 +13,12 @@ class NewsModuleBloc extends Bloc<NewsModuleEvent, NewsModuleState> {
   })  : _activityRepository = activityRepository,
         _authenticationRepository = authenticationRepository,
         super(const NewsModuleStateInitial()) {
-          on<NewsActivitiesRequested>(_onFileActivitiesRequested);
-        }
+    on<NewsActivitiesRequested>(_onNewsActivitiesRequested);
+  }
   final ActivityRepository _activityRepository;
   final AuthenticationRepository _authenticationRepository;
 
-  Future<void> _onFileActivitiesRequested(
+  Future<void> _onNewsActivitiesRequested(
     NewsActivitiesRequested event,
     Emitter<NewsModuleState> emit,
   ) async {
@@ -26,16 +26,25 @@ class NewsModuleBloc extends Bloc<NewsModuleEvent, NewsModuleState> {
     try {
       final newsActivities = await _activityRepository.getNewsActivities(
         userId: _authenticationRepository.currentUser.id,
-        limit: previewLimit,
       );
 
       emit(
         NewsModuleStateDidLoad(
-          newsActivities: newsActivities,
+          newsActivities: _processNewsActivities(newsActivities),
         ),
       );
     } catch (e) {
       emit(const NewsModuleStateError());
     }
+  }
+
+  List<NewsActivity> _processNewsActivities(List<NewsActivity> newsActivities) {
+    return newsActivities
+        .where(
+          (newsActivity) => newsActivity.publicationEnd.isAfter(DateTime.now()),
+        )
+        .toList()
+      ..sort((a, b) => b.publicationEnd.compareTo(a.publicationEnd))
+      ..take(previewLimit);
   }
 }

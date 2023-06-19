@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:studipadawan/home/modules/news_module/view/widgets/news_preview_tile.dart';
 import 'package:studipadawan/utils/empty_view.dart';
 
-class NewspreviewList extends StatelessWidget {
-  const NewspreviewList({
+class NewsPreviewList extends StatelessWidget {
+  const NewsPreviewList({
     super.key,
     required this.newsActivities,
   });

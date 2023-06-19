@@ -1,4 +1,3 @@
-import 'package:courses_repository/courses_repository.dart';
 import 'package:studip_api_client/studip_api_client.dart';
 
 class MessageUser {
@@ -10,10 +9,6 @@ class MessageUser {
     required this.formattedName,
     required this.role,
   });
-
-  factory MessageUser.fromParticipant(Participant participant) {
-    return MessageUser(id: participant.id, username: participant.username, firstName: participant.givenName, lastName: participant.familyName, formattedName: participant.formattedName, role:  participant.permission ?? '');
-  }
 
   factory MessageUser.fromUserResponse(UserResponse response) {
     return MessageUser(

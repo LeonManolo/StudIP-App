@@ -20,7 +20,7 @@ abstract interface class StudIPActivityClient {
 
   Future<NewsActivityListResponse> getNewsActivities({
     required String userId,
-    required int limit,
+    int? limit,
   });
 }
 
@@ -31,7 +31,7 @@ class StudIPActivityClientImpl implements StudIPActivityClient {
       : _core = core ?? StudIpAPICore.shared;
 
   @override
-  getFileActivities({
+  Future<FileActivityListResponse> getFileActivities({
     required String userId,
     required int limit,
   }) async {
@@ -44,29 +44,35 @@ class StudIPActivityClientImpl implements StudIPActivityClient {
   }
 
   @override
-  getNewsActivities({
+  Future<NewsActivityListResponse> getNewsActivities({
     required String userId,
-    required int limit,
+    int? limit,
   }) async {
     final response = await _getActivities(
       userId: userId,
       activityType: ActivityType.news,
       limit: limit,
     );
+    NewsActivityListResponse.fromJson(response);
     return NewsActivityListResponse.fromJson(response);
   }
 
   Future<Map<String, dynamic>> _getActivities({
     required String userId,
     required ActivityType activityType,
-    required int limit,
+    required int? limit,
   }) async {
+    final queryParameters = {
+      "filter[activity-type]": activityType.type,
+      "include": "object,actor,context",
+    };
+    if (limit != null) {
+      queryParameters["page[limit]"] = limit.toString();
+    }
+
     final response = await _core.get(
         endpoint: "users/$userId/activitystream",
-        queryParameters: {
-          "filter[activity-type]": activityType.type,
-          "page[limit]": limit.toString()
-        });
+        queryParameters: queryParameters);
     final body = response.json();
     response.throwIfInvalidHttpStatus(body: body);
     return body;

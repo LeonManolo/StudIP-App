@@ -10,8 +10,8 @@ class NewsPreviewTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: Text('Kurs: ${newsActivity.course?.courseDetails.title}'),
-      subtitle: Text('Von: ${newsActivity.userName}'),
+      title: Text('Kurs: ${newsActivity.course.courseDetails.title}'),
+      subtitle: Text('Von: ${newsActivity.username}'),
       leading: const Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[Icon(EvaIcons.infoOutline)],
@@ -27,7 +27,7 @@ class NewsPreviewTile extends StatelessWidget {
           context,
           MaterialPageRoute<CourseNewsPage>(
             builder: (context) => CourseNewsPage(
-              courseId: newsActivity.course!.id,
+              courseId: newsActivity.course.id,
             ),
             fullscreenDialog: true,
           ),

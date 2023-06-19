@@ -8,10 +8,9 @@ class NewsActivity {
     required this.content,
     required this.verb,
     required this.title,
-    required this.courseId,
-    required this.userId,
-    this.course,
-    this.userName,
+    required this.publicationEnd,
+    required this.course,
+    required this.username,
   });
   factory NewsActivity.fromNewsActivityResponse({
     required studip_api_client.NewsActivityResponse newsActivityResponse,
@@ -21,18 +20,22 @@ class NewsActivity {
       content: newsActivityResponse.content,
       verb: newsActivityResponse.verb,
       title: newsActivityResponse.title,
-      courseId: newsActivityResponse.courseId,
-      userId: newsActivityResponse.userId,
+      username: newsActivityResponse.username,
+      publicationEnd: newsActivityResponse.publicationEnd,
+      course: Course.fromCourseResponse(
+        studip_api_client.CourseResponse.fromJson(
+          newsActivityResponse.course,
+        ),
+      ),
     );
   }
   final DateTime createDate;
   final String content;
   final String verb;
   final String title;
-  final String courseId;
-  final String userId;
-  Course? course;
-  String? userName;
+  final DateTime publicationEnd;
+  Course course;
+  String username;
 
   String getTimeAgo() {
     timeago.setLocaleMessages('de', timeago.DeMessages());
