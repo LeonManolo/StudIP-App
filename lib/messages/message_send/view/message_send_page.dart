@@ -45,7 +45,7 @@ class _MessageSendPageState extends State<MessageSendPage> {
       for (final recipient in widget.message!.recipients) {
         _addRecipient(context, recipient);
       }
-      _subjectController.text = subject;
+      _subjectController.text = widget.message!.subject.isEmpty ? '' : subject;
       _messageController.text = widget.message!.getPreviouseMessageString();
     }
   }
@@ -147,7 +147,6 @@ class _MessageSendPageState extends State<MessageSendPage> {
                         const SizedBox(height: smallMargin),
                         TextField(
                           controller: _subjectController,
-                          enabled: widget.message == null,
                           decoration: const InputDecoration(
                             border: OutlineInputBorder(),
                           ),

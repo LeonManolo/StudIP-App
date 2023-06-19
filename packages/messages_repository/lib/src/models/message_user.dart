@@ -12,18 +12,30 @@ class MessageUser {
 
   factory MessageUser.fromUserResponse(UserResponse response) {
     return MessageUser(
-        id: response.id,
-        username: response.username,
-        firstName: response.givenName,
-        lastName: response.familyName,
-        formattedName: response.formattedName,
-        role: response.permission ?? '',);
+      id: response.id,
+      username: response.username,
+      firstName: response.givenName,
+      lastName: response.familyName,
+      formattedName: response.formattedName,
+      role: response.permission ?? '',
+    );
   }
+
+  factory MessageUser.empty() {
+    return MessageUser(
+      id: '',
+      username: '',
+      firstName: '',
+      lastName: '',
+      formattedName: '',
+      role: '',
+    );
+  }
+
   final String id;
   String username;
   String firstName;
   String lastName;
   String formattedName;
   String role;
-
 }

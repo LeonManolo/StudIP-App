@@ -14,6 +14,20 @@ class Message {
     required this.isRead,
   });
 
+  factory Message.empty({
+    required MessageUser recipient,
+  }) {
+    return Message(
+      id: '',
+      subject: '',
+      message: '',
+      sender: MessageUser.empty(),
+      recipients: [recipient],
+      mkdate: DateTime.now(),
+      isRead: true,
+    );
+  }
+
   factory Message.fromMessageResponse(MessageResponse response) {
     return Message(
       id: response.id,
@@ -61,14 +75,18 @@ class Message {
   }
 
   String getPreviouseMessageString() {
-    final builder = StringBuffer()
-      ..writeln('\n. . . ursprüngliche Nachricht . . .')
-      ..writeln('Betreff: $subject')
-      ..writeln("Datum: ${DateFormat("dd/MM/yyyy hh:mm:ss").format(mkdate)}")
-      ..writeln('Von: ${sender.firstName} ${sender.lastName}')
-      ..writeln('An: ${parseRecipients()}')
-      ..writeln(message);
-    return builder.toString();
+    if (message.isEmpty) {
+      return '';
+    } else {
+      final builder = StringBuffer()
+        ..writeln('\n. . . ursprüngliche Nachricht . . .')
+        ..writeln('Betreff: $subject')
+        ..writeln("Datum: ${DateFormat("dd/MM/yyyy hh:mm:ss").format(mkdate)}")
+        ..writeln('Von: ${sender.firstName} ${sender.lastName}')
+        ..writeln('An: ${parseRecipients()}')
+        ..writeln(message);
+      return builder.toString();
+    }
   }
 
   String parseRecipients({String joinedWith = ','}) {
