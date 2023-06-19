@@ -10,8 +10,8 @@ class NewsPreviewTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: Text('Kurs: ${newsActivity.course.courseDetails.title}'),
-      subtitle: Text('Von: ${newsActivity.username}'),
+      title: Text(newsActivity.title),
+      subtitle: Text(newsActivity.course.courseDetails.title),
       leading: const Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[Icon(EvaIcons.infoOutline)],

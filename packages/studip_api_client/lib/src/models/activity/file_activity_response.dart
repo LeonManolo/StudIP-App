@@ -29,9 +29,9 @@ class FileActivityResponse {
   final Map<String, dynamic> course;
 
   factory FileActivityResponse.fromJson(
-      Map<String, dynamic> data, List<dynamic> included) {
+      Map<String, dynamic> data, List<Map<String, dynamic>> included) {
     final attributes = data["attributes"];
-    final relationShips = data["relationships"];
+    final relationships = data["relationships"];
 
     Map<String, dynamic> extractById(
       List<dynamic> included,
@@ -45,15 +45,21 @@ class FileActivityResponse {
       return {};
     }
 
+    final String fileName = extractById(
+        included, relationships["object"]["data"]["id"])["attributes"]["name"];
+
+    final Map<String, dynamic> rawCourse =
+        extractById(included, relationships["context"]["data"]["id"]);
+
+    final String owner = extractById(
+            included, relationships["actor"]["data"]["id"])["attributes"]
+        ["formatted-name"];
+
     return FileActivityResponse(
         createDate: attributes["mkdate"],
         content: attributes["content"],
-        fileName: extractById(
-                included, relationShips["object"]["data"]["id"])["attributes"]
-            ["name"],
-        course: extractById(included, relationShips["context"]["data"]["id"]),
-        owner: extractById(
-                included, relationShips["actor"]["data"]["id"])["attributes"]
-            ["formatted-name"]);
+        fileName: fileName,
+        course: rawCourse,
+        owner: owner);
   }
 }

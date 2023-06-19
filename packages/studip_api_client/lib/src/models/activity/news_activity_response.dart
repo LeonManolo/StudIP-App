@@ -6,16 +6,6 @@ class NewsActivityListResponse {
   factory NewsActivityListResponse.fromJson(Map<String, dynamic> json) {
     final dynamic included = json["included"];
     final List<dynamic> newsActivities = json["data"];
-    try {
-      NewsActivityListResponse(
-          newsActivities: newsActivities
-              .map((newsActivity) =>
-                  NewsActivityResponse.fromJson(newsActivity, included))
-              .toList());
-    } catch (e) {
-      print(e);
-    }
-
     return NewsActivityListResponse(
         newsActivities: newsActivities
             .map((newsActivity) =>
@@ -27,16 +17,12 @@ class NewsActivityListResponse {
 class NewsActivityResponse {
   const NewsActivityResponse({
     required this.createDate,
-    required this.content,
-    required this.verb,
     required this.title,
     required this.course,
     required this.publicationEnd,
     required this.username,
   });
   final String createDate;
-  final String content;
-  final String verb;
   final String title;
   final Map<String, dynamic> course;
   final DateTime publicationEnd;
@@ -45,7 +31,7 @@ class NewsActivityResponse {
   factory NewsActivityResponse.fromJson(
       Map<String, dynamic> data, List<dynamic> included) {
     final attributes = data["attributes"];
-    final relationShips = data["relationships"];
+    final relationships = data["relationships"];
 
     Map<String, dynamic> extractById(
       List<dynamic> included,
@@ -59,17 +45,24 @@ class NewsActivityResponse {
       return {};
     }
 
+    final newsMap =
+        extractById(included, relationships["object"]["data"]["id"]);
+
+    final Map<String, dynamic> rawCourse =
+        extractById(included, relationships["context"]["data"]["id"]);
+
+    final DateTime publicationEnd =
+        DateTime.parse(newsMap["attributes"]["publication-end"]);
+
+    final String username = extractById(
+            included, relationships["actor"]["data"]["id"])["attributes"]
+        ["formatted-name"];
+
     return NewsActivityResponse(
         createDate: attributes["mkdate"],
-        content: attributes["content"],
-        title: attributes["title"],
-        verb: attributes["verb"],
-        course: extractById(included, relationShips["context"]["data"]["id"]),
-        publicationEnd: DateTime.parse(extractById(
-                included, relationShips["object"]["data"]["id"])["attributes"]
-            ["publication-end"]),
-        username: extractById(
-                included, relationShips["actor"]["data"]["id"])["attributes"]
-            ["formatted-name"]);
+        title: newsMap["attributes"]["title"],
+        course: rawCourse,
+        publicationEnd: publicationEnd,
+        username: username);
   }
 }

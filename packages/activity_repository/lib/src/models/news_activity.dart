@@ -5,8 +5,6 @@ import 'package:timeago/timeago.dart' as timeago;
 class NewsActivity {
   NewsActivity({
     required this.createDate,
-    required this.content,
-    required this.verb,
     required this.title,
     required this.publicationEnd,
     required this.course,
@@ -17,8 +15,6 @@ class NewsActivity {
   }) {
     return NewsActivity(
       createDate: DateTime.parse(newsActivityResponse.createDate).toLocal(),
-      content: newsActivityResponse.content,
-      verb: newsActivityResponse.verb,
       title: newsActivityResponse.title,
       username: newsActivityResponse.username,
       publicationEnd: newsActivityResponse.publicationEnd,
@@ -30,8 +26,6 @@ class NewsActivity {
     );
   }
   final DateTime createDate;
-  final String content;
-  final String verb;
   final String title;
   final DateTime publicationEnd;
   Course course;
