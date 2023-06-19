@@ -10,9 +10,9 @@ class FilePreviewTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: Text(fileActivity.fileName!),
+      title: Text(fileActivity.fileName),
       subtitle: Text(
-        '${fileActivity.course!.courseDetails.title}\n${fileActivity.owner!}',
+        '${fileActivity.course.courseDetails.title}\n${fileActivity.owner}',
       ),
       leading: const Column(
         mainAxisAlignment: MainAxisAlignment.center,

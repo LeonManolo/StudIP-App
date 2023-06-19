@@ -130,6 +130,7 @@ class InboxMessageBloc extends Bloc<InboxMessageEvent, InboxMessageState> {
         state.copyWith(
           status: InboxMessageStatus.deleteInboxMessagesSucceed,
           paginationLoading: false,
+          maxReached: inboxMessages.length < limit,
           blocResponse: event.messageIds.length == 1
               ? messageDeleteSucceed
               : messagesDeleteSucceed,

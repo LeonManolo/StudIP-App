@@ -47,8 +47,6 @@ Future<void> main() async {
   final activityClient = StudIPActivityClientImpl();
   final activityRepository = ActivityRepository(
     activityClient: activityClient,
-    courseClient: coursesClient,
-    filesClient: filesClient,
   );
 
   await initializeDateFormatting();
