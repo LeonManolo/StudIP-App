@@ -29,7 +29,7 @@ class FileActivityResponse {
   final Map<String, dynamic> course;
 
   factory FileActivityResponse.fromJson(
-      Map<String, dynamic> data, List<Map<String, dynamic>> included) {
+      Map<String, dynamic> data, List<dynamic> included) {
     final attributes = data["attributes"];
     final relationships = data["relationships"];
 
