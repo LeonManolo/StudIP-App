@@ -126,7 +126,7 @@ void main() {
         ).thenAnswer((_) => const User('1'));
         when(
           () => mockedMessageRepository.deleteMessages(
-              messageIds: any(named: 'messageIds')),
+              messageIds: any(named: 'messageIds'),),
         ).thenAnswer((_) => Future.value());
         when(
           () => mockedMessageRepository.getOutboxMessages(

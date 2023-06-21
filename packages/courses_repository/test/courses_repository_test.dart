@@ -24,7 +24,7 @@ void main() {
 
   group('getCourseEvents', () {
     CourseEventResponseItem generateCourseEventResponseItems(
-        {required int id}) {
+        {required int id,}) {
       return CourseEventResponseItem(
         '$id',
         CourseEventResponseItemAttributes(

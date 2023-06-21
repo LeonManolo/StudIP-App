@@ -29,7 +29,7 @@ class FilePreviewTile extends StatelessWidget {
           context,
           MaterialPageRoute<CourseDetailsPage>(
             builder: (context) {
-              return CourseDetailsPage(course: fileActivity.course!);
+              return CourseDetailsPage(course: fileActivity.course);
             },
           ),
         );
