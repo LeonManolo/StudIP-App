@@ -1,4 +1,3 @@
-
 import 'package:studip_api_client/src/core/studip_api_core.dart';
 import 'package:studip_api_client/src/extensions/extensions.dart';
 
@@ -22,7 +21,7 @@ abstract interface class StudIPCoursesClient {
     required int offset,
   });
 
-  Future<CourseEventListResponse> getCourseEvents({
+  Future<CourseEventResponse> getCourseEvents({
     required String courseId,
     required int offset,
     required int limit,
@@ -92,7 +91,7 @@ class StudIPCoursesClientImpl implements StudIPCoursesClient {
   }
 
   @override
-  Future<CourseEventListResponse> getCourseEvents({
+  Future<CourseEventResponse> getCourseEvents({
     required String courseId,
     required int offset,
     required int limit,
@@ -106,7 +105,7 @@ class StudIPCoursesClientImpl implements StudIPCoursesClient {
     final body = response.json();
     response.throwIfInvalidHttpStatus(body: body);
 
-    return CourseEventListResponse.fromJson(body);
+    return CourseEventResponse.fromJson(body);
   }
 
   @override

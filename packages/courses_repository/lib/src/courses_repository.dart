@@ -12,27 +12,26 @@ class CourseRepository {
   final StudIPCoursesClient _coursesApiClient;
   final StudIPUserClient _userApiClient;
 
-  Future<List<StudIPCourseEvent>> getCourseEvents({
+  Future<List<StudIPCourseEventItem>> getCourseEvents({
     required String courseId,
   }) async {
     try {
-      final List<CourseEventResponse> eventsResponse =
-          await _getResponse<CourseEventResponse>(
+      final List<CourseEventResponseItem> eventsResponseItems =
+          await _getResponse<CourseEventResponseItem>(
         id: courseId,
         loadItems: ({required id, required limit, required offset}) async {
           return _coursesApiClient.getCourseEvents(
-            courseId: id,
+            courseId: courseId,
             offset: offset,
             limit: limit,
           );
         },
       );
 
-      return eventsResponse
+      return eventsResponseItems
           .map(
-            (eventResponse) => StudIPCourseEvent.fromCourseEventResponse(
-              courseEventResponse: eventResponse,
-            ),
+            (item) =>
+                StudIPCourseEventItem.fromCourseEventResponseItem(item: item),
           )
           .toList();
     } catch (error, stackTrace) {
@@ -72,8 +71,9 @@ class CourseRepository {
     }
   }
 
-  Future<List<CourseWikiPageData>> getWikiPages(
-      {required String courseId,}) async {
+  Future<List<CourseWikiPageData>> getWikiPages({
+    required String courseId,
+  }) async {
     try {
       final List<CourseWikiPageResponse> wikiPagesResponse = await _getResponse(
         id: courseId,

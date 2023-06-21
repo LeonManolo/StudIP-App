@@ -10,7 +10,7 @@ class EventsSection extends ExpansionTile {
   }) : super(
           title: const Text('Termine'),
           children: [
-            for (StudIPCourseEvent event in eventExpansionModel.events)
+            for (StudIPCourseEventItem event in eventExpansionModel.events)
               ListTile(
                 title: Text(event.getEventTimeSpan),
                 subtitle: Text(

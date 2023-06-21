@@ -1,9 +1,8 @@
 import 'package:intl/intl.dart';
 import 'package:studip_api_client/studip_api_client.dart' as studip_api_client;
 
-class StudIPCourseEvent {
-
-  StudIPCourseEvent({
+class StudIPCourseEventItem {
+  StudIPCourseEventItem({
     required this.id,
     required this.title,
     required this.description,
@@ -13,15 +12,17 @@ class StudIPCourseEvent {
     this.location,
   });
 
-  factory StudIPCourseEvent.fromCourseEventResponse(
-      {required studip_api_client.CourseEventResponse courseEventResponse,}) {
-    return StudIPCourseEvent(
-        id: courseEventResponse.id,
-        title: courseEventResponse.title,
-        description: courseEventResponse.description,
-        startDate: DateTime.parse(courseEventResponse.start).toLocal(),
-        endDate: DateTime.parse(courseEventResponse.end).toLocal(),
-        categories: courseEventResponse.categories,);
+  factory StudIPCourseEventItem.fromCourseEventResponseItem({
+    required studip_api_client.CourseEventResponseItem item,
+  }) {
+    return StudIPCourseEventItem(
+      id: item.id,
+      title: item.attributes.title,
+      description: item.attributes.description,
+      startDate: DateTime.parse(item.attributes.start).toLocal(),
+      endDate: DateTime.parse(item.attributes.end).toLocal(),
+      categories: item.attributes.categories,
+    );
   }
   final String id;
   final String title;

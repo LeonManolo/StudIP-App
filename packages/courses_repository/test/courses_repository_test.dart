@@ -23,14 +23,18 @@ void main() {
   });
 
   group('getCourseEvents', () {
-    CourseEventResponse generateCourseEventResponse({required int id}) {
-      return CourseEventResponse(
-        id: '$id',
-        title: 'title $id',
-        description: 'description $id',
-        start: '2023-04-13T11:30:00+02:00',
-        end: '2023-04-13T11:30:00+02:00',
-        categories: [],
+    CourseEventResponseItem generateCourseEventResponseItems(
+        {required int id}) {
+      return CourseEventResponseItem(
+        '$id',
+        CourseEventResponseItemAttributes(
+          'title $id',
+          'description $id',
+          '2023-04-13T11:30:00+02:00',
+          '2023-04-13T11:30:00+02:00',
+          [],
+          '',
+        ),
       );
     }
 
@@ -38,39 +42,31 @@ void main() {
       when(
         () => mockedCoursesClient.getCourseEvents(
           courseId: '1',
-          offset: 0,
-          limit: 30,
+          offset: any(named: 'offset'),
+          limit: any(named: 'limit'),
         ),
-      ).thenAnswer((_) async {
-        return CourseEventListResponse(
-          events: List.generate(
-            30,
-            (index) => generateCourseEventResponse(id: index),
-          ),
-          offset: 0,
-          limit: 30,
-          total: 50,
+      ).thenAnswer((invocation) async {
+        final int passedOffset =
+            invocation.namedArguments[const Symbol('offset')] as int;
+        final CourseEventResponsePage page = CourseEventResponsePage(
+          passedOffset,
+          30,
+          50,
         );
-      });
-      when(
-        () => mockedCoursesClient.getCourseEvents(
-          courseId: '1',
-          offset: 30,
-          limit: 30,
-        ),
-      ).thenAnswer((_) async {
-        return CourseEventListResponse(
-          events: List.generate(
-            20,
-            (index) => generateCourseEventResponse(id: 30 + index),
+
+        return CourseEventResponse(
+          CourseEventResponseMeta(page),
+          List.generate(
+            passedOffset == 0 ? 30 : 20,
+            (index) => generateCourseEventResponseItems(
+              id: (passedOffset == 0 ? 0 : 30) +
+                  index, // add 30 for second batch to increment id correctly
+            ),
           ),
-          offset: 30,
-          limit: 30,
-          total: 50,
         );
       });
 
-      final List<StudIPCourseEvent> courseEvents =
+      final List<StudIPCourseEventItem> courseEvents =
           await sut.getCourseEvents(courseId: '1');
 
       expect(
@@ -122,7 +118,10 @@ void main() {
       );
       when(
         () => mockedCoursesClient.getCourseNews(
-            courseId: '1', limit: 5, offset: 0,),
+          courseId: '1',
+          limit: 5,
+          offset: 0,
+        ),
       ).thenAnswer((_) async {
         return CourseNewsListResponse(
           news: List.generate(
@@ -138,7 +137,7 @@ void main() {
       final courseNewsResponse =
           await sut.getCourseNews(courseId: '1', limit: 5, offset: 0);
 
-      for (var i = 0; i < courseNewsResponse.news.length; i++) {
+      for (var i = 0; i < 5; i++) {
         final courseNews = courseNewsResponse.news.elementAt(i);
 
         expect(courseNews.title, 'title $i');
@@ -196,9 +195,9 @@ void main() {
 
     test('courses which belong to same semester are grouped together',
         () async {
-      when(() =>
-              mockedCoursesClient.getCourses(userId: '1', offset: 0, limit: 30),)
-          .thenAnswer((_) async {
+      when(
+        () => mockedCoursesClient.getCourses(userId: '1', offset: 0, limit: 30),
+      ).thenAnswer((_) async {
         return CourseListResponse(
           courses: courses.getRange(0, 30).toList(),
           offset: 0,
@@ -206,8 +205,13 @@ void main() {
           total: 35,
         );
       });
-      when(() => mockedCoursesClient.getCourses(
-          userId: '1', offset: 30, limit: 30,),).thenAnswer((_) async {
+      when(
+        () => mockedCoursesClient.getCourses(
+          userId: '1',
+          offset: 30,
+          limit: 30,
+        ),
+      ).thenAnswer((_) async {
         return CourseListResponse(
           courses: courses.getRange(30, 35).toList(),
           offset: 30,

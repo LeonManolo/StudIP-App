@@ -56,7 +56,7 @@ class CourseInfoBloc extends Bloc<CourseInfoEvent, CourseInfoState> {
     TriggerInitialLoadEvent event,
     Emitter<CourseInfoState> emit,
   ) async {
-    final List<StudIPCourseEvent> newEvents =
+    final List<StudIPCourseEventItem> newEvents =
         await _courseRepository.getCourseEvents(courseId: course.id);
     _courseEventExpansionModel = CourseEventExpansionModel(events: newEvents);
 
