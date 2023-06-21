@@ -17,7 +17,8 @@ class CalendarNotificationTimeSelection extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         RadioListTile<NotificationTime>(
-          title: const Text('15 Minuten vorher'),
+          title: const Text('15 Minuten vorher'
+          ),
           subtitle:
               const Text('Erhalte Benachrichtigungen 15 Minuten vor Beginn'),
           value: NotificationTime.fifteenMinutesEarly,

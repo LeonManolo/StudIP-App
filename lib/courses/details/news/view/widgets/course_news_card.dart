@@ -13,7 +13,7 @@ class CourseNewsCard extends StatelessWidget {
     return DecoratedBox(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
-        color: Theme.of(context).appBarTheme.backgroundColor,
+        color: context.adaptiveSecondaryBackgroundColor,
         boxShadow: [
           BoxShadow(
             color: Colors.black12.withAlpha(12),

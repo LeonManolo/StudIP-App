@@ -40,7 +40,10 @@ class HomePage extends StatelessWidget {
                   ),
                 ],
                 flexibleSpace: FlexibleSpaceBar(
-                  title: Text('Home', style: Theme.of(context).textTheme.titleLarge,),
+                  title: Text(
+                    'Home',
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
                 ),
               ),
               cupertino: (context, _) => CupertinoSliverNavigationBar(
@@ -63,23 +66,32 @@ class HomePage extends StatelessWidget {
                     builder: (context, modules) {
                       return Column(
                         children: [
-                          const SizedBox(height: 400,),
-                          if (modules.isEmpty) const Center(
-                            child: EmptyView(
-                              title: 'Keine Module vorhanden',
-                              message: 'Es sind keine Module vorhanden',
-                            ),
-                          ) else Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 10),
-                            child: ReorderableModuleListView(
-                              modules: modules,
-                            ),
+                          const SizedBox(
+                            height: 400,
                           ),
+                          if (modules.isEmpty)
+                            const Center(
+                              child: EmptyView(
+                                title: 'Keine Module vorhanden',
+                                message: 'Es sind keine Module vorhanden',
+                              ),
+                            )
+                          else
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 10),
+                              child: ReorderableModuleListView(
+                                modules: modules,
+                              ),
+                            ),
                           PlatformElevatedButton(
                             onPressed: () {
-                              showCenteredCupertinoModal(context, (BuildContext _) {
-                                return ModuleSelectionModal(homeCubit: homeCubit);
-                              });
+                              showAdaptiveFullScreenModal(
+                                context: context,
+                                content: ModuleSelectionModal(
+                                  homeCubit: homeCubit,
+                                ),
+                              );
                             },
                             child: const Text('Module bearbeiten'),
                           ),

@@ -26,6 +26,8 @@ class CalendarCurrentTimeOverlay extends StatelessWidget {
         ? timeframe.containsHourMinuteExclusive(currentTime)
         : timeframe.containsHourMinute(currentTime);
 
+    final primaryColor = context.adaptivePrimaryColor;
+
     return Stack(
       children: [
         child,
@@ -59,15 +61,14 @@ class CalendarCurrentTimeOverlay extends StatelessWidget {
                             '$currentTime',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
-                              color: Theme.of(context).primaryColor,
+                              color: primaryColor,
                             ),
                           ),
                         ),
                         CircleAvatar(
                           minRadius: 5,
                           maxRadius: 5,
-                          backgroundColor: Theme.of(context).primaryColor,
-                          foregroundColor: Colors.red,
+                          backgroundColor: primaryColor,
                           child: const CircleAvatar(
                             radius: 2.5,
                             backgroundColor: Colors.white,
@@ -75,7 +76,7 @@ class CalendarCurrentTimeOverlay extends StatelessWidget {
                         ),
                         Expanded(
                           child: Container(
-                            color: Theme.of(context).primaryColor,
+                            color: primaryColor,
                             height: 2,
                             alignment: Alignment.center,
                           ),

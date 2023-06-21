@@ -17,8 +17,10 @@ class MessageTabBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(AppBarTheme.of(context).backgroundColor);
+    print(AppBarTheme.of(context));
     return BlocBuilder<TabBarBloc, TabBarState>(
-      builder: (context, state) {
+      builder: (blocContext, state) {
         if (Platform.isIOS) {
           return CupertinoNavigationBar(
             automaticallyImplyLeading: false,
@@ -31,7 +33,7 @@ class MessageTabBar extends StatelessWidget {
                 child: AdaptiveTabBar(
                   selectedTab: state.currentTabIndex,
                   onValueChanged: (value) {
-                    context
+                    blocContext
                         .read<TabBarBloc>()
                         .add(TabIndexChanged(index: value));
                     tabController.animateTo(value);
@@ -55,20 +57,23 @@ class MessageTabBar extends StatelessWidget {
             ),
           );
         } else {
-          return TabBar(
-            indicatorColor: context.adaptivePrimaryColor,
-            labelColor: context.adaptivePrimaryColor,
-            tabs: const [
-              Tab(
-                text: 'Empfangen',
-                icon: Icon(Icons.all_inbox),
-              ),
-              Tab(
-                text: 'Gesendet',
-                icon: Icon(Icons.outbox),
-              )
-            ],
-            controller: tabController,
+          return Container(
+            color: AppBarTheme.of(context).backgroundColor,
+            child: TabBar(
+              indicatorColor: context.adaptivePrimaryColor,
+              labelColor: context.adaptivePrimaryColor,
+              tabs: const [
+                Tab(
+                  text: 'Empfangen',
+                  icon: Icon(Icons.all_inbox),
+                ),
+                Tab(
+                  text: 'Gesendet',
+                  icon: Icon(Icons.outbox),
+                )
+              ],
+              controller: tabController,
+            ),
           );
         }
       },

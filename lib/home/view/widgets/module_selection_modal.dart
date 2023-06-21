@@ -1,10 +1,14 @@
+import 'package:eva_icons_flutter/eva_icons_flutter.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:studipadawan/home/cubit/home_cubit.dart';
 import 'package:studipadawan/home/modules/module.dart';
 import 'package:studipadawan/home/utils/module_provider.dart';
 
 class ModuleSelectionModal extends StatefulWidget {
   const ModuleSelectionModal({super.key, required this.homeCubit});
+
   final HomeCubit homeCubit;
 
   @override
@@ -17,6 +21,7 @@ class _ModuleSelectionModalState extends State<ModuleSelectionModal> {
   }
 
   late List<ModuleType> selectedModules;
+
   @override
   void initState() {
     super.initState();
@@ -28,17 +33,38 @@ class _ModuleSelectionModalState extends State<ModuleSelectionModal> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: const Text(
-          'Modulauswahl',
+    return PlatformScaffold(
+      appBar: PlatformAppBar(
+        cupertino: (cupertinoContext, _) => CupertinoNavigationBarData(
+          title: const Text('Module'),
+          leading: CupertinoButton(
+            padding: EdgeInsets.zero,
+            child: const Text('Abbrechen'),
+            onPressed: () => Navigator.pop(context),
+          ),
+          trailing: CupertinoButton(
+            padding: EdgeInsets.zero,
+            onPressed: _onSavedPressed,
+            child: const Text(
+              'Speichern',
+              style: TextStyle(
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ),
+        material: (materialContext, _) => MaterialAppBarData(
+          title: const Text('Module'),
+          actions: [
+            IconButton(
+              onPressed: _onSavedPressed,
+              icon: const Icon(EvaIcons.checkmark),
+            )
+          ],
         ),
       ),
       body: Column(
         children: [
-          const SizedBox(height: 16),
-          const SizedBox(height: 16),
           Expanded(
             child: ListView.builder(
               itemCount: ModuleType.values.length,
@@ -67,38 +93,19 @@ class _ModuleSelectionModalState extends State<ModuleSelectionModal> {
             ),
           ),
           const SizedBox(height: 16),
-          SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.only(right: 8),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: const Text('Abbrechen'),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      final List<Module> modules = [];
-                      for (final moduleType in selectedModules) {
-                        modules.add(getModule(moduleType));
-                      }
-                      widget.homeCubit.overrideModules(modules: modules);
-                      WidgetsBinding.instance.addPostFrameCallback((_) {
-                        Navigator.pop(context);
-                      });
-                    },
-                    child: const Text('Speichern'),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          const SizedBox(height: 16),
         ],
       ),
     );
+  }
+
+  void _onSavedPressed() {
+    final List<Module> modules = [];
+    for (final moduleType in selectedModules) {
+      modules.add(getModule(moduleType));
+    }
+    widget.homeCubit.overrideModules(modules: modules);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Navigator.pop(context);
+    });
   }
 }

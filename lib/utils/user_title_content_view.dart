@@ -41,8 +41,8 @@ class UserTitleContentView extends StatelessWidget {
           title,
           style: Theme.of(context)
               .textTheme
-              .titleLarge
-              ?.copyWith(fontWeight: FontWeight.w500),
+              .titleMedium
+              ?.copyWith(fontWeight: FontWeight.w600),
         ),
         const SizedBox(height: AppSpacing.sm),
         HtmlWidget(

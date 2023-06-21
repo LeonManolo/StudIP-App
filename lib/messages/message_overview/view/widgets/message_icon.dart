@@ -5,7 +5,7 @@ Icon messageIcon(BuildContext context, {required bool isRead}) {
   if (isRead) {
     return Icon(
       EvaIcons.emailOutline,
-      color: Theme.of(context).primaryColor,
+      //color: Theme.of(context).primaryColor,
       size: 24,
     );
   } else {

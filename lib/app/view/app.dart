@@ -69,34 +69,51 @@ class AppView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return PlatformProvider(
-      settings: PlatformSettingsData(
-        iosUsesMaterialWidgets: true,
-        //iosUseZeroPaddingForAppbarPlatformIcon: true,
-      ),
-      builder: (context) => PlatformTheme(
-        themeMode: ThemeMode.system,
-        materialLightTheme: const LightMaterialAppTheme().themeData,
-        materialDarkTheme:
-        // temporary fix, because material dark mode overrides cupertino dark mode
-            Platform.isAndroid ? const DarkMaterialAppTheme().themeData : null,
-        cupertinoLightTheme: const LightCupertinoAppTheme().themeData,
-        cupertinoDarkTheme: const DarkCupertinoAppTheme().themeData,
-        matchCupertinoSystemChromeBrightness: false,
-        builder: (context) => PlatformApp(
-          // needed to get the cupertino modal shrink effect
-          onGenerateRoute: (settings) => MaterialWithModalsPageRoute(
-            builder: (context) => FlowBuilder<AppStatus>(
-              state: context.select((AppBloc bloc) => bloc.state.status),
-              onGeneratePages: onGenerateAppViewPages,
-            ),
+    return Theme(
+      data: ThemeData.dark().copyWith(
+        cupertinoOverrideTheme: CupertinoThemeData(
+          primaryColor: CupertinoColors.systemIndigo,
+          barBackgroundColor:
+          CupertinoThemeData(brightness: Brightness.dark).barBackgroundColor,
+          scaffoldBackgroundColor: CupertinoColors.systemBackground,
+          textTheme: CupertinoTextThemeData(
+            textStyle: CupertinoThemeData(brightness: Brightness.dark).textTheme.textStyle,
+            navActionTextStyle: CupertinoThemeData(brightness: Brightness.dark)
+                .textTheme.navActionTextStyle
+                .copyWith(color: const Color(0xF0F9F9F9)),
+            navLargeTitleTextStyle: CupertinoThemeData(brightness: Brightness.dark)
+                .textTheme.navLargeTitleTextStyle
+                .copyWith(color: const Color(0xF0F9F9F9)),
           ),
-          localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
-            DefaultMaterialLocalizations.delegate,
-            DefaultWidgetsLocalizations.delegate,
-            DefaultCupertinoLocalizations.delegate,
-          ],
-          title: 'StudIPadawan',
+        ),
+      ),
+      child: PlatformProvider(
+        settings: PlatformSettingsData(
+          iosUsesMaterialWidgets: true,
+          //iosUseZeroPaddingForAppbarPlatformIcon: true,
+        ),
+        builder: (context) => PlatformTheme(
+          themeMode: ThemeMode.system,
+
+          cupertinoDarkTheme: DarkCupertinoAppTheme().themeData,
+          cupertinoLightTheme: LightCupertinoAppTheme().themeData,
+
+          //matchCupertinoSystemChromeBrightness: true,
+          builder: (context) => PlatformApp(
+            // needed to get the cupertino modal shrink effect
+            onGenerateRoute: (settings) => MaterialWithModalsPageRoute(
+              builder: (context) => FlowBuilder<AppStatus>(
+                state: context.select((AppBloc bloc) => bloc.state.status),
+                onGeneratePages: onGenerateAppViewPages,
+              ),
+            ),
+            localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
+              DefaultMaterialLocalizations.delegate,
+              DefaultWidgetsLocalizations.delegate,
+              DefaultCupertinoLocalizations.delegate,
+            ],
+            title: 'StudIPadawan',
+          ),
         ),
       ),
     );
