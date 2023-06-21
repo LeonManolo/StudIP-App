@@ -23,8 +23,9 @@ void main() {
   });
 
   group('getCourseEvents', () {
-    CourseEventResponseItem generateCourseEventResponseItems(
-        {required int id,}) {
+    CourseEventResponseItem generateCourseEventResponseItems({
+      required int id,
+    }) {
       return CourseEventResponseItem(
         '$id',
         CourseEventResponseItemAttributes(
@@ -137,7 +138,7 @@ void main() {
       final courseNewsResponse =
           await sut.getCourseNews(courseId: '1', limit: 5, offset: 0);
 
-      for (var i = 0; i < 5; i++) {
+      for (var i = 0; i < courseNewsResponse.news.length; i++) {
         final courseNews = courseNewsResponse.news.elementAt(i);
 
         expect(courseNews.title, 'title $i');
