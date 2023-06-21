@@ -31,17 +31,19 @@ class CourseNews {
   });
 
   factory CourseNews.fromCourseNewsResponse({
-    required studip_api_client.CourseNewsResponse courseNewsResponse,
+    required studip_api_client.CourseNewsResponseItem courseNewsResponse,
     required studip_api_client.UserResponse userResponse,
   }) {
     return CourseNews(
       id: courseNewsResponse.id,
-      title: courseNewsResponse.title,
-      content: courseNewsResponse.content,
+      title: courseNewsResponse.attributes.title,
+      content: courseNewsResponse.attributes.content,
       publicationStart:
-          DateTime.parse(courseNewsResponse.publicationStart).toLocal(),
+          DateTime.parse(courseNewsResponse.attributes.publicationStart)
+              .toLocal(),
       publicationEnd:
-          DateTime.parse(courseNewsResponse.publicationEnd).toLocal(),
+          DateTime.parse(courseNewsResponse.attributes.publicationEnd)
+              .toLocal(),
       author: ItemAuthor(
         formattedName: userResponse.formattedName,
         id: userResponse.id,

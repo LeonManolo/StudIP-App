@@ -49,14 +49,14 @@ void main() {
       ).thenAnswer((invocation) async {
         final int passedOffset =
             invocation.namedArguments[const Symbol('offset')] as int;
-        final CourseEventResponsePage page = CourseEventResponsePage(
-          passedOffset,
-          30,
-          50,
+        final ResponsePage page = ResponsePage(
+          offset: passedOffset,
+          limit: 30,
+          total: 50,
         );
 
         return CourseEventResponse(
-          CourseEventResponseMeta(page),
+          ResponseMeta(page: page),
           List.generate(
             passedOffset == 0 ? 30 : 20,
             (index) => generateCourseEventResponseItems(
@@ -78,14 +78,25 @@ void main() {
   });
 
   group('getCourseNews', () {
-    CourseNewsResponse generateCoursNewsResponse({required int id}) {
-      return CourseNewsResponse(
+    CourseNewsResponseItem generateCoursNewsResponseItem({
+      required int id,
+    }) {
+      return CourseNewsResponseItem(
         id: '$id',
-        title: 'title $id',
-        content: 'content $id',
-        publicationStart: '2023-04-13T11:30:00+02:00',
-        publicationEnd: '2023-04-20T11:30:00+02:00',
-        authorId: '$id',
+        attributes: CourseNewsResponseItemAttributes(
+          title: 'title $id',
+          content: 'content $id',
+          publicationStart: '2023-04-13T11:30:00+02:00',
+          publicationEnd: '2023-04-20T11:30:00+02:00',
+        ),
+        relationships: CourseNewsResponseItemRelationships(
+          author: CourseNewsResponseItemRelationshipAuthor(
+            data: CourseNewsResponseItemRelationshipAuthorData(
+              type: 'user',
+              id: '$id',
+            ),
+          ),
+        ),
       );
     }
 
@@ -124,15 +135,16 @@ void main() {
           offset: 0,
         ),
       ).thenAnswer((_) async {
-        return CourseNewsListResponse(
-          news: List.generate(
-            3,
-            (index) => generateCoursNewsResponse(id: index),
-          ),
-          offset: 0,
-          limit: 5,
-          total: 3,
-        );
+        return CourseNewsResponse(
+            meta: ResponseMeta(
+              page: ResponsePage(
+                offset: 0,
+                limit: 5,
+                total: 3,
+              ),
+            ),
+            items: List.generate(
+                3, (index) => generateCoursNewsResponseItem(id: index)));
       });
 
       final courseNewsResponse =

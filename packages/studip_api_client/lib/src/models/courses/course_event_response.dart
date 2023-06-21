@@ -10,12 +10,6 @@ class CourseEventResponse implements ItemListResponse<CourseEventResponseItem> {
   factory CourseEventResponse.fromJson(Map<String, dynamic> json) =>
       _$CourseEventResponseFromJson(json);
 
-  @JsonKey(name: 'data')
-  @override
-  final List<CourseEventResponseItem> items;
-
-  final CourseEventResponseMeta meta;
-
   @override
   @JsonKey(includeFromJson: false)
   int get limit => meta.page.limit;
@@ -27,28 +21,12 @@ class CourseEventResponse implements ItemListResponse<CourseEventResponseItem> {
   @override
   @JsonKey(includeFromJson: false)
   int get total => meta.page.total;
-}
 
-@JsonSerializable()
-class CourseEventResponseMeta {
-  CourseEventResponseMeta(this.page);
+  @override
+  @JsonKey(name: 'data')
+  final List<CourseEventResponseItem> items;
 
-  factory CourseEventResponseMeta.fromJson(Map<String, dynamic> json) =>
-      _$CourseEventResponseMetaFromJson(json);
-
-  final CourseEventResponsePage page;
-}
-
-@JsonSerializable()
-class CourseEventResponsePage {
-  CourseEventResponsePage(this.offset, this.limit, this.total);
-
-  factory CourseEventResponsePage.fromJson(Map<String, dynamic> json) =>
-      _$CourseEventResponsePageFromJson(json);
-
-  final int offset;
-  final int limit;
-  final int total;
+  final ResponseMeta meta;
 }
 
 @JsonSerializable()

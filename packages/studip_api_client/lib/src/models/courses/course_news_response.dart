@@ -1,64 +1,107 @@
+import 'package:json_annotation/json_annotation.dart';
 import 'package:studip_api_client/studip_api_client.dart';
 
-class CourseNewsListResponse implements ItemListResponse<CourseNewsResponse> {
-  final List<CourseNewsResponse> news;
-  @override
-  final int offset;
-  @override
-  final int limit;
-  @override
-  final int total;
+part 'course_news_response.g.dart';
 
-  CourseNewsListResponse({
-    required this.news,
-    required this.offset,
-    required this.limit,
-    required this.total,
-  });
+@JsonSerializable()
+class CourseNewsResponse implements ItemListResponse<CourseNewsResponseItem> {
+  CourseNewsResponse({required this.items, required this.meta});
 
-  factory CourseNewsListResponse.fromJson(Map<String, dynamic> json) {
-    final page = json["meta"]["page"];
-    List<dynamic> news = json["data"];
-
-    return CourseNewsListResponse(
-      news:
-          news.map((rawNews) => CourseNewsResponse.fromJson(rawNews)).toList(),
-      offset: page["offset"],
-      limit: page["limit"],
-      total: page["total"],
-    );
-  }
+  factory CourseNewsResponse.fromJson(Map<String, dynamic> json) =>
+      _$CourseNewsResponseFromJson(json);
 
   @override
-  List<CourseNewsResponse> get items => news;
+  @JsonKey(includeFromJson: false)
+  int get offset => meta.page.offset;
+
+  @override
+  @JsonKey(includeFromJson: false)
+  int get limit => meta.page.limit;
+
+  @override
+  @JsonKey(includeFromJson: false)
+  int get total => meta.page.total;
+
+  @override
+  @JsonKey(name: 'data')
+  final List<CourseNewsResponseItem> items;
+
+  final ResponseMeta meta;
 }
 
-class CourseNewsResponse {
+@JsonSerializable()
+class CourseNewsResponseItem {
   final String id;
+  final CourseNewsResponseItemAttributes attributes;
+  final CourseNewsResponseItemRelationships relationships;
+
+  @JsonKey(includeFromJson: false)
+  String get authorId => relationships.author.data.id;
+
+  CourseNewsResponseItem({
+    required this.id,
+    required this.attributes,
+    required this.relationships,
+  });
+
+  factory CourseNewsResponseItem.fromJson(Map<String, dynamic> json) =>
+      _$CourseNewsResponseItemFromJson(json);
+}
+
+@JsonSerializable()
+class CourseNewsResponseItemAttributes {
   final String title;
   final String content;
+  @JsonKey(name: 'publication-start')
   final String publicationStart;
+  @JsonKey(name: 'publication-end')
   final String publicationEnd;
-  final String authorId;
 
-  CourseNewsResponse({
-    required this.id,
+  CourseNewsResponseItemAttributes({
     required this.title,
     required this.content,
     required this.publicationStart,
     required this.publicationEnd,
-    required this.authorId,
   });
 
-  factory CourseNewsResponse.fromJson(Map<String, dynamic> json) {
-    final attributes = json["attributes"];
-    return CourseNewsResponse(
-      id: json["id"],
-      title: attributes["title"],
-      content: attributes["content"],
-      publicationStart: attributes["publication-start"],
-      publicationEnd: attributes["publication-end"],
-      authorId: json['relationships']['author']['data']['id'],
-    );
-  }
+  factory CourseNewsResponseItemAttributes.fromJson(
+          Map<String, dynamic> json) =>
+      _$CourseNewsResponseItemAttributesFromJson(json);
+}
+
+@JsonSerializable()
+class CourseNewsResponseItemRelationships {
+  final CourseNewsResponseItemRelationshipAuthor author;
+
+  CourseNewsResponseItemRelationships({required this.author});
+
+  factory CourseNewsResponseItemRelationships.fromJson(
+          Map<String, dynamic> json) =>
+      _$CourseNewsResponseItemRelationshipsFromJson(json);
+}
+
+@JsonSerializable()
+class CourseNewsResponseItemRelationshipAuthor {
+  final CourseNewsResponseItemRelationshipAuthorData data;
+
+  CourseNewsResponseItemRelationshipAuthor({required this.data});
+
+  factory CourseNewsResponseItemRelationshipAuthor.fromJson(
+          Map<String, dynamic> json) =>
+      _$CourseNewsResponseItemRelationshipAuthorFromJson(json);
+}
+
+@JsonSerializable()
+class CourseNewsResponseItemRelationshipAuthorData {
+  final String type;
+  final String id;
+
+  CourseNewsResponseItemRelationshipAuthorData({
+    required this.type,
+    required this.id,
+  });
+
+  factory CourseNewsResponseItemRelationshipAuthorData.fromJson(
+          Map<String, dynamic> json) =>
+      _$CourseNewsResponseItemRelationshipAuthorDataFromJson(json);
 }

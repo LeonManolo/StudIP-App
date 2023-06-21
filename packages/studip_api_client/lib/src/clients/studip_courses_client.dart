@@ -15,7 +15,7 @@ abstract interface class StudIPCoursesClient {
     required String semesterId,
   });
 
-  Future<CourseNewsListResponse> getCourseNews({
+  Future<CourseNewsResponse> getCourseNews({
     required String courseId,
     required int limit,
     required int offset,
@@ -75,7 +75,7 @@ class StudIPCoursesClientImpl implements StudIPCoursesClient {
   }
 
   @override
-  Future<CourseNewsListResponse> getCourseNews({
+  Future<CourseNewsResponse> getCourseNews({
     required String courseId,
     required int limit,
     required int offset,
@@ -87,7 +87,7 @@ class StudIPCoursesClientImpl implements StudIPCoursesClient {
     final body = response.json();
     response.throwIfInvalidHttpStatus(body: body);
 
-    return CourseNewsListResponse.fromJson(body);
+    return CourseNewsResponse.fromJson(body);
   }
 
   @override

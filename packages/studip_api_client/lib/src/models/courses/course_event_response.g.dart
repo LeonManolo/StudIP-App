@@ -8,7 +8,7 @@ part of 'course_event_response.dart';
 
 CourseEventResponse _$CourseEventResponseFromJson(Map<String, dynamic> json) =>
     CourseEventResponse(
-      CourseEventResponseMeta.fromJson(json['meta'] as Map<String, dynamic>),
+      ResponseMeta.fromJson(json['meta'] as Map<String, dynamic>),
       (json['data'] as List<dynamic>)
           .map((e) =>
               CourseEventResponseItem.fromJson(e as Map<String, dynamic>))
@@ -20,34 +20,6 @@ Map<String, dynamic> _$CourseEventResponseToJson(
     <String, dynamic>{
       'data': instance.items,
       'meta': instance.meta,
-    };
-
-CourseEventResponseMeta _$CourseEventResponseMetaFromJson(
-        Map<String, dynamic> json) =>
-    CourseEventResponseMeta(
-      CourseEventResponsePage.fromJson(json['page'] as Map<String, dynamic>),
-    );
-
-Map<String, dynamic> _$CourseEventResponseMetaToJson(
-        CourseEventResponseMeta instance) =>
-    <String, dynamic>{
-      'page': instance.page,
-    };
-
-CourseEventResponsePage _$CourseEventResponsePageFromJson(
-        Map<String, dynamic> json) =>
-    CourseEventResponsePage(
-      json['offset'] as int,
-      json['limit'] as int,
-      json['total'] as int,
-    );
-
-Map<String, dynamic> _$CourseEventResponsePageToJson(
-        CourseEventResponsePage instance) =>
-    <String, dynamic>{
-      'offset': instance.offset,
-      'limit': instance.limit,
-      'total': instance.total,
     };
 
 CourseEventResponseItem _$CourseEventResponseItemFromJson(

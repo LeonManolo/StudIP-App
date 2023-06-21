@@ -1,6 +1,6 @@
 import 'package:courses_repository/src/models/models.dart';
 import 'package:studip_api_client/studip_api_client.dart'
-    hide CourseNewsListResponse, CourseWikiPagesListResponse;
+    hide CourseNewsResponse, CourseWikiPagesListResponse;
 
 class CourseRepository {
   const CourseRepository({
@@ -52,7 +52,7 @@ class CourseRepository {
       );
 
       final List<CourseNews> newsItems = await Future.wait(
-        newsResponse.news.map((rawNewsResponse) async {
+        newsResponse.items.map((rawNewsResponse) async {
           final UserResponse userResponse =
               await _userApiClient.getUser(userId: rawNewsResponse.authorId);
           return CourseNews.fromCourseNewsResponse(
