@@ -35,7 +35,7 @@ public class DataProvider {
                 guard currentDay == attributes.weekday.rawValue,
                       let startDate = Calendar.german.set(hourMinuteFrom: attributes.start, for: date),
                       let endDate = Calendar.german.set(hourMinuteFrom: attributes.end, for: date),
-                      startDate >= date else { return nil }
+                      endDate >= date else { return nil }
                 
                 if Calendar.german.is(date: startDate, in: attributes.recurrence) ?? true {
                     return ScheduleItem(

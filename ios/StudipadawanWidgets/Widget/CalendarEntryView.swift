@@ -12,6 +12,10 @@ struct CalendarEntryView: View {
     let hourMinuteDateFormatter: DateFormatter
     let scheduleItem: ScheduleItem
     
+    var scheduleItemTitle: String {
+        scheduleItem.title.isEmpty ? "Termin ohne Titel" : scheduleItem.title
+    }
+    
     var body: some View {
         HStack {
             RoundedRectangle(cornerRadius: 4)
@@ -19,7 +23,7 @@ struct CalendarEntryView: View {
                 .frame(width: 4)
             
             VStack(alignment: .leading) {
-                Text(scheduleItem.title)
+                Text(scheduleItemTitle)
                     .font(.system(size: 14))
                     .lineLimit(1)
                 
