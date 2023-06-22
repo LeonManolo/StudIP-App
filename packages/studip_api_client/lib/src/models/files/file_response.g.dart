@@ -6,14 +6,15 @@ part of 'file_response.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-FileResponse _$FileResponseFromJson(Map<String, dynamic> json) => FileResponse(
+FileListResponse _$FileListResponseFromJson(Map<String, dynamic> json) =>
+    FileListResponse(
       files: (json['data'] as List<dynamic>)
           .map((e) => FileResponseItem.fromJson(e as Map<String, dynamic>))
           .toList(),
       meta: ResponseMeta.fromJson(json['meta'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$FileResponseToJson(FileResponse instance) =>
+Map<String, dynamic> _$FileListResponseToJson(FileListResponse instance) =>
     <String, dynamic>{
       'data': instance.files,
       'meta': instance.meta,

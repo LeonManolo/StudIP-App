@@ -5,7 +5,7 @@ import '../core/interfaces/studip_http_request_core.dart';
 import '../models/models.dart';
 
 abstract interface class StudIPCoursesClient {
-  Future<CourseResponse> getCourses({
+  Future<CourseListResponse> getCourses({
     required String userId,
     required int offset,
     required int limit,
@@ -15,25 +15,25 @@ abstract interface class StudIPCoursesClient {
     required String semesterId,
   });
 
-  Future<CourseNewsResponse> getCourseNews({
+  Future<CourseNewsListResponse> getCourseNews({
     required String courseId,
     required int limit,
     required int offset,
   });
 
-  Future<CourseEventResponse> getCourseEvents({
+  Future<CourseEventListResponse> getCourseEvents({
     required String courseId,
     required int offset,
     required int limit,
   });
 
-  Future<CourseWikiPageResponse> getCourseWikiPages({
+  Future<CourseWikiPageListResponse> getCourseWikiPages({
     required String courseId,
     required int offset,
     required int limit,
   });
 
-  Future<CourseParticipantsResponse> getCourseParticipants({
+  Future<CourseParticipantsListResponse> getCourseParticipants({
     required String courseId,
     required int offset,
     required int limit,
@@ -50,7 +50,7 @@ class StudIPCoursesClientImpl implements StudIPCoursesClient {
   StudIPCoursesClientImpl({StudIpHttpCore? core})
       : _core = core ?? StudIpAPICore.shared;
   @override
-  Future<CourseResponse> getCourses(
+  Future<CourseListResponse> getCourses(
       {required String userId, required int offset, required int limit}) async {
     final response =
         await _core.get(endpoint: "users/$userId/courses", queryParameters: {
@@ -61,7 +61,7 @@ class StudIPCoursesClientImpl implements StudIPCoursesClient {
     final body = response.json();
     response.throwIfInvalidHttpStatus(body: body);
 
-    return CourseResponse.fromJson(body);
+    return CourseListResponse.fromJson(body);
   }
 
   @override
@@ -75,7 +75,7 @@ class StudIPCoursesClientImpl implements StudIPCoursesClient {
   }
 
   @override
-  Future<CourseNewsResponse> getCourseNews({
+  Future<CourseNewsListResponse> getCourseNews({
     required String courseId,
     required int limit,
     required int offset,
@@ -87,11 +87,11 @@ class StudIPCoursesClientImpl implements StudIPCoursesClient {
     final body = response.json();
     response.throwIfInvalidHttpStatus(body: body);
 
-    return CourseNewsResponse.fromJson(body);
+    return CourseNewsListResponse.fromJson(body);
   }
 
   @override
-  Future<CourseEventResponse> getCourseEvents({
+  Future<CourseEventListResponse> getCourseEvents({
     required String courseId,
     required int offset,
     required int limit,
@@ -105,11 +105,11 @@ class StudIPCoursesClientImpl implements StudIPCoursesClient {
     final body = response.json();
     response.throwIfInvalidHttpStatus(body: body);
 
-    return CourseEventResponse.fromJson(body);
+    return CourseEventListResponse.fromJson(body);
   }
 
   @override
-  Future<CourseWikiPageResponse> getCourseWikiPages({
+  Future<CourseWikiPageListResponse> getCourseWikiPages({
     required String courseId,
     required int offset,
     required int limit,
@@ -123,11 +123,11 @@ class StudIPCoursesClientImpl implements StudIPCoursesClient {
     final body = response.json();
     response.throwIfInvalidHttpStatus(body: body);
 
-    return CourseWikiPageResponse.fromJson(body);
+    return CourseWikiPageListResponse.fromJson(body);
   }
 
   @override
-  Future<CourseParticipantsResponse> getCourseParticipants({
+  Future<CourseParticipantsListResponse> getCourseParticipants({
     required String courseId,
     required int offset,
     required int limit,
@@ -142,7 +142,7 @@ class StudIPCoursesClientImpl implements StudIPCoursesClient {
     final body = response.json();
     response.throwIfInvalidHttpStatus(body: body);
 
-    return CourseParticipantsResponse.fromJson(body);
+    return CourseParticipantsListResponse.fromJson(body);
   }
 
   @override

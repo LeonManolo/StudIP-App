@@ -4,12 +4,12 @@ import 'package:studip_api_client/studip_api_client.dart';
 part 'course_wiki_response.g.dart';
 
 @JsonSerializable()
-class CourseWikiPageResponse
+class CourseWikiPageListResponse
     implements ItemListResponse<CourseWikiPageResponseItem> {
-  CourseWikiPageResponse({required this.wikiPages, required this.meta});
+  CourseWikiPageListResponse({required this.wikiPages, required this.meta});
 
-  factory CourseWikiPageResponse.fromJson(Map<String, dynamic> json) =>
-      _$CourseWikiPageResponseFromJson(json);
+  factory CourseWikiPageListResponse.fromJson(Map<String, dynamic> json) =>
+      _$CourseWikiPageListResponseFromJson(json);
 
   @JsonKey(name: 'data')
   final List<CourseWikiPageResponseItem> wikiPages;

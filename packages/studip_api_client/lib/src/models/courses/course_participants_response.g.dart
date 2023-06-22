@@ -6,9 +6,9 @@ part of 'course_participants_response.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-CourseParticipantsResponse _$CourseParticipantsResponseFromJson(
+CourseParticipantsListResponse _$CourseParticipantsListResponseFromJson(
         Map<String, dynamic> json) =>
-    CourseParticipantsResponse(
+    CourseParticipantsListResponse(
       meta: ResponseMeta.fromJson(json['meta'] as Map<String, dynamic>),
       participants: (json['data'] as List<dynamic>)
           .map((e) => CourseParticipantsResponseItem.fromJson(
@@ -16,8 +16,8 @@ CourseParticipantsResponse _$CourseParticipantsResponseFromJson(
           .toList(),
     );
 
-Map<String, dynamic> _$CourseParticipantsResponseToJson(
-        CourseParticipantsResponse instance) =>
+Map<String, dynamic> _$CourseParticipantsListResponseToJson(
+        CourseParticipantsListResponse instance) =>
     <String, dynamic>{
       'meta': instance.meta,
       'data': instance.participants,

@@ -4,11 +4,11 @@ import 'package:studip_api_client/studip_api_client.dart';
 part 'file_response.g.dart';
 
 @JsonSerializable()
-class FileResponse implements ItemListResponse<FileResponseItem> {
+class FileListResponse implements ItemListResponse<FileResponseItem> {
   @JsonKey(name: 'data')
   final List<FileResponseItem> files;
 
-  FileResponse({required this.files, required this.meta});
+  FileListResponse({required this.files, required this.meta});
 
   @override
   int get offset => meta.page.offset;
@@ -24,8 +24,8 @@ class FileResponse implements ItemListResponse<FileResponseItem> {
   @override
   List<FileResponseItem> get items => files;
 
-  factory FileResponse.fromJson(Map<String, dynamic> json) =>
-      _$FileResponseFromJson(json);
+  factory FileListResponse.fromJson(Map<String, dynamic> json) =>
+      _$FileListResponseFromJson(json);
 }
 
 @JsonSerializable()

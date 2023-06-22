@@ -4,14 +4,14 @@ import 'package:studip_api_client/studip_api_client.dart';
 part 'folder_response.g.dart';
 
 @JsonSerializable()
-class FolderResponse implements ItemListResponse<FolderResponseItem> {
+class FolderListResponse implements ItemListResponse<FolderResponseItem> {
   @JsonKey(name: 'data')
   final List<FolderResponseItem> folders;
 
-  FolderResponse({required this.folders, required this.meta});
+  FolderListResponse({required this.folders, required this.meta});
 
-  factory FolderResponse.fromJson(Map<String, dynamic> json) =>
-      _$FolderResponseFromJson(json);
+  factory FolderListResponse.fromJson(Map<String, dynamic> json) =>
+      _$FolderListResponseFromJson(json);
 
   @override
   int get offset => meta.page.offset;

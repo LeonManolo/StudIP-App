@@ -6,15 +6,15 @@ part of 'course_response.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-CourseResponse _$CourseResponseFromJson(Map<String, dynamic> json) =>
-    CourseResponse(
+CourseListResponse _$CourseListResponseFromJson(Map<String, dynamic> json) =>
+    CourseListResponse(
       courses: (json['data'] as List<dynamic>)
           .map((e) => CourseResponseItem.fromJson(e as Map<String, dynamic>))
           .toList(),
       meta: ResponseMeta.fromJson(json['meta'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$CourseResponseToJson(CourseResponse instance) =>
+Map<String, dynamic> _$CourseListResponseToJson(CourseListResponse instance) =>
     <String, dynamic>{
       'data': instance.courses,
       'meta': instance.meta,

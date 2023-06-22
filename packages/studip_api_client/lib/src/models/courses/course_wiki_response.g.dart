@@ -6,9 +6,9 @@ part of 'course_wiki_response.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-CourseWikiPageResponse _$CourseWikiPageResponseFromJson(
+CourseWikiPageListResponse _$CourseWikiPageListResponseFromJson(
         Map<String, dynamic> json) =>
-    CourseWikiPageResponse(
+    CourseWikiPageListResponse(
       wikiPages: (json['data'] as List<dynamic>)
           .map((e) =>
               CourseWikiPageResponseItem.fromJson(e as Map<String, dynamic>))
@@ -16,8 +16,8 @@ CourseWikiPageResponse _$CourseWikiPageResponseFromJson(
       meta: ResponseMeta.fromJson(json['meta'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$CourseWikiPageResponseToJson(
-        CourseWikiPageResponse instance) =>
+Map<String, dynamic> _$CourseWikiPageListResponseToJson(
+        CourseWikiPageListResponse instance) =>
     <String, dynamic>{
       'data': instance.wikiPages,
       'meta': instance.meta,

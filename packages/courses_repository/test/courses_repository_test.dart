@@ -60,7 +60,7 @@ void main() {
           total: 50,
         );
 
-        return CourseEventResponse(
+        return CourseEventListResponse(
           ResponseMeta(page: page),
           (passedOffset == 0 ? events.getRange(0, 30) : events.getRange(30, 50))
               .toList(),
@@ -135,7 +135,7 @@ void main() {
           offset: 0,
         ),
       ).thenAnswer((_) async {
-        return CourseNewsResponse(
+        return CourseNewsListResponse(
             meta: ResponseMeta(
               page: ResponsePage(
                 offset: 0,
@@ -233,7 +233,7 @@ void main() {
         final int passedOffset =
             invocation.namedArguments[const Symbol('offset')] as int;
 
-        return CourseResponse(
+        return CourseListResponse(
           courses: (passedOffset == 0
                   ? courses.getRange(0, 30)
                   : courses.getRange(30, 35))

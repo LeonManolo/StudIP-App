@@ -4,11 +4,12 @@ import 'package:studip_api_client/studip_api_client.dart';
 part 'course_event_response.g.dart';
 
 @JsonSerializable()
-class CourseEventResponse implements ItemListResponse<CourseEventResponseItem> {
-  CourseEventResponse(this.meta, this.items);
+class CourseEventListResponse
+    implements ItemListResponse<CourseEventResponseItem> {
+  CourseEventListResponse(this.meta, this.items);
 
-  factory CourseEventResponse.fromJson(Map<String, dynamic> json) =>
-      _$CourseEventResponseFromJson(json);
+  factory CourseEventListResponse.fromJson(Map<String, dynamic> json) =>
+      _$CourseEventListResponseFromJson(json);
 
   @override
   @JsonKey(includeFromJson: false)

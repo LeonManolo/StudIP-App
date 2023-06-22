@@ -1,6 +1,6 @@
 import 'package:courses_repository/src/models/models.dart';
 import 'package:studip_api_client/studip_api_client.dart'
-    hide CourseNewsResponse, CourseWikiPageResponse;
+    hide CourseNewsListResponse, CourseWikiPageListResponse;
 
 class CourseRepository {
   const CourseRepository({

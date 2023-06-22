@@ -10,13 +10,13 @@ import '../models/models.dart';
 abstract interface class StudIPFilesClient {
   Future<FolderResponseItem> getCourseRootFolder({required String courseId});
 
-  Future<FolderResponse> getFolders({
+  Future<FolderListResponse> getFolders({
     required String folderId,
     required int offset,
     required int limit,
   });
 
-  Future<FileResponse> getFiles({
+  Future<FileListResponse> getFiles({
     required String folderId,
     required int offset,
     required int limit,
@@ -83,11 +83,11 @@ class StudIPFilesClientImpl implements StudIPFilesClient {
     final body = response.json();
     response.throwIfInvalidHttpStatus(body: body);
 
-    return FolderResponse.fromJson(body).folders.first;
+    return FolderListResponse.fromJson(body).folders.first;
   }
 
   @override
-  Future<FileResponse> getFiles(
+  Future<FileListResponse> getFiles(
       {required String folderId,
       required int offset,
       required int limit}) async {
@@ -100,11 +100,11 @@ class StudIPFilesClientImpl implements StudIPFilesClient {
     final body = response.json();
     response.throwIfInvalidHttpStatus(body: body);
 
-    return FileResponse.fromJson(body);
+    return FileListResponse.fromJson(body);
   }
 
   @override
-  Future<FolderResponse> getFolders(
+  Future<FolderListResponse> getFolders(
       {required String folderId,
       required int offset,
       required int limit}) async {
@@ -117,7 +117,7 @@ class StudIPFilesClientImpl implements StudIPFilesClient {
     final body = response.json();
     response.throwIfInvalidHttpStatus(body: body);
 
-    return FolderResponse.fromJson(body);
+    return FolderListResponse.fromJson(body);
   }
 
   @override

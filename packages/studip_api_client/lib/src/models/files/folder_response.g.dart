@@ -6,15 +6,15 @@ part of 'folder_response.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-FolderResponse _$FolderResponseFromJson(Map<String, dynamic> json) =>
-    FolderResponse(
+FolderListResponse _$FolderListResponseFromJson(Map<String, dynamic> json) =>
+    FolderListResponse(
       folders: (json['data'] as List<dynamic>)
           .map((e) => FolderResponseItem.fromJson(e as Map<String, dynamic>))
           .toList(),
       meta: ResponseMeta.fromJson(json['meta'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$FolderResponseToJson(FolderResponse instance) =>
+Map<String, dynamic> _$FolderListResponseToJson(FolderListResponse instance) =>
     <String, dynamic>{
       'data': instance.folders,
       'meta': instance.meta,
