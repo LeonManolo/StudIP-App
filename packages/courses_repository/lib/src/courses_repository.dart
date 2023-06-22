@@ -132,8 +132,8 @@ class CourseRepository {
 
       final semesters = semestersResponse.map((semesterResponse) {
         return Semester.fromSemesterResponse(
-          semesterResponse: semesterResponse,
-          courses: semesterToCourses[semesterResponse.id]
+          semesterResponseItem: semesterResponse.semester,
+          courses: semesterToCourses[semesterResponse.semester.id]
                   ?.map(
                     Course.fromCourseResponse,
                   )

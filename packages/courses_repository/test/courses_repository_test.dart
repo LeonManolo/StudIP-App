@@ -186,19 +186,21 @@ void main() {
       );
     }
 
-    SemesterResponse generateSemesterResponse({
+    SemesterResponseItem generateSemesterResponse({
       required int id,
       required String semesterStart,
       required String semesterEnd,
     }) {
-      return SemesterResponse(
+      return SemesterResponseItem(
         id: '$id',
-        title: 'title $id',
-        description: 'description $id',
-        start: semesterStart,
-        end: semesterEnd,
-        startOfLectures: '2022-05-13T11:30:00+02:00',
-        endOfLectures: '2023-02-20T11:30:00+02:00',
+        attributes: SemesterResponseItemAttributes(
+          title: 'title $id',
+          description: 'description $id',
+          start: semesterStart,
+          end: semesterEnd,
+          startOfLectures: '2022-05-13T11:30:00+02:00',
+          endOfLectures: '2023-02-20T11:30:00+02:00',
+        ),
       );
     }
 
@@ -253,10 +255,12 @@ void main() {
         final invokedIndex = int.parse(
           invocation.namedArguments[const Symbol('semesterId')] as String,
         );
-        return generateSemesterResponse(
-          id: invokedIndex,
-          semesterStart: semesterRawDates[invokedIndex]['start'] ?? '',
-          semesterEnd: semesterRawDates[invokedIndex]['end'] ?? '',
+        return SemesterResponse(
+          semester: generateSemesterResponse(
+            id: invokedIndex,
+            semesterStart: semesterRawDates[invokedIndex]['start'] ?? '',
+            semesterEnd: semesterRawDates[invokedIndex]['end'] ?? '',
+          ),
         );
       });
 

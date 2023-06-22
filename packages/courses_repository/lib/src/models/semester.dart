@@ -1,6 +1,6 @@
 import 'package:courses_repository/src/models/course.dart';
 import 'package:intl/intl.dart';
-import 'package:studip_api_client/studip_api_client.dart' as studip_api_client;
+import 'package:studip_api_client/studip_api_client.dart';
 
 class Semester {
   Semester({
@@ -15,17 +15,18 @@ class Semester {
   });
 
   factory Semester.fromSemesterResponse({
-    required studip_api_client.SemesterResponse semesterResponse,
+    required SemesterResponseItem semesterResponseItem,
     required List<Course> courses,
   }) {
+    final SemesterResponseItemAttributes attributes =
+        semesterResponseItem.attributes;
     return Semester(
-      id: semesterResponse.id,
-      title: semesterResponse.title,
-      start: DateTime.parse(semesterResponse.start).toLocal(),
-      end: DateTime.parse(semesterResponse.end).toLocal(),
-      startOfLectures:
-          DateTime.parse(semesterResponse.startOfLectures).toLocal(),
-      endOfLectures: DateTime.parse(semesterResponse.endOfLectures).toLocal(),
+      id: semesterResponseItem.id,
+      title: attributes.title,
+      start: DateTime.parse(attributes.start).toLocal(),
+      end: DateTime.parse(attributes.end).toLocal(),
+      startOfLectures: DateTime.parse(attributes.startOfLectures).toLocal(),
+      endOfLectures: DateTime.parse(attributes.endOfLectures).toLocal(),
       courses: courses,
     );
   }
