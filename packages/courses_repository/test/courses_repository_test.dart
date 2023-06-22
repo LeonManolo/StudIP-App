@@ -39,6 +39,11 @@ void main() {
       );
     }
 
+    final List<CourseEventResponseItem> events = List.generate(
+      50,
+      (index) => generateCourseEventResponseItems(id: index),
+    );
+
     test('handle multi page request', () async {
       when(
         () => mockedCoursesClient.getCourseEvents(
@@ -57,13 +62,8 @@ void main() {
 
         return CourseEventResponse(
           ResponseMeta(page: page),
-          List.generate(
-            passedOffset == 0 ? 30 : 20,
-            (index) => generateCourseEventResponseItems(
-              id: (passedOffset == 0 ? 0 : 30) +
-                  index, // add 30 for second batch to increment id correctly
-            ),
-          ),
+          (passedOffset == 0 ? events.getRange(0, 30) : events.getRange(30, 50))
+              .toList(),
         );
       });
 
@@ -162,14 +162,27 @@ void main() {
   });
 
   group('getCoursesGroupedBySemester', () {
-    CourseResponse generateCourseResponse({
+    CourseResponseItem generateCourseResponse({
       required int courseId,
       required int semesterId,
     }) {
-      return CourseResponse(
+      return CourseResponseItem(
         id: '$courseId',
-        detailsResponse: CourseDetailsResponse(title: 'details'),
-        semesterId: '$semesterId',
+        attributes: CourseResponseItemAttributes(title: 'details'),
+        relationships: CourseResponseItemRelationships(
+          startSemester: CourseResponseItemRelationshipsSemester(
+            data: CourseResponseItemRelationshipsSemesterData(
+              id: '$semesterId',
+              type: 'semesters',
+            ),
+          ),
+          endSemester: CourseResponseItemRelationshipsSemester(
+            data: CourseResponseItemRelationshipsSemesterData(
+              id: '-1', // end semester is not relevant
+              type: 'semesters',
+            ),
+          ),
+        ),
       );
     }
 
@@ -201,7 +214,7 @@ void main() {
       {'start': '2020-12-30T11:30:00+02:00', 'end': '2021-06-13T11:30:00+02:00'}
     ];
 
-    final List<CourseResponse> courses = List.generate(
+    final List<CourseResponseItem> courses = List.generate(
       35,
       (index) => generateCourseResponse(courseId: index, semesterId: index % 3),
     );
@@ -209,27 +222,27 @@ void main() {
     test('courses which belong to same semester are grouped together',
         () async {
       when(
-        () => mockedCoursesClient.getCourses(userId: '1', offset: 0, limit: 30),
-      ).thenAnswer((_) async {
-        return CourseListResponse(
-          courses: courses.getRange(0, 30).toList(),
-          offset: 0,
-          limit: 30,
-          total: 35,
-        );
-      });
-      when(
         () => mockedCoursesClient.getCourses(
           userId: '1',
-          offset: 30,
-          limit: 30,
+          offset: any(named: 'offset'),
+          limit: any(named: 'limit'),
         ),
-      ).thenAnswer((_) async {
-        return CourseListResponse(
-          courses: courses.getRange(30, 35).toList(),
-          offset: 30,
-          limit: 30,
-          total: 35,
+      ).thenAnswer((invocation) async {
+        final int passedOffset =
+            invocation.namedArguments[const Symbol('offset')] as int;
+
+        return CourseResponse(
+          courses: (passedOffset == 0
+                  ? courses.getRange(0, 30)
+                  : courses.getRange(30, 35))
+              .toList(),
+          meta: ResponseMeta(
+            page: ResponsePage(
+              offset: passedOffset,
+              limit: 30,
+              total: 35,
+            ),
+          ),
         );
       });
       when(
@@ -256,7 +269,7 @@ void main() {
       expect(
         semesters[0].courses.map((course) => course.id),
         courses
-            .where((course) => course.semesterId == '2')
+            .where((course) => course.startSemesterId == '2')
             .map((course) => course.id),
       );
 
@@ -264,7 +277,7 @@ void main() {
       expect(
         semesters[1].courses.map((course) => course.id),
         courses
-            .where((course) => course.semesterId == '1')
+            .where((course) => course.startSemesterId == '1')
             .map((course) => course.id),
       );
 
@@ -272,7 +285,7 @@ void main() {
       expect(
         semesters[2].courses.map((course) => course.id),
         courses
-            .where((course) => course.semesterId == '0')
+            .where((course) => course.startSemesterId == '0')
             .map((course) => course.id),
       );
     });

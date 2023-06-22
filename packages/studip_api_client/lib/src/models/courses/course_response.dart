@@ -1,65 +1,66 @@
+import 'package:json_annotation/json_annotation.dart';
 import 'package:studip_api_client/studip_api_client.dart';
 
-class CourseListResponse implements ItemListResponse<CourseResponse> {
-  final List<CourseResponse> courses;
-  @override
-  final int offset;
-  @override
-  final int limit;
-  @override
-  final int total;
+part 'course_response.g.dart';
 
-  const CourseListResponse({
-    required this.courses,
-    required this.offset,
-    required this.limit,
-    required this.total,
+@JsonSerializable()
+class CourseResponse implements ItemListResponse<CourseResponseItem> {
+  @JsonKey(name: 'data')
+  final List<CourseResponseItem> courses;
+
+  CourseResponse({required this.courses, required this.meta});
+
+  factory CourseResponse.fromJson(Map<String, dynamic> json) =>
+      _$CourseResponseFromJson(json);
+
+  @override
+  @JsonKey(includeFromJson: false)
+  int get offset => meta.page.offset;
+
+  @override
+  @JsonKey(includeFromJson: false)
+  int get limit => meta.page.limit;
+
+  @override
+  @JsonKey(includeFromJson: false)
+  int get total => meta.page.total;
+
+  final ResponseMeta meta;
+
+  @override
+  @JsonKey(includeFromJson: false)
+  List<CourseResponseItem> get items => courses;
+}
+
+@JsonSerializable()
+class CourseResponseItem {
+  final String id;
+  final CourseResponseItemAttributes attributes;
+  final CourseResponseItemRelationships relationships;
+
+  @JsonKey(includeFromJson: false)
+  String get startSemesterId => relationships.startSemester.data.id;
+
+  CourseResponseItem({
+    required this.id,
+    required this.attributes,
+    required this.relationships,
   });
 
-  factory CourseListResponse.fromJson(Map<String, dynamic> json) {
-    List<dynamic> courses = json["data"];
-    Map<String, dynamic> pageInfo = json["meta"]["page"];
-
-    return CourseListResponse(
-        courses: courses
-            .map((rawCourseResponse) =>
-                CourseResponse.fromJson(rawCourseResponse))
-            .toList(),
-        offset: pageInfo["offset"],
-        limit: pageInfo["limit"],
-        total: pageInfo["total"]);
-  }
-
-  @override
-  List<CourseResponse> get items => courses;
+  factory CourseResponseItem.fromJson(Map<String, dynamic> json) =>
+      _$CourseResponseItemFromJson(json);
 }
 
-class CourseResponse {
-  final String id;
-  final CourseDetailsResponse detailsResponse;
-  final String semesterId;
-
-  const CourseResponse(
-      {required this.id,
-      required this.detailsResponse,
-      required this.semesterId});
-
-  factory CourseResponse.fromJson(Map<String, dynamic> json) {
-    return CourseResponse(
-        id: json["id"],
-        detailsResponse: CourseDetailsResponse.fromJson(json["attributes"]),
-        semesterId: json["relationships"]["start-semester"]["data"]["id"]);
-  }
-}
-
-class CourseDetailsResponse {
+@JsonSerializable()
+class CourseResponseItemAttributes {
+  @JsonKey(name: 'course-number')
   final String? courseNumber;
   final String title;
   final String? subtitle;
   final String? description;
   final String? location;
 
-  CourseDetailsResponse({
+  CourseResponseItemAttributes({
     this.courseNumber,
     required this.title,
     this.subtitle,
@@ -67,13 +68,45 @@ class CourseDetailsResponse {
     this.location,
   });
 
-  factory CourseDetailsResponse.fromJson(Map<String, dynamic> json) {
-    return CourseDetailsResponse(
-      courseNumber: json["course-number"],
-      title: json["title"],
-      subtitle: json["subtitle"],
-      description: json["description"],
-      location: json["location"],
-    );
-  }
+  factory CourseResponseItemAttributes.fromJson(Map<String, dynamic> json) =>
+      _$CourseResponseItemAttributesFromJson(json);
+}
+
+@JsonSerializable()
+class CourseResponseItemRelationships {
+  @JsonKey(name: 'start-semester')
+  final CourseResponseItemRelationshipsSemester startSemester;
+
+  @JsonKey(name: 'end-semester')
+  final CourseResponseItemRelationshipsSemester endSemester;
+
+  CourseResponseItemRelationships(
+      {required this.startSemester, required this.endSemester});
+
+  factory CourseResponseItemRelationships.fromJson(Map<String, dynamic> json) =>
+      _$CourseResponseItemRelationshipsFromJson(json);
+}
+
+@JsonSerializable()
+class CourseResponseItemRelationshipsSemester {
+  final CourseResponseItemRelationshipsSemesterData data;
+
+  CourseResponseItemRelationshipsSemester({required this.data});
+
+  factory CourseResponseItemRelationshipsSemester.fromJson(
+          Map<String, dynamic> json) =>
+      _$CourseResponseItemRelationshipsSemesterFromJson(json);
+}
+
+@JsonSerializable()
+class CourseResponseItemRelationshipsSemesterData {
+  final String type;
+  final String id;
+
+  CourseResponseItemRelationshipsSemesterData(
+      {required this.type, required this.id});
+
+  factory CourseResponseItemRelationshipsSemesterData.fromJson(
+          Map<String, dynamic> json) =>
+      _$CourseResponseItemRelationshipsSemesterDataFromJson(json);
 }

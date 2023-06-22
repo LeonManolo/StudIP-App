@@ -103,7 +103,7 @@ class CourseRepository {
 
   Future<List<Semester>> getCoursesGroupedBySemester(String userId) async {
     try {
-      final List<CourseResponse> courses = await _getResponse(
+      final List<CourseResponseItem> courses = await _getResponse(
         id: userId,
         loadItems: ({required id, required limit, required offset}) async {
           return _coursesApiClient.getCourses(
@@ -114,12 +114,12 @@ class CourseRepository {
         },
       );
 
-      final Map<String, List<CourseResponse>> semesterToCourses = {};
+      final Map<String, List<CourseResponseItem>> semesterToCourses = {};
       for (final course in courses) {
-        if (semesterToCourses.containsKey(course.semesterId)) {
-          semesterToCourses[course.semesterId]?.add(course);
+        if (semesterToCourses.containsKey(course.startSemesterId)) {
+          semesterToCourses[course.startSemesterId]?.add(course);
         } else {
-          semesterToCourses[course.semesterId] = [course];
+          semesterToCourses[course.startSemesterId] = [course];
         }
       }
 

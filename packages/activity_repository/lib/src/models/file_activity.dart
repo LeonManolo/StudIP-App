@@ -19,7 +19,7 @@ class FileActivity {
       owner: fileActivityResponse.owner,
       fileName: fileActivityResponse.fileName,
       course: Course.fromCourseResponse(
-        studip_api_client.CourseResponse.fromJson(
+        studip_api_client.CourseResponseItem.fromJson(
           fileActivityResponse.course,
         ),
       ),

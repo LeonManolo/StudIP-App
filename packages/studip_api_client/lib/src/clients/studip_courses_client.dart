@@ -5,7 +5,7 @@ import '../core/interfaces/studip_http_request_core.dart';
 import '../models/models.dart';
 
 abstract interface class StudIPCoursesClient {
-  Future<CourseListResponse> getCourses({
+  Future<CourseResponse> getCourses({
     required String userId,
     required int offset,
     required int limit,
@@ -39,7 +39,7 @@ abstract interface class StudIPCoursesClient {
     required int limit,
   });
 
-  Future<CourseResponse> getCourse({
+  Future<CourseResponseItem> getCourse({
     required String courseId,
   });
 }
@@ -50,7 +50,7 @@ class StudIPCoursesClientImpl implements StudIPCoursesClient {
   StudIPCoursesClientImpl({StudIpHttpCore? core})
       : _core = core ?? StudIpAPICore.shared;
   @override
-  Future<CourseListResponse> getCourses(
+  Future<CourseResponse> getCourses(
       {required String userId, required int offset, required int limit}) async {
     final response =
         await _core.get(endpoint: "users/$userId/courses", queryParameters: {
@@ -61,7 +61,7 @@ class StudIPCoursesClientImpl implements StudIPCoursesClient {
     final body = response.json();
     response.throwIfInvalidHttpStatus(body: body);
 
-    return CourseListResponse.fromJson(body);
+    return CourseResponse.fromJson(body);
   }
 
   @override
@@ -146,13 +146,13 @@ class StudIPCoursesClientImpl implements StudIPCoursesClient {
   }
 
   @override
-  Future<CourseResponse> getCourse({
+  Future<CourseResponseItem> getCourse({
     required String courseId,
   }) async {
     final response = await _core.get(endpoint: "courses/$courseId");
     final body = response.json();
     response.throwIfInvalidHttpStatus(body: body);
 
-    return CourseResponse.fromJson(body["data"]);
+    return CourseResponseItem.fromJson(body["data"]);
   }
 }

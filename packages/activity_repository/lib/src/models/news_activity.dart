@@ -19,7 +19,7 @@ class NewsActivity {
       username: newsActivityResponse.username,
       publicationEnd: newsActivityResponse.publicationEnd,
       course: Course.fromCourseResponse(
-        studip_api_client.CourseResponse.fromJson(
+        studip_api_client.CourseResponseItem.fromJson(
           newsActivityResponse.course,
         ),
       ),
