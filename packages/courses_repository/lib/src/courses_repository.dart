@@ -169,7 +169,7 @@ class CourseRepository {
 
     return CourseParticipantsData(
       participants: participants,
-      totalParticipants: participantsResponse.total,
+      totalParticipants: participantsResponse.meta.page.total,
     );
   }
 

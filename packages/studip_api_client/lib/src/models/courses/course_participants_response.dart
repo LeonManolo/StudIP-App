@@ -1,43 +1,32 @@
+import 'package:json_annotation/json_annotation.dart';
+import 'package:studip_api_client/studip_api_client.dart';
+
+part 'course_participants_response.g.dart';
+
+@JsonSerializable()
 class CourseParticipantsResponse {
-  final int offset;
-  final int limit;
-  final int total;
-  final List<CourseParticipantResponse> participants;
+  final ResponseMeta meta;
 
-  const CourseParticipantsResponse._({
-    required this.offset,
-    required this.limit,
-    required this.total,
-    required this.participants,
-  });
+  @JsonKey(name: 'data')
+  final List<CourseParticipantsResponseItem> participants;
 
-  factory CourseParticipantsResponse.fromJson(Map<String, dynamic> json) {
-    final int offset = json["meta"]["page"]["offset"];
-    final int limit = json["meta"]["page"]["limit"];
-    final int total = json["meta"]["page"]["total"];
-    final participants = (json["data"] as List)
-        .map((participant) => CourseParticipantResponse.fromJson(participant))
-        .toList();
-
-    return CourseParticipantsResponse._(
-      offset: offset,
-      limit: limit,
-      total: total,
-      participants: participants,
-    );
-  }
+  CourseParticipantsResponse({required this.meta, required this.participants});
+  factory CourseParticipantsResponse.fromJson(Map<String, dynamic> json) =>
+      _$CourseParticipantsResponseFromJson(json);
 }
 
-class CourseParticipantResponse {
+@JsonSerializable()
+class CourseParticipantsResponseItem {
   final String type;
+
+  @JsonKey(fromJson: _idFromJson)
   final String id;
 
-  const CourseParticipantResponse._({required this.type, required this.id});
+  static String _idFromJson(String combinedCourseUserId) =>
+      combinedCourseUserId.split('_').last;
 
-  factory CourseParticipantResponse.fromJson(Map<String, dynamic> json) {
-    final String rawId = json["id"];
-    final String id = rawId.split("_").last;
+  const CourseParticipantsResponseItem({required this.type, required this.id});
 
-    return CourseParticipantResponse._(type: json["type"], id: id);
-  }
+  factory CourseParticipantsResponseItem.fromJson(Map<String, dynamic> json) =>
+      _$CourseParticipantsResponseItemFromJson(json);
 }
