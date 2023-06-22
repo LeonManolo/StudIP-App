@@ -20,14 +20,15 @@ class MessageRepository {
     required bool filterUnread,
   }) async {
     try {
-      final response = await _messagesClient.getInboxMessages(
+      final messageListResponse = await _messagesClient.getInboxMessages(
         userId: userId,
         offset: offset,
         limit: limit,
         filterUnread: filterUnread,
       );
-      final messages =
-          response.messageResponses.map(Message.fromMessageResponse).toList();
+      final messages = messageListResponse.messageResponseItems
+          .map(Message.fromMessageResponseItem)
+          .toList();
       final Map<String, MessageUser> knownUsers = {};
       for (final message in messages) {
         message
@@ -46,13 +47,14 @@ class MessageRepository {
     required int limit,
   }) async {
     try {
-      final response = await _messagesClient.getOutboxMessages(
+      final messageListResponse = await _messagesClient.getOutboxMessages(
         userId: userId,
         offset: offset,
         limit: limit,
       );
-      final messages =
-          response.messageResponses.map(Message.fromMessageResponse).toList();
+      final messages = messageListResponse.messageResponseItems
+          .map(Message.fromMessageResponseItem)
+          .toList();
       final Map<String, MessageUser> knownUsers = {};
       for (final message in messages) {
         message
@@ -86,7 +88,7 @@ class MessageRepository {
     try {
       final MessageResponse response =
           await _messagesClient.sendMessage(message: message);
-      return Message.fromMessageResponse(response);
+      return Message.fromMessageResponseItem(response.messageResponseItem);
     } catch (error, stackTrace) {
       Error.throwWithStackTrace(error, stackTrace);
     }
