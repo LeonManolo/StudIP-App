@@ -13,7 +13,7 @@ class FilesRepository {
     required String parentFolderId,
   }) async {
     try {
-      final List<FolderResponse> allFolders = await _getResponse(
+      final List<FolderResponseItem> allFolders = await _getResponse(
         id: parentFolderId,
         loadItems: ({required id, required limit, required offset}) async {
           return _apiClient.getFolders(
@@ -27,11 +27,12 @@ class FilesRepository {
       return allFolders
           .where(
             (folderResponse) =>
-                folderResponse.isVisible && folderResponse.isReadable,
+                folderResponse.attributes.isVisible &&
+                folderResponse.attributes.isReadable,
           )
           .map(
             (folderResponse) =>
-                Folder.fromFolderResponse(folderResponse: folderResponse),
+                Folder.fromFolderResponse(folderResponseItem: folderResponse),
           )
           .toList();
     } catch (error, stackTrace) {
@@ -71,7 +72,7 @@ class FilesRepository {
     try {
       final rootFolderResponse =
           await _apiClient.getCourseRootFolder(courseId: courseId);
-      return Folder.fromFolderResponse(folderResponse: rootFolderResponse);
+      return Folder.fromFolderResponse(folderResponseItem: rootFolderResponse);
     } catch (error, stackTrace) {
       Error.throwWithStackTrace(error, stackTrace);
     }
@@ -160,8 +161,7 @@ class FilesRepository {
       required String id,
       required int limit,
       required int offset,
-    })
-        loadItems,
+    }) loadItems,
   }) async {
     final response = await loadItems(id: id, limit: limit, offset: offset);
     if (response.total > limit && (response.offset + limit) < response.total) {

@@ -8,9 +8,9 @@ import 'package:studip_api_client/src/extensions/extensions.dart';
 import '../models/models.dart';
 
 abstract interface class StudIPFilesClient {
-  Future<FolderResponse> getCourseRootFolder({required String courseId});
+  Future<FolderResponseItem> getCourseRootFolder({required String courseId});
 
-  Future<FolderListResponse> getFolders({
+  Future<FolderResponse> getFolders({
     required String folderId,
     required int offset,
     required int limit,
@@ -73,7 +73,8 @@ class StudIPFilesClientImpl implements StudIPFilesClient {
         _filesCore = filesCore ?? StudIpAPICore.shared;
 
   @override
-  Future<FolderResponse> getCourseRootFolder({required String courseId}) async {
+  Future<FolderResponseItem> getCourseRootFolder(
+      {required String courseId}) async {
     final response = await _httpCore
         .get(endpoint: "courses/$courseId/folders", queryParameters: {
       "page[limit]": "1",
@@ -82,7 +83,7 @@ class StudIPFilesClientImpl implements StudIPFilesClient {
     final body = response.json();
     response.throwIfInvalidHttpStatus(body: body);
 
-    return FolderListResponse.fromJson(body).folders.first;
+    return FolderResponse.fromJson(body).folders.first;
   }
 
   @override
@@ -103,7 +104,7 @@ class StudIPFilesClientImpl implements StudIPFilesClient {
   }
 
   @override
-  Future<FolderListResponse> getFolders(
+  Future<FolderResponse> getFolders(
       {required String folderId,
       required int offset,
       required int limit}) async {
@@ -116,7 +117,7 @@ class StudIPFilesClientImpl implements StudIPFilesClient {
     final body = response.json();
     response.throwIfInvalidHttpStatus(body: body);
 
-    return FolderListResponse.fromJson(body);
+    return FolderResponse.fromJson(body);
   }
 
   @override

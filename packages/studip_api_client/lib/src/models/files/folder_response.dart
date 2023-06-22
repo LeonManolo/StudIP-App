@@ -1,58 +1,73 @@
+import 'package:json_annotation/json_annotation.dart';
 import 'package:studip_api_client/studip_api_client.dart';
 
-class FolderListResponse implements ItemListResponse<FolderResponse> {
-  final List<FolderResponse> folders;
-  @override
-  final int offset;
-  @override
-  final int limit;
-  @override
-  final int total;
+part 'folder_response.g.dart';
 
-  FolderListResponse({
-    required this.folders,
-    required this.offset,
-    required this.limit,
-    required this.total,
-  });
+@JsonSerializable()
+class FolderResponse implements ItemListResponse<FolderResponseItem> {
+  @JsonKey(name: 'data')
+  final List<FolderResponseItem> folders;
 
-  factory FolderListResponse.fromJson(Map<String, dynamic> json) {
-    final page = json["meta"]["page"];
-    List<dynamic> folders = json["data"];
+  FolderResponse({required this.folders, required this.meta});
 
-    return FolderListResponse(
-      folders: folders
-          .map((rawFolder) => FolderResponse.fromJson(rawFolder))
-          .toList(),
-      offset: page["offset"],
-      limit: page["limit"],
-      total: page["total"],
-    );
-  }
+  factory FolderResponse.fromJson(Map<String, dynamic> json) =>
+      _$FolderResponseFromJson(json);
 
   @override
-  List<FolderResponse> get items => folders;
+  int get offset => meta.page.offset;
+
+  @override
+  int get limit => meta.page.limit;
+
+  @override
+  int get total => meta.page.total;
+
+  final ResponseMeta meta;
+
+  @override
+  List<FolderResponseItem> get items => folders;
 }
 
-class FolderResponse {
+@JsonSerializable()
+class FolderResponseItem {
   final String id;
+  final FolderResponseItemAttributes attributes;
+
+  FolderResponseItem({required this.id, required this.attributes});
+
+  factory FolderResponseItem.fromJson(Map<String, dynamic> json) =>
+      _$FolderResponseItemFromJson(json);
+}
+
+@JsonSerializable()
+class FolderResponseItemAttributes {
+  @JsonKey(name: 'folder-type')
   final String folderType;
   final String name;
   final String? description;
+
+  @JsonKey(name: 'mkdate')
   final String createdAt;
+
+  @JsonKey(name: 'chdate')
   final String lastUpdatedAt;
+
+  @JsonKey(name: 'is-visible')
   final bool isVisible;
+
+  @JsonKey(name: 'is-readable')
   final bool isReadable;
+
+  @JsonKey(name: 'is-writable')
   final bool isWritable;
 
-  /// Whether user can create new subfolder within this folder
+  @JsonKey(name: 'is-subfolder-allowed')
   final bool isSubfolderAllowed;
 
-  FolderResponse({
-    required this.id,
+  FolderResponseItemAttributes({
     required this.folderType,
     required this.name,
-    this.description,
+    required this.description,
     required this.createdAt,
     required this.lastUpdatedAt,
     required this.isVisible,
@@ -61,20 +76,6 @@ class FolderResponse {
     required this.isSubfolderAllowed,
   });
 
-  factory FolderResponse.fromJson(Map<String, dynamic> json) {
-    final attributes = json["attributes"];
-
-    return FolderResponse(
-      id: json["id"],
-      folderType: attributes["folder-type"],
-      name: attributes["name"],
-      description: attributes["description"],
-      createdAt: attributes["mkdate"],
-      lastUpdatedAt: attributes["chdate"],
-      isVisible: attributes["is-visible"],
-      isReadable: attributes["is-readable"],
-      isWritable: attributes['is-writable'],
-      isSubfolderAllowed: attributes['is-subfolder-allowed'],
-    );
-  }
+  factory FolderResponseItemAttributes.fromJson(Map<String, dynamic> json) =>
+      _$FolderResponseItemAttributesFromJson(json);
 }
