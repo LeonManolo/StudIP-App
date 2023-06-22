@@ -1,80 +1,113 @@
+import 'package:json_annotation/json_annotation.dart';
 import 'package:studip_api_client/studip_api_client.dart';
 
-class FileListResponse implements ItemListResponse<FileResponse> {
-  final List<FileResponse> files;
-  @override
-  final int offset;
-  @override
-  final int limit;
-  @override
-  final int total;
+part 'file_response.g.dart';
 
-  FileListResponse({
-    required this.files,
-    required this.offset,
-    required this.limit,
-    required this.total,
-  });
+@JsonSerializable()
+class FileResponse implements ItemListResponse<FileResponseItem> {
+  @JsonKey(name: 'data')
+  final List<FileResponseItem> files;
 
-  factory FileListResponse.fromJson(Map<String, dynamic> json) {
-    final page = json["meta"]["page"];
-    List<dynamic> files = json["data"];
-
-    return FileListResponse(
-      files: files.map((rawFile) => FileResponse.fromJson(rawFile)).toList(),
-      offset: page["offset"],
-      limit: page["limit"],
-      total: page["total"],
-    );
-  }
+  FileResponse({required this.files, required this.meta});
 
   @override
-  List<FileResponse> get items => files;
+  int get offset => meta.page.offset;
+
+  @override
+  int get limit => meta.page.limit;
+
+  @override
+  int get total => meta.page.total;
+
+  final ResponseMeta meta;
+
+  @override
+  List<FileResponseItem> get items => files;
+
+  factory FileResponse.fromJson(Map<String, dynamic> json) =>
+      _$FileResponseFromJson(json);
 }
 
-class FileResponse {
+@JsonSerializable()
+class FileResponseItem {
   final String id;
+  final FileResponseItemAttributes attributes;
+  final FileResponseItemRelationships relationships;
+
+  FileResponseItem({
+    required this.id,
+    required this.attributes,
+    required this.relationships,
+  });
+
+  factory FileResponseItem.fromJson(Map<String, dynamic> json) =>
+      _$FileResponseItemFromJson(json);
+}
+
+@JsonSerializable()
+class FileResponseItemAttributes {
   final String name;
   final String description;
-  final int numberOfDownloads;
-  final String owner;
-  final String createdAt;
-  final String lastUpdatedAt;
-  final String mimeType;
-  final bool isReadable;
-  final bool isDownloadable;
-  final String downloadUrl;
 
-  FileResponse({
-    required this.id,
+  @JsonKey(name: 'downloads')
+  final int numberOfDownloads;
+
+  @JsonKey(name: 'mkdate')
+  final String createdAt;
+
+  @JsonKey(name: 'chdate')
+  final String lastUpdatedAt;
+
+  @JsonKey(name: 'mime-type')
+  final String mimeType;
+
+  @JsonKey(name: 'is-readable')
+  final bool isReadable;
+
+  @JsonKey(name: 'is-downloadable')
+  final bool isDownloadable;
+
+  FileResponseItemAttributes({
     required this.name,
     required this.description,
     required this.numberOfDownloads,
-    required this.owner,
     required this.createdAt,
     required this.lastUpdatedAt,
     required this.mimeType,
     required this.isReadable,
     required this.isDownloadable,
-    required this.downloadUrl,
   });
 
-  factory FileResponse.fromJson(Map<String, dynamic> json) {
-    final attributes = json["attributes"];
-    final relationships = json["relationships"];
+  factory FileResponseItemAttributes.fromJson(Map<String, dynamic> json) =>
+      _$FileResponseItemAttributesFromJson(json);
+}
 
-    return FileResponse(
-      id: json["id"],
-      name: attributes["name"],
-      description: attributes["description"],
-      numberOfDownloads: attributes["downloads"],
-      owner: relationships["owner"]["meta"]["name"],
-      createdAt: attributes["mkdate"],
-      lastUpdatedAt: attributes["chdate"],
-      mimeType: attributes["mime-type"],
-      isReadable: attributes["is-readable"],
-      isDownloadable: attributes["is-downloadable"],
-      downloadUrl: json["meta"]["download-url"],
-    );
-  }
+@JsonSerializable()
+class FileResponseItemRelationships {
+  final FileResponseItemOwner owner;
+
+  FileResponseItemRelationships({required this.owner});
+
+  factory FileResponseItemRelationships.fromJson(Map<String, dynamic> json) =>
+      _$FileResponseItemRelationshipsFromJson(json);
+}
+
+@JsonSerializable()
+class FileResponseItemOwner {
+  final FileResponseItemOwnerMeta meta;
+
+  FileResponseItemOwner({required this.meta});
+
+  factory FileResponseItemOwner.fromJson(Map<String, dynamic> json) =>
+      _$FileResponseItemOwnerFromJson(json);
+}
+
+@JsonSerializable()
+class FileResponseItemOwnerMeta {
+  final String name;
+
+  factory FileResponseItemOwnerMeta.fromJson(Map<String, dynamic> json) =>
+      _$FileResponseItemOwnerMetaFromJson(json);
+
+  FileResponseItemOwnerMeta({required this.name});
 }

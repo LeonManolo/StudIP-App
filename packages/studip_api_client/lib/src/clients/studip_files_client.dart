@@ -16,7 +16,7 @@ abstract interface class StudIPFilesClient {
     required int limit,
   });
 
-  Future<FileListResponse> getFiles({
+  Future<FileResponse> getFiles({
     required String folderId,
     required int offset,
     required int limit,
@@ -54,7 +54,7 @@ abstract interface class StudIPFilesClient {
     required List<String> parentFolderIds,
   });
 
-  Future<FileResponse> getFileRef({
+  Future<FileResponseItem> getFileRef({
     required String fileId,
   });
 
@@ -87,7 +87,7 @@ class StudIPFilesClientImpl implements StudIPFilesClient {
   }
 
   @override
-  Future<FileListResponse> getFiles(
+  Future<FileResponse> getFiles(
       {required String folderId,
       required int offset,
       required int limit}) async {
@@ -100,7 +100,7 @@ class StudIPFilesClientImpl implements StudIPFilesClient {
     final body = response.json();
     response.throwIfInvalidHttpStatus(body: body);
 
-    return FileListResponse.fromJson(body);
+    return FileResponse.fromJson(body);
   }
 
   @override
@@ -195,7 +195,7 @@ class StudIPFilesClientImpl implements StudIPFilesClient {
   }
 
   @override
-  Future<FileResponse> getFileRef({
+  Future<FileResponseItem> getFileRef({
     required String fileId,
   }) async {
     final response = await _httpCore.get(endpoint: "file-refs/$fileId");
@@ -203,7 +203,7 @@ class StudIPFilesClientImpl implements StudIPFilesClient {
     final body = response.json();
     response.throwIfInvalidHttpStatus(body: body);
 
-    return FileResponse.fromJson(body["data"]);
+    return FileResponseItem.fromJson(body["data"]);
   }
 
   @override

@@ -5,6 +5,7 @@ import 'package:courses_repository/courses_repository.dart';
 import 'package:dartz/dartz.dart' hide OpenFile;
 import 'package:equatable/equatable.dart';
 import 'package:files_repository/files_repository.dart';
+import 'package:logger/logger.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:studipadawan/courses/details/files/models/file_info.dart';
 import 'package:studipadawan/courses/details/files/models/folder_info.dart';
@@ -48,7 +49,8 @@ class CourseFilesBloc extends Bloc<CourseFilesEvent, CourseFilesState> {
           type: CourseFilesStateType.didLoad,
         ),
       );
-    } catch (_) {
+    } catch (e) {
+      Logger().e(e);
       emit(
         state.copyWith(
           errorMessage:
@@ -92,7 +94,8 @@ class CourseFilesBloc extends Bloc<CourseFilesEvent, CourseFilesState> {
           type: CourseFilesStateType.didLoad,
         ),
       );
-    } catch (_) {
+    } catch (e) {
+      Logger().e(e);
       emit(
         state.copyWith(
           errorMessage:
@@ -146,7 +149,8 @@ class CourseFilesBloc extends Bloc<CourseFilesEvent, CourseFilesState> {
       );
 
       await _reloadCurrentFolder(emit);
-    } catch (_) {
+    } catch (e) {
+      Logger().e(e);
       emit(
         state.copyWith(
           type: CourseFilesStateType.error,
@@ -172,7 +176,8 @@ class CourseFilesBloc extends Bloc<CourseFilesEvent, CourseFilesState> {
           type: CourseFilesStateType.didLoad,
         ),
       );
-    } catch (_) {
+    } catch (e) {
+      Logger().e(e);
       emit(
         state.copyWith(
           errorMessage:

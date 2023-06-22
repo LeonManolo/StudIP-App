@@ -44,7 +44,7 @@ class FilesRepository {
     required String parentFolderId,
   }) async {
     try {
-      final List<FileResponse> allFiles = await _getResponse(
+      final List<FileResponseItem> allFiles = await _getResponse(
         id: parentFolderId,
         loadItems: ({required id, required limit, required offset}) async {
           return _apiClient.getFiles(
@@ -56,11 +56,13 @@ class FilesRepository {
       );
       return allFiles
           .where(
-            (fileResponse) =>
-                fileResponse.isDownloadable && fileResponse.isReadable,
+            (fileResponseItem) =>
+                fileResponseItem.attributes.isDownloadable &&
+                fileResponseItem.attributes.isReadable,
           )
           .map(
-            (fileResponse) => File.fromFileResponse(fileResponse: fileResponse),
+            (fileResponse) =>
+                File.fromFileResponse(fileResponseItem: fileResponse),
           )
           .toList();
     } catch (error, stackTrace) {
