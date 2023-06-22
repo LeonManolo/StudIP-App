@@ -3,7 +3,6 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:messages_repository/messages_repository.dart';
-import 'package:studipadawan/app/bloc/app_bloc.dart';
 import 'package:studipadawan/messages/message_overview/message_inbox_bloc%20/message_inbox_bloc.dart';
 import 'package:studipadawan/messages/message_overview/message_inbox_bloc%20/message_inbox_event.dart';
 import 'package:studipadawan/messages/message_overview/message_inbox_bloc%20/message_inbox_state.dart';
@@ -13,8 +12,6 @@ import 'package:studipadawan/messages/message_overview/message_outbox_bloc/messa
 import 'package:studipadawan/messages/message_overview/message_tabbar_bloc%20/message_tabbar_bloc.dart';
 import 'package:studipadawan/messages/message_overview/message_tabbar_bloc%20/message_tabbar_event.dart';
 import 'package:studipadawan/messages/message_overview/message_tabbar_bloc%20/message_tabbar_state.dart';
-import 'package:studipadawan/messages/message_overview/view/widgets/message_add_button.dart';
-import 'package:studipadawan/messages/message_overview/view/widgets/message_bar.dart';
 import 'package:studipadawan/messages/message_overview/view/widgets/message_delete_button.dart';
 import 'package:studipadawan/messages/message_overview/view/widgets/message_filter_button.dart';
 import 'package:studipadawan/messages/message_overview/view/widgets/message_inbox_widget.dart';
@@ -178,33 +175,24 @@ class MessagesPageState extends State<MessagesPage>
           value: _tabBarBloc,
           child: BlocBuilder<TabBarBloc, TabBarState>(
             builder: (context, state) {
-              // Können die überhaupt gleichzeitig da sein?
-              return Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Visibility(
-                    visible: !state.menuIconVisible,
-                    child: IconButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute<MessageSendPage>(
-                            builder: (context) => const MessageSendPage(),
-                            fullscreenDialog: true,
-                          ),
-                        );
-                      },
-                      icon: const Icon(EvaIcons.plus),
-                    ),
-                  ),
-                  Visibility(
-                    visible: state.menuIconVisible,
-                    child: MessageDeleteButton(
-                      deleteMessages: _deleteMessages,
-                    ),
-                  )
-                ],
-              );
+              if (state.menuIconVisible) {
+                return MessageDeleteButton(
+                  deleteMessages: _deleteMessages,
+                );
+              } else {
+                return IconButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute<MessageSendPage>(
+                        builder: (context) => const MessageSendPage(),
+                        fullscreenDialog: true,
+                      ),
+                    );
+                  },
+                  icon: const Icon(EvaIcons.plus),
+                );
+              }
             },
           ),
         ),

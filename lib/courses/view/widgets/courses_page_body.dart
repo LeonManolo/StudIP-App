@@ -5,6 +5,7 @@ import 'package:studipadawan/courses/bloc/courses_event.dart';
 import 'package:studipadawan/courses/bloc/courses_state.dart';
 import 'package:studipadawan/courses/details/view/course_details_page.dart';
 import 'package:studipadawan/courses/view/widgets/semester_list.dart';
+import 'package:studipadawan/utils/loading_indicator.dart';
 import 'package:studipadawan/utils/widgets/error_view/error_view.dart';
 
 class CoursesPageBody extends StatelessWidget {
@@ -16,7 +17,7 @@ class CoursesPageBody extends StatelessWidget {
       builder: (context, state) {
         switch (state) {
           case CoursesStateLoading _:
-            return _loadingWidget();
+            return const Center(child: LoadingIndicator());
           case CoursesStateDidLoad(items: final items):
             return CoursesList(
               listItems: items,
@@ -34,9 +35,8 @@ class CoursesPageBody extends StatelessWidget {
           case CoursesStateError _:
             return Center(
               child: ErrorView(
-                  title: 'Fehler',
-                  message:
-                      'Fehler beim Laden der Kurse.\nBitte erneut versuchen.',
+                title: 'Fehler',
+                message: 'Fehler beim Laden der Kurse',
                 onRetryPressed: () {
                   BlocProvider.of<CoursesBloc>(context).add(CoursesRequested());
                 },
@@ -44,27 +44,6 @@ class CoursesPageBody extends StatelessWidget {
             );
         }
       },
-    );
-  }
-
-  Widget _loadingWidget() {
-    return const Center(
-      child: CircularProgressIndicator(),
-    );
-  }
-
-  Widget _failureWidget(BuildContext context) {
-    return Center(
-      child: Column(
-        children: [
-          const Text('Error on load'),
-          ElevatedButton(
-            onPressed: () =>
-                BlocProvider.of<CoursesBloc>(context).add(CoursesRequested()),
-            child: const Text('Load courses'),
-          )
-        ],
-      ),
     );
   }
 }
