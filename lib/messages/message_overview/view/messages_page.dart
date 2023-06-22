@@ -1,4 +1,5 @@
 import 'package:authentication_repository/authentication_repository.dart';
+import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:messages_repository/messages_repository.dart';
@@ -19,6 +20,7 @@ import 'package:studipadawan/messages/message_overview/view/widgets/message_filt
 import 'package:studipadawan/messages/message_overview/view/widgets/message_inbox_widget.dart';
 import 'package:studipadawan/messages/message_overview/view/widgets/message_menu_button.dart';
 import 'package:studipadawan/messages/message_overview/view/widgets/message_outbox_widget.dart';
+import 'package:studipadawan/messages/message_send/view/message_send_page.dart';
 import 'package:studipadawan/utils/utils.dart';
 
 final _outboxWidgetKey = GlobalKey<OutboxMessageWidgetState>();
@@ -58,11 +60,14 @@ class MessagesPageState extends State<MessagesPage>
     _inboxMessageBloc = InboxMessageBloc(
       messageRepository: context.read<MessageRepository>(),
       authenticationRepository: context.read<AuthenticationRepository>(),
-    )..add(const InboxMessagesRequested(filter: MessageFilter.none, offset: 0));
+    )
+      ..add(
+          const InboxMessagesRequested(filter: MessageFilter.none, offset: 0));
     _outboxMessageBloc = OutboxMessageBloc(
       messageRepository: context.read<MessageRepository>(),
       authenticationRepository: context.read<AuthenticationRepository>(),
-    )..add(const OutboxMessagesRequested(offset: 0));
+    )
+      ..add(const OutboxMessagesRequested(offset: 0));
     _tabBarBloc = TabBarBloc();
     _inboxScrollController.addListener(_onInboxScroll);
     _outboxScrollController.addListener(_onOutboxScroll);
@@ -97,110 +102,111 @@ class MessagesPageState extends State<MessagesPage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _buildAppBar(),
-      key: UniqueKey(),
       body: BlocProvider.value(
         value: _tabBarBloc,
-        child: Scaffold(
-          appBar: PreferredSize(
-            preferredSize: const Size.fromHeight(kToolbarHeight),
-            child: MessageTabBar(controller: _tabController),
-          ),
-          key: UniqueKey(),
-          body: TabBarView(
-            controller: _tabController,
-            physics: const ScrollPhysics(),
-            children: [
-              BlocProvider.value(
-                value: _inboxMessageBloc,
-                child: BlocConsumer<InboxMessageBloc, InboxMessageState>(
-                  listener: (context, state) {
-                    if (state.status ==
-                        InboxMessageStatus.deleteInboxMessagesSucceed) {
-                      buildSnackBar(
-                        context,
-                        state.blocResponse,
-                        Colors.green,
-                      );
-                    }
-                    if (state.status ==
-                        InboxMessageStatus.deleteInboxMessagesFailure) {
-                      buildSnackBar(
-                        context,
-                        state.blocResponse,
-                        Colors.red,
-                      );
-                    }
-                  },
-                  builder: (context, state) {
-                    return InboxMessageWidget(
-                      key: _inboxWidgetKey,
-                      state: state,
-                      unmarkAll: _unmarkAll,
-                      scrollController: _inboxScrollController,
+        child: TabBarView(
+          controller: _tabController,
+          physics: const ScrollPhysics(),
+          children: [
+            BlocProvider.value(
+              value: _inboxMessageBloc,
+              child: BlocConsumer<InboxMessageBloc, InboxMessageState>(
+                listener: (context, state) {
+                  if (state.status ==
+                      InboxMessageStatus.deleteInboxMessagesSucceed) {
+                    buildSnackBar(
+                      context,
+                      state.blocResponse,
+                      Colors.green,
                     );
-                  },
-                ),
+                  }
+                  if (state.status ==
+                      InboxMessageStatus.deleteInboxMessagesFailure) {
+                    buildSnackBar(
+                      context,
+                      state.blocResponse,
+                      Colors.red,
+                    );
+                  }
+                },
+                builder: (context, state) {
+                  return InboxMessageWidget(
+                    key: _inboxWidgetKey,
+                    state: state,
+                    unmarkAll: _unmarkAll,
+                    scrollController: _inboxScrollController,
+                  );
+                },
               ),
-              BlocProvider.value(
-                value: _outboxMessageBloc,
-                child: BlocConsumer<OutboxMessageBloc, OutboxMessageState>(
-                  listener: (context, state) {
-                    if (state.status ==
-                        OutboxMessageStatus.deleteOutboxMessagesSucceed) {
-                      buildSnackBar(
-                        context,
-                        state.blocResponse,
-                        Colors.green,
-                      );
-                    }
-                    if (state.status ==
-                        OutboxMessageStatus.deleteOutboxMessagesFailure) {
-                      buildSnackBar(
-                        context,
-                        state.blocResponse,
-                        Colors.red,
-                      );
-                    }
-                  },
-                  builder: (context, state) {
-                    return OutboxMessageWidget(
-                      key: _outboxWidgetKey,
-                      unmarkAll: _unmarkAll,
-                      state: state,
-                      scrollController: _outboxScrollController,
+            ),
+            BlocProvider.value(
+              value: _outboxMessageBloc,
+              child: BlocConsumer<OutboxMessageBloc, OutboxMessageState>(
+                listener: (context, state) {
+                  if (state.status ==
+                      OutboxMessageStatus.deleteOutboxMessagesSucceed) {
+                    buildSnackBar(
+                      context,
+                      state.blocResponse,
+                      Colors.green,
                     );
-                  },
-                ),
-              )
-            ],
-          ),
-          floatingActionButton: Row(
-            children: [
-              const Spacer(),
-              BlocProvider.value(
-                value: _tabBarBloc,
-                child: BlocBuilder<TabBarBloc, TabBarState>(
-                  builder: (context, state) {
-                    return Row(
-                      children: [
-                        Visibility(
-                          visible: !state.menuIconVisible,
-                          child: const MessageAddButton(),
-                        ),
-                        Visibility(
-                          visible: state.menuIconVisible,
-                          child: MessageDeleteButton(
-                            deleteMessages: _deleteMessages,
+                  }
+                  if (state.status ==
+                      OutboxMessageStatus.deleteOutboxMessagesFailure) {
+                    buildSnackBar(
+                      context,
+                      state.blocResponse,
+                      Colors.red,
+                    );
+                  }
+                },
+                builder: (context, state) {
+                  return OutboxMessageWidget(
+                    key: _outboxWidgetKey,
+                    unmarkAll: _unmarkAll,
+                    state: state,
+                    scrollController: _outboxScrollController,
+                  );
+                },
+              ),
+            )
+          ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(onPressed: () {},
+        child: BlocProvider.value(
+          value: _tabBarBloc,
+          child: BlocBuilder<TabBarBloc, TabBarState>(
+            builder: (context, state) {
+              // Können die überhaupt gleichzeitig da sein?
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Visibility(
+                    visible: !state.menuIconVisible,
+                    child: IconButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute<MessageSendPage>(
+                            builder: (context) => const MessageSendPage(),
+                            fullscreenDialog: true,
                           ),
-                        )
-                      ],
-                    );
-                  },
-                ),
-              )
-            ],
+                        );
+                      },
+                      icon: const Icon(EvaIcons.plus),
+                    ),
+                  ),
+                  Visibility(
+                    visible: state.menuIconVisible,
+                    child: MessageDeleteButton(
+                      deleteMessages: _deleteMessages,
+                    ),
+                  )
+                ],
+              );
+            },
           ),
-          floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
         ),
       ),
     );
@@ -209,6 +215,25 @@ class MessagesPageState extends State<MessagesPage>
   AppBar _buildAppBar() {
     return AppBar(
       title: const Text('Nachrichten'),
+      bottom: TabBar(
+        controller: _tabController,
+        tabs: const [
+          Tab(
+            icon: Icon(Icons.all_inbox),
+            text: 'Empfangen',
+          ),
+          Tab(
+            icon: Icon(Icons.outbox),
+            text: 'Gesendet',
+          )
+        ],
+        labelColor: Theme
+            .of(context)
+            .primaryColor,
+        indicatorColor: Theme
+            .of(context)
+            .primaryColor,
+      ),
       actions: <Widget>[
         BlocProvider.value(
           value: _tabBarBloc,
@@ -230,13 +255,6 @@ class MessagesPageState extends State<MessagesPage>
                       unmarkAll: _unmarkAll,
                     ),
                   ),
-                  IconButton(
-                    key: const Key('homePage_logout_iconButton'),
-                    icon: const Icon(Icons.exit_to_app),
-                    onPressed: () {
-                      context.read<AppBloc>().add(const AppLogoutRequested());
-                    },
-                  )
                 ],
               );
             },
@@ -324,7 +342,8 @@ class MessagesPageState extends State<MessagesPage>
 
   void _handleFilterSelection(MessageFilter filter) {
     setState(
-      () => {
+          () =>
+      {
         if (_inboxMessageBloc.state.currentFilter != filter)
           {
             _inboxMessageBloc

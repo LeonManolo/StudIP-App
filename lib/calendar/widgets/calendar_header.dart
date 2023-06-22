@@ -29,6 +29,14 @@ class CalendarHeader extends StatelessWidget {
               color: Theme.of(context).primaryColor,
               shape: BoxShape.circle,
             ),
+            todayDecoration: BoxDecoration(
+              border: Border.all(
+                color: Theme.of(context).primaryColor,
+                width: 1.5,
+              ),
+              shape: BoxShape.circle,
+            ),
+
           ),
           focusedDay: selectedDay,
           selectedDayPredicate: (day) {

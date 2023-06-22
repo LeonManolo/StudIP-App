@@ -5,6 +5,7 @@ import 'package:studipadawan/courses/bloc/courses_event.dart';
 import 'package:studipadawan/courses/bloc/courses_state.dart';
 import 'package:studipadawan/courses/details/view/course_details_page.dart';
 import 'package:studipadawan/courses/view/widgets/semester_list.dart';
+import 'package:studipadawan/utils/widgets/error_view/error_view.dart';
 
 class CoursesPageBody extends StatelessWidget {
   const CoursesPageBody({super.key});
@@ -31,7 +32,16 @@ class CoursesPageBody extends StatelessWidget {
               },
             );
           case CoursesStateError _:
-            return _failureWidget(context);
+            return Center(
+              child: ErrorView(
+                  title: 'Fehler',
+                  message:
+                      'Fehler beim Laden der Kurse.\nBitte erneut versuchen.',
+                onRetryPressed: () {
+                  BlocProvider.of<CoursesBloc>(context).add(CoursesRequested());
+                },
+              ),
+            );
         }
       },
     );
