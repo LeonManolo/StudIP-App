@@ -4,7 +4,7 @@ import 'package:studip_api_client/studip_api_client.dart';
 
 void main() {
   group('test semester date conversion', () {
-    final semesterResponse = SemesterResponseItem.fromJson({
+    final semesterResponse = SemesterResponse.fromJson({
       'data': {
         'type': 'semesters',
         'id': 'c3361be2abf51c4e36701f84b42c09e7',
@@ -26,7 +26,7 @@ void main() {
 
     test('Init with Semester API Response', () {
       final semester = Semester.fromSemesterResponse(
-        semesterResponseItem: semesterResponse,
+        semesterResponseItem: semesterResponse.semester,
         courses: [],
       );
 
