@@ -27,7 +27,7 @@ abstract interface class StudIPCoursesClient {
     required int limit,
   });
 
-  Future<CourseWikiPagesListResponse> getCourseWikiPages({
+  Future<CourseWikiPageResponse> getCourseWikiPages({
     required String courseId,
     required int offset,
     required int limit,
@@ -109,7 +109,7 @@ class StudIPCoursesClientImpl implements StudIPCoursesClient {
   }
 
   @override
-  Future<CourseWikiPagesListResponse> getCourseWikiPages({
+  Future<CourseWikiPageResponse> getCourseWikiPages({
     required String courseId,
     required int offset,
     required int limit,
@@ -123,7 +123,7 @@ class StudIPCoursesClientImpl implements StudIPCoursesClient {
     final body = response.json();
     response.throwIfInvalidHttpStatus(body: body);
 
-    return CourseWikiPagesListResponse.fromJson(body);
+    return CourseWikiPageResponse.fromJson(body);
   }
 
   @override

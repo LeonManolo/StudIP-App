@@ -1,6 +1,6 @@
 import 'package:courses_repository/src/models/models.dart';
 import 'package:studip_api_client/studip_api_client.dart'
-    hide CourseNewsResponse, CourseWikiPagesListResponse;
+    hide CourseNewsResponse, CourseWikiPageResponse;
 
 class CourseRepository {
   const CourseRepository({
@@ -75,7 +75,8 @@ class CourseRepository {
     required String courseId,
   }) async {
     try {
-      final List<CourseWikiPageResponse> wikiPagesResponse = await _getResponse(
+      final List<CourseWikiPageResponseItem> wikiPagesResponse =
+          await _getResponse(
         id: courseId,
         loadItems: ({required id, required limit, required offset}) async {
           return _coursesApiClient.getCourseWikiPages(

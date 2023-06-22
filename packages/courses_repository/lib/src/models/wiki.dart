@@ -12,20 +12,22 @@ class CourseWikiPageData {
   });
 
   factory CourseWikiPageData.fromCourseWikiPageResponse({
-    required studip_api_client.CourseWikiPageResponse courseWikiPageResponse,
+    required studip_api_client.CourseWikiPageResponseItem
+        courseWikiPageResponse,
     required studip_api_client.UserResponse userResponse,
   }) {
     return CourseWikiPageData(
       id: courseWikiPageResponse.id,
-      title: courseWikiPageResponse.title,
-      content: courseWikiPageResponse.content,
+      title: courseWikiPageResponse.attributes.title,
+      content: courseWikiPageResponse.attributes.content,
       lastEditorAuthor: ItemAuthor(
         formattedName: userResponse.formattedName,
         id: userResponse.id,
         avatarUrl: userResponse.avatarUrl,
       ),
       lastEditedAt:
-          DateTime.parse(courseWikiPageResponse.lastEditedAt).toLocal(),
+          DateTime.parse(courseWikiPageResponse.attributes.lastEditedAt)
+              .toLocal(),
     );
   }
 
