@@ -6,7 +6,7 @@ import 'package:test/test.dart';
 void main() {
   group('UserResponse', () {
     test('can be serialized', () {
-      final Map<String, dynamic> json = {
+      final Map<String, dynamic> rawUserResponse = {
         "data": {
           "id": "id_123",
           "attributes": {
@@ -23,28 +23,39 @@ void main() {
             "name-suffix": ""
           },
           "meta": {
-            "avatar": {
-              "medium": "https://test.com/test.png"
-            }
+            "avatar": {"medium": "https://test.com/test.png"}
           }
         }
       };
 
-      final userFromJson = UserResponse.fromJson(json);
-      expect(json["data"]["id"] as String, userFromJson.id);
-      expect(json["data"]["attributes"]["username"] as String, userFromJson.username);
-      expect(json["data"]!["attributes"]["formatted-name"] as String, userFromJson.formattedName);
-      expect(json["data"]["attributes"]["family-name"] as String, userFromJson.familyName);
-      expect(json["data"]["attributes"]["given-name"] as String, userFromJson.givenName);
-      expect(json["data"]["attributes"]["permission"] as String, userFromJson.permission);
-      expect(json["data"]["attributes"]["email"] as String, userFromJson.email);
-      expect(json["data"]["attributes"]["phone"] as String?, userFromJson.phone);
-      expect(json["data"]["attributes"]["homepage"] as String?, userFromJson.homepage);
-      expect(json["data"]["attributes"]["address"] as String?, userFromJson.address);
-      expect(json["data"]["meta"]["avatar"]["medium"] as String, userFromJson.avatarUrl);
-      expect(json["data"]["attributes"]["name-prefix"] as String, userFromJson.namePrefix);
-      expect(json["data"]["attributes"]["name-suffix"] as String, userFromJson.nameSuffix);
+      final userResponse = UserResponse.fromJson(rawUserResponse);
+      final attributes = userResponse.userResponseItem.attributes;
+      expect(rawUserResponse["data"]["id"] as String,
+          userResponse.userResponseItem.id);
+      expect(rawUserResponse["data"]["attributes"]["username"] as String,
+          attributes.username);
+      expect(rawUserResponse["data"]!["attributes"]["formatted-name"] as String,
+          attributes.formattedName);
+      expect(rawUserResponse["data"]["attributes"]["family-name"] as String,
+          attributes.familyName);
+      expect(rawUserResponse["data"]["attributes"]["given-name"] as String,
+          attributes.givenName);
+      expect(rawUserResponse["data"]["attributes"]["permission"] as String,
+          attributes.permission);
+      expect(rawUserResponse["data"]["attributes"]["email"] as String,
+          attributes.email);
+      expect(rawUserResponse["data"]["attributes"]["phone"] as String?,
+          attributes.phone);
+      expect(rawUserResponse["data"]["attributes"]["homepage"] as String?,
+          attributes.homepage);
+      expect(rawUserResponse["data"]["attributes"]["address"] as String?,
+          attributes.address);
+      expect(rawUserResponse["data"]["meta"]["avatar"]["medium"] as String,
+          userResponse.userResponseItem.meta.avatar.mediumAvatarUrl);
+      expect(rawUserResponse["data"]["attributes"]["name-prefix"] as String,
+          attributes.namePrefix);
+      expect(rawUserResponse["data"]["attributes"]["name-suffix"] as String,
+          attributes.nameSuffix);
     });
   });
 }
-

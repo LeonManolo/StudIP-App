@@ -121,9 +121,9 @@ class MessageRepository {
   }
 
   Future<List<MessageUser>> searchUsers({required String searchParam}) async {
-    final usersResponse = await _userClient.getUsers(searchParam);
-    return usersResponse.userResponses
-        .map(MessageUser.fromUserResponse)
+    final usersListResponse = await _userClient.getUsers(searchParam);
+    return usersListResponse.userResponseItems
+        .map(MessageUser.fromUserResponseItem)
         .toList();
   }
 
@@ -154,7 +154,8 @@ class MessageRepository {
   ) async {
     if (knownUsers[userId] == null) {
       final userResponse = await _userClient.getUser(userId: userId);
-      knownUsers[userId] = MessageUser.fromUserResponse(userResponse);
+      knownUsers[userId] =
+          MessageUser.fromUserResponseItem(userResponse.userResponseItem);
       return knownUsers[userId]!;
     } else {
       return knownUsers[userId]!;

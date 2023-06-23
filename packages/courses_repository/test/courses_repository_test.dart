@@ -102,19 +102,30 @@ void main() {
 
     UserResponse generateUserResponse({required String id}) {
       return UserResponse(
-        id: 'userId_$id',
-        username: 'username_$id',
-        formattedName: 'formattedName_$id',
-        familyName: '',
-        givenName: 'givenName',
-        permission: 'author',
-        email: '',
-        phone: '',
-        homepage: null,
-        address: null,
-        avatarUrl: 'avatarUrl_$id',
-        namePrefix: '',
-        nameSuffix: '',
+        userResponseItem: UserResponseItem(
+          id: 'userId_$id',
+          attributes: UserResponseItemAttributes(
+            username: 'username_$id',
+            formattedName: 'formattedName_$id',
+            familyName: '',
+            givenName: 'givenName',
+            permission: 'author',
+            email: '',
+            phone: '',
+            homepage: null,
+            address: null,
+            namePrefix: '',
+            nameSuffix: '',
+          ),
+          meta: UserResponseItemMeta(
+            avatar: UserResponseItemMetaAvatar(
+              smallAvatarUrl: 'avatarUrl_small_$id',
+              mediumAvatarUrl: 'avatarUrl_medium_$id',
+              normalAvatarUrl: 'avatarUrl_normal_$id',
+              originalAvatarUrl: 'avatarUrl_original_$id',
+            ),
+          ),
+        ),
       );
     }
 
@@ -154,7 +165,7 @@ void main() {
         final courseNews = courseNewsResponse.news.elementAt(i);
 
         expect(courseNews.title, 'title $i');
-        expect(courseNews.author.avatarUrl, 'avatarUrl_$i');
+        expect(courseNews.author.avatarUrl, 'avatarUrl_medium_$i');
         expect(courseNews.author.formattedName, 'formattedName_$i');
         expect(courseNews.author.id, 'userId_$i');
       }

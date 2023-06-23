@@ -1,4 +1,3 @@
-
 import 'package:studip_api_client/src/core/interfaces/interfaces.dart';
 import 'package:studip_api_client/src/core/studip_api_core.dart';
 import 'package:studip_api_client/src/extensions/extensions.dart';

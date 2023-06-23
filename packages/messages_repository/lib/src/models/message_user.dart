@@ -10,14 +10,15 @@ class MessageUser {
     required this.role,
   });
 
-  factory MessageUser.fromUserResponse(UserResponse response) {
+  factory MessageUser.fromUserResponseItem(UserResponseItem response) {
+    final attributes = response.attributes;
     return MessageUser(
       id: response.id,
-      username: response.username,
-      firstName: response.givenName,
-      lastName: response.familyName,
-      formattedName: response.formattedName,
-      role: response.permission ?? '',
+      username: attributes.username,
+      firstName: attributes.givenName,
+      lastName: attributes.familyName,
+      formattedName: attributes.formattedName,
+      role: attributes.permission,
     );
   }
 

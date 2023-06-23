@@ -57,7 +57,7 @@ class CourseRepository {
               await _userApiClient.getUser(userId: rawNewsResponse.authorId);
           return CourseNews.fromCourseNewsResponse(
             courseNewsResponse: rawNewsResponse,
-            userResponse: userResponse,
+            userResponseItem: userResponse.userResponseItem,
           );
         }),
       );
@@ -93,7 +93,7 @@ class CourseRepository {
               await _userApiClient.getUser(userId: rawWikiPage.lastEditorId);
           return CourseWikiPageData.fromCourseWikiPageResponse(
             courseWikiPageResponse: rawWikiPage,
-            userResponse: userResponse,
+            userResponseItem: userResponse.userResponseItem,
           );
         }),
       );
@@ -165,7 +165,8 @@ class CourseRepository {
     for (final participantResponse in participantsResponse.participants) {
       final UserResponse userResponse =
           await _userApiClient.getUser(userId: participantResponse.id);
-      participants.add(Participant.fromUserResponse(userResponse));
+      participants
+          .add(Participant.fromUserResponseItem(userResponse.userResponseItem));
     }
 
     return CourseParticipantsData(

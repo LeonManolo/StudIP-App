@@ -1,5 +1,4 @@
-export 'user_response.dart';
-export 'user_list_response.dart';
+export 'user/user_response.dart';
 export 'courses/course_response.dart';
 export 'courses/semester_response.dart';
 export 'courses/course_news_response.dart';

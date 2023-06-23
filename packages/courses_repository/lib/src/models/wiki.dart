@@ -14,16 +14,16 @@ class CourseWikiPageData {
   factory CourseWikiPageData.fromCourseWikiPageResponse({
     required studip_api_client.CourseWikiPageResponseItem
         courseWikiPageResponse,
-    required studip_api_client.UserResponse userResponse,
+    required studip_api_client.UserResponseItem userResponseItem,
   }) {
     return CourseWikiPageData(
       id: courseWikiPageResponse.id,
       title: courseWikiPageResponse.attributes.title,
       content: courseWikiPageResponse.attributes.content,
       lastEditorAuthor: ItemAuthor(
-        formattedName: userResponse.formattedName,
-        id: userResponse.id,
-        avatarUrl: userResponse.avatarUrl,
+        id: userResponseItem.id,
+        formattedName: userResponseItem.attributes.formattedName,
+        avatarUrl: userResponseItem.meta.avatar.mediumAvatarUrl,
       ),
       lastEditedAt:
           DateTime.parse(courseWikiPageResponse.attributes.lastEditedAt)
