@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class AppTheme {
-  const AppTheme();
+class LightMaterialAppTheme {
+  const LightMaterialAppTheme();
 
   ThemeData get themeData {
     return ThemeData(
       primaryColor: Colors.indigo,
       primarySwatch: Colors.indigo,
       appBarTheme: _appBarTheme,
+      brightness: Brightness.light,
       bottomNavigationBarTheme: _bottomNavigationBarThemeData,
     );
   }
