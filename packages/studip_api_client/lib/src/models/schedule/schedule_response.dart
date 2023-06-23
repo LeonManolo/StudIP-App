@@ -6,18 +6,15 @@ part 'schedule_response.g.dart';
 class ScheduleListResponse {
   ScheduleListResponse({required this.scheduleEntries});
 
-  @JsonKey(name: 'data')
-  final List<ScheduleResponseItem> scheduleEntries;
-
   factory ScheduleListResponse.fromJson(Map<String, dynamic> json) =>
       _$ScheduleListResponseFromJson(json);
+
+  @JsonKey(name: 'data')
+  final List<ScheduleResponseItem> scheduleEntries;
 }
 
 @JsonSerializable()
 class ScheduleResponseItem {
-  final String type;
-  final String id;
-  final ScheduleResponseItemAttributes attributes;
 
   ScheduleResponseItem({
     required this.type,
@@ -27,6 +24,9 @@ class ScheduleResponseItem {
 
   factory ScheduleResponseItem.fromJson(Map<String, dynamic> json) =>
       _$ScheduleResponseItemFromJson(json);
+  final String type;
+  final String id;
+  final ScheduleResponseItemAttributes attributes;
 }
 
 @JsonSerializable()
@@ -55,6 +55,18 @@ class ScheduleResponseItemAttributes {
 
 @JsonSerializable()
 class ScheduleResponseItemAttributesRecurrence {
+
+  ScheduleResponseItemAttributesRecurrence({
+    required this.freq,
+    required this.interval,
+    required this.firstOccurrenceDateString,
+    required this.lastOccurrenceDateString,
+    required this.excludedDates,
+  });
+
+  factory ScheduleResponseItemAttributesRecurrence.fromJson(
+          Map<String, dynamic> json,) =>
+      _$ScheduleResponseItemAttributesRecurrenceFromJson(json);
   @JsonKey(name: 'FREQ')
   final String freq;
 
@@ -69,16 +81,4 @@ class ScheduleResponseItemAttributesRecurrence {
 
   @JsonKey(name: 'EXDATES')
   final List<String>? excludedDates;
-
-  ScheduleResponseItemAttributesRecurrence({
-    required this.freq,
-    required this.interval,
-    required this.firstOccurrenceDateString,
-    required this.lastOccurrenceDateString,
-    required this.excludedDates,
-  });
-
-  factory ScheduleResponseItemAttributesRecurrence.fromJson(
-          Map<String, dynamic> json) =>
-      _$ScheduleResponseItemAttributesRecurrenceFromJson(json);
 }

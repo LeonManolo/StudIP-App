@@ -4,38 +4,28 @@ part 'semester_response.g.dart';
 
 @JsonSerializable()
 class SemesterResponse {
-  @JsonKey(name: 'data')
-  final SemesterResponseItem semester;
 
   SemesterResponse({required this.semester});
 
   factory SemesterResponse.fromJson(Map<String, dynamic> json) =>
       _$SemesterResponseFromJson(json);
+  @JsonKey(name: 'data')
+  final SemesterResponseItem semester;
 }
 
 @JsonSerializable()
 class SemesterResponseItem {
-  final String id;
-  final SemesterResponseItemAttributes attributes;
 
   SemesterResponseItem({required this.id, required this.attributes});
 
   factory SemesterResponseItem.fromJson(Map<String, dynamic> json) =>
       _$SemesterResponseItemFromJson(json);
+  final String id;
+  final SemesterResponseItemAttributes attributes;
 }
 
 @JsonSerializable()
 class SemesterResponseItemAttributes {
-  final String title;
-  final String description;
-  final String start;
-  final String end;
-
-  @JsonKey(name: 'start-of-lectures')
-  final String startOfLectures;
-
-  @JsonKey(name: 'end-of-lectures')
-  final String endOfLectures;
 
   SemesterResponseItemAttributes({
     required this.title,
@@ -48,4 +38,14 @@ class SemesterResponseItemAttributes {
 
   factory SemesterResponseItemAttributes.fromJson(Map<String, dynamic> json) =>
       _$SemesterResponseItemAttributesFromJson(json);
+  final String title;
+  final String description;
+  final String start;
+  final String end;
+
+  @JsonKey(name: 'start-of-lectures')
+  final String startOfLectures;
+
+  @JsonKey(name: 'end-of-lectures')
+  final String endOfLectures;
 }

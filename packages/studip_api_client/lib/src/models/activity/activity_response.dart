@@ -5,24 +5,19 @@ part 'activity_response.g.dart';
 
 @JsonSerializable()
 class ActivityListResponse {
+  ActivityListResponse(this.activityResponseItems, this.included);
+
+  factory ActivityListResponse.fromJson(Map<String, dynamic> json) =>
+      _$ActivityListResponseFromJson(json);
   @JsonKey(name: 'data')
   final List<ActivityResponseItem> activityResponseItems;
 
   @ActivityListResponseIncludedConverter()
   final List<ActivityListResponseIncluded> included;
-
-  ActivityListResponse(this.activityResponseItems, this.included);
-
-  factory ActivityListResponse.fromJson(Map<String, dynamic> json) =>
-      _$ActivityListResponseFromJson(json);
 }
 
 @JsonSerializable()
 class ActivityResponseItem {
-  final String id;
-  final ActivityResponseItemAttributes attributes;
-  final ActivityResponseItemRelationships relationships;
-
   ActivityResponseItem({
     required this.id,
     required this.attributes,
@@ -31,6 +26,9 @@ class ActivityResponseItem {
 
   factory ActivityResponseItem.fromJson(Map<String, dynamic> json) =>
       _$ActivityResponseItemFromJson(json);
+  final String id;
+  final ActivityResponseItemAttributes attributes;
+  final ActivityResponseItemRelationships relationships;
 
   String get contextId => relationships.context.data.id;
   String get actorId => relationships.actor.data.id;
@@ -39,9 +37,6 @@ class ActivityResponseItem {
 
 @JsonSerializable()
 class ActivityResponseItemAttributes {
-  final String title;
-  final String content;
-
   ActivityResponseItemAttributes({
     required this.title,
     required this.content,
@@ -49,15 +44,13 @@ class ActivityResponseItemAttributes {
 
   factory ActivityResponseItemAttributes.fromJson(Map<String, dynamic> json) =>
       _$ActivityResponseItemAttributesFromJson(json);
+  final String title;
+  final String content;
 }
 
 // --- Relationships ---
 @JsonSerializable()
 class ActivityResponseItemRelationships {
-  final ActivityResponseItemRelationshipsIncluded actor;
-  final ActivityResponseItemRelationshipsIncluded object;
-  final ActivityResponseItemRelationshipsIncluded context;
-
   ActivityResponseItemRelationships({
     required this.actor,
     required this.object,
@@ -65,34 +58,38 @@ class ActivityResponseItemRelationships {
   });
 
   factory ActivityResponseItemRelationships.fromJson(
-          Map<String, dynamic> json) =>
+    Map<String, dynamic> json,
+  ) =>
       _$ActivityResponseItemRelationshipsFromJson(json);
+  final ActivityResponseItemRelationshipsIncluded actor;
+  final ActivityResponseItemRelationshipsIncluded object;
+  final ActivityResponseItemRelationshipsIncluded context;
 }
 
 @JsonSerializable()
 class ActivityResponseItemRelationshipsIncluded {
-  final ActivityResponseItemRelationshipsData data;
-
   ActivityResponseItemRelationshipsIncluded({required this.data});
 
   factory ActivityResponseItemRelationshipsIncluded.fromJson(
-          Map<String, dynamic> json) =>
+    Map<String, dynamic> json,
+  ) =>
       _$ActivityResponseItemRelationshipsIncludedFromJson(json);
+  final ActivityResponseItemRelationshipsData data;
 }
 
 @JsonSerializable()
 class ActivityResponseItemRelationshipsData {
-  final String type;
-  final String id;
-
   ActivityResponseItemRelationshipsData({
     required this.type,
     required this.id,
   });
 
   factory ActivityResponseItemRelationshipsData.fromJson(
-          Map<String, dynamic> json) =>
+    Map<String, dynamic> json,
+  ) =>
       _$ActivityResponseItemRelationshipsDataFromJson(json);
+  final String type;
+  final String id;
 }
 
 // --- Included ---
@@ -104,7 +101,7 @@ class ActivityListResponseIncludedConverter
 
   @override
   ActivityListResponseIncluded fromJson(Map<String, dynamic> json) {
-    final String type = json['type'];
+    final String type = json['type'] as String;
 
     if (type == 'users') {
       return ActivityListResponseIncludedUser(
@@ -124,7 +121,8 @@ class ActivityListResponseIncludedConverter
       );
     } else {
       throw UnsupportedError(
-          'The following json is not expected to be included in an Activity Stream: ${json}');
+        'The following json is not expected to be included in an Activity Stream: $json',
+      );
     }
   }
 
@@ -137,25 +135,21 @@ class ActivityListResponseIncludedConverter
 sealed class ActivityListResponseIncluded {}
 
 class ActivityListResponseIncludedUser extends ActivityListResponseIncluded {
-  final UserResponseItem userResponseItem;
-
   ActivityListResponseIncludedUser({required this.userResponseItem});
+  final UserResponseItem userResponseItem;
 }
 
 class ActivityListResponseIncludedNews extends ActivityListResponseIncluded {
-  final CourseNewsResponseItem newsResponseItem;
-
   ActivityListResponseIncludedNews({required this.newsResponseItem});
+  final CourseNewsResponseItem newsResponseItem;
 }
 
 class ActivityListResponseIncludedCourse extends ActivityListResponseIncluded {
-  final CourseResponseItem courseResponseItem;
-
   ActivityListResponseIncludedCourse({required this.courseResponseItem});
+  final CourseResponseItem courseResponseItem;
 }
 
 class ActivityListResponseIncludedFile extends ActivityListResponseIncluded {
-  final FileResponseItem fileResponseItem;
-
   ActivityListResponseIncludedFile({required this.fileResponseItem});
+  final FileResponseItem fileResponseItem;
 }

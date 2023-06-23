@@ -2,7 +2,7 @@ import 'package:studip_api_client/src/core/interfaces/interfaces.dart';
 import 'package:studip_api_client/src/core/studip_api_core.dart';
 import 'package:studip_api_client/src/extensions/extensions.dart';
 
-import '../models/models.dart';
+import 'package:studip_api_client/src/models/models.dart';
 
 abstract interface class StudIPUserClient {
   Future<UserResponse> getCurrentUser();
@@ -11,14 +11,14 @@ abstract interface class StudIPUserClient {
 }
 
 class StudIPUserClientImpl implements StudIPUserClient {
-  final StudIpHttpCore _core;
 
   StudIPUserClientImpl({StudIpHttpCore? core})
       : _core = core ?? StudIpAPICore.shared;
+  final StudIpHttpCore _core;
 
   @override
   Future<UserResponse> getUser({required String userId}) async {
-    final response = await _core.get(endpoint: "users/$userId");
+    final response = await _core.get(endpoint: 'users/$userId');
 
     final body = response.json();
     response.throwIfInvalidHttpStatus(body: body);
@@ -28,7 +28,7 @@ class StudIPUserClientImpl implements StudIPUserClient {
 
   @override
   Future<UserResponse> getCurrentUser() async {
-    final response = await _core.get(endpoint: "users/me");
+    final response = await _core.get(endpoint: 'users/me');
 
     final body = response.json();
     response.throwIfInvalidHttpStatus(body: body);
@@ -40,11 +40,11 @@ class StudIPUserClientImpl implements StudIPUserClient {
   Future<UserListResponse> getUsers(String? searchParam) async {
     Map<String, String> queryParameters = {};
     if (searchParam != null) {
-      queryParameters["filter[search]"] = searchParam;
+      queryParameters['filter[search]'] = searchParam;
     }
 
     final response =
-        await _core.get(endpoint: "users", queryParameters: queryParameters);
+        await _core.get(endpoint: 'users', queryParameters: queryParameters);
 
     final body = response.json();
     response.throwIfInvalidHttpStatus(body: body);

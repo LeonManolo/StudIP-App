@@ -5,7 +5,7 @@ import 'package:studip_api_client/src/core/interfaces/interfaces.dart';
 import 'package:studip_api_client/src/core/studip_api_core.dart';
 import 'package:studip_api_client/src/extensions/extensions.dart';
 
-import '../models/models.dart';
+import 'package:studip_api_client/src/models/models.dart';
 
 abstract interface class StudIPFilesClient {
   Future<FolderResponseItem> getCourseRootFolder({required String courseId});
@@ -54,10 +54,6 @@ abstract interface class StudIPFilesClient {
     required List<String> parentFolderIds,
   });
 
-  Future<FileResponseItem> getFileRef({
-    required String fileId,
-  });
-
   FutureOr<void> cleanup({
     required List<String> parentFolderIds,
     required List<String> expectedIds,
@@ -65,20 +61,22 @@ abstract interface class StudIPFilesClient {
 }
 
 class StudIPFilesClientImpl implements StudIPFilesClient {
-  final StudIpHttpCore _httpCore;
-  final StudIpFilesCore _filesCore;
-
   StudIPFilesClientImpl({StudIpHttpCore? httpCore, StudIpFilesCore? filesCore})
       : _httpCore = httpCore ?? StudIpAPICore.shared,
         _filesCore = filesCore ?? StudIpAPICore.shared;
+  final StudIpHttpCore _httpCore;
+  final StudIpFilesCore _filesCore;
 
   @override
-  Future<FolderResponseItem> getCourseRootFolder(
-      {required String courseId}) async {
-    final response = await _httpCore
-        .get(endpoint: "courses/$courseId/folders", queryParameters: {
-      "page[limit]": "1",
-    });
+  Future<FolderResponseItem> getCourseRootFolder({
+    required String courseId,
+  }) async {
+    final response = await _httpCore.get(
+      endpoint: 'courses/$courseId/folders',
+      queryParameters: {
+        'page[limit]': '1',
+      },
+    );
 
     final body = response.json();
     response.throwIfInvalidHttpStatus(body: body);
@@ -87,15 +85,18 @@ class StudIPFilesClientImpl implements StudIPFilesClient {
   }
 
   @override
-  Future<FileListResponse> getFiles(
-      {required String folderId,
-      required int offset,
-      required int limit}) async {
-    final response = await _httpCore
-        .get(endpoint: "folders/$folderId/file-refs", queryParameters: {
-      "page[offset]": "$offset",
-      "page[limit]": "$limit",
-    });
+  Future<FileListResponse> getFiles({
+    required String folderId,
+    required int offset,
+    required int limit,
+  }) async {
+    final response = await _httpCore.get(
+      endpoint: 'folders/$folderId/file-refs',
+      queryParameters: {
+        'page[offset]': '$offset',
+        'page[limit]': '$limit',
+      },
+    );
 
     final body = response.json();
     response.throwIfInvalidHttpStatus(body: body);
@@ -104,15 +105,18 @@ class StudIPFilesClientImpl implements StudIPFilesClient {
   }
 
   @override
-  Future<FolderListResponse> getFolders(
-      {required String folderId,
-      required int offset,
-      required int limit}) async {
-    final response = await _httpCore
-        .get(endpoint: "folders/$folderId/folders", queryParameters: {
-      "page[offset]": "$offset",
-      "page[limit]": "$limit",
-    });
+  Future<FolderListResponse> getFolders({
+    required String folderId,
+    required int offset,
+    required int limit,
+  }) async {
+    final response = await _httpCore.get(
+      endpoint: 'folders/$folderId/folders',
+      queryParameters: {
+        'page[offset]': '$offset',
+        'page[limit]': '$limit',
+      },
+    );
 
     final body = response.json();
     response.throwIfInvalidHttpStatus(body: body);
@@ -121,16 +125,18 @@ class StudIPFilesClientImpl implements StudIPFilesClient {
   }
 
   @override
-  Future<String?> downloadFile(
-      {required String fileId,
-      required String fileName,
-      required List<String> parentFolderIds,
-      required DateTime lastModified}) {
+  Future<String?> downloadFile({
+    required String fileId,
+    required String fileName,
+    required List<String> parentFolderIds,
+    required DateTime lastModified,
+  }) {
     return _filesCore.downloadFile(
-        fileId: fileId,
-        fileName: fileName,
-        parentFolderIds: parentFolderIds,
-        lastModified: lastModified);
+      fileId: fileId,
+      fileName: fileName,
+      parentFolderIds: parentFolderIds,
+      lastModified: lastModified,
+    );
   }
 
   @override
@@ -154,12 +160,12 @@ class StudIPFilesClientImpl implements StudIPFilesClient {
       endpoint: 'courses/$courseId/folders',
       jsonString: jsonEncode(
         {
-          "data": {
-            "type": "folders",
-            "attributes": {"name": folderName},
-            "relationships": {
-              "parent": {
-                "data": {"type": "folders", "id": parentFolderId}
+          'data': {
+            'type': 'folders',
+            'attributes': {'name': folderName},
+            'relationships': {
+              'parent': {
+                'data': {'type': 'folders', 'id': parentFolderId}
               }
             }
           }
@@ -186,30 +192,23 @@ class StudIPFilesClientImpl implements StudIPFilesClient {
   }
 
   @override
-  Future<String> localFilePath(
-      {required String fileId,
-      required String fileName,
-      required List<String> parentFolderIds}) async {
-    return _filesCore.localFilePath(
-        fileId: fileId, fileName: fileName, parentFolderIds: parentFolderIds);
-  }
-
-  @override
-  Future<FileResponseItem> getFileRef({
+  Future<String> localFilePath({
     required String fileId,
+    required String fileName,
+    required List<String> parentFolderIds,
   }) async {
-    final response = await _httpCore.get(endpoint: "file-refs/$fileId");
-
-    final body = response.json();
-    response.throwIfInvalidHttpStatus(body: body);
-
-    return FileResponseItem.fromJson(body["data"]);
+    return _filesCore.localFilePath(
+      fileId: fileId,
+      fileName: fileName,
+      parentFolderIds: parentFolderIds,
+    );
   }
 
   @override
-  FutureOr<void> cleanup(
-      {required List<String> parentFolderIds,
-      required List<String> expectedIds}) {
+  FutureOr<void> cleanup({
+    required List<String> parentFolderIds,
+    required List<String> expectedIds,
+  }) {
     return _filesCore.cleanup(
       parentFolderIds: parentFolderIds,
       expectedIds: expectedIds,

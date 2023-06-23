@@ -5,13 +5,13 @@ part 'course_response.g.dart';
 
 @JsonSerializable()
 class CourseListResponse implements ItemListResponse<CourseResponseItem> {
-  @JsonKey(name: 'data')
-  final List<CourseResponseItem> courses;
 
   CourseListResponse({required this.courses, required this.meta});
 
   factory CourseListResponse.fromJson(Map<String, dynamic> json) =>
       _$CourseListResponseFromJson(json);
+  @JsonKey(name: 'data')
+  final List<CourseResponseItem> courses;
 
   @override
   @JsonKey(includeFromJson: false)
@@ -34,12 +34,6 @@ class CourseListResponse implements ItemListResponse<CourseResponseItem> {
 
 @JsonSerializable()
 class CourseResponseItem {
-  final String id;
-  final CourseResponseItemAttributes attributes;
-  final CourseResponseItemRelationships relationships;
-
-  @JsonKey(includeFromJson: false)
-  String get startSemesterId => relationships.startSemester.data.id;
 
   CourseResponseItem({
     required this.id,
@@ -49,16 +43,16 @@ class CourseResponseItem {
 
   factory CourseResponseItem.fromJson(Map<String, dynamic> json) =>
       _$CourseResponseItemFromJson(json);
+  final String id;
+  final CourseResponseItemAttributes attributes;
+  final CourseResponseItemRelationships relationships;
+
+  @JsonKey(includeFromJson: false)
+  String get startSemesterId => relationships.startSemester.data.id;
 }
 
 @JsonSerializable()
 class CourseResponseItemAttributes {
-  @JsonKey(name: 'course-number')
-  final String? courseNumber;
-  final String title;
-  final String? subtitle;
-  final String? description;
-  final String? location;
 
   CourseResponseItemAttributes({
     this.courseNumber,
@@ -70,43 +64,49 @@ class CourseResponseItemAttributes {
 
   factory CourseResponseItemAttributes.fromJson(Map<String, dynamic> json) =>
       _$CourseResponseItemAttributesFromJson(json);
+  @JsonKey(name: 'course-number')
+  final String? courseNumber;
+  final String title;
+  final String? subtitle;
+  final String? description;
+  final String? location;
 }
 
 @JsonSerializable()
 class CourseResponseItemRelationships {
+
+  CourseResponseItemRelationships(
+      {required this.startSemester, required this.endSemester,});
+
+  factory CourseResponseItemRelationships.fromJson(Map<String, dynamic> json) =>
+      _$CourseResponseItemRelationshipsFromJson(json);
   @JsonKey(name: 'start-semester')
   final CourseResponseItemRelationshipsSemester startSemester;
 
   @JsonKey(name: 'end-semester')
   final CourseResponseItemRelationshipsSemester endSemester;
-
-  CourseResponseItemRelationships(
-      {required this.startSemester, required this.endSemester});
-
-  factory CourseResponseItemRelationships.fromJson(Map<String, dynamic> json) =>
-      _$CourseResponseItemRelationshipsFromJson(json);
 }
 
 @JsonSerializable()
 class CourseResponseItemRelationshipsSemester {
-  final CourseResponseItemRelationshipsSemesterData data;
 
   CourseResponseItemRelationshipsSemester({required this.data});
 
   factory CourseResponseItemRelationshipsSemester.fromJson(
-          Map<String, dynamic> json) =>
+          Map<String, dynamic> json,) =>
       _$CourseResponseItemRelationshipsSemesterFromJson(json);
+  final CourseResponseItemRelationshipsSemesterData data;
 }
 
 @JsonSerializable()
 class CourseResponseItemRelationshipsSemesterData {
-  final String type;
-  final String id;
 
   CourseResponseItemRelationshipsSemesterData(
-      {required this.type, required this.id});
+      {required this.type, required this.id,});
 
   factory CourseResponseItemRelationshipsSemesterData.fromJson(
-          Map<String, dynamic> json) =>
+          Map<String, dynamic> json,) =>
       _$CourseResponseItemRelationshipsSemesterDataFromJson(json);
+  final String type;
+  final String id;
 }

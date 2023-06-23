@@ -32,12 +32,6 @@ class CourseNewsListResponse
 
 @JsonSerializable()
 class CourseNewsResponseItem {
-  final String id;
-  final CourseNewsResponseItemAttributes attributes;
-  final CourseNewsResponseItemRelationships relationships;
-
-  @JsonKey(includeFromJson: false)
-  String get authorId => relationships.author.data.id;
 
   CourseNewsResponseItem({
     required this.id,
@@ -47,16 +41,16 @@ class CourseNewsResponseItem {
 
   factory CourseNewsResponseItem.fromJson(Map<String, dynamic> json) =>
       _$CourseNewsResponseItemFromJson(json);
+  final String id;
+  final CourseNewsResponseItemAttributes attributes;
+  final CourseNewsResponseItemRelationships relationships;
+
+  @JsonKey(includeFromJson: false)
+  String get authorId => relationships.author.data.id;
 }
 
 @JsonSerializable()
 class CourseNewsResponseItemAttributes {
-  final String title;
-  final String content;
-  @JsonKey(name: 'publication-start')
-  final String publicationStart;
-  @JsonKey(name: 'publication-end')
-  final String publicationEnd;
 
   CourseNewsResponseItemAttributes({
     required this.title,
@@ -66,36 +60,40 @@ class CourseNewsResponseItemAttributes {
   });
 
   factory CourseNewsResponseItemAttributes.fromJson(
-          Map<String, dynamic> json) =>
+          Map<String, dynamic> json,) =>
       _$CourseNewsResponseItemAttributesFromJson(json);
+  final String title;
+  final String content;
+  @JsonKey(name: 'publication-start')
+  final String publicationStart;
+  @JsonKey(name: 'publication-end')
+  final String publicationEnd;
 }
 
 @JsonSerializable()
 class CourseNewsResponseItemRelationships {
-  final CourseNewsResponseItemRelationshipAuthor author;
 
   CourseNewsResponseItemRelationships({required this.author});
 
   factory CourseNewsResponseItemRelationships.fromJson(
-          Map<String, dynamic> json) =>
+          Map<String, dynamic> json,) =>
       _$CourseNewsResponseItemRelationshipsFromJson(json);
+  final CourseNewsResponseItemRelationshipAuthor author;
 }
 
 @JsonSerializable()
 class CourseNewsResponseItemRelationshipAuthor {
-  final CourseNewsResponseItemRelationshipAuthorData data;
 
   CourseNewsResponseItemRelationshipAuthor({required this.data});
 
   factory CourseNewsResponseItemRelationshipAuthor.fromJson(
-          Map<String, dynamic> json) =>
+          Map<String, dynamic> json,) =>
       _$CourseNewsResponseItemRelationshipAuthorFromJson(json);
+  final CourseNewsResponseItemRelationshipAuthorData data;
 }
 
 @JsonSerializable()
 class CourseNewsResponseItemRelationshipAuthorData {
-  final String type;
-  final String id;
 
   CourseNewsResponseItemRelationshipAuthorData({
     required this.type,
@@ -103,6 +101,8 @@ class CourseNewsResponseItemRelationshipAuthorData {
   });
 
   factory CourseNewsResponseItemRelationshipAuthorData.fromJson(
-          Map<String, dynamic> json) =>
+          Map<String, dynamic> json,) =>
       _$CourseNewsResponseItemRelationshipAuthorDataFromJson(json);
+  final String type;
+  final String id;
 }

@@ -5,13 +5,13 @@ part 'folder_response.g.dart';
 
 @JsonSerializable()
 class FolderListResponse implements ItemListResponse<FolderResponseItem> {
-  @JsonKey(name: 'data')
-  final List<FolderResponseItem> folders;
 
   FolderListResponse({required this.folders, required this.meta});
 
   factory FolderListResponse.fromJson(Map<String, dynamic> json) =>
       _$FolderListResponseFromJson(json);
+  @JsonKey(name: 'data')
+  final List<FolderResponseItem> folders;
 
   @override
   int get offset => meta.page.offset;
@@ -30,17 +30,32 @@ class FolderListResponse implements ItemListResponse<FolderResponseItem> {
 
 @JsonSerializable()
 class FolderResponseItem {
-  final String id;
-  final FolderResponseItemAttributes attributes;
 
   FolderResponseItem({required this.id, required this.attributes});
 
   factory FolderResponseItem.fromJson(Map<String, dynamic> json) =>
       _$FolderResponseItemFromJson(json);
+  final String id;
+  final FolderResponseItemAttributes attributes;
 }
 
 @JsonSerializable()
 class FolderResponseItemAttributes {
+
+  FolderResponseItemAttributes({
+    required this.folderType,
+    required this.name,
+    required this.description,
+    required this.createdAt,
+    required this.lastUpdatedAt,
+    required this.isVisible,
+    required this.isReadable,
+    required this.isWritable,
+    required this.isSubfolderAllowed,
+  });
+
+  factory FolderResponseItemAttributes.fromJson(Map<String, dynamic> json) =>
+      _$FolderResponseItemAttributesFromJson(json);
   @JsonKey(name: 'folder-type')
   final String folderType;
   final String name;
@@ -63,19 +78,4 @@ class FolderResponseItemAttributes {
 
   @JsonKey(name: 'is-subfolder-allowed')
   final bool isSubfolderAllowed;
-
-  FolderResponseItemAttributes({
-    required this.folderType,
-    required this.name,
-    required this.description,
-    required this.createdAt,
-    required this.lastUpdatedAt,
-    required this.isVisible,
-    required this.isReadable,
-    required this.isWritable,
-    required this.isSubfolderAllowed,
-  });
-
-  factory FolderResponseItemAttributes.fromJson(Map<String, dynamic> json) =>
-      _$FolderResponseItemAttributesFromJson(json);
 }

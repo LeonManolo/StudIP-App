@@ -5,19 +5,24 @@ part 'course_participants_response.g.dart';
 
 @JsonSerializable()
 class CourseParticipantsListResponse {
+
+  CourseParticipantsListResponse(
+      {required this.meta, required this.participants,});
+  factory CourseParticipantsListResponse.fromJson(Map<String, dynamic> json) =>
+      _$CourseParticipantsListResponseFromJson(json);
   final ResponseMeta meta;
 
   @JsonKey(name: 'data')
   final List<CourseParticipantsResponseItem> participants;
-
-  CourseParticipantsListResponse(
-      {required this.meta, required this.participants});
-  factory CourseParticipantsListResponse.fromJson(Map<String, dynamic> json) =>
-      _$CourseParticipantsListResponseFromJson(json);
 }
 
 @JsonSerializable()
 class CourseParticipantsResponseItem {
+
+  const CourseParticipantsResponseItem({required this.type, required this.id});
+
+  factory CourseParticipantsResponseItem.fromJson(Map<String, dynamic> json) =>
+      _$CourseParticipantsResponseItemFromJson(json);
   final String type;
 
   @JsonKey(fromJson: _idFromJson)
@@ -25,9 +30,4 @@ class CourseParticipantsResponseItem {
 
   static String _idFromJson(String combinedCourseUserId) =>
       combinedCourseUserId.split('_').last;
-
-  const CourseParticipantsResponseItem({required this.type, required this.id});
-
-  factory CourseParticipantsResponseItem.fromJson(Map<String, dynamic> json) =>
-      _$CourseParticipantsResponseItemFromJson(json);
 }

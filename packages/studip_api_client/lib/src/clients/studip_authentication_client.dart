@@ -10,10 +10,10 @@ abstract interface class StudIPAuthenticationClient {
 }
 
 class StudIPAuthenticationClientImpl implements StudIPAuthenticationClient {
-  final StudIpAuthenticationCore _core;
 
   StudIPAuthenticationClientImpl({StudIpAuthenticationCore? core})
       : _core = core ?? StudIpAPICore.shared;
+  final StudIpAuthenticationCore _core;
 
   @override
   Future<void> removeAllTokens() async {
