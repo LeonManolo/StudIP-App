@@ -2,7 +2,6 @@ import 'package:intl/intl.dart';
 import 'package:studip_api_client/studip_api_client.dart' as studip_api_client;
 
 class File {
-
   File({
     required this.id,
     required this.name,
@@ -17,19 +16,21 @@ class File {
   });
 
   factory File.fromFileResponse({
-    required studip_api_client.FileResponse fileResponse,
+    required studip_api_client.FileResponseItem fileResponseItem,
   }) {
+    final studip_api_client.FileResponseItemAttributes attributes =
+        fileResponseItem.attributes;
     return File(
-      id: fileResponse.id,
-      name: fileResponse.name,
-      description: fileResponse.description,
-      numberOfDownloads: fileResponse.numberOfDownloads,
-      owner: fileResponse.owner,
-      createdAt: DateTime.parse(fileResponse.createdAt).toLocal(),
-      lastUpdatedAt: DateTime.parse(fileResponse.lastUpdatedAt).toLocal(),
-      mimeType: fileResponse.mimeType,
-      isReadable: fileResponse.isReadable,
-      isDownloadable: fileResponse.isDownloadable,
+      id: fileResponseItem.id,
+      name: attributes.name,
+      description: attributes.description,
+      numberOfDownloads: attributes.numberOfDownloads,
+      owner: fileResponseItem.relationships.owner.meta.name,
+      createdAt: DateTime.parse(attributes.createdAt).toLocal(),
+      lastUpdatedAt: DateTime.parse(attributes.lastUpdatedAt).toLocal(),
+      mimeType: attributes.mimeType,
+      isReadable: attributes.isReadable,
+      isDownloadable: attributes.isDownloadable,
     );
   }
   final String id;

@@ -15,18 +15,20 @@ class Folder {
   });
 
   factory Folder.fromFolderResponse({
-    required studip_api_client.FolderResponse folderResponse,
+    required studip_api_client.FolderResponseItem folderResponseItem,
   }) {
+    final studip_api_client.FolderResponseItemAttributes attributes =
+        folderResponseItem.attributes;
     return Folder(
-      id: folderResponse.id,
-      folderType: folderResponse.folderType,
-      name: folderResponse.name,
-      createdAt: DateTime.parse(folderResponse.createdAt).toLocal(),
-      lastUpdatedAt: DateTime.parse(folderResponse.lastUpdatedAt).toLocal(),
-      isVisible: folderResponse.isVisible,
-      isReadable: folderResponse.isReadable,
-      isWritable: folderResponse.isWritable,
-      isSubfolderAllowed: folderResponse.isSubfolderAllowed,
+      id: folderResponseItem.id,
+      folderType: attributes.folderType,
+      name: attributes.name,
+      createdAt: DateTime.parse(attributes.createdAt).toLocal(),
+      lastUpdatedAt: DateTime.parse(attributes.lastUpdatedAt).toLocal(),
+      isVisible: attributes.isVisible,
+      isReadable: attributes.isReadable,
+      isWritable: attributes.isWritable,
+      isSubfolderAllowed: attributes.isSubfolderAllowed,
     );
   }
   final String id;

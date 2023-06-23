@@ -1,6 +1,7 @@
 import 'package:activity_repository/activity_repository.dart';
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:bloc/bloc.dart';
+import 'package:logger/logger.dart';
 import 'package:studipadawan/home/modules/news_module/bloc/news_module_event.dart';
 import 'package:studipadawan/home/modules/news_module/bloc/news_module_state.dart';
 
@@ -34,6 +35,7 @@ class NewsModuleBloc extends Bloc<NewsModuleEvent, NewsModuleState> {
         ),
       );
     } catch (e) {
+      Logger().e(e);
       emit(const NewsModuleStateError());
     }
   }

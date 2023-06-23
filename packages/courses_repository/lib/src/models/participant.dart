@@ -27,22 +27,22 @@ class Participant {
     required this.nameSuffix,
   });
 
-  factory Participant.fromUserResponse(UserResponse user) {
+  factory Participant.fromUserResponseItem(UserResponseItem userResponseItem) {
+    final attributes = userResponseItem.attributes;
     return Participant(
-      id: user.id,
-      username: user.username,
-      formattedName: user.formattedName,
-      familyName: user.familyName,
-      givenName: user.givenName,
-      permission: user.permission,
-      email: user.email,
-      phone: user.phone,
-      homepage: user.homepage,
-      address: user.address,
-      avatarUrl: user.avatarUrl,
-      namePrefix: user.namePrefix,
-      nameSuffix: user.nameSuffix,
-
+      id: userResponseItem.id,
+      username: attributes.username,
+      formattedName: attributes.formattedName,
+      familyName: attributes.familyName,
+      givenName: attributes.givenName,
+      permission: attributes.permission,
+      email: attributes.email,
+      phone: attributes.phone,
+      homepage: attributes.homepage,
+      address: attributes.address,
+      avatarUrl: userResponseItem.meta.avatar.mediumAvatarUrl,
+      namePrefix: attributes.namePrefix,
+      nameSuffix: attributes.nameSuffix,
     );
   }
 

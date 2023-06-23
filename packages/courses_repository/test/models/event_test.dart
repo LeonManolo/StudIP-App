@@ -4,7 +4,8 @@ import 'package:studip_api_client/studip_api_client.dart' as studip_api_client;
 
 void main() {
   group('test event date conversion', () {
-    final courseEventResponse = studip_api_client.CourseEventResponse.fromJson({
+    final courseEventResponseItem =
+        studip_api_client.CourseEventResponseItem.fromJson({
       'type': 'course-events',
       'id': '015e133e3ac12de8e63520a92c355ba2',
       'attributes': {
@@ -20,8 +21,8 @@ void main() {
     });
 
     test('Init with CourseEventResponse', () {
-      final courseEvent = StudIPCourseEvent.fromCourseEventResponse(
-        courseEventResponse: courseEventResponse,
+      final courseEvent = StudIPCourseEventItem.fromCourseEventResponseItem(
+        item: courseEventResponseItem,
       );
 
       expect(courseEvent.getEventTimeSpan, '13.04.2023 (10:00 - 11:30)');

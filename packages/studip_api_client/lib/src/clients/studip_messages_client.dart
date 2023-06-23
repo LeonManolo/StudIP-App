@@ -4,7 +4,7 @@ import 'package:studip_api_client/src/core/interfaces/interfaces.dart';
 import 'package:studip_api_client/src/core/studip_api_core.dart';
 import 'package:studip_api_client/src/extensions/extensions.dart';
 
-import '../models/models.dart';
+import 'package:studip_api_client/src/models/models.dart';
 
 abstract interface class StudIPMessagesClient {
   Future<MessageListResponse> getOutboxMessages({
@@ -27,10 +27,10 @@ abstract interface class StudIPMessagesClient {
 }
 
 class StudIPMessagesClientImpl implements StudIPMessagesClient {
-  final StudIpHttpCore _core;
 
   StudIPMessagesClientImpl({StudIpHttpCore? core})
       : _core = core ?? StudIpAPICore.shared;
+  final StudIpHttpCore _core;
 
   @override
   Future<MessageListResponse> getOutboxMessages({
@@ -39,10 +39,10 @@ class StudIPMessagesClientImpl implements StudIPMessagesClient {
     required int limit,
   }) async {
     Map<String, String> queryParameters = {};
-    queryParameters["page[offset]"] = offset.toString();
-    queryParameters["page[limit]"] = limit.toString();
+    queryParameters['page[offset]'] = offset.toString();
+    queryParameters['page[limit]'] = limit.toString();
     final response = await _core.get(
-        endpoint: "users/$userId/outbox", queryParameters: queryParameters);
+        endpoint: 'users/$userId/outbox', queryParameters: queryParameters,);
 
     final body = response.json();
     response.throwIfInvalidHttpStatus(body: body);
@@ -55,16 +55,16 @@ class StudIPMessagesClientImpl implements StudIPMessagesClient {
       {required String userId,
       required int offset,
       required int limit,
-      required bool filterUnread}) async {
+      required bool filterUnread,}) async {
     Map<String, String> queryParameters = {};
     if (filterUnread) {
-      queryParameters["filter[unread]"] = "true";
+      queryParameters['filter[unread]'] = 'true';
     }
-    queryParameters["page[offset]"] = offset.toString();
-    queryParameters["page[limit]"] = limit.toString();
+    queryParameters['page[offset]'] = offset.toString();
+    queryParameters['page[limit]'] = limit.toString();
 
     final response = await _core.get(
-        endpoint: "users/$userId/inbox", queryParameters: queryParameters);
+        endpoint: 'users/$userId/inbox', queryParameters: queryParameters,);
     final body = response.json();
     response.throwIfInvalidHttpStatus(body: body);
 
@@ -73,28 +73,28 @@ class StudIPMessagesClientImpl implements StudIPMessagesClient {
 
   @override
   Future<void> readMessage(
-      {required String messageId, required String message}) async {
+      {required String messageId, required String message,}) async {
     final response =
-        await _core.patch(endpoint: "messages/$messageId", jsonString: message);
+        await _core.patch(endpoint: 'messages/$messageId', jsonString: message);
     final body = response.json();
     response.throwIfInvalidHttpStatus(body: body);
   }
 
   @override
   Future<void> deleteMessage({required String messageId}) async {
-    final response = await _core.delete(endpoint: "messages/$messageId");
+    final response = await _core.delete(endpoint: 'messages/$messageId');
     final body = response.json();
     response.throwIfInvalidHttpStatus(
-        expectedStatus: HttpStatus.noContent, body: body);
+        expectedStatus: HttpStatus.noContent, body: body,);
   }
 
   @override
   Future<MessageResponse> sendMessage({required String message}) async {
     final response =
-        await _core.post(endpoint: "messages", jsonString: message);
+        await _core.post(endpoint: 'messages', jsonString: message);
     final body = response.json();
     response.throwIfInvalidHttpStatus(
-        expectedStatus: HttpStatus.created, body: body);
+        expectedStatus: HttpStatus.created, body: body,);
     return MessageResponse.fromJson(body);
   }
 }

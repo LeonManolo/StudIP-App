@@ -1,10 +1,10 @@
 import 'package:courses_repository/courses_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:studip_api_client/studip_api_client.dart' as studip_api_client;
+import 'package:studip_api_client/studip_api_client.dart';
 
 void main() {
   group('test semester date conversion', () {
-    final semesterResponse = studip_api_client.SemesterResponse.fromJson({
+    final semesterResponse = SemesterResponse.fromJson({
       'data': {
         'type': 'semesters',
         'id': 'c3361be2abf51c4e36701f84b42c09e7',
@@ -26,7 +26,9 @@ void main() {
 
     test('Init with Semester API Response', () {
       final semester = Semester.fromSemesterResponse(
-          semesterResponse: semesterResponse, courses: [],);
+        semesterResponseItem: semesterResponse.semester,
+        courses: [],
+      );
 
       expect(semester.lecturesTimeSpan, '20.09.2021 - 25.01.2022');
       expect(semester.semesterTimeSpan, '01.08.2021 - 28.02.2022');

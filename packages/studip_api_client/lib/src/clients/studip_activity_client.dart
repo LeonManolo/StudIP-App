@@ -13,25 +13,25 @@ enum ActivityType {
 }
 
 abstract interface class StudIPActivityClient {
-  Future<FileActivityListResponse> getFileActivities({
+  Future<ActivityListResponse> getFileActivities({
     required String userId,
     required int limit,
   });
 
-  Future<NewsActivityListResponse> getNewsActivities({
+  Future<ActivityListResponse> getNewsActivities({
     required String userId,
     int? limit,
   });
 }
 
 class StudIPActivityClientImpl implements StudIPActivityClient {
-  final StudIpHttpCore _core;
 
   StudIPActivityClientImpl({StudIpHttpCore? core})
       : _core = core ?? StudIpAPICore.shared;
+  final StudIpHttpCore _core;
 
   @override
-  Future<FileActivityListResponse> getFileActivities({
+  Future<ActivityListResponse> getFileActivities({
     required String userId,
     required int limit,
   }) async {
@@ -40,11 +40,12 @@ class StudIPActivityClientImpl implements StudIPActivityClient {
       activityType: ActivityType.file,
       limit: limit,
     );
-    return FileActivityListResponse.fromJson(response);
+
+    return ActivityListResponse.fromJson(response);
   }
 
   @override
-  Future<NewsActivityListResponse> getNewsActivities({
+  Future<ActivityListResponse> getNewsActivities({
     required String userId,
     int? limit,
   }) async {
@@ -53,8 +54,7 @@ class StudIPActivityClientImpl implements StudIPActivityClient {
       activityType: ActivityType.news,
       limit: limit,
     );
-    NewsActivityListResponse.fromJson(response);
-    return NewsActivityListResponse.fromJson(response);
+    return ActivityListResponse.fromJson(response);
   }
 
   Future<Map<String, dynamic>> _getActivities({
@@ -63,16 +63,16 @@ class StudIPActivityClientImpl implements StudIPActivityClient {
     required int? limit,
   }) async {
     final queryParameters = {
-      "filter[activity-type]": activityType.type,
-      "include": "object,actor,context",
+      'filter[activity-type]': activityType.type,
+      'include': 'object,actor,context',
     };
     if (limit != null) {
-      queryParameters["page[limit]"] = limit.toString();
+      queryParameters['page[limit]'] = limit.toString();
     }
 
     final response = await _core.get(
-        endpoint: "users/$userId/activitystream",
-        queryParameters: queryParameters);
+        endpoint: 'users/$userId/activitystream',
+        queryParameters: queryParameters,);
     final body = response.json();
     response.throwIfInvalidHttpStatus(body: body);
     return body;

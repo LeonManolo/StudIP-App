@@ -31,21 +31,23 @@ class CourseNews {
   });
 
   factory CourseNews.fromCourseNewsResponse({
-    required studip_api_client.CourseNewsResponse courseNewsResponse,
-    required studip_api_client.UserResponse userResponse,
+    required studip_api_client.CourseNewsResponseItem courseNewsResponse,
+    required studip_api_client.UserResponseItem userResponseItem,
   }) {
     return CourseNews(
       id: courseNewsResponse.id,
-      title: courseNewsResponse.title,
-      content: courseNewsResponse.content,
+      title: courseNewsResponse.attributes.title,
+      content: courseNewsResponse.attributes.content,
       publicationStart:
-          DateTime.parse(courseNewsResponse.publicationStart).toLocal(),
+          DateTime.parse(courseNewsResponse.attributes.publicationStart)
+              .toLocal(),
       publicationEnd:
-          DateTime.parse(courseNewsResponse.publicationEnd).toLocal(),
+          DateTime.parse(courseNewsResponse.attributes.publicationEnd)
+              .toLocal(),
       author: ItemAuthor(
-        formattedName: userResponse.formattedName,
-        id: userResponse.id,
-        avatarUrl: userResponse.avatarUrl,
+        id: userResponseItem.id,
+        formattedName: userResponseItem.attributes.formattedName,
+        avatarUrl: userResponseItem.meta.avatar.mediumAvatarUrl,
       ),
     );
   }

@@ -7,12 +7,12 @@ class Course {
     required this.semesterId,
   });
 
-  factory Course.fromCourseResponse(CourseResponse response) {
+  factory Course.fromCourseResponseItem(CourseResponseItem response) {
     return Course(
       id: response.id,
       courseDetails:
-          CourseDetails.fromCourseDetailsResponse(response.detailsResponse),
-      semesterId: response.semesterId,
+          CourseDetails.fromCourseDetailsResponse(response.attributes),
+      semesterId: response.startSemesterId,
     );
   }
   final String id;
@@ -30,7 +30,7 @@ class CourseDetails {
   });
 
   factory CourseDetails.fromCourseDetailsResponse(
-    CourseDetailsResponse response,
+    CourseResponseItemAttributes response,
   ) {
     return CourseDetails(
       courseNumber: response.courseNumber,

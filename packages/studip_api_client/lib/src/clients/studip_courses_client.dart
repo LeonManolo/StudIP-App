@@ -1,9 +1,7 @@
-
+import 'package:studip_api_client/src/core/interfaces/studip_http_request_core.dart';
 import 'package:studip_api_client/src/core/studip_api_core.dart';
 import 'package:studip_api_client/src/extensions/extensions.dart';
-
-import '../core/interfaces/studip_http_request_core.dart';
-import '../models/models.dart';
+import 'package:studip_api_client/src/models/models.dart';
 
 abstract interface class StudIPCoursesClient {
   Future<CourseListResponse> getCourses({
@@ -28,36 +26,36 @@ abstract interface class StudIPCoursesClient {
     required int limit,
   });
 
-  Future<CourseWikiPagesListResponse> getCourseWikiPages({
+  Future<CourseWikiPageListResponse> getCourseWikiPages({
     required String courseId,
     required int offset,
     required int limit,
   });
 
-  Future<CourseParticipantsResponse> getCourseParticipants({
+  Future<CourseParticipantsListResponse> getCourseParticipants({
     required String courseId,
     required int offset,
     required int limit,
-  });
-
-  Future<CourseResponse> getCourse({
-    required String courseId,
   });
 }
 
 class StudIPCoursesClientImpl implements StudIPCoursesClient {
-  final StudIpHttpCore _core;
-
   StudIPCoursesClientImpl({StudIpHttpCore? core})
       : _core = core ?? StudIpAPICore.shared;
+  final StudIpHttpCore _core;
   @override
-  Future<CourseListResponse> getCourses(
-      {required String userId, required int offset, required int limit}) async {
-    final response =
-        await _core.get(endpoint: "users/$userId/courses", queryParameters: {
-      "page[offset]": "$offset",
-      "page[limit]": "$limit",
-    });
+  Future<CourseListResponse> getCourses({
+    required String userId,
+    required int offset,
+    required int limit,
+  }) async {
+    final response = await _core.get(
+      endpoint: 'users/$userId/courses',
+      queryParameters: {
+        'page[offset]': '$offset',
+        'page[limit]': '$limit',
+      },
+    );
 
     final body = response.json();
     response.throwIfInvalidHttpStatus(body: body);
@@ -67,7 +65,7 @@ class StudIPCoursesClientImpl implements StudIPCoursesClient {
 
   @override
   Future<SemesterResponse> getSemester({required String semesterId}) async {
-    final response = await _core.get(endpoint: "semesters/$semesterId");
+    final response = await _core.get(endpoint: 'semesters/$semesterId');
 
     final body = response.json();
     response.throwIfInvalidHttpStatus(body: body);
@@ -82,8 +80,9 @@ class StudIPCoursesClientImpl implements StudIPCoursesClient {
     required int offset,
   }) async {
     final response = await _core.get(
-        endpoint: "courses/$courseId/news",
-        queryParameters: {"page[limit]": "$limit", "page[offset]": "$offset"});
+      endpoint: 'courses/$courseId/news',
+      queryParameters: {'page[limit]': '$limit', 'page[offset]': '$offset'},
+    );
 
     final body = response.json();
     response.throwIfInvalidHttpStatus(body: body);
@@ -97,11 +96,13 @@ class StudIPCoursesClientImpl implements StudIPCoursesClient {
     required int offset,
     required int limit,
   }) async {
-    final response =
-        await _core.get(endpoint: "courses/$courseId/events", queryParameters: {
-      "page[offset]": "$offset",
-      "page[limit]": "$limit",
-    });
+    final response = await _core.get(
+      endpoint: 'courses/$courseId/events',
+      queryParameters: {
+        'page[offset]': '$offset',
+        'page[limit]': '$limit',
+      },
+    );
 
     final body = response.json();
     response.throwIfInvalidHttpStatus(body: body);
@@ -110,50 +111,42 @@ class StudIPCoursesClientImpl implements StudIPCoursesClient {
   }
 
   @override
-  Future<CourseWikiPagesListResponse> getCourseWikiPages({
-    required String courseId,
-    required int offset,
-    required int limit,
-  }) async {
-    final response = await _core
-        .get(endpoint: "courses/$courseId/wiki-pages", queryParameters: {
-      "page[offset]": "$offset",
-      "page[limit]": "$limit",
-    });
-
-    final body = response.json();
-    response.throwIfInvalidHttpStatus(body: body);
-
-    return CourseWikiPagesListResponse.fromJson(body);
-  }
-
-  @override
-  Future<CourseParticipantsResponse> getCourseParticipants({
+  Future<CourseWikiPageListResponse> getCourseWikiPages({
     required String courseId,
     required int offset,
     required int limit,
   }) async {
     final response = await _core.get(
-        endpoint: "courses/$courseId/relationships/memberships",
-        queryParameters: {
-          "page[offset]": "$offset",
-          "page[limit]": "$limit",
-        });
+      endpoint: 'courses/$courseId/wiki-pages',
+      queryParameters: {
+        'page[offset]': '$offset',
+        'page[limit]': '$limit',
+      },
+    );
 
     final body = response.json();
     response.throwIfInvalidHttpStatus(body: body);
 
-    return CourseParticipantsResponse.fromJson(body);
+    return CourseWikiPageListResponse.fromJson(body);
   }
 
   @override
-  Future<CourseResponse> getCourse({
+  Future<CourseParticipantsListResponse> getCourseParticipants({
     required String courseId,
+    required int offset,
+    required int limit,
   }) async {
-    final response = await _core.get(endpoint: "courses/$courseId");
+    final response = await _core.get(
+      endpoint: 'courses/$courseId/relationships/memberships',
+      queryParameters: {
+        'page[offset]': '$offset',
+        'page[limit]': '$limit',
+      },
+    );
+
     final body = response.json();
     response.throwIfInvalidHttpStatus(body: body);
 
-    return CourseResponse.fromJson(body["data"]);
+    return CourseParticipantsListResponse.fromJson(body);
   }
 }

@@ -1,6 +1,6 @@
 import 'package:courses_repository/src/models/models.dart';
 import 'package:studip_api_client/studip_api_client.dart'
-    hide CourseNewsListResponse, CourseWikiPagesListResponse;
+    hide CourseNewsListResponse, CourseWikiPageListResponse;
 
 class CourseRepository {
   const CourseRepository({
@@ -12,27 +12,26 @@ class CourseRepository {
   final StudIPCoursesClient _coursesApiClient;
   final StudIPUserClient _userApiClient;
 
-  Future<List<StudIPCourseEvent>> getCourseEvents({
+  Future<List<StudIPCourseEventItem>> getCourseEvents({
     required String courseId,
   }) async {
     try {
-      final List<CourseEventResponse> eventsResponse =
-          await _getResponse<CourseEventResponse>(
+      final List<CourseEventResponseItem> eventsResponseItems =
+          await _getResponse<CourseEventResponseItem>(
         id: courseId,
         loadItems: ({required id, required limit, required offset}) async {
           return _coursesApiClient.getCourseEvents(
-            courseId: id,
+            courseId: courseId,
             offset: offset,
             limit: limit,
           );
         },
       );
 
-      return eventsResponse
+      return eventsResponseItems
           .map(
-            (eventResponse) => StudIPCourseEvent.fromCourseEventResponse(
-              courseEventResponse: eventResponse,
-            ),
+            (item) =>
+                StudIPCourseEventItem.fromCourseEventResponseItem(item: item),
           )
           .toList();
     } catch (error, stackTrace) {
@@ -53,12 +52,12 @@ class CourseRepository {
       );
 
       final List<CourseNews> newsItems = await Future.wait(
-        newsResponse.news.map((rawNewsResponse) async {
+        newsResponse.items.map((rawNewsResponse) async {
           final UserResponse userResponse =
               await _userApiClient.getUser(userId: rawNewsResponse.authorId);
           return CourseNews.fromCourseNewsResponse(
             courseNewsResponse: rawNewsResponse,
-            userResponse: userResponse,
+            userResponseItem: userResponse.userResponseItem,
           );
         }),
       );
@@ -72,10 +71,12 @@ class CourseRepository {
     }
   }
 
-  Future<List<CourseWikiPageData>> getWikiPages(
-      {required String courseId,}) async {
+  Future<List<CourseWikiPageData>> getWikiPages({
+    required String courseId,
+  }) async {
     try {
-      final List<CourseWikiPageResponse> wikiPagesResponse = await _getResponse(
+      final List<CourseWikiPageResponseItem> wikiPagesResponse =
+          await _getResponse(
         id: courseId,
         loadItems: ({required id, required limit, required offset}) async {
           return _coursesApiClient.getCourseWikiPages(
@@ -92,7 +93,7 @@ class CourseRepository {
               await _userApiClient.getUser(userId: rawWikiPage.lastEditorId);
           return CourseWikiPageData.fromCourseWikiPageResponse(
             courseWikiPageResponse: rawWikiPage,
-            userResponse: userResponse,
+            userResponseItem: userResponse.userResponseItem,
           );
         }),
       );
@@ -103,7 +104,7 @@ class CourseRepository {
 
   Future<List<Semester>> getCoursesGroupedBySemester(String userId) async {
     try {
-      final List<CourseResponse> courses = await _getResponse(
+      final List<CourseResponseItem> courses = await _getResponse(
         id: userId,
         loadItems: ({required id, required limit, required offset}) async {
           return _coursesApiClient.getCourses(
@@ -114,12 +115,12 @@ class CourseRepository {
         },
       );
 
-      final Map<String, List<CourseResponse>> semesterToCourses = {};
+      final Map<String, List<CourseResponseItem>> semesterToCourses = {};
       for (final course in courses) {
-        if (semesterToCourses.containsKey(course.semesterId)) {
-          semesterToCourses[course.semesterId]?.add(course);
+        if (semesterToCourses.containsKey(course.startSemesterId)) {
+          semesterToCourses[course.startSemesterId]?.add(course);
         } else {
-          semesterToCourses[course.semesterId] = [course];
+          semesterToCourses[course.startSemesterId] = [course];
         }
       }
 
@@ -131,10 +132,10 @@ class CourseRepository {
 
       final semesters = semestersResponse.map((semesterResponse) {
         return Semester.fromSemesterResponse(
-          semesterResponse: semesterResponse,
-          courses: semesterToCourses[semesterResponse.id]
+          semesterResponseItem: semesterResponse.semester,
+          courses: semesterToCourses[semesterResponse.semester.id]
                   ?.map(
-                    Course.fromCourseResponse,
+                    Course.fromCourseResponseItem,
                   )
                   .toList() ??
               [],
@@ -164,12 +165,13 @@ class CourseRepository {
     for (final participantResponse in participantsResponse.participants) {
       final UserResponse userResponse =
           await _userApiClient.getUser(userId: participantResponse.id);
-      participants.add(Participant.fromUserResponse(userResponse));
+      participants
+          .add(Participant.fromUserResponseItem(userResponse.userResponseItem));
     }
 
     return CourseParticipantsData(
       participants: participants,
-      totalParticipants: participantsResponse.total,
+      totalParticipants: participantsResponse.meta.page.total,
     );
   }
 
