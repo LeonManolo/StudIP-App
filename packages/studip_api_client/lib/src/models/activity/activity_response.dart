@@ -5,10 +5,14 @@ part 'activity_response.g.dart';
 
 @JsonSerializable()
 class ActivityListResponse {
-  ActivityListResponse(this.activityResponseItems, this.included);
+  ActivityListResponse({
+    required this.activityResponseItems,
+    required this.included,
+  });
 
   factory ActivityListResponse.fromJson(Map<String, dynamic> json) =>
       _$ActivityListResponseFromJson(json);
+
   @JsonKey(name: 'data')
   final List<ActivityResponseItem> activityResponseItems;
 
