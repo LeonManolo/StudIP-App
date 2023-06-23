@@ -7,7 +7,7 @@ class Course {
     required this.semesterId,
   });
 
-  factory Course.fromCourseResponse(CourseResponseItem response) {
+  factory Course.fromCourseResponseItem(CourseResponseItem response) {
     return Course(
       id: response.id,
       courseDetails:

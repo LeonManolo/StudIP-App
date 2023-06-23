@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:logger/logger.dart';
 import 'package:studip_api_client/src/core/interfaces/interfaces.dart';
 import 'package:studip_api_client/src/core/studip_api_core.dart';
 import 'package:studip_api_client/studip_api_client.dart';
@@ -14,12 +13,12 @@ enum ActivityType {
 }
 
 abstract interface class StudIPActivityClient {
-  Future<FileActivityListResponse> getFileActivities({
+  Future<ActivityListResponse> getFileActivities({
     required String userId,
     required int limit,
   });
 
-  Future<NewsActivityListResponse> getNewsActivities({
+  Future<ActivityListResponse> getNewsActivities({
     required String userId,
     int? limit,
   });
@@ -32,7 +31,7 @@ class StudIPActivityClientImpl implements StudIPActivityClient {
       : _core = core ?? StudIpAPICore.shared;
 
   @override
-  Future<FileActivityListResponse> getFileActivities({
+  Future<ActivityListResponse> getFileActivities({
     required String userId,
     required int limit,
   }) async {
@@ -42,11 +41,11 @@ class StudIPActivityClientImpl implements StudIPActivityClient {
       limit: limit,
     );
 
-    return FileActivityListResponse.fromJson(response);
+    return ActivityListResponse.fromJson(response);
   }
 
   @override
-  Future<NewsActivityListResponse> getNewsActivities({
+  Future<ActivityListResponse> getNewsActivities({
     required String userId,
     int? limit,
   }) async {
@@ -55,7 +54,7 @@ class StudIPActivityClientImpl implements StudIPActivityClient {
       activityType: ActivityType.news,
       limit: limit,
     );
-    return NewsActivityListResponse.fromJson(response);
+    return ActivityListResponse.fromJson(response);
   }
 
   Future<Map<String, dynamic>> _getActivities({

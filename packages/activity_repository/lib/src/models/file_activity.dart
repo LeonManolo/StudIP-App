@@ -1,38 +1,39 @@
 import 'package:courses_repository/courses_repository.dart';
-import 'package:studip_api_client/studip_api_client.dart' as studip_api_client;
+import 'package:studip_api_client/studip_api_client.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 class FileActivity {
   FileActivity({
-    required this.createDate,
+    required this.lastUpdatedDate,
     required this.content,
-    required this.owner,
+    required this.ownerFormattedName,
     required this.fileName,
     required this.course,
   });
   factory FileActivity.fromFileActivityResponse({
-    required studip_api_client.FileActivityResponse fileActivityResponse,
+    required ActivityResponseItem activityResponseItem,
+    required FileResponseItem fileResponseItem,
+    required UserResponseItem userResponseItem,
+    required CourseResponseItem courseResponseItem,
   }) {
     return FileActivity(
-      createDate: DateTime.parse(fileActivityResponse.createDate).toLocal(),
-      content: fileActivityResponse.content,
-      owner: fileActivityResponse.owner,
-      fileName: fileActivityResponse.fileName,
-      course: Course.fromCourseResponse(
-        studip_api_client.CourseResponseItem.fromJson(
-          fileActivityResponse.course,
-        ),
-      ),
+      lastUpdatedDate:
+          DateTime.parse(fileResponseItem.attributes.lastUpdatedAt).toLocal(),
+      content: activityResponseItem
+          .attributes.content, // TODO: Wird content überhaupt genutzt?
+      ownerFormattedName: userResponseItem.attributes.formattedName,
+      fileName: fileResponseItem.attributes.name,
+      course: Course.fromCourseResponseItem(courseResponseItem),
     );
   }
-  final DateTime createDate;
+  final DateTime lastUpdatedDate;
   final String content;
-  final String owner;
+  final String ownerFormattedName;
   final String fileName;
   final Course course;
 
   String getTimeAgo() {
     timeago.setLocaleMessages('de', timeago.DeMessages());
-    return timeago.format(createDate, locale: 'de');
+    return timeago.format(lastUpdatedDate, locale: 'de');
   }
 }

@@ -23,7 +23,7 @@ class NewsActivity {
       username: userResponseItem.attributes.username,
       publicationEnd:
           DateTime.parse(newsResponseItem.attributes.publicationEnd).toLocal(),
-      course: Course.fromCourseResponse(courseResponseItem),
+      course: Course.fromCourseResponseItem(courseResponseItem),
     );
   }
   final DateTime publicationStart;

@@ -12,7 +12,7 @@ class FilePreviewTile extends StatelessWidget {
     return ListTile(
       title: Text(fileActivity.fileName),
       subtitle: Text(
-        '${fileActivity.course.courseDetails.title}\n${fileActivity.owner}',
+        '${fileActivity.course.courseDetails.title}\n${fileActivity.ownerFormattedName}',
       ),
       leading: const Column(
         mainAxisAlignment: MainAxisAlignment.center,

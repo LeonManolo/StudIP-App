@@ -135,7 +135,7 @@ class CourseRepository {
           semesterResponseItem: semesterResponse.semester,
           courses: semesterToCourses[semesterResponse.semester.id]
                   ?.map(
-                    Course.fromCourseResponse,
+                    Course.fromCourseResponseItem,
                   )
                   .toList() ??
               [],
