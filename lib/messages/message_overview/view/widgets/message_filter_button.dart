@@ -12,18 +12,18 @@ class MessageFilterButton extends StatelessWidget {
   final void Function(MessageFilter) setFilter;
   final MessageFilter currentFilter;
 
-  Icon funnelIcon(MessageFilter currentFilter, Color iconColor) {
+  Icon funnelIcon(MessageFilter currentFilter) {
     if (currentFilter != MessageFilter.none) {
-      return Icon(EvaIcons.funnel, size: 25, color: iconColor);
+      return const Icon(EvaIcons.funnel);
     } else {
-      return Icon(EvaIcons.funnelOutline, size: 25, color: iconColor);
+      return const Icon(EvaIcons.funnelOutline);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton<MessageFilter>(
-      icon: funnelIcon(currentFilter, Colors.black),
+      icon: funnelIcon(currentFilter),
       onSelected: (newFilter) => {setFilter(newFilter)},
       itemBuilder: (context) => [
         PopupMenuItem<MessageFilter>(
@@ -32,7 +32,7 @@ class MessageFilterButton extends StatelessWidget {
             isSelected: currentFilter == MessageFilter.none,
             filter: MessageFilter.none,
             funnelIcon:
-                funnelIcon(currentFilter, Colors.black),
+                funnelIcon(currentFilter),
             filterDescription: MessageFilter.none.description,
           ),
         ),
@@ -42,7 +42,7 @@ class MessageFilterButton extends StatelessWidget {
             isSelected: currentFilter == MessageFilter.unread,
             filter: MessageFilter.unread,
             funnelIcon:
-                funnelIcon(currentFilter, Colors.black),
+                funnelIcon(currentFilter),
             filterDescription: MessageFilter.unread.description,
           ),
         )

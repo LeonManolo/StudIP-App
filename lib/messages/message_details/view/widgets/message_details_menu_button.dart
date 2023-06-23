@@ -23,7 +23,7 @@ class MessageDetailsMenuButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton<MessageDetailsMenuOption>(
-      icon: const Icon(EvaIcons.menu2Outline, size: 25, color: Colors.black),
+      icon: const Icon(EvaIcons.menu2Outline),
       onSelected: (state) => {
         if (state == MessageDetailsMenuOption.answer)
           {answerMessage()}
