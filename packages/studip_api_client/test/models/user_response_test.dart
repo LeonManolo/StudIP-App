@@ -1,8 +1,8 @@
 // ignore_for_file: prefer_const_constructors
 // ignore_for_file: avoid_dynamic_calls
 
+import 'package:flutter_test/flutter_test.dart';
 import 'package:studip_api_client/src/models/models.dart';
-import 'package:test/test.dart';
 
 void main() {
   group('UserResponse', () {
@@ -24,7 +24,12 @@ void main() {
             'name-suffix': ''
           },
           'meta': {
-            'avatar': {'medium': 'https://test.com/test.png'}
+            'avatar': {
+              'medium': 'https://test.com/test.png',
+              'small': 'https://test.com/test.png',
+              'normal': 'https://test.com/test.png',
+              'original': 'https://test.com/test.png',
+            }
           }
         }
       };

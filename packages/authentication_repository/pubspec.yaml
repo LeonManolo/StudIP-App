@@ -14,5 +14,6 @@ dependencies:
     path: ../studip_api_client
 
 dev_dependencies:
-  test: ^1.16.0
+  flutter_test:
+    sdk: flutter
   very_good_analysis: ^4.0.0+1
