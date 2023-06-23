@@ -12,15 +12,12 @@ class CourseNewsListResponse
       _$CourseNewsListResponseFromJson(json);
 
   @override
-  @JsonKey(includeFromJson: false)
   int get offset => meta.page.offset;
 
   @override
-  @JsonKey(includeFromJson: false)
   int get limit => meta.page.limit;
 
   @override
-  @JsonKey(includeFromJson: false)
   int get total => meta.page.total;
 
   @override
@@ -32,7 +29,6 @@ class CourseNewsListResponse
 
 @JsonSerializable()
 class CourseNewsResponseItem {
-
   CourseNewsResponseItem({
     required this.id,
     required this.attributes,
@@ -51,7 +47,6 @@ class CourseNewsResponseItem {
 
 @JsonSerializable()
 class CourseNewsResponseItemAttributes {
-
   CourseNewsResponseItemAttributes({
     required this.title,
     required this.content,
@@ -60,7 +55,8 @@ class CourseNewsResponseItemAttributes {
   });
 
   factory CourseNewsResponseItemAttributes.fromJson(
-          Map<String, dynamic> json,) =>
+    Map<String, dynamic> json,
+  ) =>
       _$CourseNewsResponseItemAttributesFromJson(json);
   final String title;
   final String content;
@@ -72,36 +68,36 @@ class CourseNewsResponseItemAttributes {
 
 @JsonSerializable()
 class CourseNewsResponseItemRelationships {
-
   CourseNewsResponseItemRelationships({required this.author});
 
   factory CourseNewsResponseItemRelationships.fromJson(
-          Map<String, dynamic> json,) =>
+    Map<String, dynamic> json,
+  ) =>
       _$CourseNewsResponseItemRelationshipsFromJson(json);
   final CourseNewsResponseItemRelationshipAuthor author;
 }
 
 @JsonSerializable()
 class CourseNewsResponseItemRelationshipAuthor {
-
   CourseNewsResponseItemRelationshipAuthor({required this.data});
 
   factory CourseNewsResponseItemRelationshipAuthor.fromJson(
-          Map<String, dynamic> json,) =>
+    Map<String, dynamic> json,
+  ) =>
       _$CourseNewsResponseItemRelationshipAuthorFromJson(json);
   final CourseNewsResponseItemRelationshipAuthorData data;
 }
 
 @JsonSerializable()
 class CourseNewsResponseItemRelationshipAuthorData {
-
   CourseNewsResponseItemRelationshipAuthorData({
     required this.type,
     required this.id,
   });
 
   factory CourseNewsResponseItemRelationshipAuthorData.fromJson(
-          Map<String, dynamic> json,) =>
+    Map<String, dynamic> json,
+  ) =>
       _$CourseNewsResponseItemRelationshipAuthorDataFromJson(json);
   final String type;
   final String id;

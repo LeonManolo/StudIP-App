@@ -12,15 +12,12 @@ class CourseEventListResponse
       _$CourseEventListResponseFromJson(json);
 
   @override
-  @JsonKey(includeFromJson: false)
   int get limit => meta.page.limit;
 
   @override
-  @JsonKey(includeFromJson: false)
   int get offset => meta.page.offset;
 
   @override
-  @JsonKey(includeFromJson: false)
   int get total => meta.page.total;
 
   @override

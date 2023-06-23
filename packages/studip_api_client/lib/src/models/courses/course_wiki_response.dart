@@ -15,27 +15,22 @@ class CourseWikiPageListResponse
   final List<CourseWikiPageResponseItem> wikiPages;
 
   @override
-  @JsonKey(includeFromJson: false)
   int get offset => meta.page.offset;
 
   @override
-  @JsonKey(includeFromJson: false)
   int get limit => meta.page.limit;
 
   @override
-  @JsonKey(includeFromJson: false)
   int get total => meta.page.total;
 
   final ResponseMeta meta;
 
   @override
-  @JsonKey(includeFromJson: false)
   List<CourseWikiPageResponseItem> get items => wikiPages;
 }
 
 @JsonSerializable()
 class CourseWikiPageResponseItem {
-
   CourseWikiPageResponseItem({
     required this.id,
     required this.attributes,
@@ -53,7 +48,6 @@ class CourseWikiPageResponseItem {
 
 @JsonSerializable()
 class CourseWikiPageResponseItemAttributes {
-
   CourseWikiPageResponseItemAttributes({
     required this.title,
     required this.content,
@@ -61,7 +55,8 @@ class CourseWikiPageResponseItemAttributes {
   });
 
   factory CourseWikiPageResponseItemAttributes.fromJson(
-          Map<String, dynamic> json,) =>
+    Map<String, dynamic> json,
+  ) =>
       _$CourseWikiPageResponseItemAttributesFromJson(json);
   @JsonKey(name: 'keyword')
   final String title;
@@ -74,34 +69,36 @@ class CourseWikiPageResponseItemAttributes {
 
 @JsonSerializable()
 class CourseWikiPageResponseItemRelationships {
-
   CourseWikiPageResponseItemRelationships({required this.author});
 
   factory CourseWikiPageResponseItemRelationships.fromJson(
-          Map<String, dynamic> json,) =>
+    Map<String, dynamic> json,
+  ) =>
       _$CourseWikiPageResponseItemRelationshipsFromJson(json);
   final CourseWikiPageResponseItemRelationshipAuthor author;
 }
 
 @JsonSerializable()
 class CourseWikiPageResponseItemRelationshipAuthor {
-
   CourseWikiPageResponseItemRelationshipAuthor({required this.data});
 
   factory CourseWikiPageResponseItemRelationshipAuthor.fromJson(
-          Map<String, dynamic> json,) =>
+    Map<String, dynamic> json,
+  ) =>
       _$CourseWikiPageResponseItemRelationshipAuthorFromJson(json);
   final CourseWikiPageResponseItemRelationshipAuthorData data;
 }
 
 @JsonSerializable()
 class CourseWikiPageResponseItemRelationshipAuthorData {
-
-  CourseWikiPageResponseItemRelationshipAuthorData(
-      {required this.type, required this.id,});
+  CourseWikiPageResponseItemRelationshipAuthorData({
+    required this.type,
+    required this.id,
+  });
 
   factory CourseWikiPageResponseItemRelationshipAuthorData.fromJson(
-          Map<String, dynamic> json,) =>
+    Map<String, dynamic> json,
+  ) =>
       _$CourseWikiPageResponseItemRelationshipAuthorDataFromJson(json);
   final String type;
   final String id;
