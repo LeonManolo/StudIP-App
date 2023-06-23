@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:logger/logger.dart';
 import 'package:studip_api_client/src/core/interfaces/interfaces.dart';
 import 'package:studip_api_client/src/core/studip_api_core.dart';
 import 'package:studip_api_client/studip_api_client.dart';
@@ -40,6 +41,7 @@ class StudIPActivityClientImpl implements StudIPActivityClient {
       activityType: ActivityType.file,
       limit: limit,
     );
+
     return FileActivityListResponse.fromJson(response);
   }
 
@@ -53,7 +55,6 @@ class StudIPActivityClientImpl implements StudIPActivityClient {
       activityType: ActivityType.news,
       limit: limit,
     );
-    NewsActivityListResponse.fromJson(response);
     return NewsActivityListResponse.fromJson(response);
   }
 

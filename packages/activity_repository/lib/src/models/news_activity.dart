@@ -1,31 +1,32 @@
 import 'package:courses_repository/courses_repository.dart';
-import 'package:studip_api_client/studip_api_client.dart' as studip_api_client;
+import 'package:studip_api_client/studip_api_client.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 class NewsActivity {
   NewsActivity({
-    required this.createDate,
+    required this.publicationStart,
     required this.title,
     required this.publicationEnd,
     required this.course,
     required this.username,
   });
   factory NewsActivity.fromNewsActivityResponse({
-    required studip_api_client.NewsActivityResponse newsActivityResponse,
+    required CourseNewsResponseItem newsResponseItem,
+    required UserResponseItem userResponseItem,
+    required CourseResponseItem courseResponseItem,
   }) {
     return NewsActivity(
-      createDate: DateTime.parse(newsActivityResponse.createDate).toLocal(),
-      title: newsActivityResponse.title,
-      username: newsActivityResponse.username,
-      publicationEnd: newsActivityResponse.publicationEnd,
-      course: Course.fromCourseResponse(
-        studip_api_client.CourseResponseItem.fromJson(
-          newsActivityResponse.course,
-        ),
-      ),
+      publicationStart:
+          DateTime.parse(newsResponseItem.attributes.publicationStart)
+              .toLocal(),
+      title: newsResponseItem.attributes.title,
+      username: userResponseItem.attributes.username,
+      publicationEnd:
+          DateTime.parse(newsResponseItem.attributes.publicationEnd).toLocal(),
+      course: Course.fromCourseResponse(courseResponseItem),
     );
   }
-  final DateTime createDate;
+  final DateTime publicationStart;
   final String title;
   final DateTime publicationEnd;
   Course course;
@@ -33,6 +34,6 @@ class NewsActivity {
 
   String getTimeAgo() {
     timeago.setLocaleMessages('de', timeago.DeMessages());
-    return timeago.format(createDate, locale: 'de');
+    return timeago.format(publicationStart, locale: 'de');
   }
 }
