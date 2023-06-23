@@ -5,15 +5,15 @@ class CalendarWeekData {
   CalendarWeekData({required this.data});
 
   factory CalendarWeekData.fromScheduleResponse({
-    required ScheduleResponse scheduleResponse,
+    required ScheduleListResponse scheduleResponse,
     required DateTime currentDateTime,
   }) {
     final Map<Weekday, Map<String, List<CalendarEntryData>>> data = {};
 
     for (final scheduleData in scheduleResponse.scheduleEntries) {
-      final weekdayNum = scheduleData.attributes?.weekday;
+      final weekdayNum = scheduleData.attributes.weekday;
 
-      if (weekdayNum != null && weekdayNum > 0 && weekdayNum < 8) {
+      if (weekdayNum > 0 && weekdayNum < 8) {
         final timeframe = _toCalenderTimeframe(scheduleData.attributes);
 
         if (timeframe != null) {
@@ -35,9 +35,9 @@ class CalendarWeekData {
           final entryData = CalendarEntryData(
             id: scheduleData.id,
             type: scheduleData.type,
-            locations: scheduleData.attributes?.locations ?? [],
-            title: scheduleData.attributes?.title,
-            description: scheduleData.attributes?.description,
+            locations: scheduleData.attributes.locations ?? [],
+            title: scheduleData.attributes.title,
+            description: scheduleData.attributes.description,
             weekday: weekday,
             timeframe: timeframe,
           );
@@ -61,10 +61,10 @@ class CalendarWeekData {
   final Map<Weekday, Map<String, List<CalendarEntryData>>> data;
 
   static bool _shouldIncludeScheduleEntry({
-    required ScheduleEntryData scheduleEntryData,
+    required ScheduleResponseItem scheduleEntryData,
     required DateTime scheduleEntryStart,
   }) {
-    final recurrenceInfo = scheduleEntryData.attributes?.recurrence;
+    final recurrenceInfo = scheduleEntryData.attributes.recurrence;
     if (recurrenceInfo == null) return true;
 
     final firstOccurrence =
@@ -74,7 +74,7 @@ class CalendarWeekData {
 
     final List<DateTime> allOccurrences = [];
     final List<DateTime> excludedDates =
-        recurrenceInfo.excludedDates.map(DateTime.parse).toList();
+        recurrenceInfo.excludedDates?.map(DateTime.parse).toList() ?? [];
 
     var currentOccurrence = firstOccurrence;
     while (currentOccurrence.isBefore(lastOccurrence) ||
@@ -90,14 +90,15 @@ class CalendarWeekData {
     return allOccurrences.contains(scheduleEntryStart);
   }
 
-  static CalendarTimeframe? _toCalenderTimeframe(Attributes? attributes) {
-    final start = attributes?.start?.split(':');
-    final end = attributes?.end?.split(':');
+  static CalendarTimeframe? _toCalenderTimeframe(
+      ScheduleResponseItemAttributes attributes) {
+    final start = attributes.start.split(':');
+    final end = attributes.end.split(':');
 
-    if (start?.length == 2 && end?.length == 2) {
-      final startHours = num.tryParse(start![0])?.toInt();
+    if (start.length == 2 && end.length == 2) {
+      final startHours = num.tryParse(start[0])?.toInt();
       final startMinutes = num.tryParse(start[1])?.toInt();
-      final endHours = num.tryParse(end![0])?.toInt();
+      final endHours = num.tryParse(end[0])?.toInt();
       final endMinutes = num.tryParse(end[1])?.toInt();
 
       if (startHours != null &&

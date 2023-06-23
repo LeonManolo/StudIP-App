@@ -1,11 +1,10 @@
-
 import 'package:studip_api_client/src/core/interfaces/interfaces.dart';
 import 'package:studip_api_client/src/core/studip_api_core.dart';
 import 'package:studip_api_client/src/extensions/extensions.dart';
 import 'package:studip_api_client/src/models/models.dart';
 
 abstract interface class StudIPCalendarClient {
-  Future<ScheduleResponse> getSchedule(
+  Future<ScheduleListResponse> getSchedule(
       {required String userId, DateTime? semesterStart});
 }
 
@@ -16,7 +15,7 @@ class StudIPCalendarClientImpl implements StudIPCalendarClient {
       : _core = core ?? StudIpAPICore.shared;
 
   @override
-  Future<ScheduleResponse> getSchedule(
+  Future<ScheduleListResponse> getSchedule(
       {required String userId, DateTime? semesterStart}) async {
     int semesterStartInMillisecondsSinceEpoch;
     if (semesterStart == null) {
@@ -34,6 +33,6 @@ class StudIPCalendarClientImpl implements StudIPCalendarClient {
     final body = response.json();
     response.throwIfInvalidHttpStatus(body: body);
 
-    return ScheduleResponse.fromJson(body);
+    return ScheduleListResponse.fromJson(body);
   }
 }
