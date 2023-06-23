@@ -10,7 +10,6 @@ abstract interface class StudIPAuthenticationClient {
 }
 
 class StudIPAuthenticationClientImpl implements StudIPAuthenticationClient {
-
   StudIPAuthenticationClientImpl({StudIpAuthenticationCore? core})
       : _core = core ?? StudIpAPICore.shared;
   final StudIpAuthenticationCore _core;
@@ -22,11 +21,11 @@ class StudIPAuthenticationClientImpl implements StudIPAuthenticationClient {
 
   @override
   Future<String?> restoreUser() async {
-    return await _core.restoreUser();
+    return _core.restoreUser();
   }
 
   @override
   Future<String?> loginWithStudIp() async {
-    return await _core.loginWithStudIp();
+    return _core.loginWithStudIp();
   }
 }

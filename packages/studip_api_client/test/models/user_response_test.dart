@@ -1,4 +1,5 @@
 // ignore_for_file: prefer_const_constructors
+// ignore_for_file: avoid_dynamic_calls
 
 import 'package:studip_api_client/src/models/models.dart';
 import 'package:test/test.dart';
@@ -30,32 +31,58 @@ void main() {
 
       final userResponse = UserResponse.fromJson(rawUserResponse);
       final attributes = userResponse.userResponseItem.attributes;
-      expect(rawUserResponse['data']['id'] as String,
-          userResponse.userResponseItem.id,);
-      expect(rawUserResponse['data']['attributes']['username'] as String,
-          attributes.username,);
-      expect(rawUserResponse['data']!['attributes']['formatted-name'] as String,
-          attributes.formattedName,);
-      expect(rawUserResponse['data']['attributes']['family-name'] as String,
-          attributes.familyName,);
-      expect(rawUserResponse['data']['attributes']['given-name'] as String,
-          attributes.givenName,);
-      expect(rawUserResponse['data']['attributes']['permission'] as String,
-          attributes.permission,);
-      expect(rawUserResponse['data']['attributes']['email'] as String,
-          attributes.email,);
-      expect(rawUserResponse['data']['attributes']['phone'] as String?,
-          attributes.phone,);
-      expect(rawUserResponse['data']['attributes']['homepage'] as String?,
-          attributes.homepage,);
-      expect(rawUserResponse['data']['attributes']['address'] as String?,
-          attributes.address,);
-      expect(rawUserResponse['data']['meta']['avatar']['medium'] as String,
-          userResponse.userResponseItem.meta.avatar.mediumAvatarUrl,);
-      expect(rawUserResponse['data']['attributes']['name-prefix'] as String,
-          attributes.namePrefix,);
-      expect(rawUserResponse['data']['attributes']['name-suffix'] as String,
-          attributes.nameSuffix,);
+      expect(
+        rawUserResponse['data']['id'] as String,
+        userResponse.userResponseItem.id,
+      );
+      expect(
+        rawUserResponse['data']['attributes']['username'] as String,
+        attributes.username,
+      );
+      expect(
+        rawUserResponse['data']!['attributes']['formatted-name'] as String,
+        attributes.formattedName,
+      );
+      expect(
+        rawUserResponse['data']['attributes']['family-name'] as String,
+        attributes.familyName,
+      );
+      expect(
+        rawUserResponse['data']['attributes']['given-name'] as String,
+        attributes.givenName,
+      );
+      expect(
+        rawUserResponse['data']['attributes']['permission'] as String,
+        attributes.permission,
+      );
+      expect(
+        rawUserResponse['data']['attributes']['email'] as String,
+        attributes.email,
+      );
+      expect(
+        rawUserResponse['data']['attributes']['phone'] as String?,
+        attributes.phone,
+      );
+      expect(
+        rawUserResponse['data']['attributes']['homepage'] as String?,
+        attributes.homepage,
+      );
+      expect(
+        rawUserResponse['data']['attributes']['address'] as String?,
+        attributes.address,
+      );
+      expect(
+        rawUserResponse['data']['meta']['avatar']['medium'] as String,
+        userResponse.userResponseItem.meta.avatar.mediumAvatarUrl,
+      );
+      expect(
+        rawUserResponse['data']['attributes']['name-prefix'] as String,
+        attributes.namePrefix,
+      );
+      expect(
+        rawUserResponse['data']['attributes']['name-suffix'] as String,
+        attributes.nameSuffix,
+      );
     });
   });
 }

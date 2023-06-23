@@ -44,7 +44,7 @@ class StudIpAPICore
     final uri = Uri.parse('$_baseUrl/$_apiBaseUrl/$endpoint')
         .replace(queryParameters: queryParameters);
 
-    return await _oauth2Helper.get(
+    return _oauth2Helper.get(
       uri.toString(),
       headers: {
         HttpHeaders.contentTypeHeader: ContentType.json.value,
@@ -61,7 +61,7 @@ class StudIpAPICore
     final uri = Uri.parse('$_baseUrl/$_apiBaseUrl/$endpoint')
         .replace(queryParameters: queryParameters);
 
-    return await _oauth2Helper.delete(
+    return _oauth2Helper.delete(
       uri.toString(),
       headers: {
         HttpHeaders.contentTypeHeader: ContentType.json.value,
@@ -78,7 +78,7 @@ class StudIpAPICore
   }) async {
     final uri = Uri.parse('$_baseUrl/$_apiBaseUrl/$endpoint');
 
-    return await _oauth2Helper.patch(
+    return _oauth2Helper.patch(
       uri.toString(),
       headers: {
         HttpHeaders.contentTypeHeader: 'application/vnd.api+json',
@@ -96,7 +96,7 @@ class StudIpAPICore
   }) async {
     final uri = Uri.parse('$_baseUrl/$_apiBaseUrl/$endpoint');
 
-    return await _oauth2Helper.post(
+    return _oauth2Helper.post(
       uri.toString(),
       headers: {
         HttpHeaders.contentTypeHeader: 'application/vnd.api+json',
@@ -169,7 +169,7 @@ class StudIpAPICore
 
       final Iterable<Future<Response<dynamic>>> fileUploadPostFutures =
           formDataElements.map(
-        (formData) async => await _dio.post(
+        (formData) async => _dio.post(
           '$_baseUrl/$_apiBaseUrl/folders/$parentFolderId/file-refs',
           data: formData,
           options: Options(
@@ -274,7 +274,7 @@ class StudIpAPICore
   Future<String?> restoreUser() async {
     if ((await _oauth2Helper.getTokenFromStorage()) != null) {
       // Only if a token is present a automatic refresh should be tried (if needed)
-      return await loginWithStudIp();
+      return loginWithStudIp();
     } else {
       return null;
     }

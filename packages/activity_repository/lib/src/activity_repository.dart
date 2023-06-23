@@ -23,8 +23,9 @@ class ActivityRepository {
           .activityResponseItems
           .map((fileAcitvityResponseItem) {
         final fileResponseItem = includedData.fileResponseItems.firstWhere(
-            (fileResponseItem) =>
-                fileResponseItem.id == fileAcitvityResponseItem.objectId);
+          (fileResponseItem) =>
+              fileResponseItem.id == fileAcitvityResponseItem.objectId,
+        );
 
         final userResponseItem = includedData.userResponseItems.firstWhere(
           (userResponseItem) =>

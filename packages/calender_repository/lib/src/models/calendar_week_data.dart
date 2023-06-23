@@ -91,7 +91,8 @@ class CalendarWeekData {
   }
 
   static CalendarTimeframe? _toCalenderTimeframe(
-      ScheduleResponseItemAttributes attributes) {
+    ScheduleResponseItemAttributes attributes,
+  ) {
     final start = attributes.start.split(':');
     final end = attributes.end.split(':');
 

@@ -147,15 +147,18 @@ void main() {
         ),
       ).thenAnswer((_) async {
         return CourseNewsListResponse(
-            meta: ResponseMeta(
-              page: ResponsePage(
-                offset: 0,
-                limit: 5,
-                total: 3,
-              ),
+          meta: ResponseMeta(
+            page: ResponsePage(
+              offset: 0,
+              limit: 5,
+              total: 3,
             ),
-            items: List.generate(
-                3, (index) => generateCoursNewsResponseItem(id: index)));
+          ),
+          items: List.generate(
+            3,
+            (index) => generateCoursNewsResponseItem(id: index),
+          ),
+        );
       });
 
       final courseNewsResponse =
