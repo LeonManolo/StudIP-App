@@ -9,14 +9,19 @@ stages:
 unit-tests:
   stage: UnitTests
   script:
-    - flutter test test
-    - cd packages
     - |
+      flutter pub get
+      cd packages/studip_api_client
+      dart run build_runner build
+      cd ../..
+
+      flutter test test
+      cd packages
+
       for dir in */; do
         if [ -f "$dir/pubspec.yaml" ] && grep -q "flutter_test" "$dir/pubspec.yaml"; then
           echo "Test $dir"
           cd "$dir"
-          flutter pub get
           flutter test test
           cd ..
         fi

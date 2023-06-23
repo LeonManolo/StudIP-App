@@ -72,7 +72,7 @@ void main() {
           userId: 'f6e5879dd84fe0f21eae9f0627d4f807',
         ),
       ).thenAnswer((_) async {
-        return ScheduleResponse.fromJson(
+        return ScheduleListResponse.fromJson(
           jsonDecode(rawScheduleResponse) as Map<String, dynamic>,
         );
       });
@@ -98,7 +98,7 @@ void main() {
           userId: 'f6e5879dd84fe0f21eae9f0627d4f807',
         ),
       ).thenAnswer((_) async {
-        return ScheduleResponse.fromJson(
+        return ScheduleListResponse.fromJson(
           jsonDecode(rawScheduleResponse) as Map<String, dynamic>,
         );
       });
@@ -120,7 +120,7 @@ void main() {
           userId: 'f6e5879dd84fe0f21eae9f0627d4f807',
         ),
       ).thenAnswer((_) async {
-        return ScheduleResponse.fromJson(
+        return ScheduleListResponse.fromJson(
           jsonDecode(rawScheduleResponse) as Map<String, dynamic>,
         );
       });

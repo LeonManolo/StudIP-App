@@ -23,54 +23,51 @@ void main() {
   });
 
   group('getCourseEvents', () {
-    CourseEventResponse generateCourseEventResponse({required int id}) {
-      return CourseEventResponse(
-        id: '$id',
-        title: 'title $id',
-        description: 'description $id',
-        start: '2023-04-13T11:30:00+02:00',
-        end: '2023-04-13T11:30:00+02:00',
-        categories: [],
+    CourseEventResponseItem generateCourseEventResponseItems({
+      required int id,
+    }) {
+      return CourseEventResponseItem(
+        '$id',
+        CourseEventResponseItemAttributes(
+          'title $id',
+          'description $id',
+          '2023-04-13T11:30:00+02:00',
+          '2023-04-13T11:30:00+02:00',
+          [],
+          '',
+        ),
       );
     }
+
+    final List<CourseEventResponseItem> events = List.generate(
+      50,
+      (index) => generateCourseEventResponseItems(id: index),
+    );
 
     test('handle multi page request', () async {
       when(
         () => mockedCoursesClient.getCourseEvents(
           courseId: '1',
-          offset: 0,
-          limit: 30,
+          offset: any(named: 'offset'),
+          limit: any(named: 'limit'),
         ),
-      ).thenAnswer((_) async {
-        return CourseEventListResponse(
-          events: List.generate(
-            30,
-            (index) => generateCourseEventResponse(id: index),
-          ),
-          offset: 0,
+      ).thenAnswer((invocation) async {
+        final int passedOffset =
+            invocation.namedArguments[const Symbol('offset')] as int;
+        final ResponsePage page = ResponsePage(
+          offset: passedOffset,
           limit: 30,
           total: 50,
         );
-      });
-      when(
-        () => mockedCoursesClient.getCourseEvents(
-          courseId: '1',
-          offset: 30,
-          limit: 30,
-        ),
-      ).thenAnswer((_) async {
+
         return CourseEventListResponse(
-          events: List.generate(
-            20,
-            (index) => generateCourseEventResponse(id: 30 + index),
-          ),
-          offset: 30,
-          limit: 30,
-          total: 50,
+          ResponseMeta(page: page),
+          (passedOffset == 0 ? events.getRange(0, 30) : events.getRange(30, 50))
+              .toList(),
         );
       });
 
-      final List<StudIPCourseEvent> courseEvents =
+      final List<StudIPCourseEventItem> courseEvents =
           await sut.getCourseEvents(courseId: '1');
 
       expect(
@@ -81,32 +78,54 @@ void main() {
   });
 
   group('getCourseNews', () {
-    CourseNewsResponse generateCoursNewsResponse({required int id}) {
-      return CourseNewsResponse(
+    CourseNewsResponseItem generateCoursNewsResponseItem({
+      required int id,
+    }) {
+      return CourseNewsResponseItem(
         id: '$id',
-        title: 'title $id',
-        content: 'content $id',
-        publicationStart: '2023-04-13T11:30:00+02:00',
-        publicationEnd: '2023-04-20T11:30:00+02:00',
-        authorId: '$id',
+        attributes: CourseNewsResponseItemAttributes(
+          title: 'title $id',
+          content: 'content $id',
+          publicationStart: '2023-04-13T11:30:00+02:00',
+          publicationEnd: '2023-04-20T11:30:00+02:00',
+        ),
+        relationships: CourseNewsResponseItemRelationships(
+          author: CourseNewsResponseItemRelationshipAuthor(
+            data: CourseNewsResponseItemRelationshipAuthorData(
+              type: 'user',
+              id: '$id',
+            ),
+          ),
+        ),
       );
     }
 
     UserResponse generateUserResponse({required String id}) {
       return UserResponse(
-        id: 'userId_$id',
-        username: 'username_$id',
-        formattedName: 'formattedName_$id',
-        familyName: '',
-        givenName: 'givenName',
-        permission: 'author',
-        email: '',
-        phone: '',
-        homepage: null,
-        address: null,
-        avatarUrl: 'avatarUrl_$id',
-        namePrefix: '',
-        nameSuffix: '',
+        userResponseItem: UserResponseItem(
+          id: 'userId_$id',
+          attributes: UserResponseItemAttributes(
+            username: 'username_$id',
+            formattedName: 'formattedName_$id',
+            familyName: '',
+            givenName: 'givenName',
+            permission: 'author',
+            email: '',
+            phone: '',
+            homepage: null,
+            address: null,
+            namePrefix: '',
+            nameSuffix: '',
+          ),
+          meta: UserResponseItemMeta(
+            avatar: UserResponseItemMetaAvatar(
+              smallAvatarUrl: 'avatarUrl_small_$id',
+              mediumAvatarUrl: 'avatarUrl_medium_$id',
+              normalAvatarUrl: 'avatarUrl_normal_$id',
+              originalAvatarUrl: 'avatarUrl_original_$id',
+            ),
+          ),
+        ),
       );
     }
 
@@ -122,16 +141,23 @@ void main() {
       );
       when(
         () => mockedCoursesClient.getCourseNews(
-            courseId: '1', limit: 5, offset: 0,),
+          courseId: '1',
+          limit: 5,
+          offset: 0,
+        ),
       ).thenAnswer((_) async {
         return CourseNewsListResponse(
-          news: List.generate(
-            3,
-            (index) => generateCoursNewsResponse(id: index),
+          meta: ResponseMeta(
+            page: ResponsePage(
+              offset: 0,
+              limit: 5,
+              total: 3,
+            ),
           ),
-          offset: 0,
-          limit: 5,
-          total: 3,
+          items: List.generate(
+            3,
+            (index) => generateCoursNewsResponseItem(id: index),
+          ),
         );
       });
 
@@ -142,7 +168,7 @@ void main() {
         final courseNews = courseNewsResponse.news.elementAt(i);
 
         expect(courseNews.title, 'title $i');
-        expect(courseNews.author.avatarUrl, 'avatarUrl_$i');
+        expect(courseNews.author.avatarUrl, 'avatarUrl_medium_$i');
         expect(courseNews.author.formattedName, 'formattedName_$i');
         expect(courseNews.author.id, 'userId_$i');
       }
@@ -150,30 +176,45 @@ void main() {
   });
 
   group('getCoursesGroupedBySemester', () {
-    CourseResponse generateCourseResponse({
+    CourseResponseItem generateCourseResponse({
       required int courseId,
       required int semesterId,
     }) {
-      return CourseResponse(
+      return CourseResponseItem(
         id: '$courseId',
-        detailsResponse: CourseDetailsResponse(title: 'details'),
-        semesterId: '$semesterId',
+        attributes: CourseResponseItemAttributes(title: 'details'),
+        relationships: CourseResponseItemRelationships(
+          startSemester: CourseResponseItemRelationshipsSemester(
+            data: CourseResponseItemRelationshipsSemesterData(
+              id: '$semesterId',
+              type: 'semesters',
+            ),
+          ),
+          endSemester: CourseResponseItemRelationshipsSemester(
+            data: CourseResponseItemRelationshipsSemesterData(
+              id: '-1', // end semester is not relevant
+              type: 'semesters',
+            ),
+          ),
+        ),
       );
     }
 
-    SemesterResponse generateSemesterResponse({
+    SemesterResponseItem generateSemesterResponse({
       required int id,
       required String semesterStart,
       required String semesterEnd,
     }) {
-      return SemesterResponse(
+      return SemesterResponseItem(
         id: '$id',
-        title: 'title $id',
-        description: 'description $id',
-        start: semesterStart,
-        end: semesterEnd,
-        startOfLectures: '2022-05-13T11:30:00+02:00',
-        endOfLectures: '2023-02-20T11:30:00+02:00',
+        attributes: SemesterResponseItemAttributes(
+          title: 'title $id',
+          description: 'description $id',
+          start: semesterStart,
+          end: semesterEnd,
+          startOfLectures: '2022-05-13T11:30:00+02:00',
+          endOfLectures: '2023-02-20T11:30:00+02:00',
+        ),
       );
     }
 
@@ -189,30 +230,35 @@ void main() {
       {'start': '2020-12-30T11:30:00+02:00', 'end': '2021-06-13T11:30:00+02:00'}
     ];
 
-    final List<CourseResponse> courses = List.generate(
+    final List<CourseResponseItem> courses = List.generate(
       35,
       (index) => generateCourseResponse(courseId: index, semesterId: index % 3),
     );
 
     test('courses which belong to same semester are grouped together',
         () async {
-      when(() =>
-              mockedCoursesClient.getCourses(userId: '1', offset: 0, limit: 30),)
-          .thenAnswer((_) async {
+      when(
+        () => mockedCoursesClient.getCourses(
+          userId: '1',
+          offset: any(named: 'offset'),
+          limit: any(named: 'limit'),
+        ),
+      ).thenAnswer((invocation) async {
+        final int passedOffset =
+            invocation.namedArguments[const Symbol('offset')] as int;
+
         return CourseListResponse(
-          courses: courses.getRange(0, 30).toList(),
-          offset: 0,
-          limit: 30,
-          total: 35,
-        );
-      });
-      when(() => mockedCoursesClient.getCourses(
-          userId: '1', offset: 30, limit: 30,),).thenAnswer((_) async {
-        return CourseListResponse(
-          courses: courses.getRange(30, 35).toList(),
-          offset: 30,
-          limit: 30,
-          total: 35,
+          courses: (passedOffset == 0
+                  ? courses.getRange(0, 30)
+                  : courses.getRange(30, 35))
+              .toList(),
+          meta: ResponseMeta(
+            page: ResponsePage(
+              offset: passedOffset,
+              limit: 30,
+              total: 35,
+            ),
+          ),
         );
       });
       when(
@@ -223,10 +269,12 @@ void main() {
         final invokedIndex = int.parse(
           invocation.namedArguments[const Symbol('semesterId')] as String,
         );
-        return generateSemesterResponse(
-          id: invokedIndex,
-          semesterStart: semesterRawDates[invokedIndex]['start'] ?? '',
-          semesterEnd: semesterRawDates[invokedIndex]['end'] ?? '',
+        return SemesterResponse(
+          semester: generateSemesterResponse(
+            id: invokedIndex,
+            semesterStart: semesterRawDates[invokedIndex]['start'] ?? '',
+            semesterEnd: semesterRawDates[invokedIndex]['end'] ?? '',
+          ),
         );
       });
 
@@ -239,7 +287,7 @@ void main() {
       expect(
         semesters[0].courses.map((course) => course.id),
         courses
-            .where((course) => course.semesterId == '2')
+            .where((course) => course.startSemesterId == '2')
             .map((course) => course.id),
       );
 
@@ -247,7 +295,7 @@ void main() {
       expect(
         semesters[1].courses.map((course) => course.id),
         courses
-            .where((course) => course.semesterId == '1')
+            .where((course) => course.startSemesterId == '1')
             .map((course) => course.id),
       );
 
@@ -255,7 +303,7 @@ void main() {
       expect(
         semesters[2].courses.map((course) => course.id),
         courses
-            .where((course) => course.semesterId == '0')
+            .where((course) => course.startSemesterId == '0')
             .map((course) => course.id),
       );
     });

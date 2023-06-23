@@ -6,18 +6,14 @@ import 'package:user_repository/src/user_repository.dart';
 
 class MockStudIPUserClient extends Mock implements StudIPUserClient {}
 
-class MockUserResponse extends Mock implements UserResponse {}
-
-class MockUserListResponse extends Mock implements UserListResponse {}
-
 void main() {
   group('UserRepository', () {
     late MockStudIPUserClient studIPUserClient;
-    late UserRepository userRepository;
+    late UserRepository sut;
 
     setUp(() {
       studIPUserClient = MockStudIPUserClient();
-      userRepository = UserRepository(
+      sut = UserRepository(
         studIpApiClient: studIPUserClient,
       );
     });
@@ -27,7 +23,7 @@ void main() {
         final exception = Exception('oops');
         when(() => studIPUserClient.getCurrentUser()).thenThrow(exception);
         expect(
-          () async => userRepository.getCurrentUser(),
+          () async => sut.getCurrentUser(),
           throwsA(exception),
         );
       });
@@ -38,20 +34,23 @@ void main() {
           () => studIPUserClient.getCurrentUser(),
         ).thenThrow(exception);
         expect(
-          () async => userRepository.getCurrentUser(),
+          () async => sut.getCurrentUser(),
           throwsA(exception),
         );
       });
 
       test('returns correct user on success', () async {
-        final userResponse = generateUserResponse(id: '123');
+        final userResponse =
+            UserResponse(userResponseItem: generateUserResponseItem(id: '123'));
         when(
           () => studIPUserClient.getCurrentUser(),
         ).thenAnswer((_) async => userResponse);
-        final actual = await userRepository.getCurrentUser();
+
+        final actual = await sut.getCurrentUser();
+
         expect(
-          actual.id,
-          generateUserResponse(id: '123').id,
+          actual.userResponseItem.id,
+          generateUserResponseItem(id: '123').id,
         );
       });
     });
@@ -69,46 +68,54 @@ void main() {
         final exception = Exception('oops');
         when(() => studIPUserClient.getUsers(any())).thenThrow(exception);
         expect(
-          () async => userRepository.getUsers(userSearchKeyword),
+          () async => sut.getUsers(userSearchKeyword),
           throwsA(exception),
         );
       });
 
       test('returns correct users on success', () async {
-        final userResponse = MockUserListResponse();
-        when(() => userResponse.userResponses).thenReturn([
-          generateUserResponse(id: '1'),
-          generateUserResponse(id: '2'),
-        ]);
-        when(() => studIPUserClient.getUsers(any())).thenAnswer(
-          (_) async => userResponse,
+        final userListResponse = UserListResponse(
+          userResponseItems: [
+            generateUserResponseItem(id: '1'),
+            generateUserResponseItem(id: '2'),
+          ],
         );
-        final actual = await userRepository.getUsers('');
+        when(() => studIPUserClient.getUsers(any())).thenAnswer(
+          (_) async => userListResponse,
+        );
+
+        final actual = await sut.getUsers('');
+
         expect(
-          actual.userResponses.map((user) => user.id).toSet(),
+          actual.userResponseItems.map((user) => user.id).toSet(),
           {'userId_1', 'userId_2'},
         );
       });
 
       test('returns correct users according to search', () async {
         final users = [
-          generateUserResponse(id: '1', username: 'hallo'),
-          generateUserResponse(id: '2', username: 'peter'),
-          generateUserResponse(id: '3', username: 'hamburg'),
+          generateUserResponseItem(id: '1', username: 'hallo'),
+          generateUserResponseItem(id: '2', username: 'peter'),
+          generateUserResponseItem(id: '3', username: 'hamburg'),
         ];
         when(() => studIPUserClient.getUsers(any()))
             .thenAnswer((invocation) async {
           final search = invocation.positionalArguments[0] as String;
           return UserListResponse(
-            userResponses: users
-                .where((user) =>
-                    user.username.toLowerCase().contains(search.toLowerCase()),)
+            userResponseItems: users
+                .where(
+                  (user) => user.attributes.username
+                      .toLowerCase()
+                      .contains(search.toLowerCase()),
+                )
                 .toList(),
           );
         });
-        final actual = await userRepository.getUsers('ha');
+
+        final actual = await sut.getUsers('ha');
+
         expect(
-          actual.userResponses.map((user) => user.id).toSet(),
+          actual.userResponseItems.map((user) => user.id).toSet(),
           {users[0].id, users[2].id},
         );
       });
@@ -116,7 +123,7 @@ void main() {
   });
 }
 
-UserResponse generateUserResponse({
+UserResponseItem generateUserResponseItem({
   required String id,
   String? username,
   String? formattedName,
@@ -131,19 +138,28 @@ UserResponse generateUserResponse({
   String? namePrefix,
   String? nameSuffix,
 }) {
-  return UserResponse(
+  return UserResponseItem(
     id: 'userId_$id',
-    username: username ?? 'username_$id',
-    formattedName: formattedName ?? 'formattedName_$id',
-    familyName: familyName ?? 'familyName_$id',
-    givenName: givenName ?? 'givenName_$id',
-    permission: permission ?? 'author_$id',
-    email: email ?? '$id@test.com',
-    phone: phone ?? '+123456789',
-    homepage: homepage ?? 'www.$id.com',
-    address: address ?? 'address_$id',
-    avatarUrl: avatarUrl ?? 'avatarUrl_$id',
-    namePrefix: nameSuffix ?? '',
-    nameSuffix: namePrefix ?? '',
+    attributes: UserResponseItemAttributes(
+      username: username ?? 'username_$id',
+      formattedName: formattedName ?? 'formattedName_$id',
+      familyName: familyName ?? 'familyName_$id',
+      givenName: givenName ?? 'givenName_$id',
+      permission: permission ?? 'author_$id',
+      email: email ?? '$id@test.com',
+      phone: phone ?? '+123456789',
+      homepage: homepage ?? 'www.$id.com',
+      address: address ?? 'address_$id',
+      namePrefix: nameSuffix ?? '',
+      nameSuffix: namePrefix ?? '',
+    ),
+    meta: UserResponseItemMeta(
+      avatar: UserResponseItemMetaAvatar(
+        smallAvatarUrl: avatarUrl ?? 'avatarUrl_small_$id',
+        mediumAvatarUrl: avatarUrl ?? 'avatarUrl_medium_$id',
+        normalAvatarUrl: avatarUrl ?? 'avatarUrl_normal_$id',
+        originalAvatarUrl: avatarUrl ?? 'avatarUrl_original_$id',
+      ),
+    ),
   );
 }

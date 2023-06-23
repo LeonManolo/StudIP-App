@@ -1,43 +1,33 @@
-class CourseParticipantsResponse {
-  final int offset;
-  final int limit;
-  final int total;
-  final List<CourseParticipantResponse> participants;
+import 'package:json_annotation/json_annotation.dart';
+import 'package:studip_api_client/studip_api_client.dart';
 
-  const CourseParticipantsResponse._({
-    required this.offset,
-    required this.limit,
-    required this.total,
-    required this.participants,
-  });
+part 'course_participants_response.g.dart';
 
-  factory CourseParticipantsResponse.fromJson(Map<String, dynamic> json) {
-    final int offset = json["meta"]["page"]["offset"];
-    final int limit = json["meta"]["page"]["limit"];
-    final int total = json["meta"]["page"]["total"];
-    final participants = (json["data"] as List)
-        .map((participant) => CourseParticipantResponse.fromJson(participant))
-        .toList();
+@JsonSerializable()
+class CourseParticipantsListResponse {
 
-    return CourseParticipantsResponse._(
-      offset: offset,
-      limit: limit,
-      total: total,
-      participants: participants,
-    );
-  }
+  CourseParticipantsListResponse(
+      {required this.meta, required this.participants,});
+  factory CourseParticipantsListResponse.fromJson(Map<String, dynamic> json) =>
+      _$CourseParticipantsListResponseFromJson(json);
+  final ResponseMeta meta;
+
+  @JsonKey(name: 'data')
+  final List<CourseParticipantsResponseItem> participants;
 }
 
-class CourseParticipantResponse {
+@JsonSerializable()
+class CourseParticipantsResponseItem {
+
+  const CourseParticipantsResponseItem({required this.type, required this.id});
+
+  factory CourseParticipantsResponseItem.fromJson(Map<String, dynamic> json) =>
+      _$CourseParticipantsResponseItemFromJson(json);
   final String type;
+
+  @JsonKey(fromJson: _idFromJson)
   final String id;
 
-  const CourseParticipantResponse._({required this.type, required this.id});
-
-  factory CourseParticipantResponse.fromJson(Map<String, dynamic> json) {
-    final String rawId = json["id"];
-    final String id = rawId.split("_").last;
-
-    return CourseParticipantResponse._(type: json["type"], id: id);
-  }
+  static String _idFromJson(String combinedCourseUserId) =>
+      combinedCourseUserId.split('_').last;
 }

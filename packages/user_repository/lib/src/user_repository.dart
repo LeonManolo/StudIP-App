@@ -30,4 +30,3 @@ class UserRepository {
     return _apiClient.getUsers(searchParams);
   }
 }
-

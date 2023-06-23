@@ -1,12 +1,11 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:local_notifications/src/models/local_notification.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
-import 'dart:io';
-
-import 'models/local_notification.dart';
 
 /// Provides local notification services using `FlutterLocalNotificationsPlugin`.
 final class LocalNotifications {
@@ -46,12 +45,12 @@ final class LocalNotifications {
       required String androidChannelDescription,
       bool requestIOSPermissions = false,
       bool requestAndroidPermissions = false,
-      String timezoneName = 'Europe/Berlin'}) async {
+      String timezoneName = 'Europe/Berlin',}) async {
     // Android initialization
     const initializationSettingsAndroid =
         AndroidInitializationSettings('@mipmap/ic_launcher');
 
-    _flutterLocalNotificationsPlugin
+    await _flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
             AndroidFlutterLocalNotificationsPlugin>()
         ?.requestPermission();
@@ -80,7 +79,7 @@ final class LocalNotifications {
 
     _androidChannelId = androidChannelId;
     _androidChannelName = androidChannelName;
-    AndroidNotificationChannel androidNotificationChannel =
+    final AndroidNotificationChannel androidNotificationChannel =
         AndroidNotificationChannel(
       _androidChannelId,
       _androidChannelName,
@@ -98,7 +97,7 @@ final class LocalNotifications {
   ///
   /// [iOS] is a boolean value that determines whether or not to request permissions on iOS. It defaults to `false`.
   static Future<void> requestPermissions(
-      {bool android = false, bool iOS = false}) async {
+      {bool android = false, bool iOS = false,}) async {
     if (android) {
       await _flutterLocalNotificationsPlugin
           .resolvePlatformSpecificImplementation<
@@ -163,7 +162,7 @@ final class LocalNotifications {
   static Future<List<LocalNotification>> getNotifications({
     String? topic,
   }) async {
-    var pendingNotificationRequests =
+    final pendingNotificationRequests =
         await _flutterLocalNotificationsPlugin.pendingNotificationRequests();
 
     final notifications = <LocalNotification>[];
@@ -191,11 +190,11 @@ final class LocalNotifications {
   static Future<void> cancelNotifications({String? topic}) async {
     if (topic != null) {
       final notifications = await getNotifications(topic: topic);
-      for (var notification in notifications) {
-        _flutterLocalNotificationsPlugin.cancel(notification.id);
+      for (final notification in notifications) {
+        await _flutterLocalNotificationsPlugin.cancel(notification.id);
       }
     } else {
-      _flutterLocalNotificationsPlugin.cancelAll();
+      await _flutterLocalNotificationsPlugin.cancelAll();
     }
   }
 
@@ -208,7 +207,7 @@ final class LocalNotifications {
       false => maxPendingAndroidNotifications,
     };
 
-    var pendingNotificationsCount = await _notificationCount();
+    final pendingNotificationsCount = await _notificationCount();
     final notificationsWithTopicCount =
         await _notificationCount(topic: excludingTopic);
     final totalNonTopicCount =
@@ -236,7 +235,7 @@ final class LocalNotifications {
     return NotificationDetails(
       android:
           AndroidNotificationDetails(_androidChannelId, _androidChannelName),
-      iOS: DarwinNotificationDetails(
+      iOS: const DarwinNotificationDetails(
         //subtitle: iOSSubtitle,
       ),
     );

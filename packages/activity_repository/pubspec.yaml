@@ -13,5 +13,8 @@ dependencies:
   timeago: ^3.4.0
   courses_repository:
     path: ../courses_repository
+
 dev_dependencies:
+  flutter_test:
+    sdk: flutter
   very_good_analysis: ^4.0.0+1

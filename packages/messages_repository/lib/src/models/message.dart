@@ -28,23 +28,27 @@ class Message {
     );
   }
 
-  factory Message.fromMessageResponse(MessageResponse response) {
+  factory Message.fromMessageResponseItem(
+    MessageResponseItem messageResponseItem,
+  ) {
+    final MessageResponseItemAttributes attributes =
+        messageResponseItem.attributes;
     return Message(
-      id: response.id,
-      subject: response.subject,
-      message: response.message,
+      id: messageResponseItem.id,
+      subject: attributes.subject,
+      message: attributes.message,
       sender: MessageUser(
-        id: response.senderId,
+        id: messageResponseItem.relationships.sender.data.id,
         username: '',
         firstName: '',
         formattedName: '',
         lastName: '',
         role: '',
       ),
-      recipients: response.recipientIds
+      recipients: messageResponseItem.relationships.recipients.dataItems
           .map(
-            (id) => MessageUser(
-              id: id,
+            (recipientDataItem) => MessageUser(
+              id: recipientDataItem.id,
               username: '',
               firstName: '',
               formattedName: '',
@@ -53,8 +57,8 @@ class Message {
             ),
           )
           .toList(),
-      mkdate: response.mkdate,
-      isRead: response.isRead,
+      mkdate: DateTime.parse(attributes.createdAt).toLocal(),
+      isRead: attributes.isRead,
     );
   }
   final String id;
