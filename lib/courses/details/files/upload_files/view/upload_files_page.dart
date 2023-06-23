@@ -56,7 +56,11 @@ class UploadFilesPage extends StatelessWidget {
                               state.filesToUpload.elementAt(index);
                           return ListTile(
                             title: Text(uploadFileModel.fileName),
-                            leading: const Icon(EvaIcons.fileOutline),
+                            leading: Icon(
+                              fileTypeToIcon(
+                                fileName: uploadFileModel.fileName,
+                              ),
+                            ),
                             trailing: IconButton(
                               icon: const Icon(
                                 EvaIcons.trash2Outline,

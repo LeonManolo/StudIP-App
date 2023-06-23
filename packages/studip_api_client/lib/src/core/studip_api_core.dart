@@ -190,10 +190,19 @@ class StudIpAPICore
       }
     } on UploadFilesCoreFailure {
       rethrow;
+    } on DioError catch (dioError) {
+      Logger().e(dioError);
+      if (dioError.response?.statusCode == 413) {
+        throw UploadFilesCoreFailure(
+          message:
+              'Mind. eine Datei ist zu groß und kann daher nicht hochgeladen werden.',
+        );
+      }
     } catch (err) {
       Logger().e(err);
       throw UploadFilesCoreFailure(
-        message: 'Beim Hochladen ist ein Fehler aufgetreten.',
+        message:
+            'Beim Hochladen ist ein Fehler aufgetreten. Es konnten nicht alle Dateien hochgeladen werden.',
       );
     }
   }
