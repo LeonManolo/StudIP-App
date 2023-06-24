@@ -73,7 +73,7 @@ void main() {
       ],
     );
 
-    /*  blocTest<CourseNewsBloc, CourseNewsState>(
+    blocTest<CourseNewsBloc, CourseNewsState>(
       'Did load news with error',
       setUp: () => when(
         () => mockedCourseRepository.getCourseNews(
@@ -81,7 +81,7 @@ void main() {
           limit: 15,
           offset: 0,
         ),
-      ).thenThrow('generic error message'),
+      ).thenThrow("test error message, couldn't load course news"),
       build: () => CourseNewsBloc(
         courseRepository: mockedCourseRepository,
         courseId: courseId,
@@ -95,7 +95,7 @@ void main() {
               'Beim Laden der Ankündigungen ist ein Fehler aufgetreten.',
         ),
       ],
-    ); */
+    );
   });
 
   group('CourseNewsReachedBottom', () {
