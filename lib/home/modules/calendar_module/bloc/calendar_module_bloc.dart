@@ -5,7 +5,7 @@ import 'package:studipadawan/home/modules/calendar_module/bloc/calendar_module_e
 import 'package:studipadawan/home/modules/calendar_module/bloc/calendar_module_state.dart';
 import 'package:studipadawan/home/modules/calendar_module/model/calendar_entry_preview.dart';
 
-const int previewLimit = 4;
+const int previewLimit = 5;
 const int weeksLimit = 3;
 
 class CalendarModuleBloc
@@ -30,7 +30,7 @@ class CalendarModuleBloc
       final entries = await _fetchCalendarEntries();
       emit(
         CalendarModuleStateDidLoad(
-          calendarEntries: entries,
+          calendarEntries: entries.take(previewLimit).toList(),
         ),
       );
     } catch (_) {
@@ -41,26 +41,23 @@ class CalendarModuleBloc
   Future<List<CalendarEntryPreview>> _fetchCalendarEntries() async {
     final entries = <CalendarEntryPreview>[];
     int week = 0;
-    while (week <= weeksLimit && entries.length <= previewLimit) {
+    while (week < weeksLimit && entries.length <= previewLimit) {
       final calendarEntries = await _calendarRepository.getCalendarSchedule(
         userId: _authenticationRepository.currentUser.id,
         currentDateTime: DateTime.now().add(Duration(days: week * 7)),
       );
       final extractedEntries = _extractEntries(week, calendarEntries);
-      if (entries.length + extractedEntries.length > previewLimit) {
-        extractedEntries.removeRange(
-          previewLimit - entries.length,
-          extractedEntries.length,
-        );
-      }
       entries.addAll(extractedEntries);
       week++;
     }
     return entries
-      ..sort((a, b) => a.date.compareTo(b.date))
-      ..removeWhere((entry) => entry.date.isBefore(DateTime.now()));
+      ..sort((entry1, entry2) => entry1.date.compareTo(entry2.date));
   }
 
+  /// Extracts calendar entries for a given week from the provided calendarEntryData.
+  /// The week parameter represents the week offset from the current week.
+  /// The extracted entries are filtered based on their date, excluding any entries in the past.
+  /// Returns a list of CalendarEntryPreview objects.
   List<CalendarEntryPreview> _extractEntries(
     int week,
     CalendarWeekData calendarEntryData,
@@ -71,8 +68,11 @@ class CalendarModuleBloc
       for (final timeframe in value.keys) {
         for (final entry in value[timeframe]!) {
           final int weekday = entry.weekday.index + 1;
-          final DateTime date =
-              CalendarEntryPreview.calculateDate(week, weekday, entry.start!);
+          final DateTime date = CalendarEntryPreview.calculateDate(
+            week,
+            weekday,
+            entry.timeframe.start,
+          );
           if (date.isAfter(DateTime.now())) {
             entries.add(
               CalendarEntryPreview(
@@ -80,7 +80,6 @@ class CalendarModuleBloc
                 timeframe: timeframe,
                 title: entry.title,
                 date: date,
-                start: entry.start,
                 locations: entry.locations,
               ),
             );

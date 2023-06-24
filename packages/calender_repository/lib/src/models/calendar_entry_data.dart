@@ -5,7 +5,6 @@ class CalendarEntryData {
     required this.id,
     required this.type,
     required this.weekday,
-    required this.start,
     required this.timeframe,
     this.title,
     this.description,
@@ -16,7 +15,6 @@ class CalendarEntryData {
   final String? title;
   final String? description;
   final Weekday weekday;
-  final String start;
   final List<String> locations;
   final CalendarTimeframe timeframe;
 }

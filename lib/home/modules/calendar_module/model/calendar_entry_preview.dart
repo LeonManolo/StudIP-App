@@ -1,7 +1,8 @@
+import 'package:calender_repository/calender_repository.dart';
+
 class CalendarEntryPreview {
   const CalendarEntryPreview({
     required this.day,
-    required this.start,
     required this.timeframe,
     required this.locations,
     required this.date,
@@ -12,12 +13,10 @@ class CalendarEntryPreview {
   final DateTime date;
   final String timeframe;
   final String? title;
-  final String start;
   final List<String> locations;
 
-  String getTimeString() {
-    final DateTime now = DateTime.now();
-    final Duration difference = date.difference(now);
+  String getTimeString(DateTime startTime) {
+    final Duration difference = date.difference(startTime);
 
     final int days = difference.inDays;
     final int hours = difference.inHours % 24;
@@ -44,7 +43,7 @@ class CalendarEntryPreview {
     return '${date.day}.${date.month}.${date.year}';
   }
 
-  static DateTime calculateDate(int week, int day, String start) {
+  static DateTime calculateDate(int week, int day, HourMinute start) {
     final now = DateTime.now();
     final today = now.weekday;
     int daysToAdd;
@@ -57,8 +56,8 @@ class CalendarEntryPreview {
       now.year,
       now.month,
       now.day,
-      int.parse(start.split(':')[0]),
-      int.parse(start.split(':')[1]),
+      int.parse(start.hours.toString()),
+      int.parse(start.minutes.toString()),
     ).add(Duration(days: daysToAdd));
   }
 

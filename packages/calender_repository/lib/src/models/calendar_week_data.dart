@@ -39,7 +39,6 @@ class CalendarWeekData {
             title: scheduleData.attributes.title,
             description: scheduleData.attributes.description,
             weekday: weekday,
-            start: scheduleData.attributes.start,
             timeframe: timeframe,
           );
 

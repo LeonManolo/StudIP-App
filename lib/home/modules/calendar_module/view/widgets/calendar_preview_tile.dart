@@ -12,7 +12,7 @@ class CalendarPreviewTile extends StatelessWidget {
     return ListTile(
       title: Text(calendarEntry.title ?? 'Kein Titel'),
       subtitle: Text(
-        'In ${calendarEntry.getTimeString()}'
+        'In ${calendarEntry.getTimeString(DateTime.now())}'
         '\n${calendarEntry.getDay()}, ${calendarEntry.getFormattedDate()}'
         '${calendarEntry.locations.isNotEmpty ? '\nOrt: ${calendarEntry.locations.join(', ')}' : ''}'
     
