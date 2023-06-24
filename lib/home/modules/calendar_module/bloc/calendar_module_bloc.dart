@@ -5,8 +5,8 @@ import 'package:studipadawan/home/modules/calendar_module/bloc/calendar_module_e
 import 'package:studipadawan/home/modules/calendar_module/bloc/calendar_module_state.dart';
 import 'package:studipadawan/home/modules/calendar_module/model/calendar_entry_preview.dart';
 
-const int previewLimit = 5;
-const int weeksLimit = 3;
+const int previewLimit = 4;
+const int weeksLimit = 4;
 
 class CalendarModuleBloc
     extends Bloc<CalendarModuleEvent, CalendarModuleState> {

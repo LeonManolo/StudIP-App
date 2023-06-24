@@ -8,7 +8,6 @@ void main() {
       final CalendarEntryData newEntry = CalendarEntryData(
         id: '1',
         type: '',
-        start: '10:15',
         weekday: Weekday.monday,
         timeframe: CalendarTimeframe(
           start: HourMinute(hours: 10, minutes: 15),
@@ -26,7 +25,6 @@ void main() {
         CalendarEntryData(
           id: '1',
           type: '',
-          start: '10:15',
           weekday: Weekday.monday,
           timeframe: CalendarTimeframe(
             start: HourMinute(hours: 10, minutes: 15),
@@ -36,7 +34,6 @@ void main() {
         CalendarEntryData(
           id: '2',
           type: '',
-          start: '15:10',
           weekday: Weekday.monday,
           timeframe: CalendarTimeframe(
             start: HourMinute(hours: 15, minutes: 10),
@@ -47,7 +44,6 @@ void main() {
       final CalendarEntryData newEntry = CalendarEntryData(
         id: '3',
         type: '',
-        start: '10:30',
         weekday: Weekday.monday,
         timeframe: CalendarTimeframe(
           start: HourMinute(hours: 10, minutes: 30),
@@ -77,7 +73,6 @@ void main() {
       final CalendarEntryData newEntry = CalendarEntryData(
         id: '2',
         type: '',
-        start: '10:30',
         weekday: Weekday.monday,
         timeframe: CalendarTimeframe(
           start: HourMinute(hours: 10, minutes: 30),

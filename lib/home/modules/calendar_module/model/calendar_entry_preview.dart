@@ -56,8 +56,8 @@ class CalendarEntryPreview {
       now.year,
       now.month,
       now.day,
-      int.parse(start.hours.toString()),
-      int.parse(start.minutes.toString()),
+      start.hours,
+      start.minutes,
     ).add(Duration(days: daysToAdd));
   }
 
