@@ -65,7 +65,7 @@ void main() {
         const CoursesStateError(
           semesterFilter: SemesterFilter.all,
           semesterSortOrder: SemesterSortOrder.asc,
-          errorMessage: 'some error message',
+          errorMessage: 'some error message - widget test',
         ),
       );
 
@@ -81,7 +81,7 @@ void main() {
       expect(
         find.descendant(
           of: find.byType(ErrorView),
-          matching: find.text('some error messagea'),
+          matching: find.text('some error message - widget test'),
         ),
         findsOneWidget,
       );
