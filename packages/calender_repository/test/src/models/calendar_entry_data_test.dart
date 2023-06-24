@@ -62,7 +62,6 @@ void main() {
         CalendarEntryData(
           id: '1',
           type: '',
-          start: '10:15',
           weekday: Weekday.monday,
           timeframe: CalendarTimeframe(
             start: HourMinute(hours: 10, minutes: 15),
