@@ -1,6 +1,5 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:studipadawan/calendar/view/calendar_detail_page.dart';
 import 'package:studipadawan/home/modules/calendar_module/model/calendar_entry_preview.dart';
 
 class CalendarPreviewTile extends StatelessWidget {
@@ -21,16 +20,6 @@ class CalendarPreviewTile extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[Icon(EvaIcons.calendar)],
       ),
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute<CalendarDetailPage>(
-            builder: (context) {
-              return const CalendarDetailPage();
-            },
-          ),
-        );
-      },
     );
   }
 }
