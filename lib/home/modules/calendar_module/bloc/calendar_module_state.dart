@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:studipadawan/home/modules/calendar_module/model/calendar_entry_preview.dart';
 
 sealed class CalendarModuleState extends Equatable {
   const CalendarModuleState();
@@ -22,14 +23,12 @@ class CalendarModuleStateLoading extends CalendarModuleState {
 }
 
 class CalendarModuleStateDidLoad extends CalendarModuleState {
-  const CalendarModuleStateDidLoad();
-
+  const CalendarModuleStateDidLoad({
+    this.calendarEntries = const [],
+  });
+  final List<CalendarEntryPreview> calendarEntries;
   @override
-  List<Object?> get props => [];
-
-  CalendarModuleStateDidLoad copyWith() {
-    return const CalendarModuleStateDidLoad();
-  }
+  List<Object?> get props => [calendarEntries];
 }
 
 class CalendarModuleStateError extends CalendarModuleState {
@@ -37,8 +36,4 @@ class CalendarModuleStateError extends CalendarModuleState {
 
   @override
   List<Object?> get props => [];
-
-  CalendarModuleStateError copyWith() {
-    return const CalendarModuleStateError();
-  }
 }
