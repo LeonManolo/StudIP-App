@@ -55,6 +55,7 @@ void main() {
           child: const MaterialApp(home: Scaffold(body: CoursesPageBody())),
         ),
       );
+      await tester.pumpAndSettle();
 
       expect(find.byType(CoursesList), findsOneWidget);
     });
@@ -74,12 +75,13 @@ void main() {
           child: const MaterialApp(home: Scaffold(body: CoursesPageBody())),
         ),
       );
+      await tester.pumpAndSettle();
 
       expect(find.byType(ErrorView), findsOneWidget);
       expect(
         find.descendant(
           of: find.byType(ErrorView),
-          matching: find.text('some error message'),
+          matching: find.text('some error messagea'),
         ),
         findsOneWidget,
       );
