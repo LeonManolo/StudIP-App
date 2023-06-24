@@ -32,11 +32,11 @@ class CoursesPageBody extends StatelessWidget {
                 );
               },
             );
-          case CoursesStateError _:
+          case final CoursesStateError errorState:
             return Center(
               child: ErrorView(
                 title: 'Fehler',
-                message: 'Fehler beim Laden der Kurse',
+                message: errorState.errorMessage,
                 onRetryPressed: () {
                   BlocProvider.of<CoursesBloc>(context).add(CoursesRequested());
                 },
