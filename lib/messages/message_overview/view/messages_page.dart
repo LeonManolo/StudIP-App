@@ -59,7 +59,7 @@ class MessagesPageState extends State<MessagesPage>
       authenticationRepository: context.read<AuthenticationRepository>(),
     )
       ..add(
-          const InboxMessagesRequested(filter: MessageFilter.none, offset: 0));
+          const InboxMessagesRequested(filter: MessageFilter.none, offset: 0),);
     _outboxMessageBloc = OutboxMessageBloc(
       messageRepository: context.read<MessageRepository>(),
       authenticationRepository: context.read<AuthenticationRepository>(),

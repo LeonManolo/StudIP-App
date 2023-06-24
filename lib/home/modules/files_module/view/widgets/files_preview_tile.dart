@@ -1,7 +1,7 @@
 import 'package:activity_repository/activity_repository.dart';
-import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:studipadawan/courses/details/view/course_details_page.dart';
+import 'package:studipadawan/utils/utils.dart';
 
 class FilePreviewTile extends StatelessWidget {
   const FilePreviewTile({super.key, required this.fileActivity});
@@ -14,9 +14,9 @@ class FilePreviewTile extends StatelessWidget {
       subtitle: Text(
         '${fileActivity.course.courseDetails.title}\n${fileActivity.ownerFormattedName}',
       ),
-      leading: const Column(
+      leading: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[Icon(EvaIcons.fileOutline)],
+        children: [Icon(fileTypeToIcon(fileName: fileActivity.fileName))],
       ),
       trailing: Column(
         mainAxisAlignment: MainAxisAlignment.center,
