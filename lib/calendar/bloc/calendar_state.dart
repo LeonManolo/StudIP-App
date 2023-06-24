@@ -39,10 +39,11 @@ enum CalendarBodyType {
 }
 
 sealed class CalendarState extends Equatable {
-  const CalendarState(
-      {required this.layout,
-      required this.currentDay,
-      required this.calendarFormat,});
+  const CalendarState({
+    required this.layout,
+    required this.currentDay,
+    required this.calendarFormat,
+  });
 
   final CalendarBodyType layout;
   final DateTime currentDay;

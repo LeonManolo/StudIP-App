@@ -32,7 +32,8 @@ class CourseWikiBloc extends Bloc<CourseWikiEvent, CourseWikiState> {
       final wikiStartPageIndex =
           wikiPages.indexWhere((wikiPage) => wikiPage.title == 'WikiWikiWeb');
       if (wikiStartPageIndex >= 0) {
-        wikiPages[wikiStartPageIndex].title = 'Startseite';
+        wikiPages[wikiStartPageIndex] =
+            wikiPages[wikiStartPageIndex].updateTitle(newTitle: 'Startseite');
       }
 
       wikiPages.sort(
@@ -46,7 +47,7 @@ class CourseWikiBloc extends Bloc<CourseWikiEvent, CourseWikiState> {
       emit(
         CourseWikiStateError(
           errorMessage:
-              'Beim Laden der Ankündigungen ist ein Fehler aufgetreten.',
+              'Beim Laden der Wiki-Seiten ist ein Fehler aufgetreten.',
         ),
       );
     }

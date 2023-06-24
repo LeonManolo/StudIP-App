@@ -1,3 +1,4 @@
+import 'package:equatable/equatable.dart';
 import 'package:studip_api_client/studip_api_client.dart' as studip_api_client;
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -8,8 +9,8 @@ class CourseNewsListResponse {
   final List<CourseNews> news;
 }
 
-class ItemAuthor {
-  ItemAuthor({
+class ItemAuthor extends Equatable {
+  const ItemAuthor({
     required this.formattedName,
     required this.id,
     required this.avatarUrl,
@@ -18,6 +19,9 @@ class ItemAuthor {
   final String formattedName;
   final String id;
   final String avatarUrl;
+
+  @override
+  List<Object?> get props => [formattedName, id, avatarUrl];
 }
 
 class CourseNews {
