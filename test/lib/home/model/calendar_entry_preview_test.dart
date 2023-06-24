@@ -9,7 +9,6 @@ void main() {
       final entry = CalendarEntryPreview(
         day: 2,
         date: DateTime.now().add(const Duration(days: 2, hours: 3, minutes: 15)),
-        timeframe: 'xxx - xxx',
         locations: [],
       );
       final startTime = DateTime.now();
@@ -23,7 +22,6 @@ void main() {
       final entry = CalendarEntryPreview(
         day: 1,
         date: DateTime.now().add(const Duration(hours: 3, minutes: 45)),
-        timeframe: 'xxx - xxx',
         locations: [],
       );
       final startTime = DateTime.now();
@@ -37,7 +35,6 @@ void main() {
       final entry = CalendarEntryPreview(
         day: 5,
         date: DateTime.now().add(const Duration(minutes: 30)),
-        timeframe: 'xxx - xxx',
         locations: [],
       );
       final startTime = DateTime.now();
@@ -51,7 +48,6 @@ void main() {
       final entry = CalendarEntryPreview(
         day: 3,
         date: DateTime.now(),
-        timeframe: 'xxx - xxx',
         locations: [],
       );
       final startTime = DateTime.now();
@@ -67,7 +63,6 @@ void main() {
       final entry = CalendarEntryPreview(
         day: 1,
         date: DateTime(2023, 6, 15),
-        timeframe: 'xxx - xxx',
         locations: [],
       );
 
@@ -123,13 +118,13 @@ void main() {
 
   group('getDay', () {
     test('Returns the correct day string for each day index', () {
-      final entry1 = CalendarEntryPreview(day: 1, date: DateTime.now(), timeframe: 'xxx - xxx', locations: []);
-      final entry2 = CalendarEntryPreview(day: 2, date: DateTime.now(), timeframe: 'xxx - xxx', locations: []);
-      final entry3 = CalendarEntryPreview(day: 3, date: DateTime.now(), timeframe: 'xxx - xxx', locations: []);
-      final entry4 = CalendarEntryPreview(day: 4, date: DateTime.now(), timeframe: 'xxx - xxx', locations: []);
-      final entry5 = CalendarEntryPreview(day: 5, date: DateTime.now(), timeframe: 'xxx - xxx', locations: []);
-      final entry6 = CalendarEntryPreview(day: 6, date: DateTime.now(), timeframe: 'xxx - xxx', locations: []);
-      final entry7 = CalendarEntryPreview(day: 7, date: DateTime.now(), timeframe: 'xxx - xxx', locations: []);
+      final entry1 = CalendarEntryPreview(day: 1, date: DateTime.now(), locations: []);
+      final entry2 = CalendarEntryPreview(day: 2, date: DateTime.now(), locations: []);
+      final entry3 = CalendarEntryPreview(day: 3, date: DateTime.now(), locations: []);
+      final entry4 = CalendarEntryPreview(day: 4, date: DateTime.now(), locations: []);
+      final entry5 = CalendarEntryPreview(day: 5, date: DateTime.now(), locations: []);
+      final entry6 = CalendarEntryPreview(day: 6, date: DateTime.now(), locations: []);
+      final entry7 = CalendarEntryPreview(day: 7, date: DateTime.now(), locations: []);
 
       expect(entry1.getDay(), 'Montag');
       expect(entry2.getDay(), 'Dienstag');
@@ -141,7 +136,7 @@ void main() {
     });
 
     test('Returns "Unbekannt" for unknown day index', () {
-      final entry = CalendarEntryPreview(day: 8, date: DateTime.now(), timeframe: '', locations: []);
+      final entry = CalendarEntryPreview(day: 8, date: DateTime.now(), locations: []);
 
       expect(entry.getDay(), 'Unbekannt');
     });

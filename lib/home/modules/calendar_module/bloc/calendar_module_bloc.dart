@@ -77,7 +77,6 @@ class CalendarModuleBloc
             entries.add(
               CalendarEntryPreview(
                 day: weekday,
-                timeframe: timeframe,
                 title: entry.title,
                 date: date,
                 locations: entry.locations,

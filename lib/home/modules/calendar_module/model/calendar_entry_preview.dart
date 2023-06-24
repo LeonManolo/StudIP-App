@@ -3,7 +3,6 @@ import 'package:calender_repository/calender_repository.dart';
 class CalendarEntryPreview {
   const CalendarEntryPreview({
     required this.day,
-    required this.timeframe,
     required this.locations,
     required this.date,
     this.title,
@@ -11,7 +10,6 @@ class CalendarEntryPreview {
 
   final int day;
   final DateTime date;
-  final String timeframe;
   final String? title;
   final List<String> locations;
 
@@ -41,6 +39,10 @@ class CalendarEntryPreview {
 
   String getFormattedDate() {
     return '${date.day}.${date.month}.${date.year}';
+  }
+
+  String getFormattedTime() {
+    return '${date.hour}:${date.minute <= 9 ? '0' : ''}${date.minute}';
   }
 
   static DateTime calculateDate(int week, int day, HourMinute start) {

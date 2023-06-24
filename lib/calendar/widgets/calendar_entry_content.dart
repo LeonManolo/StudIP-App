@@ -74,8 +74,8 @@ class CalendarEntryContent extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Visibility(
-                          visible:
-                              calendarEntryData?.locations.firstOrNull() != null,
+                          visible: calendarEntryData?.locations.firstOrNull() !=
+                              null,
                           child: Row(
                             children: [
                               Icon(
@@ -130,6 +130,10 @@ class CalendarEntryContent extends StatelessWidget {
   }
 
   void _navigateToCalendarDetailPage(BuildContext context) {
-    Navigator.of(context).push(MaterialPageRoute(builder: (context) => const CalendarDetailPage()));
+    Navigator.of(context).push(
+      MaterialPageRoute<CalendarDetailPage>(
+        builder: (context) => const CalendarDetailPage(),
+      ),
+    );
   }
 }

@@ -13,7 +13,7 @@ class CalendarPreviewTile extends StatelessWidget {
       title: Text(calendarEntry.title ?? 'Kein Titel'),
       subtitle: Text(
         'In ${calendarEntry.getTimeString(DateTime.now())}'
-        '\n${calendarEntry.getDay()}, ${calendarEntry.getFormattedDate()}'
+        '\n${calendarEntry.getDay()}, ${calendarEntry.getFormattedDate()}, ${calendarEntry.getFormattedTime()} Uhr'
         '${calendarEntry.locations.isNotEmpty ? '\nOrt: ${calendarEntry.locations.join(', ')}' : ''}'
     
       ),
