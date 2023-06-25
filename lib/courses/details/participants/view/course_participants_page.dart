@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:studipadawan/courses/details/participants/bloc/course_participants_bloc.dart';
 import 'package:studipadawan/courses/details/participants/widgets/course_participants_list.dart';
 import 'package:studipadawan/utils/loading_indicator.dart';
-import 'package:studipadawan/utils/snackbar.dart';
 import 'package:studipadawan/utils/widgets/error_view/error_view.dart';
 
 class CourseParticipantsPage extends StatelessWidget {
