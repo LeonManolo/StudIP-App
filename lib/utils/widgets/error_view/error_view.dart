@@ -6,7 +6,7 @@ import 'package:studipadawan/utils/widgets/error_view/error_illustration.dart';
 class ErrorView extends StatelessWidget {
   const ErrorView({
     super.key,
-    required this.title,
+    this.title = 'Fehler',
     required this.message,
     this.iconColor,
     this.iconData = EvaIcons.alertTriangleOutline,
@@ -17,7 +17,7 @@ class ErrorView extends StatelessWidget {
   final String title;
   final String message;
   final Color? iconColor;
-  final IconData iconData;
+  final IconData? iconData;
   final VoidCallback? onRetryPressed;
   final String retryButtonText;
 
@@ -28,10 +28,11 @@ class ErrorView extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          ErrorIllustration(
-            color: iconColor ?? Theme.of(context).primaryColor,
-            iconData: iconData,
-          ),
+          if (iconData != null)
+            ErrorIllustration(
+              color: iconColor ?? Theme.of(context).primaryColor,
+              iconData: iconData!,
+            ),
           Text(
             title,
             style: Theme.of(context).textTheme.titleLarge,

@@ -5,25 +5,21 @@ import 'package:studipadawan/courses/details/participants/bloc/course_participan
 import 'package:studipadawan/courses/details/participants/widgets/course_participants_list.dart';
 import 'package:studipadawan/utils/loading_indicator.dart';
 import 'package:studipadawan/utils/snackbar.dart';
+import 'package:studipadawan/utils/widgets/error_view/error_view.dart';
 
 class CourseParticipantsPage extends StatelessWidget {
-  const CourseParticipantsPage({super.key, required this.course});
+  const CourseParticipantsPage({super.key, required this.courseId});
 
-  final Course course;
+  final String courseId;
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => CourseParticipantsBloc(
         courseRepository: context.read<CourseRepository>(),
-        courseId: course.id,
+        courseId: courseId,
       )..add(CourseParticipantsRequested()),
-      child: BlocConsumer<CourseParticipantsBloc, CourseParticipantsState>(
-        listener: (context, state) {
-          if (state case CourseParticipantsError(errorMessage: final error)) {
-            buildSnackBar(context, error, null);
-          }
-        },
+      child: BlocBuilder<CourseParticipantsBloc, CourseParticipantsState>(
         builder: (context, state) {
           switch (state) {
             case CourseParticipantsLoading():
@@ -44,9 +40,15 @@ class CourseParticipantsPage extends StatelessWidget {
                 },
               );
 
-            case _:
-              // TODO: create universial error state widget
-              return const Text('Other');
+            case final CourseParticipantsError errorState:
+              return ErrorView(
+                iconData: null,
+                message: errorState.errorMessage,
+                onRetryPressed: () {
+                  BlocProvider.of<CourseParticipantsBloc>(context)
+                      .add(CourseParticipantsRequested());
+                },
+              );
           }
         },
       ),

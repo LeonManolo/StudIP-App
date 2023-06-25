@@ -35,7 +35,6 @@ class CoursesPageBody extends StatelessWidget {
           case final CoursesStateError errorState:
             return Center(
               child: ErrorView(
-                title: 'Fehler',
                 message: errorState.errorMessage,
                 onRetryPressed: () {
                   BlocProvider.of<CoursesBloc>(context).add(CoursesRequested());
