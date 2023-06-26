@@ -14,20 +14,6 @@ final class CalendarRequested extends CalendarEvent {
   List<Object?> get props => [day, layout];
 }
 
-final class CalendarNextDayRequested extends CalendarEvent {
-  const CalendarNextDayRequested();
-
-  @override
-  List<Object?> get props => [];
-}
-
-final class CalendarPreviousDayRequested extends CalendarEvent {
-  const CalendarPreviousDayRequested();
-
-  @override
-  List<Object?> get props => [];
-}
-
 final class CalendarExactDayRequested extends CalendarEvent {
   const CalendarExactDayRequested({required this.exactDay});
   final DateTime exactDay;

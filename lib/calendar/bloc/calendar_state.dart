@@ -59,7 +59,7 @@ sealed class CalendarState extends Equatable {
   });
 }
 
-class CalendarLoading extends CalendarState {
+final class CalendarLoading extends CalendarState {
   const CalendarLoading({
     required super.layout,
     required super.currentDay,
@@ -84,7 +84,7 @@ class CalendarLoading extends CalendarState {
   }
 }
 
-class CalendarPopulated extends CalendarState {
+final class CalendarPopulated extends CalendarState {
   const CalendarPopulated({
     required this.calendarWeekData,
     required super.currentDay,
@@ -112,7 +112,7 @@ class CalendarPopulated extends CalendarState {
   List<Object?> get props => [calendarWeekData, ...super.props];
 }
 
-class CalendarFailure extends CalendarState {
+final class CalendarFailure extends CalendarState {
   const CalendarFailure(
       {required this.failureMessage,
       required super.layout,
