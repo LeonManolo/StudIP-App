@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:courses_repository/courses_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,7 +15,6 @@ void main() {
 
   setUp(() {
     courseRepository = MockCourseRepository();
-    HttpOverrides.global = null;
   });
 
   group('displays corrects data', () {
