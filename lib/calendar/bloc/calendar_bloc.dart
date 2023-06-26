@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:calender_repository/calender_repository.dart';
+import 'package:logger/logger.dart';
 import 'package:studipadawan/calendar/bloc/calendar_event.dart';
 import 'package:studipadawan/calendar/bloc/calendar_state.dart';
 
@@ -20,8 +21,6 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
           ),
         ) {
     on<CalendarRequested>(_onCalendarRequested);
-    on<CalendarNextDayRequested>(_onCalendarNextDayRequested);
-    on<CalendarPreviousDayRequested>(_onCalendarPreviousDayRequested);
     on<CalendarExactDayRequested>(_onCalendarExactDayRequested);
     on<CalendarSwitchLayoutRequested>(_onCalendarSwitchLayoutRequested);
     on<CalendarFormatChangeRequest>(_onCalendarFormatChangeRequest);
@@ -38,79 +37,24 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
 
     emit(CalendarLoading.fromState(state.copyWith(currentDay: day)));
 
-    final calendarSchedule = await _fetchCalendarSchedule(day);
-
-    emit(
-      CalendarPopulated(
-        calendarWeekData: calendarSchedule,
-        currentDay: day,
-        layout: event.layout,
-        calendarFormat: state.calendarFormat,
-      ),
-    );
-  }
-
-  FutureOr<void> _onCalendarNextDayRequested(
-    CalendarNextDayRequested event,
-    Emitter<CalendarState> emit,
-  ) async {
-    if (state is CalendarPopulated) {
-      try {
-        final nextDay = state.currentDay.add(const Duration(days: 1));
-
-        emit(CalendarLoading.fromState(state.copyWith(currentDay: nextDay)));
-
-        final calendarSchedule = await _fetchCalendarSchedule(nextDay);
-        emit(
-          CalendarPopulated(
-            calendarWeekData: calendarSchedule,
-            currentDay: nextDay,
-            layout: state.layout,
-            calendarFormat: state.calendarFormat,
-          ),
-        );
-      } catch (e) {
-        emit(
-          CalendarFailure.fromState(
-            failureMessage: e.toString(),
-            state: state,
-          ),
-        );
-      }
-    }
-  }
-
-  FutureOr<void> _onCalendarPreviousDayRequested(
-    CalendarPreviousDayRequested event,
-    Emitter<CalendarState> emit,
-  ) async {
-    if (state is CalendarPopulated) {
-      try {
-        final previousDay = state.currentDay.subtract(const Duration(days: 1));
-
-        emit(
-          CalendarLoading.fromState(
-            state.copyWith(currentDay: previousDay),
-          ),
-        );
-
-        final calendarSchedule = await _fetchCalendarSchedule(previousDay);
-        emit(
-          CalendarPopulated(
-            calendarWeekData: calendarSchedule,
-            currentDay: previousDay,
-            layout: state.layout,
-            calendarFormat: state.calendarFormat,
-          ),
-        );
-      } catch (e) {
-        emit(
-          CalendarFailure.fromState(
-            failureMessage: e.toString(),
-            state: state,
-          ),
-        );
-      }
+    try {
+      final calendarSchedule = await _fetchCalendarSchedule(day);
+      emit(
+        CalendarPopulated(
+          calendarWeekData: calendarSchedule,
+          currentDay: day,
+          layout: event.layout,
+          calendarFormat: state.calendarFormat,
+        ),
+      );
+    } catch (e) {
+      Logger().e(e);
+      emit(
+        CalendarFailure.fromState(
+          failureMessage: e.toString(),
+          state: state,
+        ),
+      );
     }
   }
 
@@ -128,11 +72,10 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
     CalendarExactDayRequested event,
     Emitter<CalendarState> emit,
   ) async {
-    if (state is CalendarPopulated) {
-      final day = event.exactDay;
+    final day = event.exactDay;
+    emit(CalendarLoading.fromState(state.copyWith(currentDay: day)));
 
-      emit(CalendarLoading.fromState(state.copyWith(currentDay: day)));
-
+    try {
       final calendarSchedule = await _fetchCalendarSchedule(day);
       emit(
         CalendarPopulated(
@@ -140,6 +83,14 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
           currentDay: day,
           layout: state.layout,
           calendarFormat: state.calendarFormat,
+        ),
+      );
+    } catch (e) {
+      Logger().e(e);
+      emit(
+        CalendarFailure.fromState(
+          failureMessage: e.toString(),
+          state: state,
         ),
       );
     }

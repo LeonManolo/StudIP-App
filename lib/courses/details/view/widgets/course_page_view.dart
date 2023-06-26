@@ -32,10 +32,8 @@ class _CoursePageViewState extends State<CoursePageView> {
             controller: _scrollController,
             onTabChanged: (tabIndex) {
               _scrollToTabIndex(tabIndex);
-              _pageController.animateToPage(
+              _pageController.jumpToPage(
                 tabIndex,
-                duration: animationDuration,
-                curve: animationCurve,
               );
             },
             tabItems: [

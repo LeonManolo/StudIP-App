@@ -1,4 +1,5 @@
 import 'package:animate_do/animate_do.dart';
+import 'package:app_ui/app_ui.dart';
 import 'package:calender_repository/calender_repository.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
@@ -11,9 +12,11 @@ import 'package:studipadawan/calendar/calendar_notifications/view/calendar_sched
 import 'package:studipadawan/calendar/widgets/calendar_header.dart';
 import 'package:studipadawan/calendar/widgets/calendar_list_body/calendar_list_body.dart';
 import 'package:studipadawan/calendar/widgets/calendar_timeframes_body/calendar_timeframes_body.dart';
+import 'package:studipadawan/utils/widgets/error_view/error_view.dart';
 
 class CalendarPage extends StatelessWidget {
   const CalendarPage({super.key, required this.calendarBloc});
+
   final CalendarBloc calendarBloc;
 
   @override
@@ -124,8 +127,18 @@ class CalendarPage extends StatelessWidget {
                       );
                     }
 
-                  case CalendarFailure _:
-                    return Text(state.failureMessage);
+                  case CalendarFailure(
+                      currentDay: final day,
+                    ):
+                    return ErrorView(
+                      message:
+                          'Es ist ein Fehler beim Laden des Stundenplan aufgetreten. Versuche es später erneut.',
+                      marginTop: 0,
+                      onRetryPressed: () {
+                        calendarBloc
+                            .add(CalendarExactDayRequested(exactDay: day));
+                      },
+                    );
                 }
               },
             ),
