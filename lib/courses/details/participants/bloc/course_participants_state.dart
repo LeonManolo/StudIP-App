@@ -4,12 +4,6 @@ sealed class CourseParticipantsState extends Equatable {
   const CourseParticipantsState();
 }
 
-final class CourseParticipantsInitial extends CourseParticipantsState {
-  const CourseParticipantsInitial();
-  @override
-  List<Object?> get props => [];
-}
-
 final class CourseParticipantsLoading extends CourseParticipantsState {
   const CourseParticipantsLoading();
   @override

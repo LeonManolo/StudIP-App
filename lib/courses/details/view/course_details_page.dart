@@ -54,7 +54,7 @@ class CourseDetailsPage extends StatelessWidget {
                 icon: EvaIcons.personOutline,
                 title: 'Teilnehmer',
               ),
-              content: CourseParticipantsPage(course: course),
+              content: CourseParticipantsPage(courseId: course.id),
             ),
             CoursePageViewData(
               tab: const CoursePageViewTabData(

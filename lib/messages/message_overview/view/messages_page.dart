@@ -54,17 +54,22 @@ class MessagesPageState extends State<MessagesPage>
   @override
   void initState() {
     super.initState();
+
     _inboxMessageBloc = InboxMessageBloc(
       messageRepository: context.read<MessageRepository>(),
       authenticationRepository: context.read<AuthenticationRepository>(),
-    )
-      ..add(
-          const InboxMessagesRequested(filter: MessageFilter.none, offset: 0),);
+    )..add(
+        const InboxMessagesRequested(
+          filter: MessageFilter.none,
+          offset: 0,
+        ),
+      );
+
     _outboxMessageBloc = OutboxMessageBloc(
       messageRepository: context.read<MessageRepository>(),
       authenticationRepository: context.read<AuthenticationRepository>(),
-    )
-      ..add(const OutboxMessagesRequested(offset: 0));
+    )..add(const OutboxMessagesRequested(offset: 0));
+
     _tabBarBloc = TabBarBloc();
     _inboxScrollController.addListener(_onInboxScroll);
     _outboxScrollController.addListener(_onOutboxScroll);
@@ -170,12 +175,13 @@ class MessagesPageState extends State<MessagesPage>
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(onPressed: () {},
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
         child: BlocProvider.value(
           value: _tabBarBloc,
           child: BlocBuilder<TabBarBloc, TabBarState>(
             builder: (context, state) {
-              if (state.menuIconVisible) {
+              if (state.messageDeleteButtonVisible) {
                 return MessageDeleteButton(
                   deleteMessages: _deleteMessages,
                 );
@@ -215,12 +221,8 @@ class MessagesPageState extends State<MessagesPage>
             text: 'Gesendet',
           )
         ],
-        labelColor: Theme
-            .of(context)
-            .primaryColor,
-        indicatorColor: Theme
-            .of(context)
-            .primaryColor,
+        labelColor: Theme.of(context).primaryColor,
+        indicatorColor: Theme.of(context).primaryColor,
       ),
       actions: <Widget>[
         BlocProvider.value(
@@ -237,7 +239,7 @@ class MessagesPageState extends State<MessagesPage>
                     ),
                   ),
                   Visibility(
-                    visible: state.menuIconVisible,
+                    visible: state.messageDeleteButtonVisible,
                     child: MessageMenuButton(
                       markAll: _markAll,
                       unmarkAll: _unmarkAll,
@@ -330,8 +332,7 @@ class MessagesPageState extends State<MessagesPage>
 
   void _handleFilterSelection(MessageFilter filter) {
     setState(
-          () =>
-      {
+      () => {
         if (_inboxMessageBloc.state.currentFilter != filter)
           {
             _inboxMessageBloc
