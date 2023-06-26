@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:calender_repository/calender_repository.dart';
+import 'package:logger/logger.dart';
 import 'package:studipadawan/calendar/bloc/calendar_event.dart';
 import 'package:studipadawan/calendar/bloc/calendar_state.dart';
 
@@ -47,6 +48,7 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
         ),
       );
     } catch (e) {
+      Logger().e(e);
       emit(
         CalendarFailure.fromState(
           failureMessage: e.toString(),
@@ -84,6 +86,7 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
         ),
       );
     } catch (e) {
+      Logger().e(e);
       emit(
         CalendarFailure.fromState(
           failureMessage: e.toString(),

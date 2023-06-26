@@ -5,7 +5,7 @@ class ErrorIllustration extends StatelessWidget {
   const ErrorIllustration({
     super.key,
     this.color,
-    this.marginTop = AppSpacing.xxxlg + AppSpacing.xxlg,
+    required this.marginTop,
     required this.iconData,
   });
 
