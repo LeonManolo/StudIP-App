@@ -12,6 +12,7 @@ class ErrorView extends StatelessWidget {
     this.iconData = EvaIcons.alertTriangleOutline,
     this.onRetryPressed,
     this.retryButtonText = 'Erneut versuchen',
+    this.marginTop = AppSpacing.xxxlg + AppSpacing.xxlg,
   });
 
   final String title;
@@ -20,6 +21,7 @@ class ErrorView extends StatelessWidget {
   final IconData? iconData;
   final VoidCallback? onRetryPressed;
   final String retryButtonText;
+  final double marginTop;
 
   @override
   Widget build(BuildContext context) {
@@ -32,6 +34,7 @@ class ErrorView extends StatelessWidget {
             ErrorIllustration(
               color: iconColor ?? Theme.of(context).primaryColor,
               iconData: iconData!,
+              marginTop: marginTop,
             ),
           Text(
             title,

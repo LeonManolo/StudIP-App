@@ -5,18 +5,20 @@ class ErrorIllustration extends StatelessWidget {
   const ErrorIllustration({
     super.key,
     this.color,
+    this.marginTop = AppSpacing.xxxlg + AppSpacing.xxlg,
     required this.iconData,
   });
 
   final Color? color;
   final IconData iconData;
+  final double marginTop;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(AppSpacing.xlg),
-      margin: const EdgeInsets.only(
-        top: AppSpacing.xxxlg + AppSpacing.xxlg,
+      margin: EdgeInsets.only(
+        top: marginTop,
         bottom: AppSpacing.xxlg,
       ),
       decoration: BoxDecoration(
