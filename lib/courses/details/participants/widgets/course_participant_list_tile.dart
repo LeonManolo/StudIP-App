@@ -26,17 +26,18 @@ class CourseParticipantListTile extends StatelessWidget {
       ),
       trailing: IconButton(
         onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute<MessageSendPage>(
-            fullscreenDialog: true,
-            builder: (context) {
-              return MessageSendPage(
-                message: Message.empty(recipient: participant.toMessageUser()),
-              );
-            },
-          ),
-        );
+          Navigator.push(
+            context,
+            MaterialPageRoute<MessageSendPage>(
+              fullscreenDialog: true,
+              builder: (context) {
+                return MessageSendPage(
+                  message:
+                      Message.empty(recipient: participant.toMessageUser()),
+                );
+              },
+            ),
+          );
         },
         icon: const Icon(EvaIcons.emailOutline),
       ),

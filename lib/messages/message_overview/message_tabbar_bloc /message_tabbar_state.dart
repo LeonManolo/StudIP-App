@@ -1,28 +1,31 @@
 import 'package:equatable/equatable.dart';
 
-
 class TabBarState extends Equatable {
-  const TabBarState({this.currentTabIndex = 0, this.filterIconVisible = true, this.menuIconVisible = false});
+  const TabBarState({
+    this.currentTabIndex = 0,
+    this.filterIconVisible = true,
+    this.messageDeleteButtonVisible = false,
+  });
 
-  const TabBarState.initial()
-      : this(
-          filterIconVisible: true,
-
-        );
+  const TabBarState.initial() : this(filterIconVisible: true);
   final int currentTabIndex;
   final bool filterIconVisible;
-  final bool menuIconVisible;
+  final bool messageDeleteButtonVisible;
 
   @override
-  List<Object?> get props => [
-       filterIconVisible, menuIconVisible,  currentTabIndex
-      ];
+  List<Object?> get props =>
+      [filterIconVisible, messageDeleteButtonVisible, currentTabIndex];
 
-  TabBarState copyWith({int? currentTabIndex, bool? filterIconVisible, bool? menuIconVisible}) {
+  TabBarState copyWith({
+    int? currentTabIndex,
+    bool? filterIconVisible,
+    bool? menuIconVisible,
+  }) {
     return TabBarState(
       currentTabIndex: currentTabIndex ?? this.currentTabIndex,
       filterIconVisible: filterIconVisible ?? this.filterIconVisible,
-      menuIconVisible: menuIconVisible ?? this.menuIconVisible,
-      );
+      messageDeleteButtonVisible:
+          menuIconVisible ?? this.messageDeleteButtonVisible,
+    );
   }
 }

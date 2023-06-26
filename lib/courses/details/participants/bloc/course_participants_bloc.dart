@@ -17,7 +17,7 @@ class CourseParticipantsBloc
     required this.courseId,
     this.limit = 10,
   })  : _courseRepository = courseRepository,
-        super(const CourseParticipantsInitial()) {
+        super(const CourseParticipantsLoading()) {
     on<CourseParticipantsRequested>(_onCourseParticipantsRequested);
     on<CourseParticipantsReachedBottom>(
       _onCourseParticipantsReachedBottom,
@@ -80,10 +80,7 @@ class CourseParticipantsBloc
           limit: limit,
         );
 
-        final updatedParticipants = [
-          ...participants,
-          ...response.participants
-        ];
+        final updatedParticipants = [...participants, ...response.participants];
 
         emit(
           CourseParticipantsDidLoad(
