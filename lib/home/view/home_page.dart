@@ -1,9 +1,11 @@
+import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:studipadawan/app/bloc/app_bloc.dart';
 import 'package:studipadawan/home/cubit/home_cubit.dart';
 import 'package:studipadawan/home/modules/module.dart';
+import 'package:studipadawan/home/profile/view/profile_page.dart';
 import 'package:studipadawan/home/view/widgets/module_reorderable_list.dart';
 import 'package:studipadawan/home/view/widgets/module_selection_modal.dart';
 import 'package:studipadawan/utils/empty_view.dart';
@@ -23,6 +25,17 @@ class HomePage extends StatelessWidget {
         appBar: AppBar(
           title: const Text('Home'),
           actions: <Widget>[
+            IconButton(
+              icon: const Icon(EvaIcons.personOutline),
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute<ProfilePage>(
+                    fullscreenDialog: true,
+                    builder: (context) => const ProfilePage(),
+                  ),
+                );
+              },
+            ),
             IconButton(
               key: const Key('homePage_logout_iconButton'),
               icon: const Icon(Icons.exit_to_app),

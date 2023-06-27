@@ -10,6 +10,7 @@ class ProfileImageAvatar extends StatelessWidget {
     this.radius,
     this.minRadius,
     this.maxRadius,
+    this.fontSize,
   });
 
   final String replacementLetter;
@@ -18,6 +19,7 @@ class ProfileImageAvatar extends StatelessWidget {
   final double? radius;
   final double? minRadius;
   final double? maxRadius;
+  final double? fontSize;
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +36,10 @@ class ProfileImageAvatar extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(AppSpacing.xxs),
         child: switch (_getImageUrl()) {
-          null => _FirstLetterText(letter: replacementLetter),
+          null => _FirstLetterText(
+              letter: replacementLetter,
+              fontSize: fontSize,
+            ),
           _ => null,
         },
       ),
@@ -54,9 +59,13 @@ class ProfileImageAvatar extends StatelessWidget {
 }
 
 class _FirstLetterText extends StatelessWidget {
-  const _FirstLetterText({required this.letter});
+  const _FirstLetterText({
+    required this.letter,
+    this.fontSize,
+  });
 
   final String letter;
+  final double? fontSize;
 
   @override
   Widget build(BuildContext context) {
@@ -64,6 +73,7 @@ class _FirstLetterText extends StatelessWidget {
       letter.split('').firstOrNull ?? '',
       style: TextStyle(
         color: Theme.of(context).primaryColor,
+        fontSize: fontSize,
       ),
     );
   }
