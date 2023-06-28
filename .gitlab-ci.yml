@@ -5,10 +5,13 @@ variables:
 
 stages:
   - UnitTests
+  - Build
+  - Release
 
 unit-tests:
   stage: UnitTests
   script:
+    - echo "Running UnitTests"
     - |
       flutter pub get
       cd packages/studip_api_client
@@ -29,3 +32,47 @@ unit-tests:
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == $TARGET_BRANCH'
     - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == $TARGET_BRANCH'
+
+build-apk:
+  stage: Build
+  script:
+    - echo "Running build"
+    - echo -n "$KEYSTORE" | base64 --decode > android/app/upload-keystore.jks
+    - echo "keyPassword=$STORE_PASSWORD" >> android/key.properties
+    - echo -e "storePassword=$STORE_PASSWORD" >> android/key.properties
+    - echo -e "keyAlias=upload" >> android/key.properties
+    - echo -e "storeFile=upload-keystore.jks" >> android/key.properties
+    - export fhome=$(pwd)
+    - cd packages/studip_api_client
+    - dart run build_runner build
+    - cd $fhome
+    - flutter build apk --release
+  after_script:
+    - echo "JOB_ID=$CI_JOB_ID" >> job.env
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == $TARGET_BRANCH'
+  artifacts:
+    paths:
+      - build/app/outputs/apk/release
+    expire_in: never
+    reports:
+      dotenv: job.env
+
+release:
+  stage: Release
+  image: registry.gitlab.com/gitlab-org/release-cli:latest
+  needs:
+    - job: build-apk
+      artifacts: true
+  script:
+    - echo "Running release"
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == $TARGET_BRANCH'
+  release:
+    name: "$CI_COMMIT_MESSAGE"
+    tag_name: "$CI_COMMIT_SHORT_SHA"
+    description: "$CI_COMMIT_MESSAGE"
+    assets:
+      links:
+        - name: "apk-release.zip"
+          url: "https://gitlab.hs-flensburg.de/projekt-6.-semester/studipadawan/-/jobs/$JOB_ID/artifacts/download"
