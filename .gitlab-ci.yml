@@ -42,8 +42,8 @@ release:
     name: "$CI_COMMIT_MESSAGE"
     tag_name: "$CI_COMMIT_SHORT_SHA"
     description: "$CI_COMMIT_MESSAGE"
-  assets:
-    links:
-      - name: "apk-release.zip"
-        url: "https://gitlab.hs-flensburg.de/projekt-6.-semester/studipadawan/-/jobs/$JOB_ID/artifacts/download"
+    assets:
+      links:
+        - name: "apk-release.zip"
+          url: "https://gitlab.hs-flensburg.de/projekt-6.-semester/studipadawan/-/jobs/$JOB_ID/artifacts/download"
 
