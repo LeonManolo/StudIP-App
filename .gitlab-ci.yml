@@ -21,9 +21,14 @@ build-apk:
     - dart run build_runner build
     - cd $fhome
     - flutter build apk --release
+  after_script:
+    - echo "JOB_ID=$CI_JOB_ID" >> job.env
   artifacts:
     paths:
       - build/app/outputs/apk/release
+    expire_in: never
+    reports:
+      dotenv: job.env
 
 release:
   stage: Release
@@ -37,4 +42,8 @@ release:
     name: "$CI_COMMIT_MESSAGE"
     tag_name: "$CI_COMMIT_SHORT_SHA"
     description: "$CI_COMMIT_MESSAGE"
+  assets:
+      links:
+        - name: "apk-release.zip"
+          url: "https://gitlab.hs-flensburg.de/projekt-6.-semester/studipadawan/-/jobs/$JOB_ID/artifacts/download"
 
