@@ -24,4 +24,5 @@ build-apk:
       - build/app/outputs/apk/release
   release:
     name : "Release $CI_COMMIT_REF_NAME"
+    description: "Release $CI_COMMIT_REF_NAME"
     tag_name: "$CI_COMMIT_REF_NAME"
