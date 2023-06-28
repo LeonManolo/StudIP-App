@@ -31,8 +31,10 @@ class ProfileImageAvatar extends StatelessWidget {
         final String url => NetworkImage(url),
         _ => null,
       },
-      backgroundColor:
-          backgroundColor ?? Theme.of(context).primaryColor.withOpacity(0.1),
+      backgroundColor: backgroundColor ??
+          Theme.of(context).primaryColor.withOpacity(
+                Theme.of(context).brightness == Brightness.light ? 0.1 : 0.3,
+              ),
       child: Padding(
         padding: const EdgeInsets.all(AppSpacing.xxs),
         child: switch (_getImageUrl()) {

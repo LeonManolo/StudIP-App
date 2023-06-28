@@ -1,8 +1,8 @@
 import 'package:app_ui/app_ui.dart';
-import 'package:authentication_repository/authentication_repository.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:studipadawan/app/bloc/app_bloc.dart';
 import 'package:studipadawan/home/profile/widgets/optional_profile_attribute.dart';
 import 'package:studipadawan/home/profile/widgets/profile_log_out_button.dart';
 import 'package:studipadawan/utils/widgets/profile_image_avatar.dart';
@@ -13,6 +13,7 @@ class ProfilePageBody extends StatelessWidget {
     required this.lastName,
     required this.formattedName,
     required this.email,
+    required this.username,
     this.phone,
     this.website,
     this.address,
@@ -21,6 +22,7 @@ class ProfilePageBody extends StatelessWidget {
   final String lastName;
   final String formattedName;
   final String email;
+  final String username;
   final String? phone;
   final String? website;
   final String? address;
@@ -29,6 +31,7 @@ class ProfilePageBody extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size.width * 0.15;
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         Padding(
           padding: const EdgeInsets.only(
@@ -50,7 +53,7 @@ class ProfilePageBody extends StatelessWidget {
             top: AppSpacing.xs,
           ),
           child: Text(
-            email,
+            username,
             style: TextStyle(
               color: Theme.of(context).hintColor,
             ),
@@ -78,7 +81,7 @@ class ProfilePageBody extends StatelessWidget {
         ProfileLogOutButton(
           onPressed: () {
             Navigator.pop(context);
-            context.read<AuthenticationRepository>().logOut();
+            context.read<AppBloc>().add(const AppLogoutRequested());
           },
         ),
       ],

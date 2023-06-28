@@ -36,13 +36,6 @@ class HomePage extends StatelessWidget {
                 );
               },
             ),
-            IconButton(
-              key: const Key('homePage_logout_iconButton'),
-              icon: const Icon(Icons.exit_to_app),
-              onPressed: () {
-                context.read<AppBloc>().add(const AppLogoutRequested());
-              },
-            )
           ],
         ),
         body: BlocBuilder<HomeCubit, List<Module>>(
