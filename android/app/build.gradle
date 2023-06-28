@@ -78,7 +78,7 @@ android {
                         if (buildType == 'debug'){
                             newName = "app-debug.apk"
                         } else {
-                            newName = "${appName}${defaultConfig.versionName}.apk"
+                            newName = "${appName}.apk"
                         }
                         outputFileName = newName
                     }
