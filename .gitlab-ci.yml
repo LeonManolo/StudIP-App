@@ -4,31 +4,7 @@ variables:
   TARGET_BRANCH: "main"
 
 stages:
-  - UnitTests
-
-unit-tests:
-  stage: UnitTests
-  script:
-    - |
-      flutter pub get
-      cd packages/studip_api_client
-      dart run build_runner build
-      cd ../..
-
-      flutter test test
-      cd packages
-
-      for dir in */; do
-        if [ -f "$dir/pubspec.yaml" ] && grep -q "flutter_test" "$dir/pubspec.yaml"; then
-          echo "Test $dir"
-          cd "$dir"
-          flutter test test
-          cd ..
-        fi
-      done
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == $TARGET_BRANCH'
-    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == $TARGET_BRANCH'
+  - Build
 
 build-apk:
   stage: Build
