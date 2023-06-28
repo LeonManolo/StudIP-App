@@ -4,8 +4,34 @@ variables:
   TARGET_BRANCH: "main"
 
 stages:
+  - UnitTests
   - Build
   - Release
+
+unit-tests:
+  stage: UnitTests
+  script:
+    - echo "Running UnitTests"
+    - |
+      flutter pub get
+      cd packages/studip_api_client
+      dart run build_runner build
+      cd ../..
+
+      flutter test test
+      cd packages
+
+      for dir in */; do
+        if [ -f "$dir/pubspec.yaml" ] && grep -q "flutter_test" "$dir/pubspec.yaml"; then
+          echo "Test $dir"
+          cd "$dir"
+          flutter test test
+          cd ..
+        fi
+      done
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == $TARGET_BRANCH'
+    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == $TARGET_BRANCH'
 
 build-apk:
   stage: Build
@@ -23,6 +49,8 @@ build-apk:
     - flutter build apk --release
   after_script:
     - echo "JOB_ID=$CI_JOB_ID" >> job.env
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == $TARGET_BRANCH'
   artifacts:
     paths:
       - build/app/outputs/apk/release
@@ -38,6 +66,8 @@ release:
       artifacts: true
   script:
     - echo "Running release"
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == $TARGET_BRANCH'
   release:
     name: "$CI_COMMIT_MESSAGE"
     tag_name: "$CI_COMMIT_SHORT_SHA"
@@ -46,4 +76,3 @@ release:
       links:
         - name: "apk-release.zip"
           url: "https://gitlab.hs-flensburg.de/projekt-6.-semester/studipadawan/-/jobs/$JOB_ID/artifacts/download"
-
