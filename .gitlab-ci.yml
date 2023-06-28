@@ -9,7 +9,7 @@ stages:
 build-apk:
   stage: Build
   script:
-     - echo -n "$KEYSTORE" | base64 --decode > android/app/upload-keystore.jks
+    - echo -n "$KEYSTORE" | base64 --decode > android/app/upload-keystore.jks
     - echo "keyPassword=$STORE_PASSWORD" >> android/key.properties
     - echo -e "storePassword=$STORE_PASSWORD" >> android/key.properties
     - echo -e "keyAlias=upload" >> android/key.properties
