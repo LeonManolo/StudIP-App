@@ -68,19 +68,15 @@ android {
        }
    }
    buildTypes {
+      debug {
+        signingConfig signingConfigs.debug
+        }
         release {
-            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.release
             applicationVariants.all { variant ->
                 variant.outputs.all {
                     def appName = "StudIPadawan"
-                    def buildType = variant.variantData.variantConfiguration.buildType.name
-                    def newName
-                    if (buildType == 'debug'){
-                        newName = "${appName}-debug.apk"
-                    } else {
-                        newName = "${appName}-${defaultConfig.versionName}.apk"
-                    }
-                    outputFileName = newName
+                    outputFileName = "${appName}-${defaultConfig.versionName}.apk"
                 }
             }
         }
