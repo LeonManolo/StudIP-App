@@ -14,6 +14,10 @@ build-apk:
     - echo -e "storePassword=$STORE_PASSWORD" >> android/key.properties
     - echo -e "keyAlias=upload" >> android/key.properties
     - echo -e "storeFile=upload-keystore.jks" >> android/key.properties
+    - export fhome=$(pwd)
+    - cd packages/studip_api_client
+    - dart run build_runner build 
+    - cd $fhome
     - flutter build apk
   artifacts:
     paths:

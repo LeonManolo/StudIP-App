@@ -68,9 +68,23 @@ android {
        }
    }
    buildTypes {
-       release {
-           signingConfig signingConfigs.release
-       }
+        release {
+            signingConfig signingConfigs.debug
+            applicationVariants.all { variant ->
+                variant.outputs.all {
+                    def appName = "StudIPadawan"
+                    def buildType = variant.variantData.variantConfiguration.buildType.name
+                    def newName
+                    if (buildType == 'debug'){
+                        newName = "${appName}-debug.apk"
+                    } else {
+                        newName = "${appName}-${defaultConfig.versionName}.apk"
+                    }
+                    outputFileName = newName
+                }
+            }
+        }
+    }
    }
 }
 
