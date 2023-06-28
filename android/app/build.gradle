@@ -67,20 +67,24 @@ android {
            storePassword keystoreProperties['storePassword']
        }
    }
-   buildTypes {
-      debug {
-        signingConfig signingConfigs.debug
-        }
-        release {
-            signingConfig signingConfigs.release
-            applicationVariants.all { variant ->
-                variant.outputs.all {
-                    def appName = "StudIPadawan"
-                    outputFileName = "${appName}-${defaultConfig.versionName}.apk"
+    buildTypes {
+            release {
+                signingConfig signingConfigs.release
+                applicationVariants.all { variant ->
+                    variant.outputs.all {
+                        def appName = "StudIPadawan_"
+                        def buildType = variant.buildType.name
+                        def newName
+                        if (buildType == 'debug'){
+                            newName = "app-debug.apk"
+                        } else {
+                            newName = "${appName}${defaultConfig.versionName}.apk"
+                        }
+                        outputFileName = newName
+                    }
                 }
             }
         }
-    }
 }
 
 flutter {
