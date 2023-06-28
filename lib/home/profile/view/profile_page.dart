@@ -32,33 +32,30 @@ class ProfileView extends StatelessWidget {
       ),
       body: Center(
         child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(AppSpacing.lg),
-            child: BlocBuilder<ProfileBloc, ProfileState>(
-              builder: (context, state) {
-                switch (state) {
-                  case ProfileLoading() || ProfileInitial():
-                    return const LoadingIndicator();
-                  case ProfilePopulated(user: final user):
-                    return ProfilePageBody(
-                      lastName: user.attributes.familyName,
-                      formattedName: user.attributes.formattedName,
-                      email: user.attributes.email,
-                      phone: user.attributes.phone,
-                      website: user.attributes.homepage,
-                      address: user.attributes.address,
-                      username: user.attributes.username,
-                    );
-                  case ProfileFailure():
-                    return ErrorView(
-                      message: 'Fehler beim Laden des Profils',
-                      onRetryPressed: () {
-                        context.read<ProfileBloc>().add(ProfileRequested());
-                      },
-                    );
-                }
-              },
-            ),
+          child: BlocBuilder<ProfileBloc, ProfileState>(
+            builder: (context, state) {
+              switch (state) {
+                case ProfileLoading() || ProfileInitial():
+                  return const LoadingIndicator();
+                case ProfilePopulated(user: final user):
+                  return ProfilePageBody(
+                    lastName: user.attributes.familyName,
+                    formattedName: user.attributes.formattedName,
+                    email: user.attributes.email,
+                    phone: user.attributes.phone,
+                    website: user.attributes.homepage,
+                    address: user.attributes.address,
+                    username: user.attributes.username,
+                  );
+                case ProfileFailure():
+                  return ErrorView(
+                    message: 'Fehler beim Laden des Profils',
+                    onRetryPressed: () {
+                      context.read<ProfileBloc>().add(ProfileRequested());
+                    },
+                  );
+              }
+            },
           ),
         ),
       ),

@@ -30,59 +30,69 @@ class ProfilePageBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size.width * 0.15;
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(
-            top: AppSpacing.xxlg,
-            bottom: AppSpacing.lg,
-          ),
-          child: ProfileImageAvatar(
-            replacementLetter: lastName,
-            fontSize: size / 2,
-            radius: size,
-          ),
-        ),
-        Text(
-          formattedName,
-          style: Theme.of(context).textTheme.titleLarge,
-        ),
-        Padding(
-          padding: const EdgeInsets.only(
-            top: AppSpacing.xs,
-          ),
-          child: Text(
-            username,
-            style: TextStyle(
-              color: Theme.of(context).hintColor,
+    return CustomScrollView(
+      slivers: [
+        SliverFillRemaining(
+          hasScrollBody: false,
+          child: Padding(
+            padding: const EdgeInsets.all(AppSpacing.lg),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(
+                    top: AppSpacing.xxlg,
+                    bottom: AppSpacing.lg,
+                  ),
+                  child: ProfileImageAvatar(
+                    replacementLetter: lastName,
+                    fontSize: size / 2,
+                    radius: size,
+                  ),
+                ),
+                Text(
+                  formattedName,
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(
+                    top: AppSpacing.xs,
+                  ),
+                  child: Text(
+                    username,
+                    style: TextStyle(
+                      color: Theme.of(context).hintColor,
+                    ),
+                  ),
+                ),
+                const Spacer(),
+                OptionalProfileAttribute(
+                  title: phone,
+                  iconData: EvaIcons.phoneOutline,
+                ),
+                OptionalProfileAttribute(
+                  title: email,
+                  iconData: EvaIcons.emailOutline,
+                ),
+                OptionalProfileAttribute(
+                  title: website,
+                  iconData: EvaIcons.globe,
+                ),
+                OptionalProfileAttribute(
+                  title: address,
+                  iconData: EvaIcons.pinOutline,
+                  displayDivider: false,
+                ),
+                const Spacer(),
+                ProfileLogOutButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    context.read<AppBloc>().add(const AppLogoutRequested());
+                  },
+                ),
+              ],
             ),
           ),
-        ),
-        const Spacer(),
-        OptionalProfileAttribute(
-          title: phone,
-          iconData: EvaIcons.phoneOutline,
-        ),
-        OptionalProfileAttribute(
-          title: email,
-          iconData: EvaIcons.emailOutline,
-        ),
-        OptionalProfileAttribute(
-          title: website,
-          iconData: EvaIcons.globe,
-        ),
-        OptionalProfileAttribute(
-          title: address,
-          iconData: EvaIcons.pinOutline,
-          displayDivider: false,
-        ),
-        const Spacer(),
-        ProfileLogOutButton(
-          onPressed: () {
-            Navigator.pop(context);
-            context.read<AppBloc>().add(const AppLogoutRequested());
-          },
         ),
       ],
     );

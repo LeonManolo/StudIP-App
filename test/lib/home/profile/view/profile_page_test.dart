@@ -72,9 +72,6 @@ void main() {
           user: _generateUserResponseItem(),
         ),
       );
-      // default: Size(800.0, 600.0)
-      await tester.binding.setSurfaceSize(const Size(1200, 1980));
-
       await tester.pumpWidget(
         BlocProvider.value(
           value: profileBloc,
@@ -104,8 +101,6 @@ void main() {
           user: _generateUserResponseItem(),
         ),
       );
-      // default: Size(800.0, 600.0)
-      await tester.binding.setSurfaceSize(const Size(1200, 1980));
       await tester.pumpWidget(
         MultiBlocProvider(
           providers: [
@@ -115,7 +110,9 @@ void main() {
           child: const MaterialApp(home: ProfileView()),
         ),
       );
-      await tester.tap(find.byType(ProfileLogOutButton));
+      await tester.ensureVisible(find.byType(ProfileLogOutButton));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byType(ProfileLogOutButton, skipOffstage: false));
       await tester.pumpAndSettle();
       verify(() => appBloc.add(const AppLogoutRequested())).called(1);
     });
@@ -129,8 +126,6 @@ void main() {
           ),
         ),
       );
-      // default: Size(800.0, 600.0)
-      await tester.binding.setSurfaceSize(const Size(1200, 1980));
       await tester.pumpWidget(
         MultiBlocProvider(
           providers: [
@@ -158,8 +153,6 @@ void main() {
           ),
         ),
       );
-      // default: Size(800.0, 600.0)
-      await tester.binding.setSurfaceSize(const Size(1200, 1980));
       await tester.pumpWidget(
         MultiBlocProvider(
           providers: [
