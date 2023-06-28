@@ -29,3 +29,16 @@ unit-tests:
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == $TARGET_BRANCH'
     - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == $TARGET_BRANCH'
+
+build-apk:
+  stage: Build
+  script:
+    - echo -n "$KEYSTORE" | base64 --decode > android/app/upload-keystore.jks
+    - echo "keyPassword=$STORE_PASSWORD > android/key.properties"
+    - echo "storePassword=$STORE_PASSWORD > android/key.properties"
+    - echo "keyAlias=studipadawan > android/key.properties"
+    - echo "storeFile=upload-keystore.jks > android/key.properties"
+    - flutter build apk
+  artifacts:
+    paths:
+      - build/app/outputs/apk/release/StudIPadawan-1.0.0.apk

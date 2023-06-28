@@ -57,13 +57,33 @@ android {
         versionName flutterVersionName
     }
 
-    buildTypes {
+      signingConfigs {
+       release {
+           keyAlias keystoreProperties['keyAlias']
+           keyPassword keystoreProperties['keyPassword']
+           storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
+           storePassword keystoreProperties['storePassword']
+       }
+   }
+   buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig signingConfigs.debug
+            applicationVariants.all { variant ->
+                variant.outputs.all {
+                    def appName = "StudIPadawan"
+                    def buildType = variant.variantData.variantConfiguration.buildType.name
+                    def newName
+                    if (buildType == 'debug'){
+                        newName = "${appName}-debug.apk"
+                    } else {
+                        newName = "${appName}-${defaultConfig.versionName}.apk"
+                    }
+                    outputFileName = newName
+                }
+            }
         }
     }
+
 }
 
 flutter {
