@@ -5,6 +5,7 @@ variables:
 
 stages:
   - Build
+  - Release
 
 build-apk:
   stage: Build
@@ -26,3 +27,12 @@ build-apk:
     name : "Release $CI_COMMIT_REF_NAME"
     description: "Release $CI_COMMIT_REF_NAME"
     tag_name: "$CI_COMMIT_REF_NAME"
+
+release:
+  stage: Release
+  image: registry.gitlab.com/gitlab-org/release-cli:latest
+  script:
+    - echo "running release_job"
+  release:
+    tag_name: '$CI_COMMIT_TAG'
+    description: '$CI_COMMIT_TAG'
