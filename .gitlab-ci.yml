@@ -17,4 +17,4 @@ build-apk:
     - flutter build apk
   artifacts:
     paths:
-      - build/app/outputs/apk/release/StudIPadawan-1.0.0.apk
+      - build/app/outputs/flutter-apk/
