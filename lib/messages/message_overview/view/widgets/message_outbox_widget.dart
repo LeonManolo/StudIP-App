@@ -69,7 +69,9 @@ class OutboxMessageWidgetState extends State<OutboxMessageWidget> {
                         ? Theme.of(context).primaryColor.withOpacity(0.5)
                         : Colors.transparent,
                     child: MessageTile(
-                      messageIcon: messageIcon(context, isRead: message.isRead),
+                      messageIcon: MessageIcon(
+                        iconData: getMessageIconData(isRead: true),
+                      ),
                       onTapFunction: () => {
                         if (_markedOutboxMessages.isNotEmpty)
                           {
@@ -82,8 +84,8 @@ class OutboxMessageWidgetState extends State<OutboxMessageWidget> {
                           {
                             Navigator.push(
                               context,
-                              MaterialPageRoute<MessageDetailpage>(
-                                builder: (context) => MessageDetailpage(
+                              MaterialPageRoute<MessageDetailPage>(
+                                builder: (context) => MessageDetailPage(
                                   isInbox: false,
                                   message: message,
                                   refreshMessages: _refreshOutboxMessages,
@@ -95,8 +97,8 @@ class OutboxMessageWidgetState extends State<OutboxMessageWidget> {
                       onLongPressFunction: () =>
                           _markMessage(context, message.id),
                       title: message.subject,
-                      subTitle: message.parseRecipients(),
-                      trailing: message.getTimeAgo(),
+                      subTitle:
+                          'An ${message.parseRecipients()} ${message.getTimeAgo()}',
                     ),
                   );
                 }

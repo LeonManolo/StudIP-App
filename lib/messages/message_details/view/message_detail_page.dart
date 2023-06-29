@@ -12,8 +12,8 @@ import 'package:studipadawan/messages/message_details/view/widgets/message_detai
 import 'package:studipadawan/messages/message_send/view/message_send_page.dart';
 import 'package:studipadawan/utils/utils.dart';
 
-class MessageDetailpage extends StatelessWidget {
-  const MessageDetailpage({
+class MessageDetailPage extends StatelessWidget {
+  const MessageDetailPage({
     super.key,
     required this.message,
     required this.isInbox,
@@ -66,7 +66,7 @@ class MessageDetailpage extends StatelessWidget {
               actions: [
                 MessageDetailsMenuButton(
                   isInbox: isInbox,
-                  answerMessage: () {
+                  onAnswerMessage: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute<MessageSendPage>(
@@ -75,7 +75,7 @@ class MessageDetailpage extends StatelessWidget {
                       ),
                     );
                   },
-                  deleteMessage: () {
+                  onDeleteMessage: () {
                     context
                         .read<MessageDetailsBloc>()
                         .add(DeleteMessageRequested(messageId: message.id));

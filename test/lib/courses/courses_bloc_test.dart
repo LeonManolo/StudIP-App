@@ -7,7 +7,7 @@ import 'package:studipadawan/courses/bloc/courses_bloc.dart';
 import 'package:studipadawan/courses/bloc/courses_event.dart';
 import 'package:studipadawan/courses/bloc/courses_state.dart';
 
-import '../../helpers/hydrated_bloc.dart';
+import '../../helpers/hydrated_stoarge.dart';
 
 class MockAuthenticationRepository extends Mock
     implements AuthenticationRepository {}
@@ -15,7 +15,7 @@ class MockAuthenticationRepository extends Mock
 class MockCourseRepository extends Mock implements CourseRepository {}
 
 void main() {
-  initHydratedBloc();
+  initHydratedStorage();
   late MockCourseRepository mockedCourseRepository;
   late MockAuthenticationRepository mockedAuthenticationRepository;
 

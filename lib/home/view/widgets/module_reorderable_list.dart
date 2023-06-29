@@ -1,18 +1,18 @@
-
+import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:studipadawan/home/cubit/home_cubit.dart';
-import 'package:studipadawan/home/modules/module.dart';
-import 'package:studipadawan/home/modules/module_card.dart';
+import 'package:studipadawan/home/view/widgets/module_card.dart';
 
-const double bottomPadding = 16;
+const double bottomPadding = AppSpacing.lg;
 
 class ReorderableModuleListView extends StatelessWidget {
   const ReorderableModuleListView({super.key, required this.modules});
-  final List<Module> modules;
+  final List<Widget> modules;
 
   @override
   Widget build(BuildContext context) {
+    // Styling when item is dragged
     Widget proxyDecorator(
       Widget child,
       int index,
@@ -42,12 +42,13 @@ class ReorderableModuleListView extends StatelessWidget {
 
     return ReorderableListView(
       onReorder: (oldIndex, newIndex) {
-        context.read<HomeCubit>().reorderModules(oldIndex, newIndex);
+        context.read<HomeCubit>().moveModule(oldIndex, newIndex);
       },
       proxyDecorator: proxyDecorator,
+      header: const SizedBox(height: AppSpacing.lg),
       children: modules.map((module) {
         return DecoratedBox(
-          key: Key(module.getType().name),
+          key: UniqueKey(),
           decoration: const BoxDecoration(
             color: Colors.transparent,
             borderRadius: BorderRadius.all(Radius.circular(radius)),
@@ -58,13 +59,7 @@ class ReorderableModuleListView extends StatelessWidget {
               borderRadius: BorderRadius.all(Radius.circular(radius)),
             ),
             child: Column(
-              children: [
-                module,
-                const Opacity(
-                  opacity: 0,
-                  child: SizedBox(height: bottomPadding),
-                )
-              ],
+              children: [module, const SizedBox(height: bottomPadding)],
             ),
           ),
         );

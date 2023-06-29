@@ -16,7 +16,7 @@ class EventsSection extends ExpansionTile {
                 subtitle: Text(
                   event.categories.isEmpty
                       ? 'Fällt aus'
-                      : event.categories.join(','),
+                      : event.categories.join(', '),
                 ),
               )
           ],

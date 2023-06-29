@@ -1,1 +1,1 @@
-export 'module_provider.dart';
+export 'module_factory.dart';

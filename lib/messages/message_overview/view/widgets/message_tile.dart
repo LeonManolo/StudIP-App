@@ -5,13 +5,11 @@ class MessageTile extends StatelessWidget {
     super.key,
     required this.messageIcon,
     required this.onTapFunction,
-    required this.trailing,
     required this.title,
     required this.subTitle,
     this.onLongPressFunction,
   });
-  final Icon messageIcon;
-  final String trailing;
+  final Widget messageIcon;
   final String title;
   final String subTitle;
   final void Function() onTapFunction;
@@ -28,7 +26,6 @@ class MessageTile extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[messageIcon],
       ),
-      trailing: Text(trailing),
       title: Text(title),
       subtitle: Text(subTitle),
     );

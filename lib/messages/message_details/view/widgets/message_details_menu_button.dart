@@ -12,13 +12,13 @@ enum MessageDetailsMenuOption {
 class MessageDetailsMenuButton extends StatelessWidget {
   const MessageDetailsMenuButton({
     super.key,
-    required this.answerMessage,
     required this.isInbox,
-    required this.deleteMessage,
+    required this.onAnswerMessage,
+    required this.onDeleteMessage,
   });
   final bool isInbox;
-  final void Function() answerMessage;
-  final void Function() deleteMessage;
+  final void Function() onAnswerMessage;
+  final void Function() onDeleteMessage;
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +26,7 @@ class MessageDetailsMenuButton extends StatelessWidget {
       icon: const Icon(EvaIcons.menu2Outline),
       onSelected: (state) => {
         if (state == MessageDetailsMenuOption.answer)
-          {answerMessage()}
+          {onAnswerMessage()}
         else
           {
             showDialog<void>(
@@ -47,7 +47,7 @@ class MessageDetailsMenuButton extends StatelessWidget {
                     TextButton(
                       child: const Text('Ja'),
                       onPressed: () {
-                        deleteMessage();
+                        onDeleteMessage();
                         Navigator.of(context).pop();
                       },
                     )

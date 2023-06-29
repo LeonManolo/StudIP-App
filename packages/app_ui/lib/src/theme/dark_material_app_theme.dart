@@ -12,7 +12,6 @@ class DarkMaterialAppTheme {
 
   ThemeData get themeData {
     return ThemeData(
-      platform: TargetPlatform.android,
       primaryColor: primaryColor,
       primarySwatch: getMaterialColor(Colors.indigo[200]!),
       appBarTheme: _appBarTheme,

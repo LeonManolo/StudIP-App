@@ -2,41 +2,50 @@ import 'package:activity_repository/activity_repository.dart';
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:logger/logger.dart';
-import 'package:studipadawan/home/modules/news_module/bloc/news_module_event.dart';
-import 'package:studipadawan/home/modules/news_module/bloc/news_module_state.dart';
+import 'package:studipadawan/home/modules/bloc/module_bloc.dart';
+import 'package:studipadawan/home/modules/news_module/model/news_preview_model.dart';
 
-const int previewLimit = 4;
-
-class NewsModuleBloc extends Bloc<NewsModuleEvent, NewsModuleState> {
+class NewsModuleBloc extends ModuleBloc {
   NewsModuleBloc({
     required ActivityRepository activityRepository,
     required AuthenticationRepository authenticationRepository,
   })  : _activityRepository = activityRepository,
         _authenticationRepository = authenticationRepository,
-        super(const NewsModuleStateInitial()) {
-    on<NewsActivitiesRequested>(_onNewsActivitiesRequested);
-  }
+        super();
+
   final ActivityRepository _activityRepository;
   final AuthenticationRepository _authenticationRepository;
 
-  Future<void> _onNewsActivitiesRequested(
-    NewsActivitiesRequested event,
-    Emitter<NewsModuleState> emit,
+  @override
+  String get emptyViewMessage => 'Keine aktuellen Ankündigungen vorhanden';
+
+  @override
+  Future<void> onModuleItemsRequested(
+    ModuleItemsRequested event,
+    Emitter<ModuleState> emit,
   ) async {
-    emit(const NewsModuleStateLoading());
     try {
-      final newsActivities = await _activityRepository.getNewsActivities(
+      final rawNewsActivities = await _activityRepository.getNewsActivities(
         userId: _authenticationRepository.currentUser.id,
       );
-
+      final newsAcitvities = _processNewsActivities(rawNewsActivities);
       emit(
-        NewsModuleStateDidLoad(
-          newsActivities: _processNewsActivities(newsActivities),
+        ModuleLoaded(
+          previewModels: newsAcitvities
+              .map(
+                (newsActivity) => NewsPreviewModel(newsActivity: newsActivity),
+              )
+              .toList(),
         ),
       );
     } catch (e) {
       Logger().e(e);
-      emit(const NewsModuleStateError());
+      emit(
+        const ModuleError(
+          errorMessage:
+              'Beim Laden der Ankündigungen ist ein Fehler aufgetreten.',
+        ),
+      );
     }
   }
 

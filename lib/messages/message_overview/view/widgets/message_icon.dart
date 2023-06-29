@@ -1,17 +1,28 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 
-Icon messageIcon(BuildContext context, {required bool isRead}) {
-  if (isRead) {
+IconData getMessageIconData({required bool isRead}) {
+  return isRead ? EvaIcons.emailOutline : EvaIcons.email;
+}
+
+Color? getMessageIconColor({
+  required bool isRead,
+  required BuildContext context,
+}) {
+  return isRead ? null : Theme.of(context).primaryColor;
+}
+
+class MessageIcon extends StatelessWidget {
+  const MessageIcon({super.key, required this.iconData, this.color});
+
+  final IconData iconData;
+  final Color? color;
+
+  @override
+  Widget build(BuildContext context) {
     return Icon(
-      EvaIcons.emailOutline,
-      color: Theme.of(context).primaryColor,
-      size: 24,
-    );
-  } else {
-    return Icon(
-      EvaIcons.email,
-      color: Theme.of(context).primaryColor,
+      iconData,
+      color: color,
       size: 24,
     );
   }
