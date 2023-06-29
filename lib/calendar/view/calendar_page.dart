@@ -1,5 +1,4 @@
 import 'package:animate_do/animate_do.dart';
-import 'package:app_ui/app_ui.dart';
 import 'package:calender_repository/calender_repository.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';

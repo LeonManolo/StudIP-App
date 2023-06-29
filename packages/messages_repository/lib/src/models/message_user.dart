@@ -33,6 +33,17 @@ class MessageUser {
     );
   }
 
+  factory MessageUser.withUsername({required String username}) {
+    return MessageUser(
+      id: '',
+      username: username,
+      firstName: '',
+      lastName: '',
+      formattedName: '',
+      role: '',
+    );
+  }
+
   final String id;
   String username;
   String firstName;

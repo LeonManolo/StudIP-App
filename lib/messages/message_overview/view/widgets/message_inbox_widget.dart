@@ -75,7 +75,13 @@ class InboxMessageWidgetState extends State<InboxMessageWidget> {
                         ? Theme.of(context).primaryColor.withOpacity(0.5)
                         : Colors.transparent,
                     child: MessageTile(
-                      messageIcon: messageIcon(context, isRead: message.isRead),
+                      messageIcon: MessageIcon(
+                        iconData: getMessageIconData(isRead: message.isRead),
+                        color: getMessageIconColor(
+                          isRead: message.isRead,
+                          context: context,
+                        ),
+                      ),
                       onTapFunction: () => {
                         if (_markedInboxMessages.isNotEmpty)
                           {
@@ -89,8 +95,8 @@ class InboxMessageWidgetState extends State<InboxMessageWidget> {
                             _readMessage(message),
                             Navigator.push(
                               context,
-                              MaterialPageRoute<MessageDetailpage>(
-                                builder: (context) => MessageDetailpage(
+                              MaterialPageRoute<MessageDetailPage>(
+                                builder: (context) => MessageDetailPage(
                                   isInbox: true,
                                   message: message,
                                   refreshMessages: _refreshInboxMessages,
@@ -100,9 +106,9 @@ class InboxMessageWidgetState extends State<InboxMessageWidget> {
                           }
                       },
                       onLongPressFunction: () => _markMessage(message.id),
-                      trailing: message.getTimeAgo(),
                       title: message.subject,
-                      subTitle: message.sender.formattedName,
+                      subTitle:
+                          'Von ${message.sender.formattedName} ${message.getTimeAgo()}',
                     ),
                   );
                 }

@@ -1,28 +1,29 @@
 import 'package:activity_repository/activity_repository.dart';
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:bloc/bloc.dart';
-import 'package:studipadawan/home/modules/files_module/bloc/files_module_event.dart';
-import 'package:studipadawan/home/modules/files_module/bloc/files_module_state.dart';
+import 'package:logger/logger.dart';
+import 'package:studipadawan/home/modules/bloc/module_bloc.dart';
+import 'package:studipadawan/home/modules/files_module/model/file_preview_model.dart';
 
-const int previewLimit = 4;
-
-class FilesModuleBloc extends Bloc<FilesModuleEvent, FilesModuleState> {
+class FilesModuleBloc extends ModuleBloc {
   FilesModuleBloc({
     required ActivityRepository activityRepository,
     required AuthenticationRepository authenticationRepository,
   })  : _activityRepository = activityRepository,
         _authenticationRepository = authenticationRepository,
-        super(const FilesModuleStateInitial()) {
-    on<FileActivitiesRequested>(_onFileActivitiesRequested);
-  }
+        super();
+
   final ActivityRepository _activityRepository;
   final AuthenticationRepository _authenticationRepository;
 
-  Future<void> _onFileActivitiesRequested(
-    FileActivitiesRequested event,
-    Emitter<FilesModuleState> emit,
+  @override
+  String get emptyViewMessage => 'Keine aktuellen Dateien vorhanden.';
+
+  @override
+  Future<void> onModuleItemsRequested(
+    ModuleItemsRequested event,
+    Emitter<ModuleState> emit,
   ) async {
-    emit(const FilesModuleStateLoading());
     try {
       final fileActivities = await _activityRepository.getFileActivities(
         userId: _authenticationRepository.currentUser.id,
@@ -30,12 +31,21 @@ class FilesModuleBloc extends Bloc<FilesModuleEvent, FilesModuleState> {
       );
 
       emit(
-        FilesModuleStateDidLoad(
-          fileActivities: fileActivities,
+        ModuleLoaded(
+          previewModels: fileActivities
+              .map(
+                (fileActivity) => FilePreviewModel(fileActivity: fileActivity),
+              )
+              .toList(),
         ),
       );
     } catch (e) {
-      emit(const FilesModuleStateError());
+      Logger().e(e);
+      emit(
+        const ModuleError(
+          errorMessage: 'Beim Laden der Dateien ist ein Fehler aufgetreten.',
+        ),
+      );
     }
   }
 }

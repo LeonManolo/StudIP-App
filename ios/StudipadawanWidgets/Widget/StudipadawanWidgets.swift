@@ -37,9 +37,10 @@ struct StudipadawanWidgetsSystemMediumView : View {
                 Spacer()
                 HStack {
                     Spacer()
-                    Text("Keine weiteren Einträge vorhanden")
+                    Text("Heute hast Du keine Termine mehr")
                         .foregroundColor(.gray)
                         .font(.system(size: 16))
+                        .multilineTextAlignment(.center)
                     Spacer()
                 }
             } else {
@@ -84,7 +85,12 @@ struct StudipadawanWidgets: Widget {
 
 struct StudipadawanWidgets_Previews: PreviewProvider {
     static var previews: some View {
-        StudipadawanWidgetsSystemMediumView(entry: ScheduleWidgetTimelineEntry.placeholder)
+        StudipadawanWidgetsSystemMediumView(entry: ScheduleWidgetTimelineEntry.placeholderFilled)
             .previewContext(WidgetPreviewContext(family: .systemMedium))
+            .previewDisplayName("Filled Widget")
+        
+        StudipadawanWidgetsSystemMediumView(entry: ScheduleWidgetTimelineEntry.placeholderEmpty)
+            .previewContext(WidgetPreviewContext(family: .systemMedium))
+            .previewDisplayName("Empty Widget")
     }
 }

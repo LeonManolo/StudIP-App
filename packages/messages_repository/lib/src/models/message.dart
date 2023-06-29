@@ -61,6 +61,19 @@ class Message {
       isRead: attributes.isRead,
     );
   }
+
+  Message copyWith({required bool isRead}) {
+    return Message(
+      id: id,
+      subject: subject,
+      message: message,
+      sender: sender,
+      recipients: recipients,
+      mkdate: mkdate,
+      isRead: isRead,
+    );
+  }
+
   final String id;
   final String subject;
   final String message;

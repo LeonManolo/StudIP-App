@@ -13,7 +13,7 @@ struct ScheduleWidgetTimelineEntry: TimelineEntry {
     let date: Date
     let items: [ScheduleItem]
     
-    static let placeholder = ScheduleWidgetTimelineEntry(
+    static let placeholderFilled = ScheduleWidgetTimelineEntry(
         date: Date(),
         items: [
             .init(
@@ -24,13 +24,15 @@ struct ScheduleWidgetTimelineEntry: TimelineEntry {
             )
         ]
     )
+    
+    static let placeholderEmpty = ScheduleWidgetTimelineEntry(date: Date(), items: [])
 }
 
 struct ScheduleEntryDataProvider: TimelineProvider {
     let dataProvider: DataProvider
     
     func placeholder(in context: Context) -> ScheduleWidgetTimelineEntry {
-        ScheduleWidgetTimelineEntry.placeholder
+        ScheduleWidgetTimelineEntry.placeholderFilled
     }
 
     func getSnapshot(in context: Context, completion: @escaping (ScheduleWidgetTimelineEntry) -> ()) {
