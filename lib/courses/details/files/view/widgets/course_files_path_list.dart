@@ -9,15 +9,14 @@ class CourseFilesPathRowList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<CourseFilesBloc, CourseFilesState>(
-      builder: (context, state) {   
+      builder: (context, state) {
         return SizedBox(
           height: 40,
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
             itemBuilder: (context, index) {
               final folderInfo = state.parentFolders.elementAt(index);
-              return 
-              TextButton(
+              return TextButton(
                 style: TextButton.styleFrom(
                   minimumSize: const Size.fromWidth(20),
                 ),
