@@ -14,9 +14,8 @@ class CourseFilesPathRowList extends StatelessWidget {
           height: 40,
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
-            reverse: true,
             itemBuilder: (context, index) {
-              final folderInfo = state.parentFolders.reversed.elementAt(index);
+              final folderInfo = state.parentFolders.elementAt(index);
               return TextButton(
                 style: TextButton.styleFrom(
                   minimumSize: const Size.fromWidth(20),

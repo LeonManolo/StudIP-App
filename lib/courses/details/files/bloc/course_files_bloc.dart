@@ -39,7 +39,7 @@ class CourseFilesBloc extends Bloc<CourseFilesEvent, CourseFilesState> {
       final parentFolderInfo = FolderInfo(
         folder: rootFolder,
         folderType: FolderType.root,
-        displayName: 'Root',
+        displayName: 'Start',
       );
 
       emit(
