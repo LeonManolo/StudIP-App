@@ -7,6 +7,7 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:studipadawan/courses/details/files/bloc/course_files_bloc.dart';
 import 'package:studipadawan/courses/details/files/upload_files/view/upload_files_page.dart';
 import 'package:studipadawan/courses/details/files/view/widgets/course_files_items_list.dart';
+import 'package:studipadawan/utils/utils.dart';
 
 class CourseFilesContent extends StatefulWidget {
   const CourseFilesContent({super.key});
@@ -34,10 +35,19 @@ class _CourseFilesContentState extends State<CourseFilesContent> {
   @override
   Widget build(BuildContext context) {
     final courseFilesBloc = context.read<CourseFilesBloc>();
-    return BlocBuilder<CourseFilesBloc, CourseFilesState>(
+    return BlocConsumer<CourseFilesBloc, CourseFilesState>(
+      listener: (context, state) {
+        if (state.type == CourseFilesStateType.error) {
+          buildSnackBar(
+            context,
+            state.errorMessage ?? 'Es ist ein Fehler aufgetreten.',
+            Colors.red,
+          );
+        }
+      },
       builder: (context, state) {
         switch (state.type) {
-          case CourseFilesStateType.didLoad:
+          case CourseFilesStateType.didLoad || CourseFilesStateType.error:
             return Scaffold(
               body: CourseFilesItemsList(
                 insertSpacerAtEnd: state.parentFolders.last.folder.isWritable ||
@@ -102,13 +112,6 @@ class _CourseFilesContentState extends State<CourseFilesContent> {
           case CourseFilesStateType.isLoading:
             return const Center(
               child: CircularProgressIndicator(),
-            );
-          case CourseFilesStateType.error:
-            return Center(
-              child: Text(
-                state.errorMessage ?? 'Ein unbekannter Fehler ist aufgetreten',
-                textAlign: TextAlign.center,
-              ),
             );
         }
       },

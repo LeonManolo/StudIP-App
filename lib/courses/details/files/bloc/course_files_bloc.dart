@@ -196,6 +196,8 @@ class CourseFilesBloc extends Bloc<CourseFilesEvent, CourseFilesState> {
     final File fileToDownload = fileInfo.file;
 
     final int selectedFileInfoIndex = state.items.indexOf(right(fileInfo));
+    final initialItems =
+        List.of(state.items); // used as a backup value if something goes wrong
 
     if (selectedFileInfoIndex >= 0 &&
         state.items[selectedFileInfoIndex].isRight()) {
@@ -204,29 +206,53 @@ class CourseFilesBloc extends Bloc<CourseFilesEvent, CourseFilesState> {
         FileInfo(fileType: FileType.isDownloading, file: fileToDownload),
       );
 
-      emit(state.copyWith(items: updatedItems));
-    }
-
-    final localStoragePath = await _filesRepository.downloadFile(
-      file: fileToDownload,
-      parentFolderIds: state.parentFolderIds,
-    );
-
-    if (selectedFileInfoIndex >= 0 &&
-        state.items[selectedFileInfoIndex].isRight()) {
-      final updatedItems = List.of(state.items);
-      updatedItems[selectedFileInfoIndex] = right(
-        FileInfo(
-          fileType:
-              localStoragePath != null ? FileType.downloaded : FileType.remote,
-          file: fileToDownload,
+      emit(
+        state.copyWith(
+          items: updatedItems,
+          type: CourseFilesStateType.didLoad,
         ),
       );
-
-      emit(state.copyWith(items: updatedItems));
     }
 
-    return localStoragePath;
+    try {
+      final localStoragePath = await _filesRepository.downloadFile(
+        file: fileToDownload,
+        parentFolderIds: state.parentFolderIds,
+      );
+
+      if (selectedFileInfoIndex >= 0 &&
+          state.items[selectedFileInfoIndex].isRight()) {
+        final updatedItems = List.of(state.items);
+        updatedItems[selectedFileInfoIndex] = right(
+          FileInfo(
+            fileType: localStoragePath != null
+                ? FileType.downloaded
+                : FileType.remote,
+            file: fileToDownload,
+          ),
+        );
+
+        emit(
+          state.copyWith(
+            items: updatedItems,
+            type: CourseFilesStateType.didLoad,
+          ),
+        );
+      }
+
+      return localStoragePath;
+    } catch (e) {
+      Logger().e(e);
+      emit(
+        state.copyWith(
+          items: initialItems,
+          errorMessage:
+              'Beim Herunterladen der Datei ist ein Fehler aufgetreten.',
+          type: CourseFilesStateType.error,
+        ),
+      );
+      return null;
+    }
   }
 
   /// Used to load all items for the last folder in [parentFolders]
