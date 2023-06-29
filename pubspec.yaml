@@ -125,6 +125,7 @@ dependencies:
 
 dev_dependencies:
   bloc_test: ^9.1.1
+  flutter_launcher_icons: ^0.13.1
   flutter_test:
     sdk: flutter
   json_serializable: ^6.7.0
