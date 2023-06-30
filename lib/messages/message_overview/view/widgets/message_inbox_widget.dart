@@ -52,14 +52,14 @@ class InboxMessageWidgetState extends State<InboxMessageWidget> {
         if (inboxState is InboxMessageStateDeleteSucceed) {
           buildSnackBar(
             context,
-            inboxState.blocResponse,
+            inboxState.successInfo,
             Colors.green,
           );
         }
         if (inboxState is InboxMessageStateDeleteError) {
           buildSnackBar(
             context,
-            inboxState.blocResponse,
+            inboxState.failureInfo,
             Colors.red,
           );
         }

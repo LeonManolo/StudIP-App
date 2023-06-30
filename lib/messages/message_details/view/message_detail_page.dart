@@ -32,21 +32,21 @@ class MessageDetailPage extends StatelessWidget {
       create: (context) => MessageDetailsBloc(
         messageRepository: context.read<MessageRepository>(),
       )..add(ReadMessageRequested(message: message)),
-      child: BlocConsumer<MessageDetailsBloc, MessageDetailState>(
+      child: BlocConsumer<MessageDetailsBloc, MessageDetailsState>(
         listener: (context, state) {
-          if (state is MessageDetailStateDeleteMessageSucceed) {
+          if (state is MessageDetailsStateDeleteSucceed) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
-              buildSnackBar(context, state.blocResponse, Colors.green);
+              buildSnackBar(context, state.successInfo, Colors.green);
               refreshMessages();
               Navigator.pop(context);
             });
           }
-          if (state is MessageDetailStateDeleteMessageError) {
-            buildSnackBar(context, state.blocResponse, Colors.red);
+          if (state is MessageDetailsStateDeleteError) {
+            buildSnackBar(context, state.failureInfo, Colors.red);
           }
         },
         builder: (context, state) {
-          if (state is MessageDetailStateLoading) {
+          if (state is MessageDetailsStateLoading) {
             return ColoredBox(
               color: Theme.of(context).scaffoldBackgroundColor,
               child: const Column(

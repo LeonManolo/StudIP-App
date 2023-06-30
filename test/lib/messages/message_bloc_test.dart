@@ -140,7 +140,7 @@ void main() {
       expect: () => [
         const OutboxMessageStateLoading(),
         OutboxMessageStateDeleteSucceed(
-          blocResponse: messageDeleteSucceed,
+          successInfo: messageDeleteSucceed,
           maxReached: true,
           outboxMessages: [message2],
         ),
@@ -267,7 +267,7 @@ void main() {
       expect: () => [
         const InboxMessageStateLoading(),
         InboxMessageStateDeleteSucceed(
-          blocResponse: messageDeleteSucceed,
+          successInfo: messageDeleteSucceed,
           maxReached: true,
           inboxMessages: [message2],
         ),

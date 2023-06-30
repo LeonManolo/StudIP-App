@@ -14,7 +14,8 @@ sealed class InboxMessageState extends Equatable {
     this.inboxMessages = const [],
     this.currentOffset = 0,
     this.currentFilter = MessageFilter.none,
-    this.blocResponse = '',
+    this.successInfo = '',
+    this.failureInfo = '',
     this.maxReached = false,
     this.paginationLoading = false,
   });
@@ -23,13 +24,14 @@ sealed class InboxMessageState extends Equatable {
   final int currentOffset;
   final MessageFilter currentFilter;
   final bool maxReached;
-  final String blocResponse;
+  final String successInfo;
+  final String failureInfo;
   final bool paginationLoading;
 
   InboxMessageState copyWith({
     List<Message>? inboxMessages,
-    int? currentOffset,
-    String? blocResponse,
+    String? successInfo,
+    String? failureInfo,
     bool? maxReached,
     MessageFilter? currentFilter,
     bool? paginationLoading,
@@ -40,59 +42,38 @@ sealed class InboxMessageState extends Equatable {
         inboxMessages,
         currentOffset,
         currentFilter,
-        blocResponse,
+        successInfo,
+        failureInfo,
         maxReached,
         paginationLoading
       ];
 }
 
 class InboxMessageStateInitial extends InboxMessageState {
-  const InboxMessageStateInitial({
-    super.blocResponse,
-    super.currentOffset,
-    super.maxReached,
-    super.currentFilter,
-    super.inboxMessages,
-    super.paginationLoading,
-  });
+  const InboxMessageStateInitial();
 
   @override
   InboxMessageStateInitial copyWith({
     List<Message>? inboxMessages,
     int? currentOffset,
-    String? blocResponse,
+    String? successInfo,
+    String? failureInfo,
     MessageFilter? currentFilter,
     bool? maxReached,
     bool? paginationLoading,
   }) {
-    return InboxMessageStateInitial(
-      inboxMessages: inboxMessages ?? this.inboxMessages,
-      currentOffset: currentOffset ?? this.currentOffset,
-      blocResponse: blocResponse ?? this.blocResponse,
-      currentFilter: currentFilter ?? this.currentFilter,
-      maxReached: maxReached ?? this.maxReached,
-      paginationLoading: paginationLoading ?? this.paginationLoading,
-    );
+    return const InboxMessageStateInitial();
   }
-
-  @override
-  List<Object?> get props => [
-        inboxMessages,
-        currentOffset,
-        blocResponse,
-        currentFilter,
-        maxReached,
-        paginationLoading
-      ];
 }
 
 class InboxMessageStateLoading extends InboxMessageState {
   const InboxMessageStateLoading({
-    super.blocResponse,
-    super.currentOffset,
-    super.maxReached,
-    super.currentFilter,
     super.inboxMessages,
+    super.currentOffset,
+    super.currentFilter,
+    super.successInfo,
+    super.failureInfo,
+    super.maxReached,
     super.paginationLoading,
   });
 
@@ -100,7 +81,6 @@ class InboxMessageStateLoading extends InboxMessageState {
       InboxMessageStateLoading(
         inboxMessages: state.inboxMessages,
         currentOffset: state.currentOffset,
-        blocResponse: state.blocResponse,
         currentFilter: state.currentFilter,
         maxReached: state.maxReached,
         paginationLoading: state.paginationLoading,
@@ -110,7 +90,8 @@ class InboxMessageStateLoading extends InboxMessageState {
   InboxMessageStateLoading copyWith({
     List<Message>? inboxMessages,
     int? currentOffset,
-    String? blocResponse,
+    String? successInfo,
+    String? failureInfo,
     MessageFilter? currentFilter,
     bool? maxReached,
     bool? paginationLoading,
@@ -118,31 +99,23 @@ class InboxMessageStateLoading extends InboxMessageState {
     return InboxMessageStateLoading(
       inboxMessages: inboxMessages ?? this.inboxMessages,
       currentOffset: currentOffset ?? this.currentOffset,
-      blocResponse: blocResponse ?? this.blocResponse,
       currentFilter: currentFilter ?? this.currentFilter,
       maxReached: maxReached ?? this.maxReached,
+      failureInfo: failureInfo ?? this.failureInfo,
+      successInfo: successInfo ?? this.successInfo,
       paginationLoading: paginationLoading ?? this.paginationLoading,
     );
   }
-
-  @override
-  List<Object?> get props => [
-        inboxMessages,
-        currentOffset,
-        blocResponse,
-        currentFilter,
-        maxReached,
-        paginationLoading
-      ];
 }
 
 class InboxMessageStateDidLoad extends InboxMessageState {
   const InboxMessageStateDidLoad({
-    super.blocResponse,
-    super.currentOffset,
-    super.maxReached,
     super.inboxMessages,
+    super.currentOffset,
     super.currentFilter,
+    super.successInfo,
+    super.failureInfo,
+    super.maxReached,
     super.paginationLoading,
   });
 
@@ -150,7 +123,6 @@ class InboxMessageStateDidLoad extends InboxMessageState {
       InboxMessageStateDidLoad(
         inboxMessages: state.inboxMessages,
         currentOffset: state.currentOffset,
-        blocResponse: state.blocResponse,
         currentFilter: state.currentFilter,
         maxReached: state.maxReached,
         paginationLoading: state.paginationLoading,
@@ -160,7 +132,8 @@ class InboxMessageStateDidLoad extends InboxMessageState {
   InboxMessageStateDidLoad copyWith({
     List<Message>? inboxMessages,
     int? currentOffset,
-    String? blocResponse,
+    String? successInfo,
+    String? failureInfo,
     MessageFilter? currentFilter,
     bool? maxReached,
     bool? paginationLoading,
@@ -168,31 +141,23 @@ class InboxMessageStateDidLoad extends InboxMessageState {
     return InboxMessageStateDidLoad(
       inboxMessages: inboxMessages ?? this.inboxMessages,
       currentOffset: currentOffset ?? this.currentOffset,
-      blocResponse: blocResponse ?? this.blocResponse,
       currentFilter: currentFilter ?? this.currentFilter,
       maxReached: maxReached ?? this.maxReached,
+      failureInfo: failureInfo ?? this.failureInfo,
+      successInfo: successInfo ?? this.successInfo,
       paginationLoading: paginationLoading ?? this.paginationLoading,
     );
   }
-
-  @override
-  List<Object?> get props => [
-        inboxMessages,
-        currentOffset,
-        blocResponse,
-        currentFilter,
-        maxReached,
-        paginationLoading
-      ];
 }
 
 class InboxMessageStateDeleteSucceed extends InboxMessageState {
   const InboxMessageStateDeleteSucceed({
-    super.blocResponse,
-    super.currentOffset,
-    super.maxReached,
-    super.currentFilter,
     super.inboxMessages,
+    super.currentOffset,
+    super.currentFilter,
+    super.successInfo,
+    super.failureInfo,
+    super.maxReached,
     super.paginationLoading,
   });
 
@@ -200,8 +165,8 @@ class InboxMessageStateDeleteSucceed extends InboxMessageState {
       InboxMessageStateDeleteSucceed(
         inboxMessages: state.inboxMessages,
         currentOffset: state.currentOffset,
-        blocResponse: state.blocResponse,
         currentFilter: state.currentFilter,
+        successInfo: state.successInfo,
         maxReached: state.maxReached,
         paginationLoading: state.paginationLoading,
       );
@@ -212,37 +177,30 @@ class InboxMessageStateDeleteSucceed extends InboxMessageState {
     int? currentOffset,
     String? blocResponse,
     MessageFilter? currentFilter,
+    String? failureInfo,
+    String? successInfo,
     bool? maxReached,
     bool? paginationLoading,
   }) {
     return InboxMessageStateDeleteSucceed(
       inboxMessages: inboxMessages ?? this.inboxMessages,
       currentOffset: currentOffset ?? this.currentOffset,
-      blocResponse: blocResponse ?? this.blocResponse,
       currentFilter: currentFilter ?? this.currentFilter,
+      failureInfo: failureInfo ?? this.failureInfo,
+      successInfo: successInfo ?? this.successInfo,
       maxReached: maxReached ?? this.maxReached,
-      paginationLoading: paginationLoading ?? this.paginationLoading,
     );
   }
-
-  @override
-  List<Object?> get props => [
-        inboxMessages,
-        currentOffset,
-        blocResponse,
-        currentFilter,
-        maxReached,
-        paginationLoading
-      ];
 }
 
 class InboxMessageStateDeleteError extends InboxMessageState {
   const InboxMessageStateDeleteError({
-    super.blocResponse,
-    super.currentOffset,
-    super.maxReached,
-    super.currentFilter,
     super.inboxMessages,
+    super.currentOffset,
+    super.currentFilter,
+    super.successInfo,
+    super.failureInfo,
+    super.maxReached,
     super.paginationLoading,
   });
 
@@ -250,49 +208,41 @@ class InboxMessageStateDeleteError extends InboxMessageState {
       InboxMessageStateDeleteError(
         inboxMessages: state.inboxMessages,
         currentOffset: state.currentOffset,
-        blocResponse: state.blocResponse,
         currentFilter: state.currentFilter,
+        failureInfo: state.failureInfo,
         maxReached: state.maxReached,
-        paginationLoading: state.paginationLoading,
       );
 
   @override
   InboxMessageStateDeleteError copyWith({
     List<Message>? inboxMessages,
     int? currentOffset,
-    String? blocResponse,
     MessageFilter? currentFilter,
+    String? successInfo,
+    String? failureInfo,
     bool? maxReached,
     bool? paginationLoading,
   }) {
     return InboxMessageStateDeleteError(
       inboxMessages: inboxMessages ?? this.inboxMessages,
       currentOffset: currentOffset ?? this.currentOffset,
-      blocResponse: blocResponse ?? this.blocResponse,
       currentFilter: currentFilter ?? this.currentFilter,
       maxReached: maxReached ?? this.maxReached,
+      failureInfo: failureInfo ?? this.failureInfo,
+      successInfo: successInfo ?? this.successInfo,
       paginationLoading: paginationLoading ?? this.paginationLoading,
     );
   }
-
-  @override
-  List<Object?> get props => [
-        inboxMessages,
-        currentOffset,
-        blocResponse,
-        currentFilter,
-        maxReached,
-        paginationLoading
-      ];
 }
 
 class InboxMessageStateError extends InboxMessageState {
   const InboxMessageStateError({
-    super.blocResponse,
-    super.currentOffset,
-    super.maxReached,
-    super.currentFilter,
     super.inboxMessages,
+    super.currentOffset,
+    super.currentFilter,
+    super.successInfo,
+    super.failureInfo,
+    super.maxReached,
     super.paginationLoading,
   });
 
@@ -300,7 +250,8 @@ class InboxMessageStateError extends InboxMessageState {
   InboxMessageStateError copyWith({
     List<Message>? inboxMessages,
     int? currentOffset,
-    String? blocResponse,
+    String? successInfo,
+    String? failureInfo,
     MessageFilter? currentFilter,
     bool? maxReached,
     bool? paginationLoading,
@@ -308,20 +259,11 @@ class InboxMessageStateError extends InboxMessageState {
     return InboxMessageStateError(
       inboxMessages: inboxMessages ?? this.inboxMessages,
       currentOffset: currentOffset ?? this.currentOffset,
-      blocResponse: blocResponse ?? this.blocResponse,
       currentFilter: currentFilter ?? this.currentFilter,
       maxReached: maxReached ?? this.maxReached,
+      failureInfo: failureInfo ?? this.failureInfo,
+      successInfo: successInfo ?? this.successInfo,
       paginationLoading: paginationLoading ?? this.paginationLoading,
     );
   }
-
-  @override
-  List<Object?> get props => [
-        inboxMessages,
-        currentOffset,
-        blocResponse,
-        currentFilter,
-        maxReached,
-        paginationLoading
-      ];
 }

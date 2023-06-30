@@ -1,43 +1,43 @@
 import 'package:equatable/equatable.dart';
 
 
-sealed class MessageDetailState extends Equatable {
-  const MessageDetailState();
+sealed class MessageDetailsState extends Equatable {
+  const MessageDetailsState();
 
   @override
   List<Object?> get props => [];
 }
 
-class MessageDetailStateInitial extends MessageDetailState {
-  const MessageDetailStateInitial();
+class MessageDetailsStateInitial extends MessageDetailsState {
+  const MessageDetailsStateInitial();
 
   @override
   List<Object?> get props => [];
 }
 
-class MessageDetailStateLoading extends MessageDetailState {
-  const MessageDetailStateLoading();
+class MessageDetailsStateLoading extends MessageDetailsState {
+  const MessageDetailsStateLoading();
 
   @override
   List<Object?> get props => [];
 }
 
-class MessageDetailStateDeleteMessageSucceed extends MessageDetailState {
-  const MessageDetailStateDeleteMessageSucceed({
-    required this.blocResponse,
+class MessageDetailsStateDeleteSucceed extends MessageDetailsState {
+  const MessageDetailsStateDeleteSucceed({
+    required this.successInfo
   });
-  final String blocResponse;
+  final String successInfo;
 
   @override
-  List<Object?> get props => [blocResponse];
+  List<Object?> get props => [successInfo];
 }
 
-class MessageDetailStateDeleteMessageError extends MessageDetailState {
-  const MessageDetailStateDeleteMessageError({
-    required this.blocResponse,
+class MessageDetailsStateDeleteError extends MessageDetailsState {
+  const MessageDetailsStateDeleteError({
+    required this.failureInfo,
   });
-  final String blocResponse;
+  final String failureInfo;
 
   @override
-  List<Object?> get props => [blocResponse];
+  List<Object?> get props => [failureInfo];
 }

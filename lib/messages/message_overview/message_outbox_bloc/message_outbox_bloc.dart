@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:bloc/bloc.dart';
+import 'package:logger/logger.dart';
 import 'package:messages_repository/messages_repository.dart';
 import 'package:studipadawan/messages/message_overview/message_inbox_bloc%20/message_inbox_bloc.dart';
 import 'package:studipadawan/messages/message_overview/message_outbox_bloc/message_outbox_event.dart';
@@ -61,9 +62,10 @@ class OutboxMessageBloc extends Bloc<OutboxMessageEvent, OutboxMessageState> {
         ),
       );
     } catch (e) {
+      Logger().e(e);
       emit(
         const OutboxMessageStateError(
-          blocResponse: unexpectedErrorMessage,
+          failureInfo: unexpectedErrorMessage,
         ),
       );
     }
@@ -75,9 +77,7 @@ class OutboxMessageBloc extends Bloc<OutboxMessageEvent, OutboxMessageState> {
   ) async {
     emit(
       OutboxMessageStateLoading.fromState(
-        state.copyWith(
-          paginationLoading: false,
-        ),
+        state,
       ),
     );
     try {
@@ -90,19 +90,20 @@ class OutboxMessageBloc extends Bloc<OutboxMessageEvent, OutboxMessageState> {
           state.copyWith(
             maxReached: outboxMessages.length < limit,
             paginationLoading: false,
-            blocResponse: event.messageIds.length == 1
+            successInfo: event.messageIds.length == 1
                 ? messageDeleteSucceed
                 : messagesDeleteSucceed,
             outboxMessages: outboxMessages,
           ),
         ),
       );
-    } catch (_) {
+    } catch (e) {
+      Logger().e(e);
       emit(
         OutboxMessageStateDeleteError.fromState(
           state.copyWith(
             paginationLoading: false,
-            blocResponse: event.messageIds.length == 1
+            failureInfo: event.messageIds.length == 1
                 ? messageDeleteError
                 : messagesDeleteError,
           ),
@@ -142,9 +143,10 @@ class OutboxMessageBloc extends Bloc<OutboxMessageEvent, OutboxMessageState> {
         ),
       );
     } catch (e) {
+      Logger().e(e);
       emit(
         const OutboxMessageStateError(
-          blocResponse: unexpectedErrorMessage,
+          failureInfo: unexpectedErrorMessage,
         ),
       );
     }

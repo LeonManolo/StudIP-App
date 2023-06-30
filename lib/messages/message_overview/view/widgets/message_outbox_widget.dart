@@ -50,17 +50,14 @@ class OutboxMessageWidgetState extends State<OutboxMessageWidget> {
         if (state is OutboxMessageStateDeleteSucceed) {
           buildSnackBar(
             context,
-            state.blocResponse,
+            state.successInfo,
             Colors.green,
           );
-        }
-        if (state is TabBarStateMarkAllOutboxMessages) {
-          _markAll();
         }
         if (state is OutboxMessageStateDeleteError) {
           buildSnackBar(
             context,
-            state.blocResponse,
+            state.failureInfo,
             Colors.red,
           );
         }

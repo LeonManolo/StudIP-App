@@ -5,7 +5,8 @@ sealed class OutboxMessageState extends Equatable {
   const OutboxMessageState({
     this.outboxMessages = const [],
     this.currentOffset = 0,
-    this.blocResponse = '',
+    this.successInfo = '',
+    this.failureInfo = '',
     this.maxReached = false,
     this.paginationLoading = false,
   });
@@ -13,13 +14,15 @@ sealed class OutboxMessageState extends Equatable {
   final List<Message> outboxMessages;
   final int currentOffset;
   final bool maxReached;
-  final String blocResponse;
+  final String successInfo;
+  final String failureInfo;
   final bool paginationLoading;
 
   OutboxMessageState copyWith({
     List<Message>? outboxMessages,
     int? currentOffset,
-    String? blocResponse,
+    String? successInfo,
+    String? failureInfo,
     bool? maxReached,
     bool? paginationLoading,
   });
@@ -28,99 +31,71 @@ sealed class OutboxMessageState extends Equatable {
   List<Object?> get props => [
         outboxMessages,
         currentOffset,
-        blocResponse,
+        successInfo,
+        failureInfo,
         maxReached,
         paginationLoading
       ];
 }
 
 class OutboxMessageStateInitial extends OutboxMessageState {
-  const OutboxMessageStateInitial({
-    super.blocResponse,
-    super.currentOffset,
-    super.maxReached,
-    super.outboxMessages,
-    super.paginationLoading,
-  });
+  const OutboxMessageStateInitial();
 
   @override
   OutboxMessageStateInitial copyWith({
     List<Message>? outboxMessages,
     int? currentOffset,
-    String? blocResponse,
+    String? successInfo,
+    String? failureInfo,
     bool? maxReached,
     bool? paginationLoading,
   }) {
-    return OutboxMessageStateInitial(
-      outboxMessages: outboxMessages ?? this.outboxMessages,
-      currentOffset: currentOffset ?? this.currentOffset,
-      blocResponse: blocResponse ?? this.blocResponse,
-      maxReached: maxReached ?? this.maxReached,
-      paginationLoading: paginationLoading ?? this.paginationLoading,
-    );
+    return const OutboxMessageStateInitial();
   }
-
-  @override
-  List<Object?> get props => [
-        outboxMessages,
-        currentOffset,
-        blocResponse,
-        maxReached,
-        paginationLoading
-      ];
 }
 
 class OutboxMessageStateLoading extends OutboxMessageState {
   const OutboxMessageStateLoading({
-    super.blocResponse,
+    super.outboxMessages,
+    super.failureInfo,
+    super.successInfo,
     super.currentOffset,
     super.maxReached,
-    super.outboxMessages,
     super.paginationLoading,
   });
 
   factory OutboxMessageStateLoading.fromState(OutboxMessageState state) =>
       OutboxMessageStateLoading(
         outboxMessages: state.outboxMessages,
-        currentOffset: state.currentOffset,
-        blocResponse: state.blocResponse,
-        maxReached: state.maxReached,
-        paginationLoading: state.paginationLoading,
       );
 
   @override
   OutboxMessageStateLoading copyWith({
     List<Message>? outboxMessages,
     int? currentOffset,
-    String? blocResponse,
+    String? successInfo,
+    String? failureInfo,
     bool? maxReached,
     bool? paginationLoading,
   }) {
-    return OutboxMessageStateLoading(
+    return OutboxMessageStateLoading(   
       outboxMessages: outboxMessages ?? this.outboxMessages,
+      failureInfo: failureInfo ?? this.failureInfo,
+      successInfo: successInfo ?? this.successInfo,
       currentOffset: currentOffset ?? this.currentOffset,
-      blocResponse: blocResponse ?? this.blocResponse,
       maxReached: maxReached ?? this.maxReached,
       paginationLoading: paginationLoading ?? this.paginationLoading,
     );
   }
-
-  @override
-  List<Object?> get props => [
-        outboxMessages,
-        currentOffset,
-        blocResponse,
-        maxReached,
-        paginationLoading
-      ];
 }
 
 class OutboxMessageStateDidLoad extends OutboxMessageState {
   const OutboxMessageStateDidLoad({
-    super.blocResponse,
+    super.outboxMessages,
+    super.failureInfo,
+    super.successInfo,
     super.currentOffset,
     super.maxReached,
-    super.outboxMessages,
     super.paginationLoading,
   });
 
@@ -128,7 +103,6 @@ class OutboxMessageStateDidLoad extends OutboxMessageState {
       OutboxMessageStateDidLoad(
         outboxMessages: state.outboxMessages,
         currentOffset: state.currentOffset,
-        blocResponse: state.blocResponse,
         maxReached: state.maxReached,
         paginationLoading: state.paginationLoading,
       );
@@ -138,34 +112,29 @@ class OutboxMessageStateDidLoad extends OutboxMessageState {
     List<Message>? outboxMessages,
     int? currentOffset,
     String? blocResponse,
+    String? successInfo,
+    String? failureInfo,
     bool? maxReached,
     bool? paginationLoading,
   }) {
     return OutboxMessageStateDidLoad(
       outboxMessages: outboxMessages ?? this.outboxMessages,
+      failureInfo: failureInfo ?? this.failureInfo,
+      successInfo: successInfo ?? this.successInfo,
       currentOffset: currentOffset ?? this.currentOffset,
-      blocResponse: blocResponse ?? this.blocResponse,
       maxReached: maxReached ?? this.maxReached,
       paginationLoading: paginationLoading ?? this.paginationLoading,
     );
   }
-
-  @override
-  List<Object?> get props => [
-        outboxMessages,
-        currentOffset,
-        blocResponse,
-        maxReached,
-        paginationLoading
-      ];
 }
 
 class OutboxMessageStateDeleteSucceed extends OutboxMessageState {
   const OutboxMessageStateDeleteSucceed({
-    super.blocResponse,
+    super.outboxMessages,
+    super.failureInfo,
+    super.successInfo,
     super.currentOffset,
     super.maxReached,
-    super.outboxMessages,
     super.paginationLoading,
   });
 
@@ -173,7 +142,7 @@ class OutboxMessageStateDeleteSucceed extends OutboxMessageState {
       OutboxMessageStateDeleteSucceed(
         outboxMessages: state.outboxMessages,
         currentOffset: state.currentOffset,
-        blocResponse: state.blocResponse,
+        successInfo: state.successInfo,
         maxReached: state.maxReached,
         paginationLoading: state.paginationLoading,
       );
@@ -182,35 +151,29 @@ class OutboxMessageStateDeleteSucceed extends OutboxMessageState {
   OutboxMessageStateDeleteSucceed copyWith({
     List<Message>? outboxMessages,
     int? currentOffset,
-    String? blocResponse,
+    String? failureInfo,
+    String? successInfo,
     bool? maxReached,
     bool? paginationLoading,
   }) {
     return OutboxMessageStateDeleteSucceed(
       outboxMessages: outboxMessages ?? this.outboxMessages,
+      failureInfo: failureInfo ?? this.failureInfo,
+      successInfo: successInfo ?? this.successInfo,
       currentOffset: currentOffset ?? this.currentOffset,
-      blocResponse: blocResponse ?? this.blocResponse,
       maxReached: maxReached ?? this.maxReached,
       paginationLoading: paginationLoading ?? this.paginationLoading,
     );
   }
-
-  @override
-  List<Object?> get props => [
-        outboxMessages,
-        currentOffset,
-        blocResponse,
-        maxReached,
-        paginationLoading
-      ];
 }
 
 class OutboxMessageStateDeleteError extends OutboxMessageState {
   const OutboxMessageStateDeleteError({
-    super.blocResponse,
+    super.outboxMessages,
+    super.failureInfo,
+    super.successInfo,
     super.currentOffset,
     super.maxReached,
-    super.outboxMessages,
     super.paginationLoading,
   });
 
@@ -218,7 +181,7 @@ class OutboxMessageStateDeleteError extends OutboxMessageState {
       OutboxMessageStateDeleteError(
         outboxMessages: state.outboxMessages,
         currentOffset: state.currentOffset,
-        blocResponse: state.blocResponse,
+        failureInfo: state.failureInfo,
         maxReached: state.maxReached,
         paginationLoading: state.paginationLoading,
       );
@@ -227,35 +190,29 @@ class OutboxMessageStateDeleteError extends OutboxMessageState {
   OutboxMessageStateDeleteError copyWith({
     List<Message>? outboxMessages,
     int? currentOffset,
-    String? blocResponse,
+    String? successInfo,
+    String? failureInfo,
     bool? maxReached,
     bool? paginationLoading,
   }) {
     return OutboxMessageStateDeleteError(
       outboxMessages: outboxMessages ?? this.outboxMessages,
+      failureInfo: failureInfo ?? this.failureInfo,
+      successInfo: successInfo ?? this.successInfo,
       currentOffset: currentOffset ?? this.currentOffset,
-      blocResponse: blocResponse ?? this.blocResponse,
       maxReached: maxReached ?? this.maxReached,
       paginationLoading: paginationLoading ?? this.paginationLoading,
     );
   }
-
-  @override
-  List<Object?> get props => [
-        outboxMessages,
-        currentOffset,
-        blocResponse,
-        maxReached,
-        paginationLoading
-      ];
 }
 
 class OutboxMessageStateError extends OutboxMessageState {
   const OutboxMessageStateError({
-    super.blocResponse,
+    super.outboxMessages,
+    super.failureInfo,
+    super.successInfo,
     super.currentOffset,
     super.maxReached,
-    super.outboxMessages,
     super.paginationLoading,
   });
 
@@ -263,25 +220,18 @@ class OutboxMessageStateError extends OutboxMessageState {
   OutboxMessageStateError copyWith({
     List<Message>? outboxMessages,
     int? currentOffset,
-    String? blocResponse,
+    String? successInfo,
+    String? failureInfo,
     bool? maxReached,
     bool? paginationLoading,
   }) {
     return OutboxMessageStateError(
       outboxMessages: outboxMessages ?? this.outboxMessages,
+      failureInfo: failureInfo ?? this.failureInfo,
+      successInfo: successInfo ?? this.successInfo,
       currentOffset: currentOffset ?? this.currentOffset,
-      blocResponse: blocResponse ?? this.blocResponse,
       maxReached: maxReached ?? this.maxReached,
       paginationLoading: paginationLoading ?? this.paginationLoading,
     );
   }
-
-  @override
-  List<Object?> get props => [
-        outboxMessages,
-        currentOffset,
-        blocResponse,
-        maxReached,
-        paginationLoading
-      ];
 }

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:logger/logger.dart';
 import 'package:messages_repository/messages_repository.dart';
 import 'package:studipadawan/messages/message_overview/message_inbox_bloc%20/message_inbox_bloc.dart';
 import 'package:studipadawan/messages/message_send/message_send_bloc/message_send_event.dart';
@@ -33,7 +34,7 @@ class MessageSendBloc extends Bloc<MessageSendEvent, MessageSendState> {
       emit(
         MessageSendStateError.fromState(
           state.copyWith(
-            blocResponse: missingRecipientErrorMessage,
+            failureInfo: missingRecipientErrorMessage,
           ),
         ),
       );
@@ -41,7 +42,7 @@ class MessageSendBloc extends Bloc<MessageSendEvent, MessageSendState> {
       emit(
         MessageSendStateError.fromState(
           state.copyWith(
-            blocResponse: missingSubjectErrorMessage,
+            failureInfo: missingSubjectErrorMessage,
           ),
         ),
       );
@@ -49,7 +50,7 @@ class MessageSendBloc extends Bloc<MessageSendEvent, MessageSendState> {
       emit(
         MessageSendStateError.fromState(
           state.copyWith(
-            blocResponse: missingMessageErrorMessage,
+            failureInfo: missingMessageErrorMessage,
           ),
         ),
       );
@@ -68,14 +69,15 @@ class MessageSendBloc extends Bloc<MessageSendEvent, MessageSendState> {
         );
         emit(
           const MessageSendStateDidLoad(
-            blocResponse: messageSentMessage,
+            successInfo: messageSentMessage,
           ),
         );
       } catch (e) {
+        Logger().e(e);
         emit(
           MessageSendStateError.fromState(
             state.copyWith(
-              blocResponse: unexpectedErrorMessage,
+              failureInfo: unexpectedErrorMessage,
             ),
           ),
         );
@@ -114,11 +116,12 @@ class MessageSendBloc extends Bloc<MessageSendEvent, MessageSendState> {
           ),
         ),
       );
-    } catch (_) {
+    } catch (e) {
+      Logger().e(e);
       emit(
         MessageSendStateUserSuggestionsError.fromState(
           state.copyWith(
-            blocResponse: fetchUserSuggestionsErrorMessage,
+            failureInfo: fetchUserSuggestionsErrorMessage,
             suggestions: [],
           ),
         ),

@@ -38,7 +38,6 @@ class TabBarStateDefault extends TabBarState {
   TabBarStateDefault copyWith({
     int? currentTabIndex,
     bool? filterIconVisible,
-    bool? messageDeleteButtonVisible,
     bool? messageMenuIconVisible,
   }) {
     return TabBarStateDefault(
@@ -48,10 +47,6 @@ class TabBarStateDefault extends TabBarState {
           messageMenuIconVisible ?? this.messageMenuIconVisible,
     );
   }
-
-  @override
-  List<Object?> get props =>
-      [currentTabIndex, filterIconVisible, messageMenuIconVisible];
 }
 
 class TabBarStateMarkAllInboxMessages extends TabBarState {
@@ -72,7 +67,6 @@ class TabBarStateMarkAllInboxMessages extends TabBarState {
   TabBarStateMarkAllInboxMessages copyWith({
     int? currentTabIndex,
     bool? filterIconVisible,
-    bool? messageDeleteButtonVisible,
     bool? messageMenuIconVisible,
   }) {
     return TabBarStateMarkAllInboxMessages(
@@ -82,10 +76,6 @@ class TabBarStateMarkAllInboxMessages extends TabBarState {
           messageMenuIconVisible ?? this.messageMenuIconVisible,
     );
   }
-
-  @override
-  List<Object?> get props =>
-      [currentTabIndex, filterIconVisible, messageMenuIconVisible];
 }
 
 class TabBarStateMarkAllOutboxMessages extends TabBarState {
@@ -106,7 +96,6 @@ class TabBarStateMarkAllOutboxMessages extends TabBarState {
   TabBarStateMarkAllOutboxMessages copyWith({
     int? currentTabIndex,
     bool? filterIconVisible,
-    bool? messageDeleteButtonVisible,
     bool? messageMenuIconVisible,
   }) {
     return TabBarStateMarkAllOutboxMessages(
@@ -116,10 +105,6 @@ class TabBarStateMarkAllOutboxMessages extends TabBarState {
           messageMenuIconVisible ?? this.messageMenuIconVisible,
     );
   }
-
-  @override
-  List<Object?> get props =>
-      [currentTabIndex, filterIconVisible, messageMenuIconVisible];
 }
 
 class TabBarStateDeleteOutboxMessages extends TabBarState {
@@ -140,7 +125,6 @@ class TabBarStateDeleteOutboxMessages extends TabBarState {
   TabBarStateDeleteOutboxMessages copyWith({
     int? currentTabIndex,
     bool? filterIconVisible,
-    bool? messageDeleteButtonVisible,
     bool? messageMenuIconVisible,
   }) {
     return TabBarStateDeleteOutboxMessages(
@@ -150,12 +134,6 @@ class TabBarStateDeleteOutboxMessages extends TabBarState {
           messageMenuIconVisible ?? this.messageMenuIconVisible,
     );
   }
-
-  @override
-  List<Object?> get props => [
-        currentTabIndex,
-        filterIconVisible,
-      ];
 }
 
 class TabBarStateDeleteInboxMessages extends TabBarState {
@@ -172,20 +150,14 @@ class TabBarStateDeleteInboxMessages extends TabBarState {
       );
 
   @override
-  TabBarStateDeleteInboxMessages copyWith(
-      {int? currentTabIndex,
-      bool? filterIconVisible,
-      bool? messageDeleteButtonVisible,
-      bool? messageMenuIconVisible}) {
+  TabBarStateDeleteInboxMessages copyWith({
+    int? currentTabIndex,
+    bool? filterIconVisible,
+    bool? messageMenuIconVisible,
+  }) {
     return TabBarStateDeleteInboxMessages(
       currentTabIndex: currentTabIndex ?? this.currentTabIndex,
       filterIconVisible: filterIconVisible ?? this.filterIconVisible,
     );
   }
-
-  @override
-  List<Object?> get props => [
-        currentTabIndex,
-        filterIconVisible,
-      ];
 }

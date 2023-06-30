@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:bloc/bloc.dart';
+import 'package:logger/logger.dart';
 import 'package:messages_repository/messages_repository.dart';
 import 'package:studipadawan/messages/message_overview/message_inbox_bloc%20/message_inbox_event.dart';
 import 'package:studipadawan/messages/message_overview/message_inbox_bloc%20/message_inbox_state.dart';
@@ -70,10 +71,11 @@ class InboxMessageBloc extends Bloc<InboxMessageEvent, InboxMessageState> {
           ),
         ),
       );
-    } catch (_) {
+    } catch (e) {
+      Logger().e(e);
       emit(
         const InboxMessageStateError(
-          blocResponse: unexpectedErrorMessage,
+          failureInfo: unexpectedErrorMessage,
         ),
       );
     }
@@ -105,10 +107,11 @@ class InboxMessageBloc extends Bloc<InboxMessageEvent, InboxMessageState> {
           ),
         ),
       );
-    } catch (_) {
+    } catch (e) {
+      Logger().e(e);
       emit(
         const InboxMessageStateError(
-          blocResponse: unexpectedErrorMessage,
+          failureInfo: unexpectedErrorMessage,
         ),
       );
     }
@@ -136,19 +139,20 @@ class InboxMessageBloc extends Bloc<InboxMessageEvent, InboxMessageState> {
           state.copyWith(
             paginationLoading: false,
             maxReached: inboxMessages.length < limit,
-            blocResponse: event.messageIds.length == 1
+            successInfo: event.messageIds.length == 1
                 ? messageDeleteSucceed
                 : messagesDeleteSucceed,
             inboxMessages: inboxMessages,
           ),
         ),
       );
-    } catch (_) {
+    } catch (e) {
+      Logger().e(e);
       emit(
         InboxMessageStateDeleteError.fromState(
           state.copyWith(
             paginationLoading: false,
-            blocResponse: event.messageIds.length == 1
+            failureInfo: event.messageIds.length == 1
                 ? messageDeleteError
                 : messagesDeleteError,
           ),

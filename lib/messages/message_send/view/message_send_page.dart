@@ -64,10 +64,10 @@ class _MessageSendPageState extends State<MessageSendPage> {
         listener: (context, state) {
           switch (state) {
             case MessageSendStateError _:
-              buildSnackBar(context, state.blocResponse, Colors.red);
+              buildSnackBar(context, state.failureInfo, Colors.red);
               break;
             case MessageSendStateDidLoad _:
-              buildSnackBar(context, state.blocResponse, Colors.green);
+              buildSnackBar(context, state.successInfo, Colors.green);
               Navigator.pop(context);
               break;
             case MessageSendStateRecipientsChanged _:
@@ -77,7 +77,7 @@ class _MessageSendPageState extends State<MessageSendPage> {
               _triggerSuggestionCallback();
               break;
             case MessageSendStateUserSuggestionsError _:
-              buildSnackBar(context, state.blocResponse, Colors.red);
+              buildSnackBar(context, state.failureInfo, Colors.red);
               break;
             default:
               break;
