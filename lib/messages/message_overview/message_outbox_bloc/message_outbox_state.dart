@@ -89,14 +89,14 @@ class OutboxMessageStateLoading extends OutboxMessageState {
       );
 
   @override
-  OutboxMessageStateInitial copyWith({
+  OutboxMessageStateLoading copyWith({
     List<Message>? outboxMessages,
     int? currentOffset,
     String? blocResponse,
     bool? maxReached,
     bool? paginationLoading,
   }) {
-    return OutboxMessageStateInitial(
+    return OutboxMessageStateLoading(
       outboxMessages: outboxMessages ?? this.outboxMessages,
       currentOffset: currentOffset ?? this.currentOffset,
       blocResponse: blocResponse ?? this.blocResponse,
@@ -134,14 +134,14 @@ class OutboxMessageStateDidLoad extends OutboxMessageState {
       );
 
   @override
-  OutboxMessageStateInitial copyWith({
+  OutboxMessageStateDidLoad copyWith({
     List<Message>? outboxMessages,
     int? currentOffset,
     String? blocResponse,
     bool? maxReached,
     bool? paginationLoading,
   }) {
-    return OutboxMessageStateInitial(
+    return OutboxMessageStateDidLoad(
       outboxMessages: outboxMessages ?? this.outboxMessages,
       currentOffset: currentOffset ?? this.currentOffset,
       blocResponse: blocResponse ?? this.blocResponse,
@@ -179,14 +179,14 @@ class OutboxMessageStateDeleteSucceed extends OutboxMessageState {
       );
 
   @override
-  OutboxMessageStateInitial copyWith({
+  OutboxMessageStateDeleteSucceed copyWith({
     List<Message>? outboxMessages,
     int? currentOffset,
     String? blocResponse,
     bool? maxReached,
     bool? paginationLoading,
   }) {
-    return OutboxMessageStateInitial(
+    return OutboxMessageStateDeleteSucceed(
       outboxMessages: outboxMessages ?? this.outboxMessages,
       currentOffset: currentOffset ?? this.currentOffset,
       blocResponse: blocResponse ?? this.blocResponse,
@@ -224,14 +224,14 @@ class OutboxMessageStateDeleteError extends OutboxMessageState {
       );
 
   @override
-  OutboxMessageStateInitial copyWith({
+  OutboxMessageStateDeleteError copyWith({
     List<Message>? outboxMessages,
     int? currentOffset,
     String? blocResponse,
     bool? maxReached,
     bool? paginationLoading,
   }) {
-    return OutboxMessageStateInitial(
+    return OutboxMessageStateDeleteError(
       outboxMessages: outboxMessages ?? this.outboxMessages,
       currentOffset: currentOffset ?? this.currentOffset,
       blocResponse: blocResponse ?? this.blocResponse,
@@ -260,14 +260,14 @@ class OutboxMessageStateError extends OutboxMessageState {
   });
 
   @override
-  OutboxMessageStateInitial copyWith({
+  OutboxMessageStateError copyWith({
     List<Message>? outboxMessages,
     int? currentOffset,
     String? blocResponse,
     bool? maxReached,
     bool? paginationLoading,
   }) {
-    return OutboxMessageStateInitial(
+    return OutboxMessageStateError(
       outboxMessages: outboxMessages ?? this.outboxMessages,
       currentOffset: currentOffset ?? this.currentOffset,
       blocResponse: blocResponse ?? this.blocResponse,

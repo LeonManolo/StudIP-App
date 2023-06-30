@@ -107,7 +107,7 @@ class InboxMessageStateLoading extends InboxMessageState {
       );
 
   @override
-  InboxMessageStateInitial copyWith({
+  InboxMessageStateLoading copyWith({
     List<Message>? inboxMessages,
     int? currentOffset,
     String? blocResponse,
@@ -115,7 +115,7 @@ class InboxMessageStateLoading extends InboxMessageState {
     bool? maxReached,
     bool? paginationLoading,
   }) {
-    return InboxMessageStateInitial(
+    return InboxMessageStateLoading(
       inboxMessages: inboxMessages ?? this.inboxMessages,
       currentOffset: currentOffset ?? this.currentOffset,
       blocResponse: blocResponse ?? this.blocResponse,
@@ -157,7 +157,7 @@ class InboxMessageStateDidLoad extends InboxMessageState {
       );
 
   @override
-  InboxMessageStateInitial copyWith({
+  InboxMessageStateDidLoad copyWith({
     List<Message>? inboxMessages,
     int? currentOffset,
     String? blocResponse,
@@ -165,7 +165,7 @@ class InboxMessageStateDidLoad extends InboxMessageState {
     bool? maxReached,
     bool? paginationLoading,
   }) {
-    return InboxMessageStateInitial(
+    return InboxMessageStateDidLoad(
       inboxMessages: inboxMessages ?? this.inboxMessages,
       currentOffset: currentOffset ?? this.currentOffset,
       blocResponse: blocResponse ?? this.blocResponse,
@@ -207,7 +207,7 @@ class InboxMessageStateDeleteSucceed extends InboxMessageState {
       );
 
   @override
-  InboxMessageStateInitial copyWith({
+  InboxMessageStateDeleteSucceed copyWith({
     List<Message>? inboxMessages,
     int? currentOffset,
     String? blocResponse,
@@ -215,7 +215,7 @@ class InboxMessageStateDeleteSucceed extends InboxMessageState {
     bool? maxReached,
     bool? paginationLoading,
   }) {
-    return InboxMessageStateInitial(
+    return InboxMessageStateDeleteSucceed(
       inboxMessages: inboxMessages ?? this.inboxMessages,
       currentOffset: currentOffset ?? this.currentOffset,
       blocResponse: blocResponse ?? this.blocResponse,
@@ -257,7 +257,7 @@ class InboxMessageStateDeleteError extends InboxMessageState {
       );
 
   @override
-  InboxMessageStateInitial copyWith({
+  InboxMessageStateDeleteError copyWith({
     List<Message>? inboxMessages,
     int? currentOffset,
     String? blocResponse,
@@ -265,7 +265,7 @@ class InboxMessageStateDeleteError extends InboxMessageState {
     bool? maxReached,
     bool? paginationLoading,
   }) {
-    return InboxMessageStateInitial(
+    return InboxMessageStateDeleteError(
       inboxMessages: inboxMessages ?? this.inboxMessages,
       currentOffset: currentOffset ?? this.currentOffset,
       blocResponse: blocResponse ?? this.blocResponse,
@@ -297,7 +297,7 @@ class InboxMessageStateError extends InboxMessageState {
   });
 
   @override
-  InboxMessageStateInitial copyWith({
+  InboxMessageStateError copyWith({
     List<Message>? inboxMessages,
     int? currentOffset,
     String? blocResponse,
@@ -305,7 +305,7 @@ class InboxMessageStateError extends InboxMessageState {
     bool? maxReached,
     bool? paginationLoading,
   }) {
-    return InboxMessageStateInitial(
+    return InboxMessageStateError(
       inboxMessages: inboxMessages ?? this.inboxMessages,
       currentOffset: currentOffset ?? this.currentOffset,
       blocResponse: blocResponse ?? this.blocResponse,
