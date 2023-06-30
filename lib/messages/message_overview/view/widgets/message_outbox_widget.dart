@@ -16,6 +16,7 @@ import 'package:studipadawan/utils/pagination/pagination.dart';
 import 'package:studipadawan/utils/refreshable_content.dart';
 import 'package:studipadawan/utils/snackbar.dart';
 
+final _outboxWidgetKey = GlobalKey<ScaffoldState>();
 class OutboxMessageWidget extends StatefulWidget {
   const OutboxMessageWidget({
     super.key,
@@ -45,18 +46,21 @@ class OutboxMessageWidgetState extends State<OutboxMessageWidget> {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<OutboxMessageBloc, OutboxMessageState>(
-      listener: (context, outBoxState) {
-        if (outBoxState is OutboxMessageStateDeleteSucceed) {
+      listener: (context, state) {
+        if (state is OutboxMessageStateDeleteSucceed) {
           buildSnackBar(
             context,
-            outBoxState.blocResponse,
+            state.blocResponse,
             Colors.green,
           );
         }
-        if (outBoxState is OutboxMessageStateDeleteError) {
+        if (state is TabBarStateMarkAllOutboxMessages) {
+          _markAll();
+        }
+        if (state is OutboxMessageStateDeleteError) {
           buildSnackBar(
             context,
-            outBoxState.blocResponse,
+            state.blocResponse,
             Colors.red,
           );
         }
@@ -82,7 +86,7 @@ class OutboxMessageWidgetState extends State<OutboxMessageWidget> {
                 !state.messageMenuIconVisible) {
               _unmarkAll();
             }
-            if (state is TabBarStateMarkAllInboxMessages) {
+            if (state is TabBarStateMarkAllOutboxMessages) {
               _markAll();
             }
             if (state is TabBarStateDeleteOutboxMessages) {
@@ -92,6 +96,7 @@ class OutboxMessageWidgetState extends State<OutboxMessageWidget> {
           },
           builder: (context, state) {
             return Column(
+              key: _outboxWidgetKey,
               children: [
                 Expanded(
                   child: RefreshIndicator(

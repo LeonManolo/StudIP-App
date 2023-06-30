@@ -17,6 +17,8 @@ import 'package:studipadawan/utils/pagination/pagination.dart';
 import 'package:studipadawan/utils/refreshable_content.dart';
 import 'package:studipadawan/utils/snackbar.dart';
 
+final _inboxWidgetKey = GlobalKey<ScaffoldState>();
+
 class InboxMessageWidget extends StatefulWidget {
   const InboxMessageWidget({
     super.key,
@@ -93,7 +95,7 @@ class InboxMessageWidgetState extends State<InboxMessageWidget> {
           },
           builder: (context, state) {
             return Column(
-              key: UniqueKey(),
+              key: _inboxWidgetKey,
               children: [
                 Expanded(
                   child: RefreshIndicator(

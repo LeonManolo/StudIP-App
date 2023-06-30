@@ -63,6 +63,7 @@ class TabBarBloc extends Bloc<TabBarEvent, TabBarState> {
     } else {
       emit(TabBarStateMarkAllOutboxMessages.fromState(state));
     }
+    emit(TabBarStateDefault.fromState(state));
   }
 
   void _onDeleteMarkedMessages(
@@ -74,5 +75,6 @@ class TabBarBloc extends Bloc<TabBarEvent, TabBarState> {
     } else {
       emit(TabBarStateDeleteOutboxMessages.fromState(state));
     }
+    emit(TabBarStateDefault.fromState(state));
   }
 }

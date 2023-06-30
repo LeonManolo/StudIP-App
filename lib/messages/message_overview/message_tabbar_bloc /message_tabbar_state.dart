@@ -103,13 +103,13 @@ class TabBarStateMarkAllOutboxMessages extends TabBarState {
       );
 
   @override
-  TabBarStateMarkAllInboxMessages copyWith({
+  TabBarStateMarkAllOutboxMessages copyWith({
     int? currentTabIndex,
     bool? filterIconVisible,
     bool? messageDeleteButtonVisible,
     bool? messageMenuIconVisible,
   }) {
-    return TabBarStateMarkAllInboxMessages(
+    return TabBarStateMarkAllOutboxMessages(
       currentTabIndex: currentTabIndex ?? this.currentTabIndex,
       filterIconVisible: filterIconVisible ?? this.filterIconVisible,
       messageMenuIconVisible:
