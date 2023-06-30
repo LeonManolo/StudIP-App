@@ -26,7 +26,6 @@ class _MessageSendPageState extends State<MessageSendPage> {
   late TextEditingController _subjectController;
   late TextEditingController _messageController;
   late SuggestionsBoxController _suggestionsBoxController;
-  late MessageSendBloc _messageSendBloc;
   final List<MessageRecipientChip> _recipientChips = [];
 
   @override
@@ -36,9 +35,6 @@ class _MessageSendPageState extends State<MessageSendPage> {
     _recipientController = TextEditingController();
     _subjectController = TextEditingController();
     _messageController = TextEditingController();
-    _messageSendBloc = MessageSendBloc(
-      messageRepository: context.read<MessageRepository>(),
-    );
     if (widget.message != null) {
       final subject = widget.message!.subject.contains('RE:')
           ? widget.message!.subject
@@ -54,7 +50,6 @@ class _MessageSendPageState extends State<MessageSendPage> {
   @override
   void dispose() {
     super.dispose();
-    _messageSendBloc.close();
     _recipientController.dispose();
     _subjectController.dispose();
     _messageController.dispose();
@@ -65,145 +60,147 @@ class _MessageSendPageState extends State<MessageSendPage> {
     return Scaffold(
       key: UniqueKey(),
       appBar: AppBar(title: const Text('Senden')),
-      body: BlocProvider<MessageSendBloc>.value(
-        value: _messageSendBloc,
-        child: BlocConsumer<MessageSendBloc, MessageSendState>(
-          listener: (context, state) {
-            switch (state) {
-              case MessageSendStateError _:
-                buildSnackBar(context, state.blocResponse, Colors.red);
-                break;
-              case MessageSendStateDidLoad _:
-                buildSnackBar(context, state.blocResponse, Colors.green);
-                Navigator.pop(context);
-                break;
-              case MessageSendStateRecipientsChanged _:
-                _buildChips(state.recipients);
-                break;
-              case MessageSendStateUserSuggestionsFetched _:
-                _triggerSuggestionCallback();
-                break;
-              default:
-                buildSnackBar(context, state.blocResponse, Colors.red);
-                break;
-            }
-          },
-          builder: (context, state) {
-            if (state is MessageSendStateLoading) {
-              return const Center(child: LoadingIndicator());
-            } else {
-              return SingleChildScrollView(
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(bigMargin),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text('Empfänger'),
-                          const SizedBox(height: 8),
-                          TypeAheadField(
-                            hideOnEmpty: true,
-                            getImmediateSuggestions: true,
-                            hideOnLoading: true,
-                            suggestionsBoxController: _suggestionsBoxController,
-                            textFieldConfiguration: TextFieldConfiguration(
-                              controller: _recipientController,
-                              decoration: const InputDecoration(
-                                border: OutlineInputBorder(),
-                              ),
+      body: BlocConsumer<MessageSendBloc, MessageSendState>(
+        listener: (context, state) {
+          switch (state) {
+            case MessageSendStateError _:
+              buildSnackBar(context, state.blocResponse, Colors.red);
+              break;
+            case MessageSendStateDidLoad _:
+              buildSnackBar(context, state.blocResponse, Colors.green);
+              Navigator.pop(context);
+              break;
+            case MessageSendStateRecipientsChanged _:
+              _buildChips(state.recipients);
+              break;
+            case MessageSendStateUserSuggestionsFetched _:
+              _triggerSuggestionCallback();
+              break;
+            case MessageSendStateUserSuggestionsError _:
+              buildSnackBar(context, state.blocResponse, Colors.red);
+              break;
+            default:
+              break;
+          }
+        },
+        builder: (context, state) {
+          if (state is MessageSendStateLoading) {
+            return const Center(child: LoadingIndicator());
+          } else {
+            return SingleChildScrollView(
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(bigMargin),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text('Empfänger'),
+                        const SizedBox(height: 8),
+                        TypeAheadField(
+                          hideOnEmpty: true,
+                          getImmediateSuggestions: true,
+                          hideOnLoading: true,
+                          suggestionsBoxController: _suggestionsBoxController,
+                          textFieldConfiguration: TextFieldConfiguration(
+                            controller: _recipientController,
+                            decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
                             ),
-                            suggestionsCallback: (pattern) {
-                              final normalizedPattern =
-                                  pattern.toLowerCase().replaceAll(' ', '');
-                              if (pattern.length < 3) {
-                                return List<MessageUser>.empty();
-                              } else {
-                                final suggestions = _filterUsernamesByPattern(
-                                  normalizedPattern,
-                                  _messageSendBloc.state.suggestions,
-                                );
-                                if (suggestions.isEmpty) {
-                                  _messageSendBloc.add(
-                                    FetchSuggestionsRequested(
-                                      pattern: normalizedPattern,
-                                    ),
-                                  );
-                                }
-                                return suggestions;
-                              }
-                            },
-                            itemBuilder: (context, user) {
-                              return ListTile(
-                                title: Text(_parseUser(user)),
-                                subtitle: Text(user.role),
+                          ),
+                          suggestionsCallback: (pattern) {
+                            final normalizedPattern =
+                                pattern.toLowerCase().replaceAll(' ', '');
+                            if (pattern.length < 3) {
+                              return List<MessageUser>.empty();
+                            } else {
+                              final suggestions = _filterUsernamesByPattern(
+                                normalizedPattern,
+                                context
+                                    .read<MessageSendBloc>()
+                                    .state
+                                    .suggestions,
                               );
-                            },
-                            onSuggestionSelected: (suggestion) {
-                              final user = suggestion;
-                              _addRecipient(context, user);
-                              _recipientController.clear();
-                            },
-                          ),
-                          Wrap(
-                            children: _recipientChips,
-                          ),
-                          const SizedBox(height: bigMargin),
-                          const Text('Betreff'),
-                          const SizedBox(height: smallMargin),
-                          TextField(
-                            controller: _subjectController,
-                            decoration: const InputDecoration(
-                              border: OutlineInputBorder(),
-                            ),
-                          ),
-                          const SizedBox(height: bigMargin),
-                          const Text('Nachricht'),
-                          const SizedBox(height: smallMargin),
-                          TextField(
-                            controller: _messageController,
-                            maxLines: 8,
-                            decoration: const InputDecoration(
-                              border: OutlineInputBorder(),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(right: bigMargin),
-                      child: Row(
-                        children: [
-                          const Spacer(),
-                          ElevatedButton(
-                            onPressed: () {
-                              final String subject = _subjectController.text;
-                              final String text = _messageController.text;
-                              if (widget.message != null) {
-                                _sendMessage(
-                                  context,
-                                  subject,
-                                  text,
-                                );
-                              } else {
-                                _sendMessage(
-                                  context,
-                                  subject,
-                                  text,
-                                );
+                              if (suggestions.isEmpty) {
+                                context.read<MessageSendBloc>().add(
+                                      FetchSuggestionsRequested(
+                                        pattern: normalizedPattern,
+                                      ),
+                                    );
                               }
-                            },
-                            child: const Text('Senden'),
+                              return suggestions;
+                            }
+                          },
+                          itemBuilder: (context, user) {
+                            return ListTile(
+                              title: Text(_parseUser(user)),
+                              subtitle: Text(user.role),
+                            );
+                          },
+                          onSuggestionSelected: (suggestion) {
+                            final user = suggestion;
+                            _addRecipient(context, user);
+                            _recipientController.clear();
+                          },
+                        ),
+                        Wrap(
+                          children: _recipientChips,
+                        ),
+                        const SizedBox(height: bigMargin),
+                        const Text('Betreff'),
+                        const SizedBox(height: smallMargin),
+                        TextField(
+                          controller: _subjectController,
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
                           ),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-              );
-            }
-          },
-        ),
+                        ),
+                        const SizedBox(height: bigMargin),
+                        const Text('Nachricht'),
+                        const SizedBox(height: smallMargin),
+                        TextField(
+                          controller: _messageController,
+                          maxLines: 8,
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(right: bigMargin),
+                    child: Row(
+                      children: [
+                        const Spacer(),
+                        ElevatedButton(
+                          onPressed: () {
+                            final String subject = _subjectController.text;
+                            final String text = _messageController.text;
+                            if (widget.message != null) {
+                              _sendMessage(
+                                context,
+                                subject,
+                                text,
+                              );
+                            } else {
+                              _sendMessage(
+                                context,
+                                subject,
+                                text,
+                              );
+                            }
+                          },
+                          child: const Text('Senden'),
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            );
+          }
+        },
       ),
     );
   }
@@ -240,13 +237,17 @@ class _MessageSendPageState extends State<MessageSendPage> {
 
   void _addRecipient(BuildContext context, MessageUser recipient) {
     setState(() {
-      _messageSendBloc.add(AddRecipientRequested(recipient: recipient));
+      context
+          .read<MessageSendBloc>()
+          .add(AddRecipientRequested(recipient: recipient));
     });
   }
 
   void _removeRecipient(BuildContext context, MessageUser recipient) {
     setState(() {
-      _messageSendBloc.add(RemoveRecipientRequested(recipient: recipient));
+      context
+          .read<MessageSendBloc>()
+          .add(RemoveRecipientRequested(recipient: recipient));
     });
   }
 
@@ -256,7 +257,10 @@ class _MessageSendPageState extends State<MessageSendPage> {
   ) {
     return users
         .where(
-          (user) => !_messageSendBloc.state.recipients
+          (user) => !context
+              .read<MessageSendBloc>()
+              .state
+              .recipients
               .map((user) => user.id)
               .contains(user.id),
         )
@@ -267,11 +271,11 @@ class _MessageSendPageState extends State<MessageSendPage> {
   }
 
   void _sendMessage(BuildContext context, String subject, String messageText) {
-    _messageSendBloc.add(
-      SendMessageRequested(
-        subject: subject,
-        messageText: messageText,
-      ),
-    );
+    context.read<MessageSendBloc>().add(
+          SendMessageRequested(
+            subject: subject,
+            messageText: messageText,
+          ),
+        );
   }
 }
