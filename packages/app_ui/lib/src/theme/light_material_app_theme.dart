@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -11,6 +13,7 @@ class LightMaterialAppTheme {
       appBarTheme: _appBarTheme,
       brightness: Brightness.light,
       bottomNavigationBarTheme: _bottomNavigationBarThemeData,
+      splashFactory: Platform.isIOS ? NoSplash.splashFactory : null,
     );
   }
 

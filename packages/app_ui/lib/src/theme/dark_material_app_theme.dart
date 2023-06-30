@@ -20,6 +20,7 @@ class DarkMaterialAppTheme {
       floatingActionButtonTheme: _floatingActionButtonTheme,
       tabBarTheme: _tabBarTheme,
       scaffoldBackgroundColor: Platform.isIOS ? Colors.black : null,
+      splashFactory: Platform.isIOS ? NoSplash.splashFactory : null,
     );
   }
 
