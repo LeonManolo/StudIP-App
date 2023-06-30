@@ -17,40 +17,46 @@ class MessageSendBloc extends Bloc<MessageSendEvent, MessageSendState> {
   MessageSendBloc({
     required MessageRepository messageRepository,
   })  : _messageRepository = messageRepository,
-        super(const MessageSendState.initial()) {
-    on<SendMessageRequest>(_onSendMessageRequested);
-    on<AddRecipient>(_onAddRecipientRequested);
-    on<RemoveRecipient>(_onRemoveRecipientRequested);
-    on<FetchSuggestions>(_onFetchSuggestionsRequested);
+        super(const MessageSendStateInitial()) {
+    on<SendMessageRequested>(_onSendMessageRequested);
+    on<AddRecipientRequested>(_onAddRecipientRequested);
+    on<RemoveRecipientRequested>(_onRemoveRecipientRequested);
+    on<FetchSuggestionsRequested>(_onFetchSuggestionsRequested);
   }
   final MessageRepository _messageRepository;
 
   FutureOr<void> _onSendMessageRequested(
-    SendMessageRequest event,
+    SendMessageRequested event,
     Emitter<MessageSendState> emit,
   ) async {
     if (state.recipients.isEmpty) {
       emit(
-        state.copyWith(
-          status: MessageSendStatus.failure,
-          blocResponse: missingRecipientErrorMessage,
+        MessageSendStateError.fromState(
+          state.copyWith(
+            blocResponse: missingRecipientErrorMessage,
+          ),
         ),
       );
     } else if (event.subject.isEmpty) {
       emit(
-        state.copyWith(
-          status: MessageSendStatus.failure,
-          blocResponse: missingSubjectErrorMessage,
+        MessageSendStateError.fromState(
+          state.copyWith(
+            blocResponse: missingSubjectErrorMessage,
+          ),
         ),
       );
     } else if (event.messageText.isEmpty) {
       emit(
-        state.copyWith(
-          status: MessageSendStatus.failure,
-          blocResponse: missingMessageErrorMessage,
+        MessageSendStateError.fromState(
+          state.copyWith(
+            blocResponse: missingMessageErrorMessage,
+          ),
         ),
       );
     } else {
+      emit(
+        MessageSendStateLoading.fromState(state),
+      );
       try {
         await _messageRepository.sendMessage(
           outgoingMessage: OutgoingMessage(
@@ -61,16 +67,16 @@ class MessageSendBloc extends Bloc<MessageSendEvent, MessageSendState> {
           ),
         );
         emit(
-          state.copyWith(
-            status: MessageSendStatus.populated,
+          const MessageSendStateDidLoad(
             blocResponse: messageSentMessage,
           ),
         );
       } catch (e) {
         emit(
-          state.copyWith(
-            status: MessageSendStatus.failure,
-            blocResponse: unexpectedErrorMessage,
+          MessageSendStateError.fromState(
+            state.copyWith(
+              blocResponse: unexpectedErrorMessage,
+            ),
           ),
         );
       }
@@ -78,7 +84,7 @@ class MessageSendBloc extends Bloc<MessageSendEvent, MessageSendState> {
   }
 
   void _onAddRecipientRequested(
-    AddRecipient event,
+    AddRecipientRequested event,
     Emitter<MessageSendState> emit,
   ) {
     final recipients = [
@@ -86,48 +92,52 @@ class MessageSendBloc extends Bloc<MessageSendEvent, MessageSendState> {
       ...[event.recipient]
     ];
     emit(
-      state.copyWith(
-        status: MessageSendStatus.recipientsChanged,
-        recipients: recipients,
+      MessageSendStateRecipientsChanged.fromState(
+        state.copyWith(
+          recipients: recipients,
+        ),
       ),
     );
   }
 
   Future<void> _onFetchSuggestionsRequested(
-    FetchSuggestions event,
+    FetchSuggestionsRequested event,
     Emitter<MessageSendState> emit,
   ) async {
     try {
       final users =
           await _messageRepository.searchUsers(searchParam: event.pattern);
       emit(
-        state.copyWith(
-          status: MessageSendStatus.userSuggestionsFetched,
-          suggestions: users,
+        MessageSendStateUserSuggestionsFetched.fromState(
+          state.copyWith(
+            suggestions: users,
+          ),
         ),
       );
     } catch (_) {
       emit(
-        state.copyWith(
-          status: MessageSendStatus.userSuggestionsFailure,
-          blocResponse: fetchUserSuggestionsErrorMessage,
-          suggestions: [],
+        MessageSendStateUserSuggestionsError.fromState(
+          state.copyWith(
+            blocResponse: fetchUserSuggestionsErrorMessage,
+            suggestions: [],
+          ),
         ),
       );
     }
   }
 
   void _onRemoveRecipientRequested(
-    RemoveRecipient event,
+    RemoveRecipientRequested event,
     Emitter<MessageSendState> emit,
   ) {
     final recipients = [...state.recipients]
       ..removeWhere((recipient) => recipient.id == event.recipient.id);
 
     emit(
-      state.copyWith(
-        status: MessageSendStatus.recipientsChanged,
-        recipients: recipients,
+      MessageSendStateRecipientsChanged.fromState(
+        state.copyWith(
+          recipients: recipients,
+        ),
       ),
     );
   }

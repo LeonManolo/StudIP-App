@@ -1,16 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:messages_repository/messages_repository.dart';
 
-enum InboxMessageStatus {
-  initial,
-  loading,
-  paginationLoading,
-  deleteInboxMessagesSucceed,
-  deleteInboxMessagesFailure,
-  populated,
-  failure
-}
-
 enum MessageFilter {
   none('Alle Nachrichten'),
   unread('Ungelesene Nachrichten');
@@ -19,58 +9,319 @@ enum MessageFilter {
   final String description;
 }
 
-class InboxMessageState extends Equatable {
+sealed class InboxMessageState extends Equatable {
   const InboxMessageState({
-    required this.status,
     this.inboxMessages = const [],
+    this.currentOffset = 0,
     this.currentFilter = MessageFilter.none,
     this.blocResponse = '',
-    this.currentOffset = 0,
     this.maxReached = false,
     this.paginationLoading = false,
   });
 
-  const InboxMessageState.initial()
-      : this(
-          status: InboxMessageStatus.initial,
-        );
-  final InboxMessageStatus status;
-  final String blocResponse;
   final List<Message> inboxMessages;
-  final MessageFilter currentFilter;
   final int currentOffset;
+  final MessageFilter currentFilter;
   final bool maxReached;
+  final String blocResponse;
   final bool paginationLoading;
+
+  InboxMessageState copyWith({
+    List<Message>? inboxMessages,
+    int? currentOffset,
+    String? blocResponse,
+    bool? maxReached,
+    MessageFilter? currentFilter,
+    bool? paginationLoading,
+  });
 
   @override
   List<Object?> get props => [
-        status,
         inboxMessages,
-        currentFilter,
         currentOffset,
-        maxReached,
+        currentFilter,
         blocResponse,
-        paginationLoading,
+        maxReached,
+        paginationLoading
       ];
+}
 
-  InboxMessageState copyWith({
-    InboxMessageStatus? status,
+class InboxMessageStateInitial extends InboxMessageState {
+  const InboxMessageStateInitial({
+    super.blocResponse,
+    super.currentOffset,
+    super.maxReached,
+    super.currentFilter,
+    super.inboxMessages,
+    super.paginationLoading,
+  });
+
+  @override
+  InboxMessageStateInitial copyWith({
     List<Message>? inboxMessages,
-    MessageFilter? currentFilter,
     int? currentOffset,
-    bool? maxReached,
-    bool? showFilterIcon,
     String? blocResponse,
+    MessageFilter? currentFilter,
+    bool? maxReached,
     bool? paginationLoading,
   }) {
-    return InboxMessageState(
-      status: status ?? this.status,
+    return InboxMessageStateInitial(
       inboxMessages: inboxMessages ?? this.inboxMessages,
-      currentFilter: currentFilter ?? this.currentFilter,
       currentOffset: currentOffset ?? this.currentOffset,
-      maxReached: maxReached ?? this.maxReached,
       blocResponse: blocResponse ?? this.blocResponse,
+      currentFilter: currentFilter ?? this.currentFilter,
+      maxReached: maxReached ?? this.maxReached,
       paginationLoading: paginationLoading ?? this.paginationLoading,
     );
   }
+
+  @override
+  List<Object?> get props => [
+        inboxMessages,
+        currentOffset,
+        blocResponse,
+        currentFilter,
+        maxReached,
+        paginationLoading
+      ];
+}
+
+class InboxMessageStateLoading extends InboxMessageState {
+  const InboxMessageStateLoading({
+    super.blocResponse,
+    super.currentOffset,
+    super.maxReached,
+    super.currentFilter,
+    super.inboxMessages,
+    super.paginationLoading,
+  });
+
+  factory InboxMessageStateLoading.fromState(InboxMessageState state) =>
+      InboxMessageStateLoading(
+        inboxMessages: state.inboxMessages,
+        currentOffset: state.currentOffset,
+        blocResponse: state.blocResponse,
+        currentFilter: state.currentFilter,
+        maxReached: state.maxReached,
+        paginationLoading: state.paginationLoading,
+      );
+
+  @override
+  InboxMessageStateInitial copyWith({
+    List<Message>? inboxMessages,
+    int? currentOffset,
+    String? blocResponse,
+    MessageFilter? currentFilter,
+    bool? maxReached,
+    bool? paginationLoading,
+  }) {
+    return InboxMessageStateInitial(
+      inboxMessages: inboxMessages ?? this.inboxMessages,
+      currentOffset: currentOffset ?? this.currentOffset,
+      blocResponse: blocResponse ?? this.blocResponse,
+      currentFilter: currentFilter ?? this.currentFilter,
+      maxReached: maxReached ?? this.maxReached,
+      paginationLoading: paginationLoading ?? this.paginationLoading,
+    );
+  }
+
+  @override
+  List<Object?> get props => [
+        inboxMessages,
+        currentOffset,
+        blocResponse,
+        currentFilter,
+        maxReached,
+        paginationLoading
+      ];
+}
+
+class InboxMessageStateDidLoad extends InboxMessageState {
+  const InboxMessageStateDidLoad({
+    super.blocResponse,
+    super.currentOffset,
+    super.maxReached,
+    super.inboxMessages,
+    super.currentFilter,
+    super.paginationLoading,
+  });
+
+  factory InboxMessageStateDidLoad.fromState(InboxMessageState state) =>
+      InboxMessageStateDidLoad(
+        inboxMessages: state.inboxMessages,
+        currentOffset: state.currentOffset,
+        blocResponse: state.blocResponse,
+        currentFilter: state.currentFilter,
+        maxReached: state.maxReached,
+        paginationLoading: state.paginationLoading,
+      );
+
+  @override
+  InboxMessageStateInitial copyWith({
+    List<Message>? inboxMessages,
+    int? currentOffset,
+    String? blocResponse,
+    MessageFilter? currentFilter,
+    bool? maxReached,
+    bool? paginationLoading,
+  }) {
+    return InboxMessageStateInitial(
+      inboxMessages: inboxMessages ?? this.inboxMessages,
+      currentOffset: currentOffset ?? this.currentOffset,
+      blocResponse: blocResponse ?? this.blocResponse,
+      currentFilter: currentFilter ?? this.currentFilter,
+      maxReached: maxReached ?? this.maxReached,
+      paginationLoading: paginationLoading ?? this.paginationLoading,
+    );
+  }
+
+  @override
+  List<Object?> get props => [
+        inboxMessages,
+        currentOffset,
+        blocResponse,
+        currentFilter,
+        maxReached,
+        paginationLoading
+      ];
+}
+
+class InboxMessageStateDeleteSucceed extends InboxMessageState {
+  const InboxMessageStateDeleteSucceed({
+    super.blocResponse,
+    super.currentOffset,
+    super.maxReached,
+    super.currentFilter,
+    super.inboxMessages,
+    super.paginationLoading,
+  });
+
+  factory InboxMessageStateDeleteSucceed.fromState(InboxMessageState state) =>
+      InboxMessageStateDeleteSucceed(
+        inboxMessages: state.inboxMessages,
+        currentOffset: state.currentOffset,
+        blocResponse: state.blocResponse,
+        currentFilter: state.currentFilter,
+        maxReached: state.maxReached,
+        paginationLoading: state.paginationLoading,
+      );
+
+  @override
+  InboxMessageStateInitial copyWith({
+    List<Message>? inboxMessages,
+    int? currentOffset,
+    String? blocResponse,
+    MessageFilter? currentFilter,
+    bool? maxReached,
+    bool? paginationLoading,
+  }) {
+    return InboxMessageStateInitial(
+      inboxMessages: inboxMessages ?? this.inboxMessages,
+      currentOffset: currentOffset ?? this.currentOffset,
+      blocResponse: blocResponse ?? this.blocResponse,
+      currentFilter: currentFilter ?? this.currentFilter,
+      maxReached: maxReached ?? this.maxReached,
+      paginationLoading: paginationLoading ?? this.paginationLoading,
+    );
+  }
+
+  @override
+  List<Object?> get props => [
+        inboxMessages,
+        currentOffset,
+        blocResponse,
+        currentFilter,
+        maxReached,
+        paginationLoading
+      ];
+}
+
+class InboxMessageStateDeleteError extends InboxMessageState {
+  const InboxMessageStateDeleteError({
+    super.blocResponse,
+    super.currentOffset,
+    super.maxReached,
+    super.currentFilter,
+    super.inboxMessages,
+    super.paginationLoading,
+  });
+
+  factory InboxMessageStateDeleteError.fromState(InboxMessageState state) =>
+      InboxMessageStateDeleteError(
+        inboxMessages: state.inboxMessages,
+        currentOffset: state.currentOffset,
+        blocResponse: state.blocResponse,
+        currentFilter: state.currentFilter,
+        maxReached: state.maxReached,
+        paginationLoading: state.paginationLoading,
+      );
+
+  @override
+  InboxMessageStateInitial copyWith({
+    List<Message>? inboxMessages,
+    int? currentOffset,
+    String? blocResponse,
+    MessageFilter? currentFilter,
+    bool? maxReached,
+    bool? paginationLoading,
+  }) {
+    return InboxMessageStateInitial(
+      inboxMessages: inboxMessages ?? this.inboxMessages,
+      currentOffset: currentOffset ?? this.currentOffset,
+      blocResponse: blocResponse ?? this.blocResponse,
+      currentFilter: currentFilter ?? this.currentFilter,
+      maxReached: maxReached ?? this.maxReached,
+      paginationLoading: paginationLoading ?? this.paginationLoading,
+    );
+  }
+
+  @override
+  List<Object?> get props => [
+        inboxMessages,
+        currentOffset,
+        blocResponse,
+        currentFilter,
+        maxReached,
+        paginationLoading
+      ];
+}
+
+class InboxMessageStateError extends InboxMessageState {
+  const InboxMessageStateError({
+    super.blocResponse,
+    super.currentOffset,
+    super.maxReached,
+    super.currentFilter,
+    super.inboxMessages,
+    super.paginationLoading,
+  });
+
+  @override
+  InboxMessageStateInitial copyWith({
+    List<Message>? inboxMessages,
+    int? currentOffset,
+    String? blocResponse,
+    MessageFilter? currentFilter,
+    bool? maxReached,
+    bool? paginationLoading,
+  }) {
+    return InboxMessageStateInitial(
+      inboxMessages: inboxMessages ?? this.inboxMessages,
+      currentOffset: currentOffset ?? this.currentOffset,
+      blocResponse: blocResponse ?? this.blocResponse,
+      currentFilter: currentFilter ?? this.currentFilter,
+      maxReached: maxReached ?? this.maxReached,
+      paginationLoading: paginationLoading ?? this.paginationLoading,
+    );
+  }
+
+  @override
+  List<Object?> get props => [
+        inboxMessages,
+        currentOffset,
+        blocResponse,
+        currentFilter,
+        maxReached,
+        paginationLoading
+      ];
 }

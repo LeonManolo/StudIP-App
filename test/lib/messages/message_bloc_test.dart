@@ -53,7 +53,7 @@ void main() {
         messageRepository: mockedMessageRepository,
         authenticationRepository: mockedAuthenticationRepository,
       );
-      expect(bloc.state, const OutboxMessageState.initial());
+      expect(bloc.state, const OutboxMessageStateInitial());
       bloc.close();
     });
 
@@ -77,11 +77,8 @@ void main() {
       ),
       act: (bloc) => bloc.add(const OutboxMessagesRequested(offset: 0)),
       expect: () => [
-        const OutboxMessageState(
-          status: OutboxMessageStatus.loading,
-        ),
-        OutboxMessageState(
-          status: OutboxMessageStatus.populated,
+        const OutboxMessageStateLoading(),
+        OutboxMessageStateDidLoad(
           maxReached: true,
           outboxMessages: [message1, message2],
         ),
@@ -108,11 +105,8 @@ void main() {
       ),
       act: (bloc) => bloc.add(const RefreshOutboxRequested()),
       expect: () => [
-        const OutboxMessageState(
-          status: OutboxMessageStatus.loading,
-        ),
-        OutboxMessageState(
-          status: OutboxMessageStatus.populated,
+        const OutboxMessageStateLoading(),
+        OutboxMessageStateDidLoad(
           outboxMessages: [message1, message2],
         ),
       ],
@@ -144,11 +138,8 @@ void main() {
       act: (bloc) =>
           bloc.add(const DeleteOutboxMessagesRequested(messageIds: ['1'])),
       expect: () => [
-        const OutboxMessageState(
-          status: OutboxMessageStatus.loading,
-        ),
-        OutboxMessageState(
-          status: OutboxMessageStatus.deleteOutboxMessagesSucceed,
+        const OutboxMessageStateLoading(),
+        OutboxMessageStateDeleteSucceed(
           blocResponse: messageDeleteSucceed,
           maxReached: true,
           outboxMessages: [message2],
@@ -183,7 +174,7 @@ void main() {
         messageRepository: mockedMessageRepository,
         authenticationRepository: mockedAuthenticationRepository,
       );
-      expect(bloc.state, const InboxMessageState.initial());
+      expect(bloc.state, const InboxMessageStateInitial());
       bloc.close();
     });
 
@@ -210,9 +201,8 @@ void main() {
         const InboxMessagesRequested(offset: 0, filter: MessageFilter.none),
       ),
       expect: () => [
-        const InboxMessageState(status: InboxMessageStatus.loading),
-        InboxMessageState(
-          status: InboxMessageStatus.populated,
+        const InboxMessageStateLoading(),
+        InboxMessageStateDidLoad(
           maxReached: true,
           inboxMessages: [message1, message2],
         ),
@@ -240,9 +230,8 @@ void main() {
       ),
       act: (bloc) => bloc.add(const RefreshInboxRequested()),
       expect: () => [
-        const InboxMessageState(status: InboxMessageStatus.loading),
-        InboxMessageState(
-          status: InboxMessageStatus.populated,
+        const InboxMessageStateLoading(),
+        InboxMessageStateDidLoad(
           maxReached: true,
           inboxMessages: [message1, message2],
         ),
@@ -276,9 +265,8 @@ void main() {
       act: (bloc) =>
           bloc.add(const DeleteInboxMessagesRequested(messageIds: ['1'])),
       expect: () => [
-        const InboxMessageState(status: InboxMessageStatus.loading),
-        InboxMessageState(
-          status: InboxMessageStatus.deleteInboxMessagesSucceed,
+        const InboxMessageStateLoading(),
+        InboxMessageStateDeleteSucceed(
           blocResponse: messageDeleteSucceed,
           maxReached: true,
           inboxMessages: [message2],

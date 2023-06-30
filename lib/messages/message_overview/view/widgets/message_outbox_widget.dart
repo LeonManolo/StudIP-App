@@ -6,23 +6,20 @@ import 'package:studipadawan/messages/message_overview/message_outbox_bloc/messa
 import 'package:studipadawan/messages/message_overview/message_outbox_bloc/message_outbox_state.dart';
 import 'package:studipadawan/messages/message_overview/message_tabbar_bloc%20/message_tabbar_bloc.dart';
 import 'package:studipadawan/messages/message_overview/message_tabbar_bloc%20/message_tabbar_event.dart';
+import 'package:studipadawan/messages/message_overview/message_tabbar_bloc%20/message_tabbar_state.dart';
 import 'package:studipadawan/messages/message_overview/view/widgets/message_icon.dart';
 import 'package:studipadawan/messages/message_overview/view/widgets/message_tile.dart';
 import 'package:studipadawan/utils/empty_view.dart';
+import 'package:studipadawan/utils/loading_indicator.dart';
 
 import 'package:studipadawan/utils/pagination/pagination.dart';
 import 'package:studipadawan/utils/refreshable_content.dart';
+import 'package:studipadawan/utils/snackbar.dart';
 
 class OutboxMessageWidget extends StatefulWidget {
   const OutboxMessageWidget({
     super.key,
-    required this.state,
-    required this.scrollController,
-    required this.unmarkAll,
   });
-  final OutboxMessageState state;
-  final ScrollController scrollController;
-  final Function unmarkAll;
 
   @override
   State<OutboxMessageWidget> createState() => OutboxMessageWidgetState();
@@ -30,85 +27,174 @@ class OutboxMessageWidget extends StatefulWidget {
 
 class OutboxMessageWidgetState extends State<OutboxMessageWidget> {
   final List<String> _markedOutboxMessages = [];
+  final _outboxScrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+
+    _outboxScrollController.addListener(_onOutboxScroll);
+  }
+
+  @override
+  void dispose() {
+    _outboxScrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    if (widget.state.status == OutboxMessageStatus.loading) {
-      return const Center(child: CircularProgressIndicator());
-    }
+    return BlocConsumer<OutboxMessageBloc, OutboxMessageState>(
+      listener: (context, outBoxState) {
+        if (outBoxState is OutboxMessageStateDeleteSucceed) {
+          buildSnackBar(
+            context,
+            outBoxState.blocResponse,
+            Colors.green,
+          );
+        }
+        if (outBoxState is OutboxMessageStateDeleteError) {
+          buildSnackBar(
+            context,
+            outBoxState.blocResponse,
+            Colors.red,
+          );
+        }
+      },
+      builder: (context, outBoxState) {
+        if (outBoxState is OutboxMessageStateLoading) {
+          return const Center(child: LoadingIndicator());
+        }
 
-    if (widget.state.outboxMessages.isEmpty) {
-      return RefreshableContent(
-        callback: _refreshOutboxMessages,
-        child: const EmptyView(
-          title: 'Keine Nachrichten',
-          message: 'Es sind keine Nachrichten vorhanden',
+        if (outBoxState.outboxMessages.isEmpty) {
+          return RefreshableContent(
+            callback: _refreshOutboxMessages,
+            child: const EmptyView(
+              title: 'Keine Nachrichten',
+              message: 'Es sind keine Nachrichten vorhanden',
+            ),
+          );
+        }
+
+        return BlocConsumer<TabBarBloc, TabBarState>(
+          listener: (context, state) {
+            if (_markedOutboxMessages.isNotEmpty &&
+                !state.messageMenuIconVisible) {
+              _unmarkAll();
+            }
+            if (state is TabBarStateMarkAllInboxMessages) {
+              _markAll();
+            }
+            if (state is TabBarStateDeleteOutboxMessages) {
+              _deleteMessages();
+              context.read<TabBarBloc>().add(const HideMenuicon());
+            }
+          },
+          builder: (context, state) {
+            return Column(
+              children: [
+                Expanded(
+                  child: RefreshIndicator(
+                    onRefresh: () async => _refreshOutboxMessages(),
+                    child: ListView.separated(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      itemCount: outBoxState.outboxMessages.length + 1,
+                      separatorBuilder: (context, index) =>
+                          const Divider(height: 0.5),
+                      itemBuilder: (context, index) {
+                        if (index == outBoxState.outboxMessages.length) {
+                          return PaginationLoadingIndicator(
+                            visible: outBoxState.paginationLoading,
+                          );
+                        } else {
+                          final message = outBoxState.outboxMessages[index];
+                          return ColoredBox(
+                            color: (_markedOutboxMessages.contains(message.id))
+                                ? Theme.of(context)
+                                    .primaryColor
+                                    .withOpacity(0.5)
+                                : Colors.transparent,
+                            child: MessageTile(
+                              messageIcon: MessageIcon(
+                                iconData: getMessageIconData(isRead: true),
+                              ),
+                              onTapFunction: () => {
+                                if (_markedOutboxMessages.isNotEmpty)
+                                  {
+                                    if (_markedOutboxMessages
+                                        .contains(message.id))
+                                      _unmarkMessage(context, message.id)
+                                    else
+                                      _markMessage(context, message.id)
+                                  }
+                                else
+                                  {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute<MessageDetailPage>(
+                                        builder: (context) => MessageDetailPage(
+                                          isInbox: false,
+                                          message: message,
+                                          refreshMessages:
+                                              _refreshOutboxMessages,
+                                        ),
+                                      ),
+                                    )
+                                  }
+                              },
+                              onLongPressFunction: () =>
+                                  _markMessage(context, message.id),
+                              title: message.subject,
+                              subTitle:
+                                  'An ${message.parseRecipients()} ${message.getTimeAgo()}',
+                            ),
+                          );
+                        }
+                      },
+                      controller: _outboxScrollController,
+                    ),
+                  ),
+                )
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
+  void _onOutboxScroll() {
+    final outBoxMessageBloc = context.read<OutboxMessageBloc>();
+    final currentState = outBoxMessageBloc.state;
+    if (!currentState.maxReached) {
+      _onScroll(
+        bloc: outBoxMessageBloc,
+        event: OutboxMessagesRequested(
+          offset: currentState.outboxMessages.length,
         ),
+        scrollController: _outboxScrollController,
+        threshold: currentState.outboxMessages.length,
+        paginationLoading: currentState.paginationLoading,
+        populated: currentState is! OutboxMessageStateError,
       );
     }
+  }
 
-    return Column(
-      children: [
-        Expanded(
-          child: RefreshIndicator(
-            onRefresh: () async => _refreshOutboxMessages(),
-            child: ListView.separated(
-              physics: const AlwaysScrollableScrollPhysics(),
-              itemCount: widget.state.outboxMessages.length + 1,
-              separatorBuilder: (context, index) => const Divider(height: 0.5),
-              itemBuilder: (context, index) {
-                if (index == widget.state.outboxMessages.length) {
-                  return PaginationLoadingIndicator(
-                    visible: widget.state.status ==
-                        OutboxMessageStatus.paginationLoading,
-                  );
-                } else {
-                  final message = widget.state.outboxMessages[index];
-                  return ColoredBox(
-                    color: (_markedOutboxMessages.contains(message.id))
-                        ? Theme.of(context).primaryColor.withOpacity(0.5)
-                        : Colors.transparent,
-                    child: MessageTile(
-                      messageIcon: MessageIcon(
-                        iconData: getMessageIconData(isRead: true),
-                      ),
-                      onTapFunction: () => {
-                        if (_markedOutboxMessages.isNotEmpty)
-                          {
-                            if (_markedOutboxMessages.contains(message.id))
-                              _unmarkMessage(context, message.id)
-                            else
-                              _markMessage(context, message.id)
-                          }
-                        else
-                          {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute<MessageDetailPage>(
-                                builder: (context) => MessageDetailPage(
-                                  isInbox: false,
-                                  message: message,
-                                  refreshMessages: _refreshOutboxMessages,
-                                ),
-                              ),
-                            )
-                          }
-                      },
-                      onLongPressFunction: () =>
-                          _markMessage(context, message.id),
-                      title: message.subject,
-                      subTitle:
-                          'An ${message.parseRecipients()} ${message.getTimeAgo()}',
-                    ),
-                  );
-                }
-              },
-              controller: widget.scrollController,
-            ),
-          ),
-        )
-      ],
-    );
+  void _onScroll({
+    required Bloc<dynamic, dynamic> bloc,
+    required dynamic event,
+    required ScrollController scrollController,
+    required int threshold,
+    required bool paginationLoading,
+    required bool populated,
+  }) {
+    final maxScroll = scrollController.position.maxScrollExtent;
+    final currentScroll = scrollController.position.pixels;
+    if (!paginationLoading &&
+        populated &&
+        maxScroll - currentScroll <= threshold) {
+      bloc.add(event);
+    }
   }
 
   void _markMessage(BuildContext context, String messageId) {
@@ -127,7 +213,7 @@ class OutboxMessageWidgetState extends State<OutboxMessageWidget> {
     });
   }
 
-  void markAll() {
+  void _markAll() {
     setState(() {
       _markedOutboxMessages.addAll(
         context
@@ -140,14 +226,14 @@ class OutboxMessageWidgetState extends State<OutboxMessageWidget> {
     });
   }
 
-  void unmarkAll() {
+  void _unmarkAll() {
     setState(() {
       _markedOutboxMessages.clear();
       context.read<TabBarBloc>().add(const HideMenuicon());
     });
   }
 
-  void deleteMessages() {
+  void _deleteMessages() {
     context.read<OutboxMessageBloc>().add(
           DeleteOutboxMessagesRequested(
             messageIds: _markedOutboxMessages.toList(),
@@ -160,7 +246,7 @@ class OutboxMessageWidgetState extends State<OutboxMessageWidget> {
     setState(() {
       context.read<OutboxMessageBloc>().add(const RefreshOutboxRequested());
       context.read<TabBarBloc>().add(const HideMenuicon());
-      unmarkAll();
+      _unmarkAll();
     });
   }
 }

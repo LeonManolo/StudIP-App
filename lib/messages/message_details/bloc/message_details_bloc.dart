@@ -7,11 +7,11 @@ import 'package:studipadawan/messages/message_details/bloc/message_details_state
 import 'package:studipadawan/messages/message_overview/message_inbox_bloc%20/message_inbox_bloc.dart';
 
 class MessageDetailsBloc
-    extends Bloc<MessageDetailsEvent, MessageDetailsState> {
+    extends Bloc<MessageDetailsEvent, MessageDetailState> {
   MessageDetailsBloc({
     required MessageRepository messageRepository,
   })  : _messageRepository = messageRepository,
-        super(const MessageDetailsState.initial()) {
+        super(const MessageDetailStateInitial()) {
     on<DeleteMessageRequested>(_onDeleteMessageRequested);
     on<ReadMessageRequested>(_onReadMessageRequested);
   }
@@ -19,22 +19,20 @@ class MessageDetailsBloc
 
   FutureOr<void> _onDeleteMessageRequested(
     DeleteMessageRequested event,
-    Emitter<MessageDetailsState> emit,
+    Emitter<MessageDetailState> emit,
   ) async {
-    emit(const MessageDetailsState(status: MessageDetailsStatus.loading));
+    emit(const MessageDetailStateLoading());
     try {
       await _messageRepository.deleteMessage(messageId: event.messageId);
 
       emit(
-        const MessageDetailsState(
-          status: MessageDetailsStatus.deleteMessageSucceed,
+        const MessageDetailStateDeleteMessageSucceed(
           blocResponse: messageDeleteSucceed,
         ),
       );
     } catch (_) {
       emit(
-        const MessageDetailsState(
-          status: MessageDetailsStatus.deleteMessageFailure,
+        const MessageDetailStateDeleteMessageError(
           blocResponse: messageDeleteSucceed,
         ),
       );
@@ -43,7 +41,7 @@ class MessageDetailsBloc
 
   FutureOr<void> _onReadMessageRequested(
     ReadMessageRequested event,
-    Emitter<MessageDetailsState> emit,
+    Emitter<MessageDetailState> emit,
   ) async {
     await _messageRepository.readMessage(messageId: event.message.id);
   }
