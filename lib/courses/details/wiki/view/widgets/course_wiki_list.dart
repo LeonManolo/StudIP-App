@@ -4,6 +4,7 @@ import 'package:studipadawan/courses/details/wiki/bloc/course_wiki_bloc.dart';
 import 'package:studipadawan/courses/details/wiki/view/widgets/course_wiki_list_row.dart';
 import 'package:studipadawan/utils/empty_view.dart';
 import 'package:studipadawan/utils/refreshable_content.dart';
+import 'package:studipadawan/utils/widgets/error_view/error_view.dart';
 
 class CourseWikiList extends StatelessWidget {
   const CourseWikiList({super.key});
@@ -41,16 +42,12 @@ class CourseWikiList extends StatelessWidget {
             );
 
           case CourseWikiStateError _:
-            return RefreshableContent(
-              callback: () async => context
+            return ErrorView(
+              iconData: null,
+              message: state.errorMessage,
+              onRetryPressed: () async => context
                   .read<CourseWikiBloc>()
                   .add(CourseWikiReloadRequested()),
-              child: Center(
-                child: Text(
-                  state.errorMessage,
-                  textAlign: TextAlign.center,
-                ),
-              ),
             );
 
           case CourseWikiStateLoading _:

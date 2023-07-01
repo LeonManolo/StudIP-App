@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:studipadawan/courses/details/files/bloc/course_files_bloc.dart';
 import 'package:studipadawan/courses/details/files/view/widgets/file_row/course_files_file_row.dart';
+import 'package:studipadawan/utils/empty_view.dart';
 
 class CourseFilesItemsList extends StatelessWidget {
   const CourseFilesItemsList({super.key, required this.insertSpacerAtEnd});
@@ -13,12 +14,7 @@ class CourseFilesItemsList extends StatelessWidget {
     return BlocBuilder<CourseFilesBloc, CourseFilesState>(
       builder: (context, state) {
         return state.items.isEmpty
-            ? const Center(
-                child: Text(
-                  'Keine Dateien vorhanden',
-                  textAlign: TextAlign.center,
-                ),
-              )
+            ? const Center(child: EmptyView(message: 'Keine Dateien vorhanden'))
             : ListView.builder(
                 itemBuilder: (context, index) {
                   if (index >= state.items.length) {
