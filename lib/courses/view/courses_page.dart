@@ -36,7 +36,14 @@ class CoursesPage extends StatelessWidget {
                 ) =>
                   [
                     IconButton(
-                      icon: const Icon(EvaIcons.funnelOutline),
+                      color: state.isDefaultFilter
+                          ? null
+                          : Theme.of(context).primaryColor,
+                      icon: Icon(
+                        state.isDefaultFilter
+                            ? EvaIcons.funnelOutline
+                            : EvaIcons.funnel,
+                      ),
                       onPressed: () {
                         _showSemesterSortFilterModal(
                           context: context,
