@@ -11,7 +11,7 @@ class MessageAddButton extends StatelessWidget {
   });
   @override
   Widget build(BuildContext context) {
-    return IconButton(
+    return FloatingActionButton(
       onPressed: () {
         Navigator.push(
           context,
@@ -26,7 +26,7 @@ class MessageAddButton extends StatelessWidget {
           ),
         );
       },
-      icon: const Icon(EvaIcons.plus),
+      child: const Icon(EvaIcons.plus),
     );
   }
 }

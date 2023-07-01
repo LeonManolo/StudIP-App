@@ -91,8 +91,7 @@ class MessagesPageState extends State<MessagesPage>
           value: _tabBarBloc,
         ),
       ],
-      child: BlocConsumer<TabBarBloc, TabBarState>(
-        listener: (context, state) {},
+      child: BlocBuilder<TabBarBloc, TabBarState>(
         builder: (context, state) {
           return Scaffold(
             appBar: _buildAppBar(context),
@@ -104,17 +103,11 @@ class MessagesPageState extends State<MessagesPage>
                 OutboxMessageWidget(),
               ],
             ),
-            floatingActionButton: FloatingActionButton(
-              backgroundColor: state.messageMenuIconVisible
-                  ? Colors.red
-                  : Theme.of(context).primaryColor,
-              onPressed: () {},
-              child: state.messageMenuIconVisible
-                  ? MessageDeleteButton(
-                      buildContext: context,
-                    )
-                  : const MessageAddButton(),
-            ),
+            floatingActionButton: state.messageMenuIconVisible
+                ? MessageDeleteButton(
+                    buildContext: context,
+                  )
+                : const MessageAddButton(),
           );
         },
       ),
@@ -140,8 +133,7 @@ class MessagesPageState extends State<MessagesPage>
         indicatorColor: Theme.of(context).primaryColor,
       ),
       actions: <Widget>[
-        BlocConsumer<TabBarBloc, TabBarState>(
-          listener: (context, state) {},
+        BlocBuilder<TabBarBloc, TabBarState>(
           builder: (context, state) {
             if (state.filterIconVisible) {
               return const MessageFilterButton();

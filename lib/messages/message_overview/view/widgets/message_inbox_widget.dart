@@ -90,7 +90,6 @@ class InboxMessageWidgetState extends State<InboxMessageWidget> {
             }
             if (state is TabBarStateDeleteInboxMessages) {
               _deleteMessages();
-              context.read<TabBarBloc>().add(const HideMenuicon());
             }
           },
           builder: (context, state) {

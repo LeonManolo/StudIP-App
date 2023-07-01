@@ -12,7 +12,8 @@ class MessageDeleteButton extends StatelessWidget {
   final BuildContext buildContext;
   @override
   Widget build(BuildContext context) {
-    return IconButton(
+    return FloatingActionButton(
+      backgroundColor: Colors.red,
       onPressed: () {
         showDialog<void>(
           context: context,
@@ -43,7 +44,7 @@ class MessageDeleteButton extends StatelessWidget {
           },
         );
       },
-      icon: const Icon(
+      child: const Icon(
         EvaIcons.trash2,
         color: Colors.white,
       ),
