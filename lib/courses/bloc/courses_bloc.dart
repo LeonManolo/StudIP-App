@@ -19,8 +19,9 @@ class CoursesBloc extends HydratedBloc<CourseEvent, CoursesState> {
         _todayDateTime = todayDateTime,
         super(
           CoursesStateLoading(
-            semesterFilter: initialFilter ?? SemesterFilter.all,
-            semesterSortOrder: initialSortOrder ?? SemesterSortOrder.desc,
+            semesterFilter: initialFilter ?? CoursesState.defaultSemesterFilter,
+            semesterSortOrder:
+                initialSortOrder ?? CoursesState.defaultSemesterSortOrder,
           ),
         ) {
     on<CoursesRequested>(_onCourseRequested);
