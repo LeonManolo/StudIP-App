@@ -11,6 +11,7 @@ import 'package:studipadawan/calendar/calendar_notifications/view/calendar_sched
 import 'package:studipadawan/calendar/widgets/calendar_header.dart';
 import 'package:studipadawan/calendar/widgets/calendar_list_body/calendar_list_body.dart';
 import 'package:studipadawan/calendar/widgets/calendar_timeframes_body/calendar_timeframes_body.dart';
+import 'package:studipadawan/calendar/widgets/selected_layout_indicator.dart';
 import 'package:studipadawan/utils/widgets/error_view/error_view.dart';
 
 class CalendarPage extends StatelessWidget {
@@ -41,23 +42,10 @@ class CalendarPage extends StatelessWidget {
             },
             icon: BlocBuilder<CalendarBloc, CalendarState>(
               bloc: calendarBloc,
-              buildWhen: (previous, current) {
-                return previous.layout != current.layout;
-              },
-              builder: (context, state) {
-                Color? color;
-                if (calendarBloc.state.layout == CalendarBodyType.timeframes) {
-                  color = Theme.of(context).primaryColor;
-                }
-                return Spin(
-                  duration: const Duration(milliseconds: 800),
-                  key: GlobalKey(),
-                  child: Icon(
-                    EvaIcons.repeatOutline,
-                    color: color,
-                  ),
-                );
-              },
+              builder: (context, state) => SelectedLayoutIndicator(
+                calendarBodyType: state.layout,
+                animate: state is! CalendarLoading,
+              ),
             ),
           ),
         ],
@@ -117,7 +105,6 @@ class CalendarPage extends StatelessWidget {
                     } else {
                       return FadeInDown(
                         from: -200,
-                        key: GlobalKey(),
                         child: CalendarTimeframesBody(
                           date: state.currentDay,
                           scheduleData: state.calendarWeekData.data,

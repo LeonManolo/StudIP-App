@@ -21,6 +21,13 @@ class DarkMaterialAppTheme {
       tabBarTheme: _tabBarTheme,
       scaffoldBackgroundColor: Platform.isIOS ? Colors.black : null,
       splashFactory: Platform.isIOS ? NoSplash.splashFactory : null,
+      radioTheme: _radioTheme,
+    );
+  }
+
+  RadioThemeData get _radioTheme {
+    return RadioThemeData(
+      fillColor: MaterialStateProperty.all(primaryColor),
     );
   }
 

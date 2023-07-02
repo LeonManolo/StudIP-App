@@ -18,24 +18,42 @@ class CalendarHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final primaryColor = Theme.of(context).primaryColor;
     return Column(
       children: [
         TableCalendar<CalendarEntryData>(
+          availableCalendarFormats: const {
+            CalendarFormat.week: 'Woche',
+            CalendarFormat.twoWeeks : '2 Wochen',
+            CalendarFormat.month : 'Monat',
+          },
+          calendarBuilders: CalendarBuilders(
+          ),
           locale: 'DE_de',
           calendarFormat: calendarFormat,
           onFormatChanged: onFormatChanged,
           calendarStyle: CalendarStyle(
+            //outsideTextStyle: TextStyle(color: Colors.red),
+            //rangeHighlightColor: Colors.red,
             selectedDecoration: BoxDecoration(
-              color: Theme.of(context).primaryColor,
+              color: primaryColor,
               shape: BoxShape.circle,
+            ),
+            selectedTextStyle: TextStyle(
+              fontSize: 16,
+              color: Theme.of(context).colorScheme.onPrimary,
             ),
             todayDecoration: BoxDecoration(
               border: Border.all(
-                color: Theme.of(context).primaryColor,
+                color: primaryColor,
                 width: 1.5,
               ),
               shape: BoxShape.circle,
             ),
+            todayTextStyle: TextStyle(
+              color: primaryColor,
+              fontSize: 16,
+            )
 
           ),
           focusedDay: selectedDay,
