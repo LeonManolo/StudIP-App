@@ -36,7 +36,7 @@ class CalendarNotificationSaveButton extends StatelessWidget {
           child: Text(
             '$selectedNotifications/$totalNotifications Benachrichtigungen speichern',
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  color: Colors.white,
+                  color: Theme.of(context).colorScheme.onPrimary,
                   fontWeight: FontWeight.w500,
                 ),
           ),

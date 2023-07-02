@@ -14,6 +14,13 @@ class LightMaterialAppTheme {
       brightness: Brightness.light,
       bottomNavigationBarTheme: _bottomNavigationBarThemeData,
       splashFactory: Platform.isIOS ? NoSplash.splashFactory : null,
+      radioTheme: _radioTheme,
+    );
+  }
+
+  RadioThemeData get _radioTheme {
+    return RadioThemeData(
+      fillColor: MaterialStateProperty.all(Colors.indigo),
     );
   }
 

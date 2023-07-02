@@ -288,6 +288,7 @@ final class CalendarNotificationsBloc extends HydratedBloc<
         final cEvent = CalendarNotificationsCourseEvent(
           courseId: course.id,
           eventDate: event.startDate,
+          eventEndDate: event.endDate,
         );
         events[cEvent.combinedKey] = cEvent;
       }

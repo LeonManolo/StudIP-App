@@ -9,6 +9,7 @@ import 'package:studipadawan/calendar/calendar_notifications/widgets/calendar_no
 import 'package:studipadawan/calendar/calendar_notifications/widgets/calendar_notification_time_selection.dart';
 import 'package:studipadawan/calendar/calendar_notifications/widgets/headline.dart';
 import 'package:studipadawan/utils/empty_view.dart';
+import 'package:studipadawan/utils/extensions/date_time_extension.dart';
 import 'package:studipadawan/utils/loading_indicator.dart';
 import 'package:studipadawan/utils/snackbar.dart';
 import 'package:studipadawan/utils/widgets/non_empty_listview_builder.dart';
@@ -111,8 +112,12 @@ class CalendarScheduleNotificationsPage extends StatelessWidget {
                                               ? EvaIcons.bell
                                               : EvaIcons.bellOutline,
                                         ),
-                                        title:
-                                            Text(_formatDate(event.eventDate)),
+                                        title: Text(
+                                          event.eventDate
+                                              .getFormattedGermanTimeSpanBetweenDates(
+                                            event.eventEndDate,
+                                          ),
+                                        ),
                                         subtitle: const Text('Vorlesung'),
                                         selected: event.notificationEnabled,
                                         onTap: () {
