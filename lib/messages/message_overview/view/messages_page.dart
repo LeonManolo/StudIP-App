@@ -109,7 +109,7 @@ class MessagesPageState extends State<MessagesPage>
                   )
                 : const MessageAddButton(),
           );
-        },
+        }, 
       ),
     );
   }

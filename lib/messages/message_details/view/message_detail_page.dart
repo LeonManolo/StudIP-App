@@ -8,6 +8,7 @@ import 'package:studipadawan/messages/message_details/bloc/message_details_bloc.
 import 'package:studipadawan/messages/message_details/bloc/message_details_event.dart';
 import 'package:studipadawan/messages/message_details/bloc/message_details_state.dart';
 import 'package:studipadawan/messages/message_details/view/widgets/message_details_menu_button.dart';
+import 'package:studipadawan/messages/message_send/message_send_bloc/message_send_bloc.dart';
 
 import 'package:studipadawan/messages/message_send/view/message_send_page.dart';
 import 'package:studipadawan/utils/utils.dart';
@@ -70,7 +71,13 @@ class MessageDetailPage extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute<MessageSendPage>(
-                        builder: (context) => MessageSendPage(message: message),
+                        builder: (context) => BlocProvider(
+                          create: (context) => MessageSendBloc(
+                            messageRepository:
+                                context.read<MessageRepository>(),
+                          ),
+                          child: MessageSendPage(message: message),
+                        ),
                         fullscreenDialog: true,
                       ),
                     );
