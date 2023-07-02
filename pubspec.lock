@@ -260,14 +260,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.1.1"
-  dropdown_button2:
-    dependency: "direct main"
-    description:
-      name: dropdown_button2
-      sha256: "13bf78b6e5b6ca7256701988b22e078cd94b41bfab8d68a128651734702e0d1b"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.1.2"
   equatable:
     dependency: "direct main"
     description:
@@ -284,14 +276,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.1.0"
-  fading_edge_scrollview:
-    dependency: transitive
-    description:
-      name: fading_edge_scrollview
-      sha256: c25c2231652ce774cc31824d0112f11f653881f43d7f5302c05af11942052031
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.0.0"
   fake_async:
     dependency: transitive
     description:
@@ -432,6 +416,11 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "7.0.0+1"
+  flutter_localizations:
+    dependency: "direct main"
+    description: flutter
+    source: sdk
+    version: "0.0.0"
   flutter_plugin_android_lifecycle:
     dependency: transitive
     description:
@@ -639,10 +628,10 @@ packages:
     dependency: "direct main"
     description:
       name: intl
-      sha256: "3bc132a9dbce73a7e4a21a17d06e1878839ffbf975568bc875c60537824b0c4d"
+      sha256: a3715e3bc90294e971cb7dc063fbf3cd9ee0ebf8604ffeafabd9e6f16abbdbe6
       url: "https://pub.dev"
     source: hosted
-    version: "0.18.1"
+    version: "0.18.0"
   io:
     dependency: transitive
     description:
@@ -706,14 +695,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.1"
-  marquee:
-    dependency: "direct main"
-    description:
-      name: marquee
-      sha256: "4b5243d2804373bdc25fc93d42c3b402d6ec1f4ee8d0bb72276edd04ae7addb8"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.2.3"
   matcher:
     dependency: transitive
     description:
@@ -1127,7 +1108,7 @@ packages:
     source: hosted
     version: "0.5.1"
   timeago:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: timeago
       sha256: a415b9a05ef64b845c859a91161fc9f689f88eaaa4c04759517d201891b99e90

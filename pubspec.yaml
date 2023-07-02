@@ -109,12 +109,10 @@ dependencies:
 
   url_launcher: ^6.1.11
 
-  # Flutter's core Dropdown Button widget with steady dropdown menu and many options you can customize to your needs.
-  dropdown_button2: ^2.1.2
-
-  marquee: ^2.2.3
-
   flutter_speed_dial: ^6.2.0
+
+  # A library useful for creating fuzzy timestamps. (e.g. "15 minutes ago")
+  timeago: ^3.4.0
 
   ######### STATE MANAGEMENT ############
   bloc: ^8.1.1
@@ -122,6 +120,9 @@ dependencies:
   flow_builder: ^0.0.9
   flutter_typeahead: ^4.3.7
   hydrated_bloc: ^9.1.0
+
+  flutter_localizations:
+    sdk: flutter
 
 dev_dependencies:
   bloc_test: ^9.1.1
