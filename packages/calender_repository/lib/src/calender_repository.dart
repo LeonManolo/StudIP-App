@@ -9,16 +9,15 @@ class CalenderRepository {
 
   Future<CalendarWeekData> getCalendarSchedule({
     required String userId,
-    required DateTime currentDateTime,
-    DateTime? requestedSemester,
+    required DateTime requestedDateTime,
   }) async {
     final schedule = await _apiClient.getSchedule(
       userId: userId,
-      semesterStart: requestedSemester,
+      semesterStart: requestedDateTime,
     );
     return CalendarWeekData.fromScheduleResponse(
       scheduleResponse: schedule,
-      currentDateTime: currentDateTime,
+      requestedDateTime: requestedDateTime,
     );
   }
 }

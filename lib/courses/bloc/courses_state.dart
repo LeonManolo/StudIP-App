@@ -15,6 +15,13 @@ sealed class CoursesState extends Equatable {
   final SemesterFilter semesterFilter;
   final SemesterSortOrder semesterSortOrder;
 
+  static const defaultSemesterFilter = SemesterFilter.all;
+  static const defaultSemesterSortOrder = SemesterSortOrder.desc;
+
+  bool get isDefaultFilter =>
+      semesterFilter == defaultSemesterFilter &&
+      semesterSortOrder == defaultSemesterSortOrder;
+
   @override
   List<Object?> get props => [semesterFilter, semesterSortOrder];
 }

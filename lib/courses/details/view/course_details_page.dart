@@ -39,39 +39,37 @@ class CourseDetailsPage extends StatelessWidget {
           )
         ],
       ),
-      body: SafeArea(
-        child: CoursePageView(
-          content: [
-            CoursePageViewData(
-              tab: const CoursePageViewTabData(
-                icon: EvaIcons.folderOutline,
-                title: 'Dateien',
-              ),
-              content: CourseFilesPage(course: course),
+      body: CoursePageView(
+        content: [
+          CoursePageViewData(
+            tab: const CoursePageViewTabData(
+              icon: EvaIcons.folderOutline,
+              title: 'Dateien',
             ),
-            CoursePageViewData(
-              tab: const CoursePageViewTabData(
-                icon: EvaIcons.personOutline,
-                title: 'Teilnehmer',
-              ),
-              content: CourseParticipantsPage(courseId: course.id),
+            content: CourseFilesPage(course: course),
+          ),
+          CoursePageViewData(
+            tab: const CoursePageViewTabData(
+              icon: EvaIcons.personOutline,
+              title: 'Teilnehmer',
             ),
-            CoursePageViewData(
-              tab: const CoursePageViewTabData(
-                icon: EvaIcons.bulbOutline,
-                title: 'Wiki',
-              ),
-              content: CourseWikiPage(course: course),
+            content: CourseParticipantsPage(courseId: course.id),
+          ),
+          CoursePageViewData(
+            tab: const CoursePageViewTabData(
+              icon: EvaIcons.bulbOutline,
+              title: 'Wiki',
             ),
-            CoursePageViewData(
-              tab: const CoursePageViewTabData(
-                icon: EvaIcons.infoOutline,
-                title: 'Info',
-              ),
-              content: CourseInfoPage(course: course),
+            content: CourseWikiPage(course: course),
+          ),
+          CoursePageViewData(
+            tab: const CoursePageViewTabData(
+              icon: EvaIcons.infoOutline,
+              title: 'Info',
             ),
-          ],
-        ),
+            content: CourseInfoPage(course: course),
+          ),
+        ],
       ),
     );
   }

@@ -33,16 +33,17 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
     CalendarRequested event,
     Emitter<CalendarState> emit,
   ) async {
-    final day = event.day;
+    final requestedDateTime = event.day;
 
-    emit(CalendarLoading.fromState(state.copyWith(currentDay: day)));
+    emit(CalendarLoading.fromState(
+        state.copyWith(currentDay: requestedDateTime)));
 
     try {
-      final calendarSchedule = await _fetchCalendarSchedule(day);
+      final calendarSchedule = await _fetchCalendarSchedule(requestedDateTime);
       emit(
         CalendarPopulated(
           calendarWeekData: calendarSchedule,
-          currentDay: day,
+          currentDay: requestedDateTime,
           layout: event.layout,
           calendarFormat: state.calendarFormat,
         ),
@@ -59,12 +60,11 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
   }
 
   Future<CalendarWeekData> _fetchCalendarSchedule(
-    DateTime semesterDateTime,
+    DateTime requestedDateTime,
   ) async {
     return _calendarRepository.getCalendarSchedule(
       userId: _authenticationRepository.currentUser.id,
-      requestedSemester: semesterDateTime,
-      currentDateTime: DateTime.now(),
+      requestedDateTime: requestedDateTime,
     );
   }
 
@@ -72,15 +72,19 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
     CalendarExactDayRequested event,
     Emitter<CalendarState> emit,
   ) async {
-    final day = event.exactDay;
-    emit(CalendarLoading.fromState(state.copyWith(currentDay: day)));
+    final requestedDateTime = event.exactDay;
+    emit(
+      CalendarLoading.fromState(
+        state.copyWith(currentDay: requestedDateTime),
+      ),
+    );
 
     try {
-      final calendarSchedule = await _fetchCalendarSchedule(day);
+      final calendarSchedule = await _fetchCalendarSchedule(requestedDateTime);
       emit(
         CalendarPopulated(
           calendarWeekData: calendarSchedule,
-          currentDay: day,
+          currentDay: requestedDateTime,
           layout: state.layout,
           calendarFormat: state.calendarFormat,
         ),

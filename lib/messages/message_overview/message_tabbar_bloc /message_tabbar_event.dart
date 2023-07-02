@@ -17,6 +17,18 @@ class ShowMenuIcon extends TabBarEvent {
   List<Object?> get props => [];
 }
 
+class DeleteMarkedMessages extends TabBarEvent {
+  const DeleteMarkedMessages();
+  @override
+  List<Object?> get props => [];
+}
+
+class MarkAllMessages extends TabBarEvent {
+  const MarkAllMessages();
+  @override
+  List<Object?> get props => [];
+}
+
 class HideMenuicon extends TabBarEvent {
   const HideMenuicon();
   @override

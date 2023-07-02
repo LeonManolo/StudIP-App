@@ -6,6 +6,7 @@ import 'package:studipadawan/courses/details/news/view/widgets/course_news_card.
 import 'package:studipadawan/utils/empty_view.dart';
 import 'package:studipadawan/utils/pagination/pagination.dart';
 import 'package:studipadawan/utils/refreshable_content.dart';
+import 'package:studipadawan/utils/widgets/error_view/error_view.dart';
 
 class CourseNewsList extends PaginatedList {
   const CourseNewsList({super.key, required super.reachedBottom});
@@ -70,11 +71,9 @@ class _CourseNewsListState extends PaginatedListState {
             );
 
           case CourseNewsStateError _:
-            return Center(
-              child: Text(
-                state.errorMessage,
-                textAlign: TextAlign.center,
-              ),
+            return ErrorView(
+              iconData: null,
+              message: state.errorMessage,
             );
 
           case CourseNewsStateLoading _:

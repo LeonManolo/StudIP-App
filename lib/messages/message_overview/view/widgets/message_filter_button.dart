@@ -1,17 +1,15 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:studipadawan/messages/message_overview/message_inbox_bloc%20/message_inbox_bloc.dart';
+import 'package:studipadawan/messages/message_overview/message_inbox_bloc%20/message_inbox_event.dart';
 import 'package:studipadawan/messages/message_overview/message_inbox_bloc%20/message_inbox_state.dart';
 import 'package:studipadawan/messages/message_overview/view/widgets/message_filter_item.dart';
 
 class MessageFilterButton extends StatelessWidget {
   const MessageFilterButton({
     super.key,
-    required this.setFilter,
-    required this.currentFilter,
   });
-  final void Function(MessageFilter) setFilter;
-  final MessageFilter currentFilter;
-
   Icon funnelIcon(MessageFilter currentFilter) {
     if (currentFilter != MessageFilter.none) {
       return const Icon(EvaIcons.funnel);

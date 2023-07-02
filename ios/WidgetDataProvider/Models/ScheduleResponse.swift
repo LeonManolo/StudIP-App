@@ -20,14 +20,9 @@ struct ScheduleResponse: Codable {
             let description: String?
             let start: String
             let end: String
-            let weekday: Weekday
+            let weekday: Int // 1 represents monday, 7 represents sunday
             let locations: [String]?
             let recurrence: Recurrence?
-            
-            enum Weekday: Int, Codable {
-                case monday = 1
-                case tuesday, wednesday, thursday, friday, saturday, sunday
-            }
             
             struct Recurrence: Codable {
                 let freq: String

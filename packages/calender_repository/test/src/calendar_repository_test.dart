@@ -70,6 +70,7 @@ void main() {
       when(
         () => mockedApiClient.getSchedule(
           userId: 'f6e5879dd84fe0f21eae9f0627d4f807',
+          semesterStart: DateTime(2023, 5, 15, 17, 14),
         ),
       ).thenAnswer((_) async {
         return ScheduleListResponse.fromJson(
@@ -79,7 +80,7 @@ void main() {
 
       final CalendarWeekData calendarWeekData = await sut.getCalendarSchedule(
         userId: 'f6e5879dd84fe0f21eae9f0627d4f807',
-        currentDateTime: DateTime(2023, 5, 15, 17, 14),
+        requestedDateTime: DateTime(2023, 5, 15, 17, 14),
       );
 
       final scheduleTitle =
@@ -96,6 +97,7 @@ void main() {
       when(
         () => mockedApiClient.getSchedule(
           userId: 'f6e5879dd84fe0f21eae9f0627d4f807',
+          semesterStart: DateTime(2023, 5, 1, 17, 14),
         ),
       ).thenAnswer((_) async {
         return ScheduleListResponse.fromJson(
@@ -105,7 +107,7 @@ void main() {
 
       final CalendarWeekData calendarWeekData = await sut.getCalendarSchedule(
         userId: 'f6e5879dd84fe0f21eae9f0627d4f807',
-        currentDateTime: DateTime(2023, 5, 1, 17, 14),
+        requestedDateTime: DateTime(2023, 5, 1, 17, 14),
       );
 
       expect(
@@ -118,6 +120,7 @@ void main() {
       when(
         () => mockedApiClient.getSchedule(
           userId: 'f6e5879dd84fe0f21eae9f0627d4f807',
+          semesterStart: DateTime(2023, 6, 19, 17, 14),
         ),
       ).thenAnswer((_) async {
         return ScheduleListResponse.fromJson(
@@ -127,7 +130,7 @@ void main() {
 
       final CalendarWeekData calendarWeekData = await sut.getCalendarSchedule(
         userId: 'f6e5879dd84fe0f21eae9f0627d4f807',
-        currentDateTime: DateTime(2023, 6, 19, 17, 14),
+        requestedDateTime: DateTime(2023, 6, 19, 17, 14),
       );
 
       expect(

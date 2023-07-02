@@ -34,19 +34,7 @@ class LoginPage extends StatelessWidget {
             case _:
               return Scaffold(
                 backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
-                appBar: AppBar(
-                  actions: [
-                    IconButton(
-                      onPressed: () {
-                        context.read<AppBloc>().add(const AppLogoutRequested());
-                      },
-                      icon: const Icon(
-                        EvaIcons.logOutOutline,
-                        color: Colors.transparent,
-                      ),
-                    )
-                  ],
-                ),
+                appBar: AppBar(),
                 body: Padding(
                   padding: const EdgeInsets.all(8),
                   child: Column(

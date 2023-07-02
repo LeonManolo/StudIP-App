@@ -5,8 +5,8 @@ abstract class MessageSendEvent extends Equatable {
   const MessageSendEvent();
 }
 
-class SendMessageRequest extends MessageSendEvent {
-  const SendMessageRequest({required this.subject, required this.messageText});
+class SendMessageRequested extends MessageSendEvent {
+  const SendMessageRequested({required this.subject, required this.messageText});
   final String subject;
   final String messageText;
 
@@ -14,24 +14,24 @@ class SendMessageRequest extends MessageSendEvent {
   List<Object?> get props => [subject, messageText];
 }
 
-class AddRecipient extends MessageSendEvent {
-  const AddRecipient({required this.recipient});
+class AddRecipientRequested extends MessageSendEvent {
+  const AddRecipientRequested({required this.recipient});
   final MessageUser recipient;
 
   @override
   List<Object?> get props => [recipient];
 }
 
-class RemoveRecipient extends MessageSendEvent {
-  const RemoveRecipient({required this.recipient});
+class RemoveRecipientRequested extends MessageSendEvent {
+  const RemoveRecipientRequested({required this.recipient});
   final MessageUser recipient;
 
   @override
   List<Object?> get props => [recipient];
 }
 
-class FetchSuggestions extends MessageSendEvent {
-  const FetchSuggestions({required this.pattern});
+class FetchSuggestionsRequested extends MessageSendEvent {
+  const FetchSuggestionsRequested({required this.pattern});
   final String pattern;
   @override
   List<Object?> get props => [pattern];

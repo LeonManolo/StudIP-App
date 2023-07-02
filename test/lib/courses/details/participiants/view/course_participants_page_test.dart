@@ -69,16 +69,16 @@ void main() {
 
         for (int i = 0; i < 5; i++) {
           expect(
-            find.descendant(
-              of: find.byType(CourseParticipantListTile),
-              matching: find.text('familyName_$i, givenName_$i'),
+            find.widgetWithText(
+              CourseParticipantListTile,
+              'familyName_$i, givenName_$i',
             ),
             findsOneWidget,
           );
           expect(
-            find.descendant(
-              of: find.byType(CourseParticipantListTile),
-              matching: find.text('email_$i'),
+            find.widgetWithText(
+              CourseParticipantListTile,
+              'email_$i',
             ),
             findsOneWidget,
           );
@@ -110,10 +110,9 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(
-        find.descendant(
-          of: find.byType(ErrorView),
-          matching:
-              find.text('Beim Laden der Teilnehmer ist ein Fehler aufgetreten'),
+        find.widgetWithText(
+          ErrorView,
+          'Beim Laden der Teilnehmer ist ein Fehler aufgetreten',
         ),
         findsOneWidget,
       );
