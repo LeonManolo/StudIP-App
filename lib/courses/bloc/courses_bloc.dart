@@ -24,7 +24,7 @@ class CoursesBloc extends HydratedBloc<CourseEvent, CoursesState> {
                 initialSortOrder ?? CoursesState.defaultSemesterSortOrder,
           ),
         ) {
-    on<CoursesRequested>(_onCourseRequested);
+    on<CoursesRequested>(_onCoursesRequested);
     on<SemesterFilterChanged>(_onSemesterFilterChanged);
     on<SemesterSortOrderChanged>(_onSemesterSortOrderChanged);
   }
@@ -60,7 +60,7 @@ class CoursesBloc extends HydratedBloc<CourseEvent, CoursesState> {
     };
   }
 
-  FutureOr<void> _onCourseRequested(
+  FutureOr<void> _onCoursesRequested(
     CoursesRequested event,
     Emitter<CoursesState> emit,
   ) async {

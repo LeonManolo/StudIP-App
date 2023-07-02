@@ -15,11 +15,11 @@ class ScheduleListResponse {
 
 @JsonSerializable()
 class ScheduleResponseItem {
-
   ScheduleResponseItem({
     required this.type,
     required this.id,
     required this.attributes,
+    required this.relationships,
   });
 
   factory ScheduleResponseItem.fromJson(Map<String, dynamic> json) =>
@@ -27,7 +27,10 @@ class ScheduleResponseItem {
   final String type;
   final String id;
   final ScheduleResponseItemAttributes attributes;
+  final ScheduleResponseItemRelationships relationships;
 }
+
+// --- Attributes ---
 
 @JsonSerializable()
 class ScheduleResponseItemAttributes {
@@ -55,7 +58,6 @@ class ScheduleResponseItemAttributes {
 
 @JsonSerializable()
 class ScheduleResponseItemAttributesRecurrence {
-
   ScheduleResponseItemAttributesRecurrence({
     required this.freq,
     required this.interval,
@@ -65,7 +67,8 @@ class ScheduleResponseItemAttributesRecurrence {
   });
 
   factory ScheduleResponseItemAttributesRecurrence.fromJson(
-          Map<String, dynamic> json,) =>
+    Map<String, dynamic> json,
+  ) =>
       _$ScheduleResponseItemAttributesRecurrenceFromJson(json);
   @JsonKey(name: 'FREQ')
   final String freq;
@@ -81,4 +84,46 @@ class ScheduleResponseItemAttributesRecurrence {
 
   @JsonKey(name: 'EXDATES')
   final List<String>? excludedDates;
+}
+
+// --- Relationshipss ---
+
+@JsonSerializable()
+class ScheduleResponseItemRelationships {
+  ScheduleResponseItemRelationships({required this.owner});
+
+  factory ScheduleResponseItemRelationships.fromJson(
+    Map<String, dynamic> json,
+  ) =>
+      _$ScheduleResponseItemRelationshipsFromJson(json);
+
+  final ScheduleResponseItemRelationshipsOwner owner;
+}
+
+@JsonSerializable()
+class ScheduleResponseItemRelationshipsOwner {
+  ScheduleResponseItemRelationshipsOwner({required this.data});
+
+  factory ScheduleResponseItemRelationshipsOwner.fromJson(
+    Map<String, dynamic> json,
+  ) =>
+      _$ScheduleResponseItemRelationshipsOwnerFromJson(json);
+
+  final ScheduleResponseItemRelationshipsOwnerData data;
+}
+
+@JsonSerializable()
+class ScheduleResponseItemRelationshipsOwnerData {
+  ScheduleResponseItemRelationshipsOwnerData({
+    required this.type,
+    required this.id,
+  });
+
+  factory ScheduleResponseItemRelationshipsOwnerData.fromJson(
+    Map<String, dynamic> json,
+  ) =>
+      _$ScheduleResponseItemRelationshipsOwnerDataFromJson(json);
+
+  final String type;
+  final String id;
 }
