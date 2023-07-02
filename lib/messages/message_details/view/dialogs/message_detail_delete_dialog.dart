@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 class MessageDetailDeleteDialog extends StatelessWidget {
   const MessageDetailDeleteDialog({
     super.key,
-    this.onNegativePressed,
-    this.onPositivePressed,
+    this.onCancelPressed,
+    this.onConfirmPressed,
   });
 
-  final VoidCallback? onNegativePressed;
-  final VoidCallback? onPositivePressed;
+  final VoidCallback? onCancelPressed;
+  final VoidCallback? onConfirmPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -22,14 +22,14 @@ class MessageDetailDeleteDialog extends StatelessWidget {
           child: const Text('Nein'),
           onPressed: () {
             Navigator.of(context).pop();
-            onNegativePressed?.call();
+            onCancelPressed?.call();
           },
         ),
         TextButton(
           child: const Text('Ja'),
           onPressed: () {
             Navigator.of(context).pop();
-            onPositivePressed?.call();
+            onConfirmPressed?.call();
           },
         )
       ],

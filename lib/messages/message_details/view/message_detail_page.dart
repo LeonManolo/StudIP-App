@@ -138,7 +138,7 @@ class MessageDetailPage extends StatelessWidget {
       context: context,
       builder: (BuildContext _) {
         return MessageDetailDeleteDialog(
-          onPositivePressed: () {
+          onConfirmPressed: () {
             context
                 .read<MessageDetailsBloc>()
                 .add(DeleteMessageRequested(messageId: message.id));
