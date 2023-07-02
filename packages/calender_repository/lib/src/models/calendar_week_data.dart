@@ -32,6 +32,8 @@ class CalendarWeekData {
           }
 
           final weekday = Weekday.fromIndex(weekdayNum - 1);
+          final isCourseEvent =
+              scheduleData.relationships.owner.data.type == 'courses';
           final entryData = CalendarEntryData(
             id: scheduleData.id,
             type: scheduleData.type,
@@ -40,6 +42,8 @@ class CalendarWeekData {
             description: scheduleData.attributes.description,
             weekday: weekday,
             timeframe: timeframe,
+            courseId:
+                isCourseEvent ? scheduleData.relationships.owner.data.id : null,
           );
 
           if (data[weekday] == null) {

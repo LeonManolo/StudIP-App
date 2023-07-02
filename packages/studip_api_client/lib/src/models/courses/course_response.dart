@@ -27,6 +27,18 @@ class CourseListResponse implements ItemListResponse<CourseResponseItem> {
   List<CourseResponseItem> get items => courses;
 }
 
+/// Single [CourseResponseItem] Response
+@JsonSerializable()
+class CourseResponse {
+  CourseResponse({required this.courseResponseItem});
+
+  factory CourseResponse.fromJson(Map<String, dynamic> json) =>
+      _$CourseResponseFromJson(json);
+
+  @JsonKey(name: 'data')
+  final CourseResponseItem courseResponseItem;
+}
+
 @JsonSerializable()
 class CourseResponseItem {
   CourseResponseItem({

@@ -9,6 +9,7 @@ class CalendarEntryData {
     this.title,
     this.description,
     this.locations = const [],
+    this.courseId,
   });
   final String type;
   final String id;
@@ -17,6 +18,7 @@ class CalendarEntryData {
   final Weekday weekday;
   final List<String> locations;
   final CalendarTimeframe timeframe;
+  final String? courseId;
 }
 
 extension CalendarEntryDataList on List<CalendarEntryData> {

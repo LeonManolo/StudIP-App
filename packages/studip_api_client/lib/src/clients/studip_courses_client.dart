@@ -10,6 +10,8 @@ abstract interface class StudIPCoursesClient {
     required int limit,
   });
 
+  Future<CourseResponse> getCourse({required String courseId});
+
   Future<SemesterResponse> getSemester({
     required String semesterId,
   });
@@ -148,5 +150,15 @@ class StudIPCoursesClientImpl implements StudIPCoursesClient {
     response.throwIfInvalidHttpStatus(body: body);
 
     return CourseParticipantsListResponse.fromJson(body);
+  }
+
+  @override
+  Future<CourseResponse> getCourse({required String courseId}) async {
+    final response = await _core.get(endpoint: 'courses/$courseId');
+
+    final body = response.json();
+    response.throwIfInvalidHttpStatus(body: body);
+
+    return CourseResponse.fromJson(body);
   }
 }

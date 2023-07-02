@@ -151,6 +151,12 @@ class CourseRepository {
     }
   }
 
+  Future<Course> getCourse({required String courseId}) async {
+    final courseResponse =
+        await _coursesApiClient.getCourse(courseId: courseId);
+    return Course.fromCourseResponseItem(courseResponse.courseResponseItem);
+  }
+
   Future<CourseParticipantsData> getCourseParticipants({
     required String courseId,
     required int offset,
