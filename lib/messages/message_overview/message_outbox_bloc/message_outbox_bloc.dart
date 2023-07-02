@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:bloc/bloc.dart';
+import 'package:logger/logger.dart';
 import 'package:messages_repository/messages_repository.dart';
 import 'package:studipadawan/messages/message_overview/message_inbox_bloc%20/message_inbox_bloc.dart';
 import 'package:studipadawan/messages/message_overview/message_outbox_bloc/message_outbox_event.dart';
@@ -13,7 +14,7 @@ class OutboxMessageBloc extends Bloc<OutboxMessageEvent, OutboxMessageState> {
     required AuthenticationRepository authenticationRepository,
   })  : _messageRepository = messageRepository,
         _authenticationRepository = authenticationRepository,
-        super(const OutboxMessageState.initial()) {
+        super(const OutboxMessageStateInitial()) {
     on<OutboxMessagesRequested>(_onOutboxMessagesRequested);
     on<RefreshOutboxRequested>(_onRefreshRequested);
     on<DeleteOutboxMessagesRequested>(_onDeleteOutboxMessagesRequested);
@@ -28,19 +29,21 @@ class OutboxMessageBloc extends Bloc<OutboxMessageEvent, OutboxMessageState> {
   ) async {
     if (state.outboxMessages.isEmpty) {
       emit(
-        state.copyWith(
-          status: OutboxMessageStatus.loading,
-          paginationLoading: false,
-          maxReached: false,
-          outboxMessages: [],
+        OutboxMessageStateLoading.fromState(
+          state.copyWith(
+            paginationLoading: false,
+            maxReached: false,
+            outboxMessages: [],
+          ),
         ),
       );
     } else {
       emit(
-        state.copyWith(
-          status: OutboxMessageStatus.paginationLoading,
-          paginationLoading: true,
-          outboxMessages: state.outboxMessages,
+        OutboxMessageStateDidLoad.fromState(
+          state.copyWith(
+            paginationLoading: true,
+            outboxMessages: state.outboxMessages,
+          ),
         ),
       );
     }
@@ -50,18 +53,19 @@ class OutboxMessageBloc extends Bloc<OutboxMessageEvent, OutboxMessageState> {
           await _fetchOutboxMessages(offset: event.offset);
 
       emit(
-        state.copyWith(
-          status: OutboxMessageStatus.populated,
-          maxReached: outboxMessages.length < limit,
-          paginationLoading: false,
-          outboxMessages: [...state.outboxMessages, ...outboxMessages],
+        OutboxMessageStateDidLoad.fromState(
+          state.copyWith(
+            maxReached: outboxMessages.length < limit,
+            paginationLoading: false,
+            outboxMessages: [...state.outboxMessages, ...outboxMessages],
+          ),
         ),
       );
     } catch (e) {
+      Logger().e(e);
       emit(
-        const OutboxMessageState(
-          status: OutboxMessageStatus.failure,
-          blocResponse: unexpectedErrorMessage,
+        const OutboxMessageStateError(
+          failureInfo: unexpectedErrorMessage,
         ),
       );
     }
@@ -72,9 +76,8 @@ class OutboxMessageBloc extends Bloc<OutboxMessageEvent, OutboxMessageState> {
     Emitter<OutboxMessageState> emit,
   ) async {
     emit(
-      state.copyWith(
-        status: OutboxMessageStatus.loading,
-        paginationLoading: false,
+      OutboxMessageStateLoading.fromState(
+        state,
       ),
     );
     try {
@@ -83,24 +86,27 @@ class OutboxMessageBloc extends Bloc<OutboxMessageEvent, OutboxMessageState> {
           await _fetchOutboxMessages(offset: 0);
 
       emit(
-        state.copyWith(
-          status: OutboxMessageStatus.deleteOutboxMessagesSucceed,
-          maxReached: outboxMessages.length < limit,
-          paginationLoading: false,
-          blocResponse: event.messageIds.length == 1
-              ? messageDeleteSucceed
-              : messagesDeleteSucceed,
-          outboxMessages: outboxMessages,
+        OutboxMessageStateDeleteSucceed.fromState(
+          state.copyWith(
+            maxReached: outboxMessages.length < limit,
+            paginationLoading: false,
+            successInfo: event.messageIds.length == 1
+                ? messageDeleteSucceed
+                : messagesDeleteSucceed,
+            outboxMessages: outboxMessages,
+          ),
         ),
       );
-    } catch (_) {
+    } catch (e) {
+      Logger().e(e);
       emit(
-        state.copyWith(
-          status: OutboxMessageStatus.deleteOutboxMessagesFailure,
-          paginationLoading: false,
-          blocResponse: event.messageIds.length == 1
-              ? messageDeleteError
-              : messagesDeleteError,
+        OutboxMessageStateDeleteError.fromState(
+          state.copyWith(
+            paginationLoading: false,
+            failureInfo: event.messageIds.length == 1
+                ? messageDeleteError
+                : messagesDeleteError,
+          ),
         ),
       );
     }
@@ -111,11 +117,12 @@ class OutboxMessageBloc extends Bloc<OutboxMessageEvent, OutboxMessageState> {
     Emitter<OutboxMessageState> emit,
   ) async {
     emit(
-      state.copyWith(
-        status: OutboxMessageStatus.loading,
-        paginationLoading: false,
-        maxReached: false,
-        outboxMessages: [],
+      OutboxMessageStateLoading.fromState(
+        state.copyWith(
+          paginationLoading: false,
+          maxReached: false,
+          outboxMessages: [],
+        ),
       ),
     );
     try {
@@ -127,18 +134,19 @@ class OutboxMessageBloc extends Bloc<OutboxMessageEvent, OutboxMessageState> {
       );
 
       emit(
-        state.copyWith(
-          status: OutboxMessageStatus.populated,
-          maxReached: outboxMessages.isEmpty,
-          paginationLoading: false,
-          outboxMessages: outboxMessages,
+        OutboxMessageStateDidLoad.fromState(
+          state.copyWith(
+            maxReached: outboxMessages.isEmpty,
+            paginationLoading: false,
+            outboxMessages: outboxMessages,
+          ),
         ),
       );
     } catch (e) {
+      Logger().e(e);
       emit(
-        const OutboxMessageState(
-          status: OutboxMessageStatus.failure,
-          blocResponse: unexpectedErrorMessage,
+        const OutboxMessageStateError(
+          failureInfo: unexpectedErrorMessage,
         ),
       );
     }

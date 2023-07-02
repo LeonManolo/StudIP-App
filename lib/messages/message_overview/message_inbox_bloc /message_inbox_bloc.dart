@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:bloc/bloc.dart';
+import 'package:logger/logger.dart';
 import 'package:messages_repository/messages_repository.dart';
 import 'package:studipadawan/messages/message_overview/message_inbox_bloc%20/message_inbox_event.dart';
 import 'package:studipadawan/messages/message_overview/message_inbox_bloc%20/message_inbox_state.dart';
@@ -19,7 +20,7 @@ class InboxMessageBloc extends Bloc<InboxMessageEvent, InboxMessageState> {
     required AuthenticationRepository authenticationRepository,
   })  : _messageRepository = messageRepository,
         _authenticationRepository = authenticationRepository,
-        super(const InboxMessageState.initial()) {
+        super(const InboxMessageStateInitial()) {
     on<InboxMessagesRequested>(_onInboxMessagesRequested);
     on<RefreshInboxRequested>(_onRefreshRequested);
     on<DeleteInboxMessagesRequested>(_onDeleteInboxMessagesRequested);
@@ -34,19 +35,21 @@ class InboxMessageBloc extends Bloc<InboxMessageEvent, InboxMessageState> {
   ) async {
     if (state.inboxMessages.isEmpty || event.filter != state.currentFilter) {
       emit(
-        state.copyWith(
-          status: InboxMessageStatus.loading,
-          inboxMessages: [],
-          paginationLoading: false,
-          currentFilter: event.filter,
+        InboxMessageStateLoading.fromState(
+          state.copyWith(
+            inboxMessages: [],
+            paginationLoading: false,
+            currentFilter: event.filter,
+          ),
         ),
       );
     } else {
       emit(
-        state.copyWith(
-          status: InboxMessageStatus.paginationLoading,
-          paginationLoading: true,
-          currentFilter: event.filter,
+        InboxMessageStateDidLoad.fromState(
+          state.copyWith(
+            paginationLoading: true,
+            currentFilter: event.filter,
+          ),
         ),
       );
     }
@@ -56,22 +59,23 @@ class InboxMessageBloc extends Bloc<InboxMessageEvent, InboxMessageState> {
           await _fetchInboxMessages(offset: event.offset, filter: event.filter);
 
       emit(
-        state.copyWith(
-          status: InboxMessageStatus.populated,
-          currentFilter: event.filter,
-          maxReached: inboxMessages.length < limit,
-          paginationLoading: false,
-          inboxMessages: [
-            ...state.inboxMessages,
-            ...inboxMessages,
-          ],
+        InboxMessageStateDidLoad.fromState(
+          state.copyWith(
+            currentFilter: event.filter,
+            maxReached: inboxMessages.length < limit,
+            paginationLoading: false,
+            inboxMessages: [
+              ...state.inboxMessages,
+              ...inboxMessages,
+            ],
+          ),
         ),
       );
-    } catch (_) {
+    } catch (e) {
+      Logger().e(e);
       emit(
-        const InboxMessageState(
-          status: InboxMessageStatus.failure,
-          blocResponse: unexpectedErrorMessage,
+        const InboxMessageStateError(
+          failureInfo: unexpectedErrorMessage,
         ),
       );
     }
@@ -82,10 +86,11 @@ class InboxMessageBloc extends Bloc<InboxMessageEvent, InboxMessageState> {
     Emitter<InboxMessageState> emit,
   ) async {
     emit(
-      state.copyWith(
-        status: InboxMessageStatus.loading,
-        inboxMessages: [],
-        paginationLoading: false,
+      InboxMessageStateLoading.fromState(
+        state.copyWith(
+          inboxMessages: [],
+          paginationLoading: false,
+        ),
       ),
     );
 
@@ -94,18 +99,19 @@ class InboxMessageBloc extends Bloc<InboxMessageEvent, InboxMessageState> {
           await _fetchInboxMessages(offset: 0, filter: state.currentFilter);
 
       emit(
-        state.copyWith(
-          status: InboxMessageStatus.populated,
-          maxReached: inboxMessages.length < limit,
-          paginationLoading: false,
-          inboxMessages: inboxMessages,
+        InboxMessageStateDidLoad.fromState(
+          state.copyWith(
+            maxReached: inboxMessages.length < limit,
+            paginationLoading: false,
+            inboxMessages: inboxMessages,
+          ),
         ),
       );
-    } catch (_) {
+    } catch (e) {
+      Logger().e(e);
       emit(
-        const InboxMessageState(
-          status: InboxMessageStatus.failure,
-          blocResponse: unexpectedErrorMessage,
+        const InboxMessageStateError(
+          failureInfo: unexpectedErrorMessage,
         ),
       );
     }
@@ -116,35 +122,40 @@ class InboxMessageBloc extends Bloc<InboxMessageEvent, InboxMessageState> {
     Emitter<InboxMessageState> emit,
   ) async {
     emit(
-      state.copyWith(
-        status: InboxMessageStatus.loading,
-        paginationLoading: false,
+      InboxMessageStateLoading.fromState(
+        state.copyWith(
+          paginationLoading: false,
+        ),
       ),
     );
+
     try {
       await _messageRepository.deleteMessages(messageIds: event.messageIds);
       final inboxMessages =
           await _fetchInboxMessages(offset: 0, filter: state.currentFilter);
 
       emit(
-        state.copyWith(
-          status: InboxMessageStatus.deleteInboxMessagesSucceed,
-          paginationLoading: false,
-          maxReached: inboxMessages.length < limit,
-          blocResponse: event.messageIds.length == 1
-              ? messageDeleteSucceed
-              : messagesDeleteSucceed,
-          inboxMessages: inboxMessages,
+        InboxMessageStateDeleteSucceed.fromState(
+          state.copyWith(
+            paginationLoading: false,
+            maxReached: inboxMessages.length < limit,
+            successInfo: event.messageIds.length == 1
+                ? messageDeleteSucceed
+                : messagesDeleteSucceed,
+            inboxMessages: inboxMessages,
+          ),
         ),
       );
-    } catch (_) {
+    } catch (e) {
+      Logger().e(e);
       emit(
-        state.copyWith(
-          status: InboxMessageStatus.deleteInboxMessagesFailure,
-          paginationLoading: false,
-          blocResponse: event.messageIds.length == 1
-              ? messageDeleteError
-              : messagesDeleteError,
+        InboxMessageStateDeleteError.fromState(
+          state.copyWith(
+            paginationLoading: false,
+            failureInfo: event.messageIds.length == 1
+                ? messageDeleteError
+                : messagesDeleteError,
+          ),
         ),
       );
     }

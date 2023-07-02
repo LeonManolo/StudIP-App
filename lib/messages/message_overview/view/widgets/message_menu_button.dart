@@ -1,5 +1,8 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:studipadawan/messages/message_overview/message_tabbar_bloc%20/message_tabbar_bloc.dart';
+import 'package:studipadawan/messages/message_overview/message_tabbar_bloc%20/message_tabbar_event.dart';
 
 enum MessageMenuOption {
   markAll('Alle Markieren'),
@@ -12,22 +15,20 @@ enum MessageMenuOption {
 class MessageMenuButton extends StatelessWidget {
   const MessageMenuButton({
     super.key,
-    required this.markAll,
-    required this.unmarkAll,
   });
-  final void Function() markAll;
-  final void Function() unmarkAll;
 
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton<MessageMenuOption>(
-      icon: Icon(
+      icon: const Icon(
         EvaIcons.menu2Outline,
         size: 25,
-        color: Theme.of(context).primaryColor,
       ),
       onSelected: (state) => {
-        if (state == MessageMenuOption.markAll) {markAll()} else {unmarkAll()}
+        if (state == MessageMenuOption.markAll)
+          {context.read<TabBarBloc>().add(const MarkAllMessages())}
+        else
+          {context.read<TabBarBloc>().add(const HideMenuicon())}
       },
       itemBuilder: (context) => [
         PopupMenuItem<MessageMenuOption>(
