@@ -33,31 +33,50 @@ struct StudipadawanWidgetsSystemMediumView : View {
                 .font(.system(size: 20, weight: .semibold))
                 .foregroundColor(.secondary)
             
-            if entry.items.isEmpty {
+            switch entry.result {
+            case .success(let items):
+                ItemsView(items: Array(items.prefix(maxScheduleItemsToDisplay)))
+                
+            case .failure(let error):
                 Spacer()
                 HStack {
                     Spacer()
-                    Text("Heute hast Du keine Termine mehr")
-                        .foregroundColor(.gray)
-                        .font(.system(size: 16))
-                        .multilineTextAlignment(.center)
+                    Text(error.rawValue)
                     Spacer()
-                }
-            } else {
-                VStack(alignment: .leading, spacing: 8) {
-                    ForEach(entry.items.prefix(maxScheduleItemsToDisplay), id: \.self) { scheduleItem in
-                        CalendarEntryView(
-                            hourMinuteDateFormatter: DateFormatter.hourMinuteFormatter,
-                            scheduleItem: scheduleItem
-                        )
-                    }
                 }
             }
             
             Spacer()
         }
+        .foregroundColor(.gray)
+        .font(.system(size: 16))
+        .multilineTextAlignment(.center)
         .padding(.horizontal, 22)
         .padding(.vertical, 16)
+    }
+}
+
+private struct ItemsView: View {
+    let items: [ScheduleItem]
+    
+    var body: some View {
+        if items.isEmpty {
+            Spacer()
+            HStack {
+                Spacer()
+                Text("Heute hast Du keine Termine mehr")
+                Spacer()
+            }
+        } else {
+            VStack(alignment: .leading, spacing: 8) {
+                ForEach(items, id: \.self) { scheduleItem in
+                    CalendarEntryView(
+                        hourMinuteDateFormatter: DateFormatter.hourMinuteFormatter,
+                        scheduleItem: scheduleItem
+                    )
+                }
+            }
+        }
     }
 }
 
@@ -92,5 +111,17 @@ struct StudipadawanWidgets_Previews: PreviewProvider {
         StudipadawanWidgetsSystemMediumView(entry: ScheduleWidgetTimelineEntry.placeholderEmpty)
             .previewContext(WidgetPreviewContext(family: .systemMedium))
             .previewDisplayName("Empty Widget")
+        
+        StudipadawanWidgetsSystemMediumView(entry: ScheduleWidgetTimelineEntry.placeholderDefaultError)
+            .previewContext(WidgetPreviewContext(family: .systemMedium))
+            .previewDisplayName("Default Error Widget")
+        
+        StudipadawanWidgetsSystemMediumView(entry: ScheduleWidgetTimelineEntry.placeholderUnauthorizedError)
+            .previewContext(WidgetPreviewContext(family: .systemMedium))
+            .previewDisplayName("Unauthorized Error Widget")
+        
+        StudipadawanWidgetsSystemMediumView(entry: ScheduleWidgetTimelineEntry.placeholderDecodingError)
+            .previewContext(WidgetPreviewContext(family: .systemMedium))
+            .previewDisplayName("Decoding Error Widget")
     }
 }

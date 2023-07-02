@@ -32,7 +32,7 @@ public class DataProvider {
         let scheduleItems: [ScheduleItem] = scheduleResponse.data
             .compactMap { scheduleData in
                 let attributes = scheduleData.attributes
-                guard currentDay == attributes.weekday.rawValue,
+                guard currentDay == attributes.weekday,
                       let startDate = Calendar.german.set(hourMinuteFrom: attributes.start, for: date),
                       let endDate = Calendar.german.set(hourMinuteFrom: attributes.end, for: date),
                       endDate >= date else { return nil }

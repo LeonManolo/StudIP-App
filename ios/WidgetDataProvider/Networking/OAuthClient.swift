@@ -47,7 +47,7 @@ public class DefaultOAuthClient: OAuthClient {
     public func get<T: Codable>(rawUrlString: String, queryItems: [URLQueryItem] = []) async throws -> T {
         guard let rawKeychainContentData = keychain[string: tokenUrlString]?.data(using: .utf8) else { throw OAuthClientError.keychainContentNotReadable(key: tokenUrlString) }
         var keychainContent = try jsonDecoder(dateDecodingStrategy: .millisecondsSince1970).decode(KeychainContent.self, from: rawKeychainContentData)
-        
+
         if keychainContent.api.expirationDate < Date() {
             try await refreshToken()
             // if token has been refreshed, keychainContent must be updated

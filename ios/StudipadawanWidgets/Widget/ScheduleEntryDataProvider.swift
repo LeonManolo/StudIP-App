@@ -9,23 +9,33 @@ import SwiftUI
 import WidgetKit
 import WidgetDataProvider
 
+enum ScheduleWidgetTimelineEntryError: String, Error {
+    case `default` = "Fehler beim Laden des Widgets!\nBitte melde Dich erneut in der App an."
+    case unauthorizedResponse = "Ungültige Zugangsdaten!\nBitte melde Dich erneut in der App an."
+    case decodingError = "Ungültige API-Daten!\nDie Daten liegen in einem ungültigen Format vor."
+}
+
 struct ScheduleWidgetTimelineEntry: TimelineEntry {
     let date: Date
-    let items: [ScheduleItem]
+    let result: Result<[ScheduleItem], ScheduleWidgetTimelineEntryError>
+    
     
     static let placeholderFilled = ScheduleWidgetTimelineEntry(
         date: Date(),
-        items: [
+        result: .success([
             .init(
                 startDate: DateFormatter.hourMinuteFormatter.date(from: "14:30")!,
                 endDate: DateFormatter.hourMinuteFormatter.date(from: "15:45")!,
                 title: "Softwarearchitektur",
                 locations: nil
             )
-        ]
+        ])
     )
     
-    static let placeholderEmpty = ScheduleWidgetTimelineEntry(date: Date(), items: [])
+    static let placeholderEmpty = ScheduleWidgetTimelineEntry(date: Date(), result: .success([]))
+    static let placeholderDefaultError = ScheduleWidgetTimelineEntry(date: Date(), result: .failure(.default))
+    static let placeholderUnauthorizedError = ScheduleWidgetTimelineEntry(date: Date(), result: .failure(.unauthorizedResponse))
+    static let placeholderDecodingError = ScheduleWidgetTimelineEntry(date: Date(), result: .failure(.decodingError))
 }
 
 struct ScheduleEntryDataProvider: TimelineProvider {
@@ -37,15 +47,28 @@ struct ScheduleEntryDataProvider: TimelineProvider {
 
     func getSnapshot(in context: Context, completion: @escaping (ScheduleWidgetTimelineEntry) -> ()) {
         let currentItems = dataProvider.fetchLocalScheduleItems()
-        let entry = ScheduleWidgetTimelineEntry(date: Date(), items: currentItems)
+        let entry = ScheduleWidgetTimelineEntry(date: Date(), result: .success(currentItems))
         
         completion(entry)
     }
 
     func getTimeline(in context: Context, completion: @escaping (Timeline<ScheduleWidgetTimelineEntry>) -> ()) {
         Task {
-            let currentItems = (try? await dataProvider.loadRemoteScheduleItems(for: Date())) ?? []
-            let entry = ScheduleWidgetTimelineEntry(date: Date(), items: currentItems)
+            let entry: ScheduleWidgetTimelineEntry
+            do {
+                let currentItems = (try await dataProvider.loadRemoteScheduleItems(for: Date()))
+                entry = ScheduleWidgetTimelineEntry(date: Date(), result: .success(currentItems))
+
+            } catch {
+                print(error)
+                if let error = error as? URLError, error.errorCode == 401 {
+                    entry = ScheduleWidgetTimelineEntry(date: Date(), result: .failure(.unauthorizedResponse))
+                } else if let _ = error as? DecodingError {
+                    entry = ScheduleWidgetTimelineEntry(date: Date(), result: .failure(.decodingError))
+                } else {
+                    entry = ScheduleWidgetTimelineEntry(date: Date(), result: .failure(.default))
+                }
+            }
 
             if let nextReloadDate = Calendar.current.date(byAdding: .minute, value: 30, to: Date()) {
                 completion(Timeline(entries: [entry], policy: .after(nextReloadDate)))
