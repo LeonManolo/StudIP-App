@@ -6,7 +6,7 @@ class CalendarWeekData {
 
   factory CalendarWeekData.fromScheduleResponse({
     required ScheduleListResponse scheduleResponse,
-    required DateTime currentDateTime,
+    required DateTime requestedDateTime,
   }) {
     final Map<Weekday, Map<String, List<CalendarEntryData>>> data = {};
 
@@ -18,9 +18,9 @@ class CalendarWeekData {
 
         if (timeframe != null) {
           final startDate = DateTime(
-            currentDateTime.year,
-            currentDateTime.month,
-            currentDateTime.day,
+            requestedDateTime.year,
+            requestedDateTime.month,
+            requestedDateTime.day,
             timeframe.start.hours,
             timeframe.start.minutes,
           ).toUtc();

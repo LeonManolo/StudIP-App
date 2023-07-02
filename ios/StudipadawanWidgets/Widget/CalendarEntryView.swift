@@ -42,12 +42,3 @@ struct CalendarEntryView: View {
         )
     }
 }
-
-struct CalendarEntryView_Previews: PreviewProvider {
-    static var previews: some View {
-        CalendarEntryView(
-            hourMinuteDateFormatter: DateFormatter.hourMinuteFormatter,
-            scheduleItem: ScheduleWidgetTimelineEntry.placeholderFilled.items[0]
-        )
-    }
-}

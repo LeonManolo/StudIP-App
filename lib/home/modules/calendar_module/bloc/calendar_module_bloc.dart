@@ -46,7 +46,7 @@ class CalendarModuleBloc extends ModuleBloc {
     while (week < weeksLimit && entries.length <= previewLimit) {
       final calendarEntries = await _calendarRepository.getCalendarSchedule(
         userId: _authenticationRepository.currentUser.id,
-        currentDateTime: DateTime.now().add(Duration(days: week * 7)),
+        requestedDateTime: DateTime.now().add(Duration(days: week * 7)),
       );
       final extractedEntries = _extractEntries(week, calendarEntries);
       entries.addAll(extractedEntries);

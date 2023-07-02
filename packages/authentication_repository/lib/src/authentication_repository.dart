@@ -14,6 +14,7 @@ class AuthenticationRepository {
   final StreamController<User> _controller = StreamController<User>();
 
   Future<void> loginWithStudIp() async {
+    await _client.removeAllTokens();
     final userId = await _client.loginWithStudIp();
 
     if (userId != null) {

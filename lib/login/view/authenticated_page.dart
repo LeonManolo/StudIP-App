@@ -64,13 +64,15 @@ class _AuthenticatedPageState extends State<AuthenticatedPage> {
     Logger().d(uri);
 
     setState(() {
-      _calendarBloc.add(
-        CalendarRequested(
-          day: DateTime.now(),
-          layout: CalendarBodyType.list,
-        ),
-      );
-      _selectedTab = 3;
+      if (mounted) {
+        _calendarBloc.add(
+          CalendarRequested(
+            day: DateTime.now(),
+            layout: CalendarBodyType.list,
+          ),
+        );
+        _selectedTab = 3;
+      }
     });
   }
 
