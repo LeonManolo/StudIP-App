@@ -11,6 +11,7 @@ class CalendarHeader extends StatelessWidget {
     required this.onDaySelected,
     required this.onFormatChanged,
   });
+
   final CalendarFormat calendarFormat;
   final DateTime selectedDay;
   final void Function(DateTime selectedDay) onDaySelected;
@@ -18,26 +19,38 @@ class CalendarHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final primaryColor = Theme.of(context).primaryColor;
     return Column(
       children: [
         TableCalendar<CalendarEntryData>(
+          availableCalendarFormats: const {
+            CalendarFormat.week: 'Woche',
+            CalendarFormat.twoWeeks: '2 Wochen',
+            CalendarFormat.month: 'Monat',
+          },
           locale: 'DE_de',
           calendarFormat: calendarFormat,
           onFormatChanged: onFormatChanged,
           calendarStyle: CalendarStyle(
-            selectedDecoration: BoxDecoration(
-              color: Theme.of(context).primaryColor,
-              shape: BoxShape.circle,
-            ),
-            todayDecoration: BoxDecoration(
-              border: Border.all(
-                color: Theme.of(context).primaryColor,
-                width: 1.5,
+              selectedDecoration: BoxDecoration(
+                color: primaryColor,
+                shape: BoxShape.circle,
               ),
-              shape: BoxShape.circle,
-            ),
-
-          ),
+              selectedTextStyle: TextStyle(
+                fontSize: 16,
+                color: Theme.of(context).colorScheme.onPrimary,
+              ),
+              todayDecoration: BoxDecoration(
+                border: Border.all(
+                  color: primaryColor,
+                  width: 1.5,
+                ),
+                shape: BoxShape.circle,
+              ),
+              todayTextStyle: TextStyle(
+                color: primaryColor,
+                fontSize: 16,
+              )),
           focusedDay: selectedDay,
           selectedDayPredicate: (day) {
             return day.isSameDayAs(selectedDay);

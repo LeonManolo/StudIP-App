@@ -3,7 +3,6 @@ import 'package:calender_repository/calender_repository.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:studipadawan/calendar/extensions/list_extensions.dart';
-import 'package:studipadawan/calendar/view/calendar_detail_page.dart';
 
 /// Right side of the Calendar entry, shows the calendar data
 class CalendarEntryContent extends StatelessWidget {
@@ -35,7 +34,11 @@ class CalendarEntryContent extends StatelessWidget {
               padding: const EdgeInsets.all(AppSpacing.sm),
               margin: EdgeInsets.only(right: padding),
               decoration: BoxDecoration(
-                color: bgColor.withOpacity(0.15),
+                color: bgColor.withOpacity(
+                  Theme.of(context).brightness == Brightness.light
+                      ? 0.15
+                      : 0.25,
+                ),
                 boxShadow: [
                   BoxShadow(
                     color: bgColor.withOpacity(0.1),
@@ -57,7 +60,7 @@ class CalendarEntryContent extends StatelessWidget {
                 children: [
                   Padding(
                     padding: const EdgeInsets.only(
-                      bottom: AppSpacing.lg,
+                      bottom: AppSpacing.md,
                     ),
                     child: Text(
                       calendarEntryData?.title ?? '',
@@ -69,7 +72,7 @@ class CalendarEntryContent extends StatelessWidget {
                   if (calendarEntryData?.description != null)
                     Text(calendarEntryData!.description!),
                   Padding(
-                    padding: const EdgeInsets.only(top: AppSpacing.lg),
+                    padding: const EdgeInsets.only(top: AppSpacing.md),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -130,10 +133,6 @@ class CalendarEntryContent extends StatelessWidget {
   }
 
   void _navigateToCalendarDetailPage(BuildContext context) {
-    Navigator.of(context).push(
-      MaterialPageRoute<CalendarDetailPage>(
-        builder: (context) => const CalendarDetailPage(),
-      ),
-    );
+
   }
 }
