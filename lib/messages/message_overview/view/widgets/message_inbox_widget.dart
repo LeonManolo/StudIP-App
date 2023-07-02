@@ -72,9 +72,9 @@ class InboxMessageWidgetState extends State<InboxMessageWidget> {
         if (inboxState.inboxMessages.isEmpty) {
           return RefreshableContent(
             callback: _refreshInboxMessages,
-            child: const EmptyView(
+            child: EmptyView(
               title: 'Keine Nachrichten',
-              message: 'Es sind keine Nachrichten vorhanden',
+              message: inboxState.emptyViewMessage,
             ),
           );
         }
@@ -180,7 +180,6 @@ class InboxMessageWidgetState extends State<InboxMessageWidget> {
       _onScroll(
         bloc: inboxMessageBloc,
         event: InboxMessagesRequested(
-          filter: currentState.currentFilter,
           offset: currentState.inboxMessages.length,
         ),
         scrollController: _inboxScrollController,

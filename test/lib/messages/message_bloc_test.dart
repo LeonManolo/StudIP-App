@@ -174,7 +174,12 @@ void main() {
         messageRepository: mockedMessageRepository,
         authenticationRepository: mockedAuthenticationRepository,
       );
-      expect(bloc.state, const InboxMessageStateInitial());
+      expect(
+        bloc.state,
+        const InboxMessageStateInitial(
+          currentFilter: MessageFilter.all,
+        ),
+      );
       bloc.close();
     });
 
@@ -198,7 +203,7 @@ void main() {
         authenticationRepository: mockedAuthenticationRepository,
       ),
       act: (bloc) => bloc.add(
-        const InboxMessagesRequested(offset: 0, filter: MessageFilter.none),
+        const InboxMessagesRequested(offset: 0, newFilter: MessageFilter.all),
       ),
       expect: () => [
         const InboxMessageStateLoading(),
