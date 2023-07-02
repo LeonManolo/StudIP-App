@@ -20,32 +20,44 @@ class MessageFilterButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return PopupMenuButton<MessageFilter>(
-      icon: funnelIcon(currentFilter),
-      position: PopupMenuPosition.under,
-      onSelected: (newFilter) => {setFilter(newFilter)},
-      itemBuilder: (context) => [
-        PopupMenuItem<MessageFilter>(
-          value: MessageFilter.none,
-          child: FilterItem(
-            isSelected: currentFilter == MessageFilter.none,
-            filter: MessageFilter.none,
-            funnelIcon:
-                funnelIcon(currentFilter),
-            filterDescription: MessageFilter.none.description,
-          ),
-        ),
-        PopupMenuItem<MessageFilter>(
-          value: MessageFilter.unread,
-          child: FilterItem(
-            isSelected: currentFilter == MessageFilter.unread,
-            filter: MessageFilter.unread,
-            funnelIcon:
-                funnelIcon(currentFilter),
-            filterDescription: MessageFilter.unread.description,
-          ),
-        )
-      ],
+    return BlocProvider.value(
+      value: context.read<InboxMessageBloc>(),
+      child: BlocBuilder<InboxMessageBloc, InboxMessageState>(
+        builder: (context, state) {
+          return PopupMenuButton<MessageFilter>(
+            icon: funnelIcon(state.currentFilter),
+            onSelected: (newFilter) => {
+              if (context.read<InboxMessageBloc>().state.currentFilter !=
+                  newFilter)
+                {
+                  context
+                      .read<InboxMessageBloc>()
+                      .add(InboxMessagesRequested(filter: newFilter, offset: 0))
+                }
+            },
+            itemBuilder: (context) => [
+              PopupMenuItem<MessageFilter>(
+                value: MessageFilter.none,
+                child: FilterItem(
+                  isSelected: state.currentFilter == MessageFilter.none,
+                  filter: MessageFilter.none,
+                  funnelIcon: funnelIcon(state.currentFilter),
+                  filterDescription: MessageFilter.none.description,
+                ),
+              ),
+              PopupMenuItem<MessageFilter>(
+                value: MessageFilter.unread,
+                child: FilterItem(
+                  isSelected: state.currentFilter == MessageFilter.unread,
+                  filter: MessageFilter.unread,
+                  funnelIcon: funnelIcon(state.currentFilter),
+                  filterDescription: MessageFilter.unread.description,
+                ),
+              )
+            ],
+          );
+        },
+      ),
     );
   }
 }

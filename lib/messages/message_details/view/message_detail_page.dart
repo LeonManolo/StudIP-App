@@ -38,15 +38,15 @@ class MessageDetailPage extends StatelessWidget {
         )..add(ReadMessageRequested(message: message)),
         child: BlocConsumer<MessageDetailsBloc, MessageDetailsState>(
           listener: (context, state) {
-            if (state.status == MessageDetailsStatus.deleteMessageSucceed) {
+            if (state is MessageDetailsStateDeleteSucceed) {
               WidgetsBinding.instance.addPostFrameCallback((_) {
-                buildSnackBar(context, state.blocResponse, Colors.green);
+                buildSnackBar(context, state.successInfo, Colors.green);
                 refreshMessages();
                 Navigator.pop(context);
               });
             }
-            if (state.status == MessageDetailsStatus.deleteMessageFailure) {
-              buildSnackBar(context, state.blocResponse, Colors.red);
+            if (state is MessageDetailsStateDeleteError) {
+              buildSnackBar(context, state.failureInfo, Colors.red);
             }
           },
           builder: (context, state) {
