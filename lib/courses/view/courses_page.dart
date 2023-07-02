@@ -8,6 +8,7 @@ import 'package:studipadawan/courses/bloc/courses_event.dart';
 import 'package:studipadawan/courses/bloc/courses_state.dart';
 import 'package:studipadawan/courses/view/widgets/courses_page_body.dart';
 import 'package:studipadawan/courses/view/widgets/semester_sort_filter_modal_sheet.dart';
+import 'package:studipadawan/utils/widgets/modal_sheet/modal_bottom_sheet.dart';
 
 class CoursesPage extends StatelessWidget {
   const CoursesPage({super.key});
@@ -67,35 +68,27 @@ class CoursesPage extends StatelessWidget {
     required SemesterFilter currentFilter,
     required SemesterSortOrder currentSortOrder,
   }) {
-    return showModalBottomSheet<void>(
+    return showCustomModalBottomSheet(
       context: context,
-      isScrollControlled: true,
-      showDragHandle: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(12),
-        ),
+      title: 'Semesterauswahl',
+      child: SemesterSortFilterModalSheet(
+        onSemesterFilterSelectionChanged: (newFilter) {
+          context.read<CoursesBloc>().add(
+                SemesterFilterChanged(
+                  selectedSemesterFilter: newFilter,
+                ),
+              );
+        },
+        onSemesterSortOrderSelectionChanged: (newSortOrder) {
+          context.read<CoursesBloc>().add(
+                SemesterSortOrderChanged(
+                  selectedSemesterSortOrder: newSortOrder,
+                ),
+              );
+        },
+        currentSemesterFilter: currentFilter,
+        currentSemesterSortOrder: currentSortOrder,
       ),
-      builder: (_) {
-        return SemesterSortFilterModalSheet(
-          onSemesterFilterSelectionChanged: (newFilter) {
-            context.read<CoursesBloc>().add(
-                  SemesterFilterChanged(
-                    selectedSemesterFilter: newFilter,
-                  ),
-                );
-          },
-          onSemesterSortOrderSelectionChanged: (newSortOrder) {
-            context.read<CoursesBloc>().add(
-                  SemesterSortOrderChanged(
-                    selectedSemesterSortOrder: newSortOrder,
-                  ),
-                );
-          },
-          currentSemesterFilter: currentFilter,
-          currentSemesterSortOrder: currentSortOrder,
-        );
-      },
     );
   }
 }

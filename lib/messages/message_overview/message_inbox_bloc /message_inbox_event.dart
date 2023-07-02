@@ -8,13 +8,12 @@ abstract class InboxMessageEvent extends Equatable {
 }
 
 class InboxMessagesRequested extends InboxMessageEvent {
-
-  const InboxMessagesRequested({required this.filter, required this.offset});
-  final MessageFilter filter;
+  const InboxMessagesRequested({this.newFilter, required this.offset});
+  final MessageFilter? newFilter;
   final int offset;
 
   @override
-  List<Object?> get props => [filter, offset];
+  List<Object?> get props => [newFilter, offset];
 }
 
 class RefreshInboxRequested extends InboxMessageEvent {
@@ -25,7 +24,6 @@ class RefreshInboxRequested extends InboxMessageEvent {
 }
 
 class DeleteInboxMessagesRequested extends InboxMessageEvent {
-
   const DeleteInboxMessagesRequested({required this.messageIds});
   final List<String> messageIds;
 
@@ -34,7 +32,6 @@ class DeleteInboxMessagesRequested extends InboxMessageEvent {
 }
 
 class ReadMessageRequested extends InboxMessageEvent {
-
   const ReadMessageRequested({required this.message});
   final Message message;
 

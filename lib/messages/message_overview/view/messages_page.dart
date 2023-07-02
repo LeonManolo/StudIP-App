@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:messages_repository/messages_repository.dart';
 import 'package:studipadawan/messages/message_overview/message_inbox_bloc%20/message_inbox_bloc.dart';
 import 'package:studipadawan/messages/message_overview/message_inbox_bloc%20/message_inbox_event.dart';
-import 'package:studipadawan/messages/message_overview/message_inbox_bloc%20/message_inbox_state.dart';
 import 'package:studipadawan/messages/message_overview/message_outbox_bloc/message_outbox_bloc.dart';
 import 'package:studipadawan/messages/message_overview/message_outbox_bloc/message_outbox_event.dart';
 import 'package:studipadawan/messages/message_overview/message_tabbar_bloc%20/message_tabbar_bloc.dart';
@@ -74,7 +73,6 @@ class MessagesPageState extends State<MessagesPage>
             authenticationRepository: context.read<AuthenticationRepository>(),
           )..add(
               const InboxMessagesRequested(
-                filter: MessageFilter.none,
                 offset: 0,
               ),
             ),
@@ -109,7 +107,7 @@ class MessagesPageState extends State<MessagesPage>
                   )
                 : const MessageAddButton(),
           );
-        }, 
+        },
       ),
     );
   }

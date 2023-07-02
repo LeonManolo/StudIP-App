@@ -123,6 +123,7 @@ class _MessageSendViewState extends State<MessageSendView> {
                             controller: _recipientController,
                             decoration: const InputDecoration(
                               border: OutlineInputBorder(),
+                              hintText: 'Empfänger suchen',
                             ),
                           ),
                           suggestionsCallback: (pattern) {
@@ -170,6 +171,7 @@ class _MessageSendViewState extends State<MessageSendView> {
                           controller: _subjectController,
                           decoration: const InputDecoration(
                             border: OutlineInputBorder(),
+                            hintText: 'Betreff',
                           ),
                         ),
                         const SizedBox(height: bigMargin),
@@ -180,6 +182,7 @@ class _MessageSendViewState extends State<MessageSendView> {
                           maxLines: 8,
                           decoration: const InputDecoration(
                             border: OutlineInputBorder(),
+                            hintText: 'Neue Nachricht',
                           ),
                         ),
                       ],

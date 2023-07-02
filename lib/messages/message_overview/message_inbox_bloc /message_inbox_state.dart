@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:messages_repository/messages_repository.dart';
 
 enum MessageFilter {
-  none('Alle Nachrichten'),
+  all('Alle Nachrichten'),
   unread('Ungelesene Nachrichten');
 
   const MessageFilter(this.description);
@@ -13,7 +13,7 @@ sealed class InboxMessageState extends Equatable {
   const InboxMessageState({
     this.inboxMessages = const [],
     this.currentOffset = 0,
-    this.currentFilter = MessageFilter.none,
+    this.currentFilter = defaultFilter,
     this.successInfo = '',
     this.failureInfo = '',
     this.maxReached = false,
@@ -27,6 +27,17 @@ sealed class InboxMessageState extends Equatable {
   final String successInfo;
   final String failureInfo;
   final bool paginationLoading;
+
+  static const defaultFilter = MessageFilter.all;
+  bool get isDefaultFilter => currentFilter == defaultFilter;
+  String get emptyViewMessage {
+    switch (currentFilter) {
+      case MessageFilter.all:
+        return 'Es sind keine Nachrichten vorhanden';
+      case MessageFilter.unread:
+        return 'Es sind keine ungelesenen Nachrichten vorhanden';
+    }
+  }
 
   InboxMessageState copyWith({
     List<Message>? inboxMessages,
@@ -50,7 +61,7 @@ sealed class InboxMessageState extends Equatable {
 }
 
 class InboxMessageStateInitial extends InboxMessageState {
-  const InboxMessageStateInitial();
+  const InboxMessageStateInitial({required super.currentFilter});
 
   @override
   InboxMessageStateInitial copyWith({
@@ -62,7 +73,9 @@ class InboxMessageStateInitial extends InboxMessageState {
     bool? maxReached,
     bool? paginationLoading,
   }) {
-    return const InboxMessageStateInitial();
+    return InboxMessageStateInitial(
+      currentFilter: currentFilter ?? this.currentFilter,
+    );
   }
 }
 
