@@ -31,14 +31,8 @@ class CourseParticipantListTile extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute<MessageSendPage>(
-              builder: (context) => BlocProvider(
-                create: (context) => MessageSendBloc(
-                  messageRepository: context.read<MessageRepository>(),
-                ),
-                child: MessageSendPage(
-                  message:
-                      Message.empty(recipient: participant.toMessageUser()),
-                ),
+              builder: (context) => MessageSendPage(
+                message: Message.empty(recipient: participant.toMessageUser()),
               ),
               fullscreenDialog: true,
             ),

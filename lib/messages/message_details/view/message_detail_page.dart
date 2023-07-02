@@ -71,12 +71,8 @@ class MessageDetailPage extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute<MessageSendPage>(
-                        builder: (context) => BlocProvider(
-                          create: (context) => MessageSendBloc(
-                            messageRepository:
-                                context.read<MessageRepository>(),
-                          ),
-                          child: MessageSendPage(message: message),
+                        builder: (context) => MessageSendPage(
+                          message: message,
                         ),
                         fullscreenDialog: true,
                       ),

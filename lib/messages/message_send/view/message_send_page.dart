@@ -13,15 +13,32 @@ import 'package:studipadawan/utils/utils.dart';
 const double smallMargin = AppSpacing.sm;
 const double bigMargin = AppSpacing.lg;
 
-class MessageSendPage extends StatefulWidget {
+class MessageSendPage extends StatelessWidget {
   const MessageSendPage({super.key, this.message});
+
   final Message? message;
 
   @override
-  State<MessageSendPage> createState() => _MessageSendPageState();
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) =>
+          MessageSendBloc(messageRepository: context.read<MessageRepository>()),
+      child: MessageSendView(
+        message: message,
+      ),
+    );
+  }
 }
 
-class _MessageSendPageState extends State<MessageSendPage> {
+class MessageSendView extends StatefulWidget {
+  const MessageSendView({super.key, this.message});
+  final Message? message;
+
+  @override
+  State<MessageSendView> createState() => _MessageSendViewState();
+}
+
+class _MessageSendViewState extends State<MessageSendView> {
   late TextEditingController _recipientController;
   late TextEditingController _subjectController;
   late TextEditingController _messageController;
