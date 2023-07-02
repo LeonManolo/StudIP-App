@@ -11,7 +11,7 @@ class MessageDetailsBloc
   MessageDetailsBloc({
     required MessageRepository messageRepository,
   })  : _messageRepository = messageRepository,
-        super(const MessageDetailsState.initial()) {
+        super(const MessageDetailsStateInitial()) {
     on<DeleteMessageRequested>(_onDeleteMessageRequested);
     on<ReadMessageRequested>(_onReadMessageRequested);
   }
@@ -21,21 +21,19 @@ class MessageDetailsBloc
     DeleteMessageRequested event,
     Emitter<MessageDetailsState> emit,
   ) async {
-    emit(const MessageDetailsState(status: MessageDetailsStatus.loading));
+    emit(const MessageDetailsStateLoading());
     try {
       await _messageRepository.deleteMessage(messageId: event.messageId);
 
       emit(
-        const MessageDetailsState(
-          status: MessageDetailsStatus.deleteMessageSucceed,
-          blocResponse: messageDeleteSucceed,
+        const MessageDetailsStateDeleteSucceed(
+          successInfo: messageDeleteSucceed,
         ),
       );
     } catch (_) {
       emit(
-        const MessageDetailsState(
-          status: MessageDetailsStatus.deleteMessageFailure,
-          blocResponse: messageDeleteSucceed,
+        const MessageDetailsStateDeleteError(
+          failureInfo: messageDeleteSucceed,
         ),
       );
     }

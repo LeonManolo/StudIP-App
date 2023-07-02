@@ -7,25 +7,42 @@ import 'package:studipadawan/messages/message_send/message_send_bloc/message_sen
 import 'package:studipadawan/messages/message_send/message_send_bloc/message_send_event.dart';
 import 'package:studipadawan/messages/message_send/message_send_bloc/message_send_state.dart';
 import 'package:studipadawan/messages/message_send/view/widgets/message_recipient_chip.dart';
+import 'package:studipadawan/utils/loading_indicator.dart';
 import 'package:studipadawan/utils/utils.dart';
 
 const double smallMargin = AppSpacing.sm;
 const double bigMargin = AppSpacing.lg;
 
-class MessageSendPage extends StatefulWidget {
+class MessageSendPage extends StatelessWidget {
   const MessageSendPage({super.key, this.message});
+
   final Message? message;
 
   @override
-  State<MessageSendPage> createState() => _MessageSendPageState();
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) =>
+          MessageSendBloc(messageRepository: context.read<MessageRepository>()),
+      child: MessageSendView(
+        message: message,
+      ),
+    );
+  }
 }
 
-class _MessageSendPageState extends State<MessageSendPage> {
+class MessageSendView extends StatefulWidget {
+  const MessageSendView({super.key, this.message});
+  final Message? message;
+
+  @override
+  State<MessageSendView> createState() => _MessageSendViewState();
+}
+
+class _MessageSendViewState extends State<MessageSendView> {
   late TextEditingController _recipientController;
   late TextEditingController _subjectController;
   late TextEditingController _messageController;
   late SuggestionsBoxController _suggestionsBoxController;
-  late MessageSendBloc _messageSendBloc;
   final List<MessageRecipientChip> _recipientChips = [];
 
   @override
@@ -35,9 +52,6 @@ class _MessageSendPageState extends State<MessageSendPage> {
     _recipientController = TextEditingController();
     _subjectController = TextEditingController();
     _messageController = TextEditingController();
-    _messageSendBloc = MessageSendBloc(
-      messageRepository: context.read<MessageRepository>(),
-    );
     if (widget.message != null) {
       final subject = widget.message!.subject.contains('RE:')
           ? widget.message!.subject
@@ -53,7 +67,6 @@ class _MessageSendPageState extends State<MessageSendPage> {
   @override
   void dispose() {
     super.dispose();
-    _messageSendBloc.close();
     _recipientController.dispose();
     _subjectController.dispose();
     _messageController.dispose();
@@ -64,28 +77,33 @@ class _MessageSendPageState extends State<MessageSendPage> {
     return Scaffold(
       key: UniqueKey(),
       appBar: AppBar(title: const Text('Senden')),
-      body: BlocProvider<MessageSendBloc>.value(
-        value: _messageSendBloc,
-        child: BlocConsumer<MessageSendBloc, MessageSendState>(
-          listener: (context, state) {
-            if (state.status == MessageSendStatus.failure) {
-              buildSnackBar(context, state.blocResponse, Colors.red);
-            }
-            if (state.status == MessageSendStatus.populated) {
-              buildSnackBar(context, state.blocResponse, Colors.green);
+      body: BlocConsumer<MessageSendBloc, MessageSendState>(
+        listener: (context, state) {
+          switch (state) {
+            case MessageSendStateError _:
+              buildSnackBar(context, state.failureInfo, Colors.red);
+              break;
+            case MessageSendStateDidLoad _:
+              buildSnackBar(context, state.successInfo, Colors.green);
               Navigator.pop(context);
-            }
-            if (state.status == MessageSendStatus.recipientsChanged) {
+              break;
+            case MessageSendStateRecipientsChanged _:
               _buildChips(state.recipients);
-            }
-            if (state.status == MessageSendStatus.userSuggestionsFetched) {
+              break;
+            case MessageSendStateUserSuggestionsFetched _:
               _triggerSuggestionCallback();
-            }
-            if (state.status == MessageSendStatus.userSuggestionsFailure) {
-              buildSnackBar(context, state.blocResponse, Colors.red);
-            }
-          },
-          builder: (context, state) {
+              break;
+            case MessageSendStateUserSuggestionsError _:
+              buildSnackBar(context, state.failureInfo, Colors.red);
+              break;
+            default:
+              break;
+          }
+        },
+        builder: (context, state) {
+          if (state is MessageSendStateLoading) {
+            return const Center(child: LoadingIndicator());
+          } else {
             return SingleChildScrollView(
               child: Column(
                 children: [
@@ -115,14 +133,17 @@ class _MessageSendPageState extends State<MessageSendPage> {
                             } else {
                               final suggestions = _filterUsernamesByPattern(
                                 normalizedPattern,
-                                _messageSendBloc.state.suggestions,
+                                context
+                                    .read<MessageSendBloc>()
+                                    .state
+                                    .suggestions,
                               );
                               if (suggestions.isEmpty) {
-                                _messageSendBloc.add(
-                                  FetchSuggestions(
-                                    pattern: normalizedPattern,
-                                  ),
-                                );
+                                context.read<MessageSendBloc>().add(
+                                      FetchSuggestionsRequested(
+                                        pattern: normalizedPattern,
+                                      ),
+                                    );
                               }
                               return suggestions;
                             }
@@ -195,8 +216,8 @@ class _MessageSendPageState extends State<MessageSendPage> {
                 ],
               ),
             );
-          },
-        ),
+          }
+        },
       ),
     );
   }
@@ -233,13 +254,17 @@ class _MessageSendPageState extends State<MessageSendPage> {
 
   void _addRecipient(BuildContext context, MessageUser recipient) {
     setState(() {
-      _messageSendBloc.add(AddRecipient(recipient: recipient));
+      context
+          .read<MessageSendBloc>()
+          .add(AddRecipientRequested(recipient: recipient));
     });
   }
 
   void _removeRecipient(BuildContext context, MessageUser recipient) {
     setState(() {
-      _messageSendBloc.add(RemoveRecipient(recipient: recipient));
+      context
+          .read<MessageSendBloc>()
+          .add(RemoveRecipientRequested(recipient: recipient));
     });
   }
 
@@ -249,7 +274,10 @@ class _MessageSendPageState extends State<MessageSendPage> {
   ) {
     return users
         .where(
-          (user) => !_messageSendBloc.state.recipients
+          (user) => !context
+              .read<MessageSendBloc>()
+              .state
+              .recipients
               .map((user) => user.id)
               .contains(user.id),
         )
@@ -260,11 +288,11 @@ class _MessageSendPageState extends State<MessageSendPage> {
   }
 
   void _sendMessage(BuildContext context, String subject, String messageText) {
-    _messageSendBloc.add(
-      SendMessageRequest(
-        subject: subject,
-        messageText: messageText,
-      ),
-    );
+    context.read<MessageSendBloc>().add(
+          SendMessageRequested(
+            subject: subject,
+            messageText: messageText,
+          ),
+        );
   }
 }

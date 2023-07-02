@@ -21,7 +21,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   final UserRepository _userRepository;
 
   FutureOr<void> _onProfileRequested(
-      ProfileRequested event, Emitter<ProfileState> emit) async {
+      ProfileRequested event, Emitter<ProfileState> emit,) async {
     emit(const ProfileLoading());
     try {
       final user = await _userRepository.getCurrentUser();
