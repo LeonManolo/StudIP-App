@@ -24,6 +24,7 @@ class MessageFilterButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return PopupMenuButton<MessageFilter>(
       icon: funnelIcon(currentFilter),
+      position: PopupMenuPosition.under,
       onSelected: (newFilter) => {setFilter(newFilter)},
       itemBuilder: (context) => [
         PopupMenuItem<MessageFilter>(

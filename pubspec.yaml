@@ -116,12 +116,18 @@ dependencies:
 
   flutter_speed_dial: ^6.2.0
 
+  # A library useful for creating fuzzy timestamps. (e.g. "15 minutes ago")
+  timeago: ^3.4.0
+
   ######### STATE MANAGEMENT ############
   bloc: ^8.1.1
   flutter_bloc: ^8.1.2
   flow_builder: ^0.0.9
   flutter_typeahead: ^4.3.7
   hydrated_bloc: ^9.1.0
+
+  flutter_localizations:
+    sdk: flutter
 
 dev_dependencies:
   bloc_test: ^9.1.1
