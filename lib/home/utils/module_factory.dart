@@ -18,22 +18,26 @@ Widget moduleListTileFactory({
   switch (type) {
     case ModuleType.files:
       return FilePreviewTile(
+        key: UniqueKey(),
         filePreviewModel: previewModel as FilePreviewModel,
       );
 
     case ModuleType.messages:
       return MessagePreviewTile(
+        key: UniqueKey(),
         messagePreview: previewModel as MessagePreviewModel,
         onRefresh: onRefresh,
       );
 
     case ModuleType.news:
       return NewsPreviewTile(
+        key: UniqueKey(),
         newsPreviewModel: previewModel as NewsPreviewModel,
       );
 
     case ModuleType.calendar:
       return CalendarPreviewTile(
+        key: UniqueKey(),
         calendarEntry: previewModel as CalendarPreviewModel,
       );
   }
