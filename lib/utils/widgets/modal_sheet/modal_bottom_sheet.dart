@@ -43,16 +43,22 @@ class _ModalBottomSheet extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(bottom: AppSpacing.lg),
             child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  title,
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w600,
+                Padding(
+                  padding: const EdgeInsets.only(top: AppSpacing.sm),
+                  child: Text(
+                    title,
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
                 IconButton.filled(
+                  padding: EdgeInsets.zero,
+                  alignment: Alignment.topRight,
                   onPressed: () {
                     Navigator.of(context).pop();
                   },

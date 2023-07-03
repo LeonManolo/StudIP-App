@@ -1,7 +1,9 @@
 import 'package:app_ui/app_ui.dart';
+import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:studipadawan/courses/bloc/courses_state.dart';
 import 'package:studipadawan/utils/utils.dart';
+import 'package:studipadawan/utils/widgets/segmented_selection/segmented_selection.dart';
 
 class SemesterSortFilterModalSheet extends StatefulWidget {
   const SemesterSortFilterModalSheet({
@@ -46,50 +48,50 @@ class _SemesterSortFilterModalSheetState
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         const ModalBottomSheetSubtitle(title: 'Semester'),
-        SegmentedButton(
-          style: segmentedButtonStyle(context: context),
-          segments: const [
-            ButtonSegment(
+        SegmentedSelection(
+          selected: currentSemesterFilter,
+          selections: [
+            SegmentedSelectionData(
               value: SemesterFilter.all,
-              label: Text('Alle Semester'),
+              iconData: EvaIcons.gridOutline,
+              text: 'Alle Semester',
             ),
-            ButtonSegment(
+            SegmentedSelectionData(
               value: SemesterFilter.current,
-              label: Text('Aktuelles Semester'),
+              iconData: EvaIcons.squareOutline,
+              text: 'Aktuelles Semester',
             ),
           ],
-          selected: {currentSemesterFilter},
-          onSelectionChanged: (selectedFilters) {
-            {
-              setState(
-                () => currentSemesterFilter = selectedFilters.first,
-              );
-              onSemesterFilterSelectionChanged(selectedFilters.first);
-            }
+          onSelectionChange: (filter) {
+            setState(() {
+              currentSemesterFilter = filter;
+            });
+            onSemesterFilterSelectionChanged(filter);
           },
         ),
         const SizedBox(height: AppSpacing.xlg),
         const ModalBottomSheetSubtitle(title: 'Sortierung'),
-        SegmentedButton(
-          style: segmentedButtonStyle(context: context),
-          segments: const [
-            ButtonSegment(
-              value: SemesterSortOrder.asc,
-              label: Text('Aufsteigend'),
-            ),
-            ButtonSegment(
+        SegmentedSelection(
+          selected: currentSemesterSortOrder,
+          selections: [
+            SegmentedSelectionData(
               value: SemesterSortOrder.desc,
-              label: Text('Absteigend'),
+              iconData: EvaIcons.arrowCircleDownOutline,
+              text: 'Absteigend',
+            ),
+            SegmentedSelectionData(
+              value: SemesterSortOrder.asc,
+              iconData: EvaIcons.arrowCircleUpOutline,
+              text: 'Aufsteigend',
             ),
           ],
-          selected: {currentSemesterSortOrder},
-          onSelectionChanged: (selectedSortOrders) {
-            setState(
-              () => currentSemesterSortOrder = selectedSortOrders.first,
-            );
-            onSemesterSortOrderSelectionChanged(selectedSortOrders.first);
+          onSelectionChange: (sortDirection) {
+            setState(() {
+              currentSemesterSortOrder = sortDirection;
+            });
+            onSemesterSortOrderSelectionChanged(sortDirection);
           },
-        )
+        ),
       ],
     );
   }
