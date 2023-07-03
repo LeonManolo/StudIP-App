@@ -5,6 +5,7 @@ import 'package:studipadawan/messages/message_overview/message_inbox_bloc%20/mes
 import 'package:studipadawan/messages/message_overview/message_inbox_bloc%20/message_inbox_event.dart';
 import 'package:studipadawan/messages/message_overview/message_inbox_bloc%20/message_inbox_state.dart';
 import 'package:studipadawan/utils/utils.dart';
+import 'package:studipadawan/utils/widgets/segmented_selection.dart';
 
 class MessageFilterButton extends StatelessWidget {
   const MessageFilterButton({
@@ -71,28 +72,26 @@ class _MessageFilterModalContentState
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         const ModalBottomSheetSubtitle(title: 'Filter'),
-        SegmentedButton(
-          style: segmentedButtonStyle(context: context),
-          segments: const [
-            ButtonSegment(
-              value: MessageFilter.all,
-              label: Text('Alle'),
+        SegmentedSelection(
+          initialSelection: currentMessageFilter == MessageFilter.all ? 0 : 1,
+          selections: [
+            SegmentedSelectionData(
+              iconData: EvaIcons.checkmark,
+              text: 'Alle',
             ),
-            ButtonSegment(
-              value: MessageFilter.unread,
-              label: Text('Ungelesene'),
+            SegmentedSelectionData(
+              iconData: EvaIcons.doneAllOutline,
+              text: 'Ungelesen',
             ),
           ],
-          selected: {currentMessageFilter},
-          onSelectionChanged: (selectedFilters) {
-            {
-              setState(
-                () => currentMessageFilter = selectedFilters.first,
-              );
-              onMessageFilterChanged(selectedFilters.first);
-            }
+          onSelectionChange: (index) {
+            final filter = index == 0 ? MessageFilter.all : MessageFilter.unread;
+            setState(() {
+              currentMessageFilter = filter;
+            });
+            onMessageFilterChanged(filter);
           },
-        )
+        ),
       ],
     );
   }

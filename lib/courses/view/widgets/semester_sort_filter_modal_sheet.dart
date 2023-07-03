@@ -49,6 +49,7 @@ class _SemesterSortFilterModalSheetState
       children: [
         const ModalBottomSheetSubtitle(title: 'Semester'),
         SegmentedSelection(
+          initialSelection: currentSemesterFilter == SemesterFilter.all ? 0 : 1,
           selections: [
             SegmentedSelectionData(
               iconData: EvaIcons.gridOutline,
@@ -60,8 +61,8 @@ class _SemesterSortFilterModalSheetState
             ),
           ],
           onSelectionChange: (index) {
-            final filter = index == 0 ? SemesterFilter.all : SemesterFilter
-                .current;
+            final filter =
+                index == 0 ? SemesterFilter.all : SemesterFilter.current;
             setState(() {
               currentSemesterFilter = filter;
             });
@@ -71,6 +72,8 @@ class _SemesterSortFilterModalSheetState
         const SizedBox(height: AppSpacing.xlg),
         const ModalBottomSheetSubtitle(title: 'Sortierung'),
         SegmentedSelection(
+          initialSelection:
+              currentSemesterSortOrder == SemesterSortOrder.asc ? 0 : 1,
           selections: [
             SegmentedSelectionData(
               iconData: EvaIcons.arrowCircleUpOutline,
@@ -78,11 +81,12 @@ class _SemesterSortFilterModalSheetState
             ),
             SegmentedSelectionData(
               iconData: EvaIcons.arrowCircleDownOutline,
-              text: 'Absteigen',
+              text: 'Absteigend',
             ),
           ],
           onSelectionChange: (index) {
-            final sortDirection = index == 0 ? SemesterSortOrder.asc : SemesterSortOrder.desc;
+            final sortDirection =
+                index == 0 ? SemesterSortOrder.asc : SemesterSortOrder.desc;
             setState(() {
               currentSemesterSortOrder = sortDirection;
             });
