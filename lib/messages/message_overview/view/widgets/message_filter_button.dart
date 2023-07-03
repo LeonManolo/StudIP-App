@@ -5,7 +5,7 @@ import 'package:studipadawan/messages/message_overview/message_inbox_bloc%20/mes
 import 'package:studipadawan/messages/message_overview/message_inbox_bloc%20/message_inbox_event.dart';
 import 'package:studipadawan/messages/message_overview/message_inbox_bloc%20/message_inbox_state.dart';
 import 'package:studipadawan/utils/utils.dart';
-import 'package:studipadawan/utils/widgets/segmented_selection.dart';
+import 'package:studipadawan/utils/widgets/segmented_selection/segmented_selection.dart';
 
 class MessageFilterButton extends StatelessWidget {
   const MessageFilterButton({
@@ -73,19 +73,20 @@ class _MessageFilterModalContentState
       children: [
         const ModalBottomSheetSubtitle(title: 'Filter'),
         SegmentedSelection(
-          initialSelection: currentMessageFilter == MessageFilter.all ? 0 : 1,
+          selected: currentMessageFilter,
           selections: [
             SegmentedSelectionData(
+              value: MessageFilter.all,
               iconData: EvaIcons.checkmark,
               text: 'Alle',
             ),
             SegmentedSelectionData(
+              value: MessageFilter.unread,
               iconData: EvaIcons.doneAllOutline,
               text: 'Ungelesen',
             ),
           ],
-          onSelectionChange: (index) {
-            final filter = index == 0 ? MessageFilter.all : MessageFilter.unread;
+          onSelectionChange: (filter) {
             setState(() {
               currentMessageFilter = filter;
             });

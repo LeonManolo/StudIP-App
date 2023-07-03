@@ -1,29 +1,29 @@
 import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
-import 'package:studipadawan/utils/widgets/segmented_option.dart';
+import 'package:studipadawan/utils/widgets/segmented_selection/segmented_option.dart';
 
-class SegmentedSelection extends StatefulWidget {
+class SegmentedSelection<T> extends StatefulWidget {
   const SegmentedSelection({
     super.key,
-    this.initialSelection = 0,
+    required this.selected,
     required this.selections,
     this.onSelectionChange,
   });
 
-  final int initialSelection;
-  final List<SegmentedSelectionData> selections;
-  final ValueChanged<int>? onSelectionChange;
+  final T selected;
+  final List<SegmentedSelectionData<T>> selections;
+  final ValueChanged<T>? onSelectionChange;
 
   @override
-  State<SegmentedSelection> createState() => _SegmentedSelectionState();
+  State<SegmentedSelection<T>> createState() => _SegmentedSelectionState();
 }
 
-class _SegmentedSelectionState extends State<SegmentedSelection> {
-  int _selectedIndex = 0;
+class _SegmentedSelectionState<T> extends State<SegmentedSelection<T>> {
+  late T _selected;
 
   @override
   void initState() {
-    _selectedIndex = widget.initialSelection;
+    _selected = widget.selected;
     super.initState();
   }
 
@@ -39,11 +39,12 @@ class _SegmentedSelectionState extends State<SegmentedSelection> {
                   child: SegmentedOption(
                     iconData: widget.selections[i].iconData,
                     text: widget.selections[i].text,
-                    selected: i == _selectedIndex,
+                    selected: widget.selections[i].value == _selected,
                     onTap: () {
                       setState(() {
-                        _selectedIndex = i;
-                        widget.onSelectionChange?.call(i);
+                        _selected = widget.selections[i].value;
+                        widget.onSelectionChange
+                            ?.call(widget.selections[i].value);
                       });
                     },
                   ),
@@ -58,12 +59,14 @@ class _SegmentedSelectionState extends State<SegmentedSelection> {
   }
 }
 
-class SegmentedSelectionData {
+class SegmentedSelectionData<T> {
   SegmentedSelectionData({
     required this.iconData,
     required this.text,
+    required this.value,
   });
 
   final IconData iconData;
   final String text;
+  final T value;
 }

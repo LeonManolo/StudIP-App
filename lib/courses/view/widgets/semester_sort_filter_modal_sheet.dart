@@ -3,7 +3,7 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:studipadawan/courses/bloc/courses_state.dart';
 import 'package:studipadawan/utils/utils.dart';
-import 'package:studipadawan/utils/widgets/segmented_selection.dart';
+import 'package:studipadawan/utils/widgets/segmented_selection/segmented_selection.dart';
 
 class SemesterSortFilterModalSheet extends StatefulWidget {
   const SemesterSortFilterModalSheet({
@@ -49,20 +49,20 @@ class _SemesterSortFilterModalSheetState
       children: [
         const ModalBottomSheetSubtitle(title: 'Semester'),
         SegmentedSelection(
-          initialSelection: currentSemesterFilter == SemesterFilter.all ? 0 : 1,
+          selected: currentSemesterFilter,
           selections: [
             SegmentedSelectionData(
-              iconData: EvaIcons.gridOutline,
-              text: 'Alle Semester',
-            ),
-            SegmentedSelectionData(
+              value: SemesterFilter.current,
               iconData: EvaIcons.squareOutline,
               text: 'Aktuelles Semester',
             ),
+            SegmentedSelectionData(
+              value: SemesterFilter.all,
+              iconData: EvaIcons.gridOutline,
+              text: 'Alle Semester',
+            ),
           ],
-          onSelectionChange: (index) {
-            final filter =
-                index == 0 ? SemesterFilter.all : SemesterFilter.current;
+          onSelectionChange: (filter) {
             setState(() {
               currentSemesterFilter = filter;
             });
@@ -72,21 +72,20 @@ class _SemesterSortFilterModalSheetState
         const SizedBox(height: AppSpacing.xlg),
         const ModalBottomSheetSubtitle(title: 'Sortierung'),
         SegmentedSelection(
-          initialSelection:
-              currentSemesterSortOrder == SemesterSortOrder.asc ? 0 : 1,
+          selected: currentSemesterSortOrder,
           selections: [
             SegmentedSelectionData(
+              value: SemesterSortOrder.asc,
               iconData: EvaIcons.arrowCircleUpOutline,
               text: 'Aufsteigend',
             ),
             SegmentedSelectionData(
+              value: SemesterSortOrder.desc,
               iconData: EvaIcons.arrowCircleDownOutline,
               text: 'Absteigend',
             ),
           ],
-          onSelectionChange: (index) {
-            final sortDirection =
-                index == 0 ? SemesterSortOrder.asc : SemesterSortOrder.desc;
+          onSelectionChange: (sortDirection) {
             setState(() {
               currentSemesterSortOrder = sortDirection;
             });
