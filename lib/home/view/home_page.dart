@@ -19,6 +19,8 @@ import 'package:studipadawan/home/view/widgets/module_card_view.dart';
 import 'package:studipadawan/home/view/widgets/module_reorderable_list.dart';
 import 'package:studipadawan/home/view/widgets/module_selection_modal.dart';
 import 'package:studipadawan/utils/empty_view.dart';
+import 'package:studipadawan/utils/widgets/segmented_option.dart';
+import 'package:studipadawan/utils/widgets/segmented_selection.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -111,7 +113,6 @@ class HomePageView extends StatelessWidget {
           return Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-
               Expanded(
                 child: state.selectedModules.isEmpty
                     ? const Center(
