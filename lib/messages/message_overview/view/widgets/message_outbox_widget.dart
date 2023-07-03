@@ -1,3 +1,4 @@
+import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:studipadawan/messages/message_details/view/message_detail_page.dart';
@@ -99,10 +100,14 @@ class OutboxMessageWidgetState extends State<OutboxMessageWidget> {
                   child: RefreshIndicator(
                     onRefresh: () async => _refreshOutboxMessages(),
                     child: ListView.separated(
+                      padding: const EdgeInsets.only(top: AppSpacing.md),
                       physics: const AlwaysScrollableScrollPhysics(),
                       itemCount: outBoxState.outboxMessages.length + 1,
                       separatorBuilder: (context, index) =>
-                          const Divider(height: 0.5),
+                          const Divider(
+                            indent: AppSpacing.lg,
+                            endIndent: AppSpacing.lg,
+                          ),
                       itemBuilder: (context, index) {
                         if (index == outBoxState.outboxMessages.length) {
                           return PaginationLoadingIndicator(
@@ -117,9 +122,7 @@ class OutboxMessageWidgetState extends State<OutboxMessageWidget> {
                                     .withOpacity(0.5)
                                 : Colors.transparent,
                             child: MessageTile(
-                              messageIcon: MessageIcon(
-                                iconData: getMessageIconData(isRead: true),
-                              ),
+                              isRead: true,
                               onTapFunction: () => {
                                 if (_markedOutboxMessages.isNotEmpty)
                                   {

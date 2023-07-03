@@ -52,14 +52,14 @@ class _SemesterSortFilterModalSheetState
           selected: currentSemesterFilter,
           selections: [
             SegmentedSelectionData(
-              value: SemesterFilter.current,
-              iconData: EvaIcons.squareOutline,
-              text: 'Aktuelles Semester',
-            ),
-            SegmentedSelectionData(
               value: SemesterFilter.all,
               iconData: EvaIcons.gridOutline,
               text: 'Alle Semester',
+            ),
+            SegmentedSelectionData(
+              value: SemesterFilter.current,
+              iconData: EvaIcons.squareOutline,
+              text: 'Aktuelles Semester',
             ),
           ],
           onSelectionChange: (filter) {
@@ -75,14 +75,14 @@ class _SemesterSortFilterModalSheetState
           selected: currentSemesterSortOrder,
           selections: [
             SegmentedSelectionData(
-              value: SemesterSortOrder.asc,
-              iconData: EvaIcons.arrowCircleUpOutline,
-              text: 'Aufsteigend',
-            ),
-            SegmentedSelectionData(
               value: SemesterSortOrder.desc,
               iconData: EvaIcons.arrowCircleDownOutline,
               text: 'Absteigend',
+            ),
+            SegmentedSelectionData(
+              value: SemesterSortOrder.asc,
+              iconData: EvaIcons.arrowCircleUpOutline,
+              text: 'Aufsteigend',
             ),
           ],
           onSelectionChange: (sortDirection) {

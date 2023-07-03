@@ -77,12 +77,12 @@ class _MessageFilterModalContentState
           selections: [
             SegmentedSelectionData(
               value: MessageFilter.all,
-              iconData: EvaIcons.checkmark,
+              iconData: EvaIcons.eyeOutline,
               text: 'Alle',
             ),
             SegmentedSelectionData(
               value: MessageFilter.unread,
-              iconData: EvaIcons.doneAllOutline,
+              iconData: EvaIcons.eyeOffOutline,
               text: 'Ungelesen',
             ),
           ],
