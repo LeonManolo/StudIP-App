@@ -3,7 +3,7 @@ import 'package:calender_repository/calender_repository.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:studipadawan/calendar/extensions/list_extensions.dart';
-import 'package:studipadawan/calendar/widgets/calendar_course_presentation/calendar_course_page.dart';
+import 'package:studipadawan/calendar/utils/handle_calendar_entry_selection.dart';
 
 /// Right side of the Calendar entry, shows the calendar data
 class CalendarEntryContent extends StatelessWidget {
@@ -30,7 +30,10 @@ class CalendarEntryContent extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           InkWell(
-            onTap: () => _navigateToCalendarDetailPage(context),
+            onTap: () => handleCalendarEntrySelection(
+              context: context,
+              calendarEntryData: calendarEntryData,
+            ),
             child: Container(
               padding: const EdgeInsets.all(AppSpacing.sm),
               margin: EdgeInsets.only(right: padding),
@@ -131,42 +134,5 @@ class CalendarEntryContent extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  void _navigateToCalendarDetailPage(BuildContext context) {
-    if (calendarEntryData?.courseId != null) {
-      Navigator.of(context).push(
-        MaterialPageRoute<CalendarCoursePage>(
-          builder: (context) =>
-              CalendarCoursePage(courseId: calendarEntryData!.courseId!),
-        ),
-      );
-    } else {
-      showDialog<void>(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text(calendarEntryData?.title ?? 'Termin ohne Titel'),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: [
-                Text(
-                  'Beschreibung: ${calendarEntryData?.description ?? 'N/A'}',
-                ),
-                const SizedBox(height: 12),
-                Text(
-                  'Uhrzeit: ${calendarEntryData?.timeframe}',
-                ),
-              ],
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Ok'),
-            )
-          ],
-        ),
-      );
-    }
   }
 }

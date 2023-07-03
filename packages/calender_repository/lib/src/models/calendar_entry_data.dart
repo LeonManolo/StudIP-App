@@ -1,3 +1,5 @@
+// ignore_for_file: comment_references
+
 import 'package:calender_repository/calender_repository.dart';
 
 class CalendarEntryData {

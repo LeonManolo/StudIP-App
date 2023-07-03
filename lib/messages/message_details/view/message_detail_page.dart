@@ -11,7 +11,6 @@ import 'package:studipadawan/messages/message_details/view/dialogs/message_detai
 import 'package:studipadawan/messages/message_details/view/widgets/message_detail_action_button.dart';
 import 'package:studipadawan/messages/message_send/view/message_send_page.dart';
 import 'package:studipadawan/utils/utils.dart';
-import 'package:studipadawan/utils/widgets/profile_image_avatar.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 class MessageDetailPage extends StatelessWidget {

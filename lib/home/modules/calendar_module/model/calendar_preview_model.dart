@@ -6,16 +6,13 @@ import 'package:studipadawan/home/modules/extensions/date_time_extensions.dart';
 
 class CalendarPreviewModel implements PreviewModel {
   const CalendarPreviewModel({
-    required this.day,
-    required this.locations,
     required this.entryStartDate,
-    this.entryTitle,
+    required this.calendarEntryData,
   });
 
-  final int day;
+  final CalendarEntryData calendarEntryData;
   final DateTime entryStartDate;
-  final String? entryTitle;
-  final List<String> locations;
+  int get day => calendarEntryData.weekday.index + 1;
 
   @override
   IconData get iconData => EvaIcons.calendarOutline;
@@ -24,10 +21,10 @@ class CalendarPreviewModel implements PreviewModel {
   String get subtitle =>
       'In ${entryStartDate.germanTimeCountdown(countdownStart: DateTime.now())}'
       '\n${getDay()}, ${entryStartDate.formattedDateTime()} Uhr'
-      '${locations.isNotEmpty ? '\nOrt: ${locations.join(', ')}' : ''}';
+      '${calendarEntryData.locations.isNotEmpty ? '\nOrt: ${calendarEntryData.locations.join(', ')}' : ''}';
 
   @override
-  String get title => entryTitle ?? 'Termin ohne Titel';
+  String get title => calendarEntryData.title ?? 'Termin ohne Titel';
 
   static DateTime calculateDate(int week, int day, HourMinute start) {
     final now = DateTime.now();

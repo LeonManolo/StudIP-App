@@ -8,7 +8,6 @@ import 'package:studipadawan/messages/message_overview/message_outbox_bloc/messa
 import 'package:studipadawan/messages/message_overview/message_tabbar_bloc%20/message_tabbar_bloc.dart';
 import 'package:studipadawan/messages/message_overview/message_tabbar_bloc%20/message_tabbar_event.dart';
 import 'package:studipadawan/messages/message_overview/message_tabbar_bloc%20/message_tabbar_state.dart';
-import 'package:studipadawan/messages/message_overview/view/widgets/message_icon.dart';
 import 'package:studipadawan/messages/message_overview/view/widgets/message_tile.dart';
 import 'package:studipadawan/utils/empty_view.dart';
 import 'package:studipadawan/utils/loading_indicator.dart';
@@ -18,6 +17,7 @@ import 'package:studipadawan/utils/refreshable_content.dart';
 import 'package:studipadawan/utils/snackbar.dart';
 
 final _outboxWidgetKey = GlobalKey<ScaffoldState>();
+
 class OutboxMessageWidget extends StatefulWidget {
   const OutboxMessageWidget({
     super.key,
@@ -103,11 +103,10 @@ class OutboxMessageWidgetState extends State<OutboxMessageWidget> {
                       padding: const EdgeInsets.only(top: AppSpacing.md),
                       physics: const AlwaysScrollableScrollPhysics(),
                       itemCount: outBoxState.outboxMessages.length + 1,
-                      separatorBuilder: (context, index) =>
-                          const Divider(
-                            indent: AppSpacing.lg,
-                            endIndent: AppSpacing.lg,
-                          ),
+                      separatorBuilder: (context, index) => const Divider(
+                        indent: AppSpacing.lg,
+                        endIndent: AppSpacing.lg,
+                      ),
                       itemBuilder: (context, index) {
                         if (index == outBoxState.outboxMessages.length) {
                           return PaginationLoadingIndicator(

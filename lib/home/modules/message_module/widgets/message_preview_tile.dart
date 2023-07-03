@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:studipadawan/home/modules/message_module/model/message_preview_model.dart';
 import 'package:studipadawan/messages/message_details/view/message_detail_page.dart';
-import 'package:studipadawan/messages/message_overview/view/widgets/message_icon.dart';
 import 'package:studipadawan/messages/message_overview/view/widgets/message_tile.dart';
 
 class MessagePreviewTile extends StatefulWidget {

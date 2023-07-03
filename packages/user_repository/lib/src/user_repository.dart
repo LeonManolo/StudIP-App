@@ -4,20 +4,20 @@ import 'package:studip_api_client/studip_api_client.dart';
 class UserRepository {
   /// Instantiates a UserRepository with a StudIPUserClient.
   ///
-  /// Requires a [studIpApiClient] of type [StudIPUserClient].
-  /// The [studIpApiClient] is used to access the API.
+  /// Requires a [userApiClient] of type [StudIPUserClient].
+  /// The [userApiClient] is used to access the API.
   UserRepository({
-    required StudIPUserClient studIpApiClient,
-  }) : _apiClient = studIpApiClient;
+    required StudIPUserClient userApiClient,
+  }) : _userApiClient = userApiClient;
 
-  final StudIPUserClient _apiClient;
+  final StudIPUserClient _userApiClient;
 
   /// Retrieves the current user.
   ///
   /// Returns a [UserResponse] containing the current user
   /// (the authenticated user).
   Future<UserResponse> getCurrentUser() async {
-    return _apiClient.getCurrentUser();
+    return _userApiClient.getCurrentUser();
   }
 
   /// Retrieves a list of users.
@@ -27,6 +27,6 @@ class UserRepository {
   ///
   /// Returns [UserListResponse] containing the list of users.
   Future<UserListResponse> getUsers(String? searchParams) async {
-    return _apiClient.getUsers(searchParams);
+    return _userApiClient.getUsers(searchParams);
   }
 }

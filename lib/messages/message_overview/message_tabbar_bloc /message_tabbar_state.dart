@@ -137,10 +137,11 @@ class TabBarStateDeleteOutboxMessages extends TabBarState {
 }
 
 class TabBarStateDeleteInboxMessages extends TabBarState {
-  const TabBarStateDeleteInboxMessages(
-      {super.currentTabIndex,
-      super.filterIconVisible,
-      super.messageMenuIconVisible});
+  const TabBarStateDeleteInboxMessages({
+    super.currentTabIndex,
+    super.filterIconVisible,
+    super.messageMenuIconVisible,
+  });
 
   factory TabBarStateDeleteInboxMessages.fromState(TabBarState state) =>
       TabBarStateDeleteInboxMessages(

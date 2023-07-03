@@ -23,8 +23,7 @@ Future<void> main() async {
       AuthenticationRepository(client: authenticationClient);
 
   final userClient = StudIPUserClientImpl();
-  // TODO: studIpApiClient <- Naming anpassen
-  final userRepository = UserRepository(studIpApiClient: userClient);
+  final userRepository = UserRepository(userApiClient: userClient);
 
   final coursesClient = StudIPCoursesClientImpl();
   final coursesRepository = CourseRepository(

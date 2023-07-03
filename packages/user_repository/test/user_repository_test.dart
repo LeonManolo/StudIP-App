@@ -1,7 +1,7 @@
 // ignore_for_file: prefer_const_constructors
+import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:studip_api_client/studip_api_client.dart';
-import 'package:test/test.dart';
 import 'package:user_repository/src/user_repository.dart';
 
 class MockStudIPUserClient extends Mock implements StudIPUserClient {}
@@ -14,7 +14,7 @@ void main() {
     setUp(() {
       studIPUserClient = MockStudIPUserClient();
       sut = UserRepository(
-        studIpApiClient: studIPUserClient,
+        userApiClient: studIPUserClient,
       );
     });
 

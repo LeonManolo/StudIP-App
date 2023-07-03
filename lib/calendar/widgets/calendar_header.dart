@@ -32,25 +32,26 @@ class CalendarHeader extends StatelessWidget {
           calendarFormat: calendarFormat,
           onFormatChanged: onFormatChanged,
           calendarStyle: CalendarStyle(
-              selectedDecoration: BoxDecoration(
+            selectedDecoration: BoxDecoration(
+              color: primaryColor,
+              shape: BoxShape.circle,
+            ),
+            selectedTextStyle: TextStyle(
+              fontSize: 16,
+              color: Theme.of(context).colorScheme.onPrimary,
+            ),
+            todayDecoration: BoxDecoration(
+              border: Border.all(
                 color: primaryColor,
-                shape: BoxShape.circle,
+                width: 1.5,
               ),
-              selectedTextStyle: TextStyle(
-                fontSize: 16,
-                color: Theme.of(context).colorScheme.onPrimary,
-              ),
-              todayDecoration: BoxDecoration(
-                border: Border.all(
-                  color: primaryColor,
-                  width: 1.5,
-                ),
-                shape: BoxShape.circle,
-              ),
-              todayTextStyle: TextStyle(
-                color: primaryColor,
-                fontSize: 16,
-              )),
+              shape: BoxShape.circle,
+            ),
+            todayTextStyle: TextStyle(
+              color: primaryColor,
+              fontSize: 16,
+            ),
+          ),
           focusedDay: selectedDay,
           selectedDayPredicate: (day) {
             return day.isSameDayAs(selectedDay);
