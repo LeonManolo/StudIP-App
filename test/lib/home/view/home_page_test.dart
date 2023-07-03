@@ -1,5 +1,6 @@
 import 'package:activity_repository/activity_repository.dart';
 import 'package:bloc_test/bloc_test.dart';
+import 'package:calender_repository/calender_repository.dart';
 import 'package:courses_repository/courses_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -230,10 +231,16 @@ MessagePreviewModel _createMessagePreviewModel({required String id}) {
 
 CalendarPreviewModel _createCalendarPreviewModel({required String id}) {
   return CalendarPreviewModel(
-    day: 10,
-    locations: ['place 1'],
     entryStartDate: DateTime(2023, 06, 10, 15),
-    entryTitle: 'calendarEntry_$id',
+    calendarEntryData: CalendarEntryData(
+      id: id,
+      type: '',
+      weekday: Weekday.saturday,
+      timeframe: CalendarTimeframe(
+        start: HourMinute(hours: 10, minutes: 30),
+        end: HourMinute(hours: 11, minutes: 30),
+      ),
+    ),
   );
 }
 

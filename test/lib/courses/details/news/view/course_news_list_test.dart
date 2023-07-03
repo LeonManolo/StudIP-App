@@ -55,7 +55,10 @@ void main() {
         () => courseNewsBloc.state,
       ).thenReturn(
         CourseNewsStateDidLoad(
-            maxReached: true, paginationLoading: false, news: const []),
+          maxReached: true,
+          paginationLoading: false,
+          news: const [],
+        ),
       );
 
       await setUpCourseNewsList(tester);

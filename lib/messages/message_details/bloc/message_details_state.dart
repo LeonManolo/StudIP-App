@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
 
-
 sealed class MessageDetailsState extends Equatable {
   const MessageDetailsState();
 
@@ -24,7 +23,7 @@ class MessageDetailsStateLoading extends MessageDetailsState {
 
 class MessageDetailsStateDeleteSucceed extends MessageDetailsState {
   const MessageDetailsStateDeleteSucceed({
-    required this.successInfo
+    required this.successInfo,
   });
   final String successInfo;
 

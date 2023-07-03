@@ -27,7 +27,6 @@ abstract interface class StudIPMessagesClient {
 }
 
 class StudIPMessagesClientImpl implements StudIPMessagesClient {
-
   StudIPMessagesClientImpl({StudIpHttpCore? core})
       : _core = core ?? StudIpAPICore.shared;
   final StudIpHttpCore _core;
@@ -38,11 +37,13 @@ class StudIPMessagesClientImpl implements StudIPMessagesClient {
     required int offset,
     required int limit,
   }) async {
-    Map<String, String> queryParameters = {};
+    final Map<String, String> queryParameters = {};
     queryParameters['page[offset]'] = offset.toString();
     queryParameters['page[limit]'] = limit.toString();
     final response = await _core.get(
-        endpoint: 'users/$userId/outbox', queryParameters: queryParameters,);
+      endpoint: 'users/$userId/outbox',
+      queryParameters: queryParameters,
+    );
 
     final body = response.json();
     response.throwIfInvalidHttpStatus(body: body);
@@ -51,12 +52,13 @@ class StudIPMessagesClientImpl implements StudIPMessagesClient {
   }
 
   @override
-  Future<MessageListResponse> getInboxMessages(
-      {required String userId,
-      required int offset,
-      required int limit,
-      required bool filterUnread,}) async {
-    Map<String, String> queryParameters = {};
+  Future<MessageListResponse> getInboxMessages({
+    required String userId,
+    required int offset,
+    required int limit,
+    required bool filterUnread,
+  }) async {
+    final Map<String, String> queryParameters = {};
     if (filterUnread) {
       queryParameters['filter[unread]'] = 'true';
     }
@@ -64,7 +66,9 @@ class StudIPMessagesClientImpl implements StudIPMessagesClient {
     queryParameters['page[limit]'] = limit.toString();
 
     final response = await _core.get(
-        endpoint: 'users/$userId/inbox', queryParameters: queryParameters,);
+      endpoint: 'users/$userId/inbox',
+      queryParameters: queryParameters,
+    );
     final body = response.json();
     response.throwIfInvalidHttpStatus(body: body);
 
@@ -72,8 +76,10 @@ class StudIPMessagesClientImpl implements StudIPMessagesClient {
   }
 
   @override
-  Future<void> readMessage(
-      {required String messageId, required String message,}) async {
+  Future<void> readMessage({
+    required String messageId,
+    required String message,
+  }) async {
     final response =
         await _core.patch(endpoint: 'messages/$messageId', jsonString: message);
     final body = response.json();
@@ -85,7 +91,9 @@ class StudIPMessagesClientImpl implements StudIPMessagesClient {
     final response = await _core.delete(endpoint: 'messages/$messageId');
     final body = response.json();
     response.throwIfInvalidHttpStatus(
-        expectedStatus: HttpStatus.noContent, body: body,);
+      expectedStatus: HttpStatus.noContent,
+      body: body,
+    );
   }
 
   @override
@@ -94,7 +102,9 @@ class StudIPMessagesClientImpl implements StudIPMessagesClient {
         await _core.post(endpoint: 'messages', jsonString: message);
     final body = response.json();
     response.throwIfInvalidHttpStatus(
-        expectedStatus: HttpStatus.created, body: body,);
+      expectedStatus: HttpStatus.created,
+      body: body,
+    );
     return MessageResponse.fromJson(body);
   }
 }

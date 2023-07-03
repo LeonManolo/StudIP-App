@@ -3,20 +3,24 @@ import 'package:studip_api_client/src/core/studip_api_core.dart';
 import 'package:studip_api_client/src/extensions/extensions.dart';
 import 'package:studip_api_client/src/models/models.dart';
 
+// ignore: one_member_abstracts
 abstract interface class StudIPCalendarClient {
-  Future<ScheduleListResponse> getSchedule(
-      {required String userId, DateTime? semesterStart,});
+  Future<ScheduleListResponse> getSchedule({
+    required String userId,
+    DateTime? semesterStart,
+  });
 }
 
 class StudIPCalendarClientImpl implements StudIPCalendarClient {
-
   StudIPCalendarClientImpl({StudIpHttpCore? core})
       : _core = core ?? StudIpAPICore.shared;
   final StudIpHttpCore _core;
 
   @override
-  Future<ScheduleListResponse> getSchedule(
-      {required String userId, DateTime? semesterStart,}) async {
+  Future<ScheduleListResponse> getSchedule({
+    required String userId,
+    DateTime? semesterStart,
+  }) async {
     int semesterStartInMillisecondsSinceEpoch;
     if (semesterStart == null) {
       semesterStartInMillisecondsSinceEpoch = DateTime.now().secondsSinceEpoch;
@@ -25,10 +29,11 @@ class StudIPCalendarClientImpl implements StudIPCalendarClient {
     }
 
     final response = await _core.get(
-        endpoint: 'users/$userId/schedule',
-        queryParameters: {
-          'filter[timestamp]': '$semesterStartInMillisecondsSinceEpoch'
-        },);
+      endpoint: 'users/$userId/schedule',
+      queryParameters: {
+        'filter[timestamp]': '$semesterStartInMillisecondsSinceEpoch'
+      },
+    );
 
     final body = response.json();
     response.throwIfInvalidHttpStatus(body: body);

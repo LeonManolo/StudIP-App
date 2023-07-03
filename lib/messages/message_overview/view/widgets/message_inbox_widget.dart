@@ -9,7 +9,6 @@ import 'package:studipadawan/messages/message_overview/message_inbox_bloc%20/mes
 import 'package:studipadawan/messages/message_overview/message_tabbar_bloc%20/message_tabbar_bloc.dart';
 import 'package:studipadawan/messages/message_overview/message_tabbar_bloc%20/message_tabbar_event.dart';
 import 'package:studipadawan/messages/message_overview/message_tabbar_bloc%20/message_tabbar_state.dart';
-import 'package:studipadawan/messages/message_overview/view/widgets/message_icon.dart';
 import 'package:studipadawan/messages/message_overview/view/widgets/message_tile.dart';
 import 'package:studipadawan/utils/empty_view.dart';
 import 'package:studipadawan/utils/loading_indicator.dart';

@@ -53,8 +53,10 @@ class CalendarModuleBloc extends ModuleBloc {
       week++;
     }
     return entries
-      ..sort((entry1, entry2) =>
-          entry1.entryStartDate.compareTo(entry2.entryStartDate));
+      ..sort(
+        (entry1, entry2) =>
+            entry1.entryStartDate.compareTo(entry2.entryStartDate),
+      );
   }
 
   /// Extracts calendar entries for a given week from the provided calendarEntryData.
@@ -79,10 +81,8 @@ class CalendarModuleBloc extends ModuleBloc {
           if (date.isAfter(DateTime.now())) {
             entries.add(
               CalendarPreviewModel(
-                day: weekday,
-                entryTitle: entry.title,
+                calendarEntryData: entry,
                 entryStartDate: date,
-                locations: entry.locations,
               ),
             );
           }

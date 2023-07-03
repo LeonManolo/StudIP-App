@@ -49,59 +49,32 @@ void main() {
 
   group('getDay', () {
     test('Returns the correct day string for each day index', () {
-      final entry1 = CalendarPreviewModel(
-        day: 1,
-        entryStartDate: DateTime.now(),
-        locations: [],
-      );
-      final entry2 = CalendarPreviewModel(
-        day: 2,
-        entryStartDate: DateTime.now(),
-        locations: [],
-      );
-      final entry3 = CalendarPreviewModel(
-        day: 3,
-        entryStartDate: DateTime.now(),
-        locations: [],
-      );
-      final entry4 = CalendarPreviewModel(
-        day: 4,
-        entryStartDate: DateTime.now(),
-        locations: [],
-      );
-      final entry5 = CalendarPreviewModel(
-        day: 5,
-        entryStartDate: DateTime.now(),
-        locations: [],
-      );
-      final entry6 = CalendarPreviewModel(
-        day: 6,
-        entryStartDate: DateTime.now(),
-        locations: [],
-      );
-      final entry7 = CalendarPreviewModel(
-        day: 7,
-        entryStartDate: DateTime.now(),
-        locations: [],
-      );
+      final weekdayNames = [
+        'Montag',
+        'Dienstag',
+        'Mittwoch',
+        'Donnerstag',
+        'Freitag',
+        'Samstag',
+        'Sonntag'
+      ];
 
-      expect(entry1.getDay(), 'Montag');
-      expect(entry2.getDay(), 'Dienstag');
-      expect(entry3.getDay(), 'Mittwoch');
-      expect(entry4.getDay(), 'Donnerstag');
-      expect(entry5.getDay(), 'Freitag');
-      expect(entry6.getDay(), 'Samstag');
-      expect(entry7.getDay(), 'Sonntag');
-    });
+      for (int i = 0; i < weekdayNames.length; i++) {
+        final entry = CalendarPreviewModel(
+          entryStartDate: DateTime(2023, 06, 10, 15),
+          calendarEntryData: CalendarEntryData(
+            id: '1',
+            type: '',
+            weekday: Weekday.values[i],
+            timeframe: CalendarTimeframe(
+              start: HourMinute(hours: 10, minutes: 30),
+              end: HourMinute(hours: 11, minutes: 30),
+            ),
+          ),
+        );
 
-    test('Returns "Unbekannt" for unknown day index', () {
-      final entry = CalendarPreviewModel(
-        day: 8,
-        entryStartDate: DateTime.now(),
-        locations: [],
-      );
-
-      expect(entry.getDay(), 'Unbekannt');
+        expect(entry.getDay(), weekdayNames[i]);
+      }
     });
   });
 }

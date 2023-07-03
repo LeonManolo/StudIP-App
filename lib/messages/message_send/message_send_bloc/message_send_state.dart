@@ -119,7 +119,8 @@ class MessageSendStateUserSuggestionsError extends MessageSendState {
   });
 
   factory MessageSendStateUserSuggestionsError.fromState(
-          MessageSendState state) =>
+    MessageSendState state,
+  ) =>
       MessageSendStateUserSuggestionsError(
         recipients: state.recipients,
         suggestions: state.suggestions,

@@ -35,8 +35,9 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
   ) async {
     final requestedDateTime = event.day;
 
-    emit(CalendarLoading.fromState(
-        state.copyWith(currentDay: requestedDateTime)));
+    emit(
+      CalendarLoading.fromState(state.copyWith(currentDay: requestedDateTime)),
+    );
 
     try {
       final calendarSchedule = await _fetchCalendarSchedule(requestedDateTime);

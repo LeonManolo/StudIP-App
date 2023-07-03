@@ -3,7 +3,6 @@ import 'package:courses_repository/courses_repository.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 import 'package:studipadawan/calendar/calendar_notifications/bloc/calendar_notifications_bloc.dart';
 import 'package:studipadawan/calendar/calendar_notifications/widgets/calendar_notification_save_button.dart';
 import 'package:studipadawan/calendar/calendar_notifications/widgets/calendar_notification_time_selection.dart';
@@ -158,9 +157,5 @@ class CalendarScheduleNotificationsPage extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  String _formatDate(DateTime dateTime) {
-    return DateFormat('dd.MM.yyyy').format(dateTime);
   }
 }

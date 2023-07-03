@@ -11,7 +11,6 @@ abstract interface class StudIPUserClient {
 }
 
 class StudIPUserClientImpl implements StudIPUserClient {
-
   StudIPUserClientImpl({StudIpHttpCore? core})
       : _core = core ?? StudIpAPICore.shared;
   final StudIpHttpCore _core;
@@ -38,7 +37,7 @@ class StudIPUserClientImpl implements StudIPUserClient {
 
   @override
   Future<UserListResponse> getUsers(String? searchParam) async {
-    Map<String, String> queryParameters = {};
+    final Map<String, String> queryParameters = {};
     if (searchParam != null) {
       queryParameters['filter[search]'] = searchParam;
     }

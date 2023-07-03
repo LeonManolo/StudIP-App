@@ -10,9 +10,10 @@ part 'calendar_course_state.dart';
 
 class CalendarCourseBloc
     extends Bloc<CalendarCourseEvent, CalendarCourseState> {
-  CalendarCourseBloc(
-      {required CourseRepository courseRepository, required String courseId})
-      : _courseRepository = courseRepository,
+  CalendarCourseBloc({
+    required CourseRepository courseRepository,
+    required String courseId,
+  })  : _courseRepository = courseRepository,
         _courseId = courseId,
         super(CalendarCourseStateLoading()) {
     on<CalendarCourseRequested>(_onCourseRequested);
