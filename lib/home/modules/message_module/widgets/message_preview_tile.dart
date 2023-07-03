@@ -33,13 +33,7 @@ class _MessagePreviewTileState extends State<MessagePreviewTile> {
   @override
   Widget build(BuildContext context) {
     return MessageTile(
-      messageIcon: MessageIcon(
-        iconData: messagePreview.iconData,
-        color: getMessageIconColor(
-          isRead: messagePreview.message.isRead,
-          context: context,
-        ),
-      ),
+      isRead: messagePreview.message.isRead,
       onTapFunction: () {
         if (!messagePreview.message.isRead) {
           // Optimistic UI-Update

@@ -1,3 +1,4 @@
+import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:messages_repository/messages_repository.dart';
@@ -100,10 +101,12 @@ class InboxMessageWidgetState extends State<InboxMessageWidget> {
                   child: RefreshIndicator(
                     onRefresh: () async => _refreshInboxMessages(),
                     child: ListView.separated(
+                      padding: const EdgeInsets.only(top: AppSpacing.md),
                       physics: const AlwaysScrollableScrollPhysics(),
                       itemCount: inboxState.inboxMessages.length + 1,
                       separatorBuilder: (context, index) => const Divider(
-                        height: 0.5,
+                        indent: AppSpacing.lg,
+                        endIndent: AppSpacing.lg,
                       ),
                       itemBuilder: (context, index) {
                         if (index == inboxState.inboxMessages.length) {
@@ -119,14 +122,7 @@ class InboxMessageWidgetState extends State<InboxMessageWidget> {
                                     .withOpacity(0.5)
                                 : Colors.transparent,
                             child: MessageTile(
-                              messageIcon: MessageIcon(
-                                iconData:
-                                    getMessageIconData(isRead: message.isRead),
-                                color: getMessageIconColor(
-                                  isRead: message.isRead,
-                                  context: context,
-                                ),
-                              ),
+                              isRead: message.isRead,
                               onTapFunction: () => {
                                 if (_markedInboxMessages.isNotEmpty)
                                   {
