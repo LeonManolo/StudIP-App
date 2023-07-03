@@ -111,6 +111,7 @@ class HomePageView extends StatelessWidget {
           return Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+
               Expanded(
                 child: state.selectedModules.isEmpty
                     ? const Center(
