@@ -15,6 +15,7 @@ import 'package:studipadawan/utils/loading_indicator.dart';
 import 'package:studipadawan/utils/pagination/pagination.dart';
 import 'package:studipadawan/utils/refreshable_content.dart';
 import 'package:studipadawan/utils/snackbar.dart';
+import 'package:studipadawan/utils/utils.dart';
 
 final _outboxWidgetKey = GlobalKey<ScaffoldState>();
 
@@ -66,6 +67,12 @@ class OutboxMessageWidgetState extends State<OutboxMessageWidget> {
       builder: (context, outBoxState) {
         if (outBoxState is OutboxMessageStateLoading) {
           return const Center(child: LoadingIndicator());
+        } else if (outBoxState is OutboxMessageStateError) {
+          return ErrorView(
+            message: outBoxState.failureInfo,
+            iconData: null,
+            onRetryPressed: _refreshOutboxMessages,
+          );
         }
 
         if (outBoxState.outboxMessages.isEmpty) {

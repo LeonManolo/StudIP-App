@@ -28,17 +28,23 @@ class Message {
     );
   }
 
-  factory Message.fromMessageResponseItem(
+  /// If no message sender is present, this method returns null
+  static Message? fromMessageResponseItem(
     MessageResponseItem messageResponseItem,
   ) {
     final MessageResponseItemAttributes attributes =
         messageResponseItem.attributes;
+    final String? senderId = messageResponseItem.relationships.sender?.data.id;
+    if (senderId == null) {
+      return null;
+    }
+
     return Message(
       id: messageResponseItem.id,
       subject: attributes.subject,
       message: attributes.message,
       sender: MessageUser(
-        id: messageResponseItem.relationships.sender.data.id,
+        id: senderId,
         username: '',
         firstName: '',
         formattedName: '',

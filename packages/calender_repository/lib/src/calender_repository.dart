@@ -10,6 +10,7 @@ class CalenderRepository {
   Future<CalendarWeekData> getCalendarSchedule({
     required String userId,
     required DateTime requestedDateTime,
+    bool shouldInclueCoursesAfterRequestedDateTime = false,
   }) async {
     final schedule = await _apiClient.getSchedule(
       userId: userId,
@@ -18,6 +19,8 @@ class CalenderRepository {
     return CalendarWeekData.fromScheduleResponse(
       scheduleResponse: schedule,
       requestedDateTime: requestedDateTime,
+      shouldInclueCoursesAfterScheduleEntryStart:
+          shouldInclueCoursesAfterRequestedDateTime,
     );
   }
 }

@@ -5,7 +5,6 @@ part 'message_response.g.dart';
 /// List of [MessageResponseItem]s
 @JsonSerializable()
 class MessageListResponse {
-
   MessageListResponse({required this.messageResponseItems});
 
   factory MessageListResponse.fromJson(Map<String, dynamic> json) =>
@@ -17,7 +16,6 @@ class MessageListResponse {
 /// Single [MessageResponseItem]
 @JsonSerializable()
 class MessageResponse {
-
   MessageResponse({required this.messageResponseItem});
 
   factory MessageResponse.fromJson(Map<String, dynamic> json) =>
@@ -28,7 +26,6 @@ class MessageResponse {
 
 @JsonSerializable()
 class MessageResponseItem {
-
   MessageResponseItem({
     required this.id,
     required this.attributes,
@@ -44,7 +41,6 @@ class MessageResponseItem {
 
 @JsonSerializable()
 class MessageResponseItemAttributes {
-
   MessageResponseItemAttributes({
     required this.subject,
     required this.message,
@@ -66,14 +62,17 @@ class MessageResponseItemAttributes {
 
 @JsonSerializable()
 class MessageResponseItemRelationships {
-
-  MessageResponseItemRelationships(
-      {required this.sender, required this.recipients,});
+  MessageResponseItemRelationships({
+    this.sender,
+    required this.recipients,
+  });
 
   factory MessageResponseItemRelationships.fromJson(
-          Map<String, dynamic> json,) =>
+    Map<String, dynamic> json,
+  ) =>
       _$MessageResponseItemRelationshipsFromJson(json);
-  final MessageResponseItemRelationshipsSender sender;
+
+  final MessageResponseItemRelationshipsSender? sender;
   final MessageResponseItemRelationshipsRecipients recipients;
 }
 
@@ -81,23 +80,25 @@ class MessageResponseItemRelationships {
 
 @JsonSerializable()
 class MessageResponseItemRelationshipsSender {
-
   MessageResponseItemRelationshipsSender({required this.data});
 
   factory MessageResponseItemRelationshipsSender.fromJson(
-          Map<String, dynamic> json,) =>
+    Map<String, dynamic> json,
+  ) =>
       _$MessageResponseItemRelationshipsSenderFromJson(json);
   final MessageResponseItemRelationshipsSenderData data;
 }
 
 @JsonSerializable()
 class MessageResponseItemRelationshipsSenderData {
-
-  MessageResponseItemRelationshipsSenderData(
-      {required this.type, required this.id,});
+  MessageResponseItemRelationshipsSenderData({
+    required this.type,
+    required this.id,
+  });
 
   factory MessageResponseItemRelationshipsSenderData.fromJson(
-          Map<String, dynamic> json,) =>
+    Map<String, dynamic> json,
+  ) =>
       _$MessageResponseItemRelationshipsSenderDataFromJson(json);
   final String type;
   final String id;
@@ -107,11 +108,11 @@ class MessageResponseItemRelationshipsSenderData {
 
 @JsonSerializable()
 class MessageResponseItemRelationshipsRecipients {
-
   MessageResponseItemRelationshipsRecipients({required this.dataItems});
 
   factory MessageResponseItemRelationshipsRecipients.fromJson(
-          Map<String, dynamic> json,) =>
+    Map<String, dynamic> json,
+  ) =>
       _$MessageResponseItemRelationshipsRecipientsFromJson(json);
   @JsonKey(name: 'data')
   final List<MessageResponseItemRelationshipsRecipientsDataItem> dataItems;
@@ -119,12 +120,14 @@ class MessageResponseItemRelationshipsRecipients {
 
 @JsonSerializable()
 class MessageResponseItemRelationshipsRecipientsDataItem {
-
-  MessageResponseItemRelationshipsRecipientsDataItem(
-      {required this.type, required this.id,});
+  MessageResponseItemRelationshipsRecipientsDataItem({
+    required this.type,
+    required this.id,
+  });
 
   factory MessageResponseItemRelationshipsRecipientsDataItem.fromJson(
-          Map<String, dynamic> json,) =>
+    Map<String, dynamic> json,
+  ) =>
       _$MessageResponseItemRelationshipsRecipientsDataItemFromJson(json);
   final String type;
   final String id;
