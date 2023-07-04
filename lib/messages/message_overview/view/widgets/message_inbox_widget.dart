@@ -16,6 +16,7 @@ import 'package:studipadawan/utils/loading_indicator.dart';
 import 'package:studipadawan/utils/pagination/pagination.dart';
 import 'package:studipadawan/utils/refreshable_content.dart';
 import 'package:studipadawan/utils/snackbar.dart';
+import 'package:studipadawan/utils/utils.dart';
 
 final _inboxWidgetKey = GlobalKey<ScaffoldState>();
 
@@ -67,6 +68,12 @@ class InboxMessageWidgetState extends State<InboxMessageWidget> {
       builder: (context, inboxState) {
         if (inboxState is InboxMessageStateLoading) {
           return const Center(child: LoadingIndicator());
+        } else if (inboxState is InboxMessageStateError) {
+          return ErrorView(
+            message: inboxState.failureInfo,
+            iconData: null,
+            onRetryPressed: _refreshInboxMessages,
+          );
         }
 
         if (inboxState.inboxMessages.isEmpty) {

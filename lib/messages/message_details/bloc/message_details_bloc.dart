@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:logger/logger.dart';
 import 'package:messages_repository/messages_repository.dart';
 import 'package:studipadawan/messages/message_details/bloc/message_details_event.dart';
 import 'package:studipadawan/messages/message_details/bloc/message_details_state.dart';
@@ -33,7 +34,7 @@ class MessageDetailsBloc
     } catch (_) {
       emit(
         const MessageDetailsStateDeleteError(
-          failureInfo: messageDeleteSucceed,
+          failureInfo: messageDeleteError,
         ),
       );
     }
@@ -43,6 +44,10 @@ class MessageDetailsBloc
     ReadMessageRequested event,
     Emitter<MessageDetailsState> emit,
   ) async {
-    await _messageRepository.readMessage(messageId: event.message.id);
+    try {
+      await _messageRepository.readMessage(messageId: event.message.id);
+    } catch (e) {
+      Logger().e(e);
+    }
   }
 }

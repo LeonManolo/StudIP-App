@@ -7,6 +7,7 @@ class CalendarWeekData {
   factory CalendarWeekData.fromScheduleResponse({
     required ScheduleListResponse scheduleResponse,
     required DateTime requestedDateTime,
+    required bool shouldInclueCoursesAfterScheduleEntryStart,
   }) {
     final Map<Weekday, Map<String, List<CalendarEntryData>>> data = {};
 
@@ -27,6 +28,8 @@ class CalendarWeekData {
           if (!_shouldIncludeScheduleEntry(
             scheduleEntryData: scheduleData,
             scheduleEntryStart: startDate,
+            shouldInclueCoursesAfterScheduleEntryStart:
+                shouldInclueCoursesAfterScheduleEntryStart,
           )) {
             continue;
           }
@@ -67,6 +70,7 @@ class CalendarWeekData {
   static bool _shouldIncludeScheduleEntry({
     required ScheduleResponseItem scheduleEntryData,
     required DateTime scheduleEntryStart,
+    required bool shouldInclueCoursesAfterScheduleEntryStart,
   }) {
     final recurrenceInfo = scheduleEntryData.attributes.recurrence;
     if (recurrenceInfo == null) return true;
@@ -91,7 +95,17 @@ class CalendarWeekData {
           currentOccurrence.add(Duration(days: 7 * recurrenceInfo.interval));
     }
 
-    return allOccurrences.contains(scheduleEntryStart);
+    if (shouldInclueCoursesAfterScheduleEntryStart) {
+      // adjustedStartDate is set based on firstOccurence to the first appropriate date after scheduleEntryStart
+      var adjustedStartDate = firstOccurrence;
+      while (adjustedStartDate.isBefore(scheduleEntryStart)) {
+        adjustedStartDate =
+            adjustedStartDate.add(Duration(days: 7 * recurrenceInfo.interval));
+      }
+      return allOccurrences.contains(adjustedStartDate);
+    } else {
+      return allOccurrences.contains(scheduleEntryStart);
+    }
   }
 
   static CalendarTimeframe? _toCalenderTimeframe(

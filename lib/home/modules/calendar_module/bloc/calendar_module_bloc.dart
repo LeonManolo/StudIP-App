@@ -47,6 +47,7 @@ class CalendarModuleBloc extends ModuleBloc {
       final calendarEntries = await _calendarRepository.getCalendarSchedule(
         userId: _authenticationRepository.currentUser.id,
         requestedDateTime: DateTime.now().add(Duration(days: week * 7)),
+        shouldInclueCoursesAfterRequestedDateTime: true,
       );
       final extractedEntries = _extractEntries(week, calendarEntries);
       entries.addAll(extractedEntries);

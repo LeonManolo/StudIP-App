@@ -28,6 +28,8 @@ class MessageRepository {
       );
       final messages = messageListResponse.messageResponseItems
           .map(Message.fromMessageResponseItem)
+          .where((message) => message != null)
+          .map((checkedMessage) => checkedMessage!)
           .toList();
       final Map<String, MessageUser> knownUsers = {};
       for (final message in messages) {
@@ -54,7 +56,10 @@ class MessageRepository {
       );
       final messages = messageListResponse.messageResponseItems
           .map(Message.fromMessageResponseItem)
+          .where((message) => message != null)
+          .map((checkedMessage) => checkedMessage!)
           .toList();
+
       final Map<String, MessageUser> knownUsers = {};
       for (final message in messages) {
         message
@@ -67,7 +72,7 @@ class MessageRepository {
     }
   }
 
-  Future<Message> sendMessage({
+  Future<void> sendMessage({
     required OutgoingMessage outgoingMessage,
   }) async {
     final parsedRecipients = outgoingMessage.recipients
@@ -86,9 +91,7 @@ class MessageRepository {
       }
     });
     try {
-      final MessageResponse response =
-          await _messagesClient.sendMessage(message: message);
-      return Message.fromMessageResponseItem(response.messageResponseItem);
+      await _messagesClient.sendMessage(message: message);
     } catch (error, stackTrace) {
       Error.throwWithStackTrace(error, stackTrace);
     }
