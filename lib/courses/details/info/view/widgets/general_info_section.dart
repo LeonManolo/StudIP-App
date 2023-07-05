@@ -26,10 +26,6 @@ class GeneralInfoSection extends ExpansionTile {
               title: const Text('Beschreibung'),
               subtitle: Text(generalInfo.courseDetails.description ?? 'N/A'),
             ),
-            ListTile(
-              title: const Text('Ort'),
-              subtitle: Text(generalInfo.courseDetails.location ?? 'N/A'),
-            ),
           ],
           initiallyExpanded: generalInfo.isExpanded,
           onExpansionChanged: (isExpanded) => onExpansionChanged(isExpanded),

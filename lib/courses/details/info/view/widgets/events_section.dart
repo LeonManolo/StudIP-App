@@ -8,19 +8,25 @@ class EventsSection extends ExpansionTile {
     required CourseEventExpansionModel eventExpansionModel,
     required void Function(bool) onExpansionChanged,
   }) : super(
-          title: const Text('Termine'),
-          children: [
-            for (StudIPCourseEventItem event in eventExpansionModel.events)
-              ListTile(
-                title: Text(event.getEventTimeSpan),
-                subtitle: Text(
-                  event.categories.isEmpty
-                      ? 'Fällt aus'
-                      : event.categories.join(', '),
-                ),
-              )
-          ],
-          initiallyExpanded: eventExpansionModel.isExpanded,
-          onExpansionChanged: (isExpanded) => onExpansionChanged(isExpanded),
-        );
+    title: const Text('Termine'),
+    children: [
+      for (StudIPCourseEventItem event in eventExpansionModel.events)
+        ListTile(
+          title: Text(event.getEventTimeSpan),
+          subtitle: Text(
+            event.categories.isEmpty
+                ? 'Fällt aus'
+                : ('${event.categories.join(', ')} ${_locationString(location: event.location)}'),
+          ),
+        )
+    ],
+    initiallyExpanded: eventExpansionModel.isExpanded,
+    onExpansionChanged: (isExpanded) => onExpansionChanged(isExpanded),
+  );
+
+  static String _locationString({required String? location}) {
+    if (location != null) return '- $location';
+    return '';
+  }
 }
+
