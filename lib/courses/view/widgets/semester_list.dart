@@ -25,14 +25,19 @@ class CoursesList extends StatelessWidget {
       },
       child: ListView.separated(
         itemCount: listItems.length,
-        separatorBuilder: (context, index) => const Divider(),
+        separatorBuilder: (context, index) {
+          return const Divider();
+        },
         itemBuilder: (context, index) {
           final item = listItems.elementAt(index);
 
           switch (item) {
             case CourseListSemesterItem(semester: final semester):
               return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 14),
+                padding: const EdgeInsets.only(
+                  left: AppSpacing.lg,
+                  right: AppSpacing.xs,
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

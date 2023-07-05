@@ -2,7 +2,6 @@ import 'package:app_ui/app_ui.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
 import 'package:messages_repository/messages_repository.dart';
 import 'package:studipadawan/messages/message_details/bloc/message_details_bloc.dart';
 import 'package:studipadawan/messages/message_details/bloc/message_details_event.dart';
@@ -11,6 +10,7 @@ import 'package:studipadawan/messages/message_details/view/dialogs/message_detai
 import 'package:studipadawan/messages/message_details/view/widgets/message_detail_action_button.dart';
 import 'package:studipadawan/messages/message_send/view/message_send_page.dart';
 import 'package:studipadawan/utils/utils.dart';
+import 'package:studipadawan/utils/widgets/html_view.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 class MessageDetailPage extends StatelessWidget {
@@ -80,7 +80,7 @@ class MessageDetailPage extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      HtmlWidget(message.message),
+                      HtmlView(html: message.message),
                       const SizedBox(
                         height: AppSpacing.xlg,
                       ),

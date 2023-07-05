@@ -20,9 +20,9 @@ class MessageMenuButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton<MessageMenuOption>(
+      position: PopupMenuPosition.under,
       icon: const Icon(
-        EvaIcons.menu2Outline,
-        size: 25,
+        EvaIcons.moreVerticalOutline,
       ),
       onSelected: (state) => {
         if (state == MessageMenuOption.markAll)
