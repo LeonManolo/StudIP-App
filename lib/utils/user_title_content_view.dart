@@ -1,8 +1,7 @@
 import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
+import 'package:studipadawan/utils/widgets/html_view.dart';
 import 'package:studipadawan/utils/widgets/profile_image_avatar.dart';
-import 'package:url_launcher/url_launcher_string.dart';
 
 enum UserTitleContentAction {
   edited('bearbeitet'),
@@ -44,13 +43,7 @@ class UserTitleContentView extends StatelessWidget {
               ?.copyWith(fontWeight: FontWeight.w600),
         ),
         const SizedBox(height: AppSpacing.sm),
-        HtmlWidget(
-          content,
-          onTapUrl: (url) async {
-            if (!await canLaunchUrlString(url)) return false;
-            return launchUrlString(url);
-          },
-        ),
+        HtmlView(html: content),
         ListTile(
           contentPadding: EdgeInsets.zero,
           leading: ProfileImageAvatar(

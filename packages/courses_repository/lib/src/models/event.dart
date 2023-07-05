@@ -22,8 +22,10 @@ class StudIPCourseEventItem {
       startDate: DateTime.parse(item.attributes.start).toLocal(),
       endDate: DateTime.parse(item.attributes.end).toLocal(),
       categories: item.attributes.categories,
+      location: item.attributes.location,
     );
   }
+
   final String id;
   final String title;
   final String description;

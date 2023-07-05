@@ -1,4 +1,5 @@
 import 'package:app_ui/app_ui.dart';
+import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 
 const double radius = 15;
@@ -9,6 +10,7 @@ class ModuleCard extends StatelessWidget {
     required this.child,
     required this.title,
   });
+
   final Widget child;
   final String title;
 
@@ -19,7 +21,7 @@ class ModuleCard extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Container(
-          padding: const EdgeInsets.only(left: AppSpacing.lg),
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
           decoration: BoxDecoration(
             color: Theme.of(context).primaryColor,
             borderRadius: const BorderRadius.only(
@@ -29,16 +31,21 @@ class ModuleCard extends StatelessWidget {
           ),
           child: SizedBox(
             height: 40,
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                title,
-                style: TextStyle(
-                  color: isLightMode ? Colors.white : Colors.black,
-                  fontSize: 17,
-                  fontWeight: FontWeight.bold,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  title,
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        color: Theme.of(context).colorScheme.onPrimary,
+                        fontWeight: FontWeight.w600,
+                      ),
                 ),
-              ),
+                Icon(
+                  EvaIcons.menu,
+                  color: Theme.of(context).colorScheme.onPrimary,
+                )
+              ],
             ),
           ),
         ),

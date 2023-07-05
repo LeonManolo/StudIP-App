@@ -24,7 +24,7 @@ class CourseDetailsPage extends StatelessWidget {
         ),
         actions: [
           IconButton(
-            icon: const Icon(EvaIcons.bellOutline),
+            icon: const Icon(EvaIcons.inboxOutline),
             onPressed: () {
               Navigator.push(
                 context,
@@ -50,6 +50,13 @@ class CourseDetailsPage extends StatelessWidget {
           ),
           CoursePageViewData(
             tab: const CoursePageViewTabData(
+              icon: EvaIcons.infoOutline,
+              title: 'Info',
+            ),
+            content: CourseInfoPage(course: course),
+          ),
+          CoursePageViewData(
+            tab: const CoursePageViewTabData(
               icon: EvaIcons.personOutline,
               title: 'Teilnehmer',
             ),
@@ -61,13 +68,6 @@ class CourseDetailsPage extends StatelessWidget {
               title: 'Wiki',
             ),
             content: CourseWikiPage(course: course),
-          ),
-          CoursePageViewData(
-            tab: const CoursePageViewTabData(
-              icon: EvaIcons.infoOutline,
-              title: 'Info',
-            ),
-            content: CourseInfoPage(course: course),
           ),
         ],
       ),
