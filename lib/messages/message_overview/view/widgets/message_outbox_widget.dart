@@ -14,7 +14,6 @@ import 'package:studipadawan/utils/loading_indicator.dart';
 
 import 'package:studipadawan/utils/pagination/pagination.dart';
 import 'package:studipadawan/utils/refreshable_content.dart';
-import 'package:studipadawan/utils/snackbar.dart';
 import 'package:studipadawan/utils/utils.dart';
 
 final _outboxWidgetKey = GlobalKey<ScaffoldState>();

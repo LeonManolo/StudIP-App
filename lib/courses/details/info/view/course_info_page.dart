@@ -33,7 +33,7 @@ class CourseInfoPage extends StatelessWidget {
                   case InfoType.general:
                     return GeneralInfoSection(
                       generalInfo: state.generalInfoExpansionModel,
-                      onExpansionChanged: (isExpanded) {
+                      onExpansionChanged: ({required isExpanded}) {
                         context.read<CourseInfoBloc>().add(
                               ToggleSectionEvent(
                                 type: InfoType.general,
@@ -45,7 +45,7 @@ class CourseInfoPage extends StatelessWidget {
                   case InfoType.events:
                     return EventsSection(
                       eventExpansionModel: state.eventExpansionModel,
-                      onExpansionChanged: (isExpanded) {
+                      onExpansionChanged: ({required isExpanded}) {
                         context.read<CourseInfoBloc>().add(
                               ToggleSectionEvent(
                                 type: InfoType.events,

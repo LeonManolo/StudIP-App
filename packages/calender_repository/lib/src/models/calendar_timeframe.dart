@@ -4,7 +4,7 @@ class CalendarTimeframe {
   CalendarTimeframe({required HourMinute start, required HourMinute end})
       : _start = start,
         _end = end,
-        assert(start.minutesAwayFrom(end) > 0);
+        assert(start.minutesAwayFrom(end) > 0, 'start should be before end');
   final HourMinute _start;
   final HourMinute _end;
 

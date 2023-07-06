@@ -1,9 +1,9 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:studipadawan/messages/message_overview/message_inbox_bloc%20/message_inbox_bloc.dart';
-import 'package:studipadawan/messages/message_overview/message_inbox_bloc%20/message_inbox_event.dart';
-import 'package:studipadawan/messages/message_overview/message_inbox_bloc%20/message_inbox_state.dart';
+import 'package:studipadawan/messages/message_overview/message_inbox_bloc/message_inbox_bloc.dart';
+import 'package:studipadawan/messages/message_overview/message_inbox_bloc/message_inbox_event.dart';
+import 'package:studipadawan/messages/message_overview/message_inbox_bloc/message_inbox_state.dart';
 import 'package:studipadawan/utils/utils.dart';
 import 'package:studipadawan/utils/widgets/segmented_selection/segmented_selection.dart';
 
@@ -40,7 +40,6 @@ class MessageFilterButton extends StatelessWidget {
 
 class _MessageFilterModalContent extends StatefulWidget {
   const _MessageFilterModalContent({
-    super.key,
     required this.onMessageFilterChanged,
     required this.currentMessageFilter,
   });
