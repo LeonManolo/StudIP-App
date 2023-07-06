@@ -13,6 +13,7 @@ enum ScheduleWidgetTimelineEntryError: String, Error {
     case `default` = "Fehler beim Laden des Widgets!\nBitte melde Dich erneut in der App an."
     case unauthorizedResponse = "Ungültige Zugangsdaten!\nBitte melde Dich erneut in der App an."
     case decodingError = "Ungültige API-Daten!\nDie Daten liegen in einem ungültigen Format vor."
+    case keychainReadingError = "Keine Zugangsdaten!\nMelde Dich erneut in der App an."
 }
 
 struct ScheduleWidgetTimelineEntry: TimelineEntry {
@@ -65,6 +66,8 @@ struct ScheduleEntryDataProvider: TimelineProvider {
                     entry = ScheduleWidgetTimelineEntry(date: Date(), result: .failure(.unauthorizedResponse))
                 } else if let _ = error as? DecodingError {
                     entry = ScheduleWidgetTimelineEntry(date: Date(), result: .failure(.decodingError))
+                } else if let error = error as? OAuthClientError, case .keychainContentNotReadable = error {
+                    entry = ScheduleWidgetTimelineEntry(date: Date(), result: .failure(.keychainReadingError))
                 } else {
                     entry = ScheduleWidgetTimelineEntry(date: Date(), result: .failure(.default))
                 }

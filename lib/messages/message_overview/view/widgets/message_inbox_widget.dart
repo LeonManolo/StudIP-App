@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:messages_repository/messages_repository.dart';
 import 'package:studipadawan/messages/message_details/view/message_detail_page.dart';
-import 'package:studipadawan/messages/message_overview/message_inbox_bloc%20/message_inbox_bloc.dart';
-import 'package:studipadawan/messages/message_overview/message_inbox_bloc%20/message_inbox_event.dart';
-import 'package:studipadawan/messages/message_overview/message_inbox_bloc%20/message_inbox_state.dart';
+import 'package:studipadawan/messages/message_overview/message_inbox_bloc/message_inbox_bloc.dart';
+import 'package:studipadawan/messages/message_overview/message_inbox_bloc/message_inbox_event.dart';
+import 'package:studipadawan/messages/message_overview/message_inbox_bloc/message_inbox_state.dart';
 import 'package:studipadawan/messages/message_overview/message_tabbar_bloc%20/message_tabbar_bloc.dart';
 import 'package:studipadawan/messages/message_overview/message_tabbar_bloc%20/message_tabbar_event.dart';
 import 'package:studipadawan/messages/message_overview/message_tabbar_bloc%20/message_tabbar_state.dart';
@@ -15,7 +15,6 @@ import 'package:studipadawan/utils/loading_indicator.dart';
 
 import 'package:studipadawan/utils/pagination/pagination.dart';
 import 'package:studipadawan/utils/refreshable_content.dart';
-import 'package:studipadawan/utils/snackbar.dart';
 import 'package:studipadawan/utils/utils.dart';
 
 final _inboxWidgetKey = GlobalKey<ScaffoldState>();

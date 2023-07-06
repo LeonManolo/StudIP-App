@@ -35,6 +35,7 @@ class _SegmentedSelectionState<T> extends State<SegmentedSelection<T>> {
           Expanded(
             child: Row(
               children: [
+                if (i > 0) const SizedBox(width: AppSpacing.sm),
                 Expanded(
                   child: SegmentedOption(
                     iconData: widget.selections[i].iconData,
@@ -50,7 +51,7 @@ class _SegmentedSelectionState<T> extends State<SegmentedSelection<T>> {
                   ),
                 ),
                 if (i < widget.selections.length - 1)
-                  const SizedBox(width: AppSpacing.lg),
+                  const SizedBox(width: AppSpacing.sm),
               ],
             ),
           ),

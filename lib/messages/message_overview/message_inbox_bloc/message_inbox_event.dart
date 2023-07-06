@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:messages_repository/messages_repository.dart';
 
-import 'package:studipadawan/messages/message_overview/message_inbox_bloc%20/message_inbox_state.dart';
+import 'package:studipadawan/messages/message_overview/message_inbox_bloc/message_inbox_state.dart';
 
 abstract class InboxMessageEvent extends Equatable {
   const InboxMessageEvent();

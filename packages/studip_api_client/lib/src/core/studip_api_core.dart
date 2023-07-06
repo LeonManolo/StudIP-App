@@ -18,8 +18,11 @@ import 'package:studip_api_client/src/exceptions.dart';
 
 class StudIpAPICore
     implements StudIpAuthenticationCore, StudIpHttpCore, StudIpFilesCore {
-  StudIpAPICore({String? baseUrl, Dio? dio, OAuth2Helper? oauth2Helper})
-      : _baseUrl = baseUrl ?? _defaultBaseUrl,
+  StudIpAPICore._instance({
+    String? baseUrl,
+    Dio? dio,
+    OAuth2Helper? oauth2Helper,
+  })  : _baseUrl = baseUrl ?? _defaultBaseUrl,
         _dio = dio ?? Dio(),
         _oauth2Helper = oauth2Helper ??
             OAuth2Helper(
@@ -28,7 +31,7 @@ class StudIpAPICore
               scopes: ['api'],
               tokenBaseStorage: CustomTokenStorage(),
             );
-  static final shared = StudIpAPICore();
+  static final shared = StudIpAPICore._instance();
 
   final String _baseUrl;
   final OAuth2Helper _oauth2Helper;

@@ -6,7 +6,7 @@ class GeneralInfoSection extends ExpansionTile {
   GeneralInfoSection({
     super.key,
     required GeneralInfoExpansionModel generalInfo,
-    required void Function(bool) onExpansionChanged,
+    required void Function({required bool isExpanded}) onExpansionChanged,
   }) : super(
           title: const Text('Allgemein'),
           children: [
@@ -28,6 +28,7 @@ class GeneralInfoSection extends ExpansionTile {
             ),
           ],
           initiallyExpanded: generalInfo.isExpanded,
-          onExpansionChanged: (isExpanded) => onExpansionChanged(isExpanded),
+          onExpansionChanged: (isExpanded) =>
+              onExpansionChanged(isExpanded: isExpanded),
         );
 }

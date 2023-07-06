@@ -51,7 +51,7 @@ class LoginPage extends StatelessWidget {
                           bottom: AppSpacing.xxlg,
                         ),
                         child: Text(
-                          'Melde dich jetzt mit deinem\nStudIP Account an',
+                          'Melde dich jetzt mit deinem\nStud.IP Account an',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             color: Theme.of(context).hintColor,
@@ -63,16 +63,6 @@ class LoginPage extends StatelessWidget {
                             context.read<LoginCubit>().loginWithStudIp(),
                       ),
                       const Spacer(),
-                      const SafeArea(
-                        child: Padding(
-                          padding: EdgeInsets.all(AppSpacing.lg),
-                          child: Text(
-                            'Vitae sapien pellentesque habitant morbi tristique senectus et netus et malesuada fames',
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                      ),
-                      //_StudIpLoginButton(),
                     ],
                   ),
                 ),

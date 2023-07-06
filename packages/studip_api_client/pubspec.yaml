@@ -7,13 +7,9 @@ environment:
   sdk: ">=3.0.0 <4.0.0"
 
 dependencies:
+  dio: ^5.1.1
   equatable: ^2.0.5
-  logger: ^1.3.0
-
-  oauth2_client:
-    git:
-      url: https://github.com/finebel/oauth2_client
-      ref: 7c2a704eff312338f41fdc500f00a56e04e21afb
+  flutter_secure_storage: ^8.0.0
 
   http_forked:
     git:
@@ -21,16 +17,17 @@ dependencies:
       path: pkgs/http
       ref: 09a3488b58d636760c8c98ecf686417ca033aa8a
 
+  http_parser: ^4.0.2
   json_annotation: ^4.8.1
-
-  flutter_secure_storage: ^8.0.0
-
   jwt_decode: ^0.3.1
+  logger: ^1.3.0
+
+  oauth2_client:
+    git:
+      url: https://github.com/finebel/oauth2_client
+      ref: 7c2a704eff312338f41fdc500f00a56e04e21afb
 
   path_provider: ^2.0.14
-  dio: ^5.1.1
-
-  http_parser: ^4.0.2
 
 dev_dependencies:
   build_runner: ^2.4.5

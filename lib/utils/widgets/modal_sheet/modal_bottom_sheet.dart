@@ -24,7 +24,6 @@ Future<void> showCustomModalBottomSheet({
 
 class _ModalBottomSheet extends StatelessWidget {
   const _ModalBottomSheet({
-    super.key,
     required this.title,
     required this.child,
   });

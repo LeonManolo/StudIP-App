@@ -5,7 +5,7 @@ import 'package:logger/logger.dart';
 import 'package:messages_repository/messages_repository.dart';
 import 'package:studipadawan/messages/message_details/bloc/message_details_event.dart';
 import 'package:studipadawan/messages/message_details/bloc/message_details_state.dart';
-import 'package:studipadawan/messages/message_overview/message_inbox_bloc%20/message_inbox_bloc.dart';
+import 'package:studipadawan/messages/message_overview/message_inbox_bloc/message_inbox_bloc.dart';
 
 class MessageDetailsBloc
     extends Bloc<MessageDetailsEvent, MessageDetailsState> {
