@@ -14,7 +14,7 @@ enum MockedOAuthClientException: Error {
 }
 
 class MockedOAuthClient: OAuthClient {
-    func get<T>(rawUrlString: String, queryItems: [URLQueryItem]) async throws -> T where T : Decodable, T : Encodable {
+    func get<T>(rawUrlString: String, queryItems: [URLQueryItem], isTokenRefreshEnabled: Bool) async throws -> T where T : Decodable, T : Encodable {
         
         if let userResponse = userResponse() as? T {
             return userResponse

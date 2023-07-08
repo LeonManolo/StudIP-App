@@ -11,10 +11,11 @@ import KeychainAccess
 public enum OAuthClientError: Error {
     case keychainContentNotReadable(key: String)
     case invalidUrlString(url: String)
+    case expiredToken
 }
 
 public protocol OAuthClient {
-    func get<T: Codable>(rawUrlString: String, queryItems: [URLQueryItem]) async throws -> T
+    func get<T: Codable>(rawUrlString: String, queryItems: [URLQueryItem], isTokenRefreshEnabled: Bool) async throws -> T
 }
 
 public class DefaultOAuthClient: OAuthClient {
@@ -44,18 +45,21 @@ public class DefaultOAuthClient: OAuthClient {
     ///   - rawUrlString: Full URL-String
     ///   - queryItems: Query-Items to use
     /// - Returns: Decoded Result based on `T`
-    public func get<T: Codable>(rawUrlString: String, queryItems: [URLQueryItem] = []) async throws -> T {
+    public func get<T: Codable>(rawUrlString: String, queryItems: [URLQueryItem] = [], isTokenRefreshEnabled: Bool = true) async throws -> T {
         guard let rawKeychainContentData = keychain[string: tokenUrlString]?.data(using: .utf8) else { throw OAuthClientError.keychainContentNotReadable(key: tokenUrlString) }
         
         guard var keychainContent = try? jsonDecoder(dateDecodingStrategy: .millisecondsSince1970).decode(KeychainContent.self, from: rawKeychainContentData) else {
             throw OAuthClientError.keychainContentNotReadable(key: tokenUrlString)
         }
 
-        if keychainContent.api.expirationDate < Date() {
+        if keychainContent.api.expirationDate < Date() && isTokenRefreshEnabled {
             try await refreshToken()
             // if token has been refreshed, keychainContent must be updated
             guard let rawKeychainContentData = keychain[string: tokenUrlString]?.data(using: .utf8) else { throw OAuthClientError.keychainContentNotReadable(key: tokenUrlString) }
             keychainContent = try jsonDecoder(dateDecodingStrategy: .millisecondsSince1970).decode(KeychainContent.self, from: rawKeychainContentData)
+        } else if keychainContent.api.expirationDate < Date() {
+            // token is expired but refresh is disabled
+            throw OAuthClientError.expiredToken
         }
         
         guard var url = URL(string: rawUrlString) else { throw OAuthClientError.invalidUrlString(url: rawUrlString) }

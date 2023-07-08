@@ -10,7 +10,7 @@ import WidgetKit
 import WidgetDataProvider
 
 enum ScheduleWidgetTimelineEntryError: String, Error {
-    case `default` = "Fehler beim Laden des Widgets!\nBitte melde Dich erneut in der App an."
+    case `default` = "Fehler beim Laden des Widgets!\nÖffne die App zum Neuladen."
     case unauthorizedResponse = "Ungültige Zugangsdaten!\nBitte melde Dich erneut in der App an."
     case decodingError = "Ungültige API-Daten!\nDie Daten liegen in einem ungültigen Format vor."
     case keychainReadingError = "Keine Zugangsdaten!\nMelde Dich erneut in der App an."
@@ -27,7 +27,7 @@ struct ScheduleWidgetTimelineEntry: TimelineEntry {
             .init(
                 startDate: DateFormatter.hourMinuteFormatter.date(from: "14:30")!,
                 endDate: DateFormatter.hourMinuteFormatter.date(from: "15:45")!,
-                title: "Softwarearchitektur",
+                title: "Mustervorlesung",
                 locations: nil
             )
         ])
@@ -47,17 +47,25 @@ struct ScheduleEntryDataProvider: TimelineProvider {
     }
 
     func getSnapshot(in context: Context, completion: @escaping (ScheduleWidgetTimelineEntry) -> ()) {
-        let currentItems = dataProvider.fetchLocalScheduleItems()
-        let entry = ScheduleWidgetTimelineEntry(date: Date(), result: .success(currentItems))
-        
-        completion(entry)
+        if context.isPreview {
+            // preview when widget is added to home screen
+            completion(ScheduleWidgetTimelineEntry.placeholderFilled)
+        } else {
+            let currentItems = dataProvider.fetchLocalScheduleItems()
+            let entry = ScheduleWidgetTimelineEntry(date: Date(), result: .success(currentItems))
+            
+            completion(entry)
+        }
     }
 
     func getTimeline(in context: Context, completion: @escaping (Timeline<ScheduleWidgetTimelineEntry>) -> ()) {
+        let isTokenRefreshEnabled = dataProvider.isTokenRefreshEnabled()
+        dataProvider.removeIsTokenRefreshEnabledToggle()
+        
         Task {
             let entry: ScheduleWidgetTimelineEntry
             do {
-                let currentItems = (try await dataProvider.loadRemoteScheduleItems(for: Date()))
+                let currentItems = (try await dataProvider.loadRemoteScheduleItems(for: Date(), isTokenRefreshEnabled: isTokenRefreshEnabled))
                 entry = ScheduleWidgetTimelineEntry(date: Date(), result: .success(currentItems))
 
             } catch {

@@ -19,13 +19,13 @@ public class DataProvider {
     /// This method can be used to load all `ScheduleItem`s for a given `date` from Stud.IP. The result is filtered based on interval and excluded dates.
     /// Only schedule entries which have a later `startDate` compared to the injected `date` are returned.
     /// - Parameter date: The current Date. Injectable for testing purposes
+    /// - Parameter isTokenRefreshEnabled: Whether a token refresh should be executed if required
     /// - Returns: Loaded `ScheduleItem`s sorted ascending based on `startDate`
-    public func loadRemoteScheduleItems(for date: Date) async throws -> [ScheduleItem] {
-        let currentUser: UserResponse = try await oauthClient.get(rawUrlString: "http://studip.miezhaus.net/jsonapi.php/v1/users/me", queryItems: [])
+    public func loadRemoteScheduleItems(for date: Date, isTokenRefreshEnabled: Bool = true) async throws -> [ScheduleItem] {
+        let currentUser: UserResponse = try await oauthClient.get(rawUrlString: "http://studip.miezhaus.net/jsonapi.php/v1/users/me", queryItems: [], isTokenRefreshEnabled: isTokenRefreshEnabled)
         
         let eventRawUrlString = "http://studip.miezhaus.net/jsonapi.php/v1/users/\(currentUser.data.id)/schedule"
-        let scheduleResponse: ScheduleResponse = try await oauthClient.get(rawUrlString: eventRawUrlString, queryItems: [])
-        
+        let scheduleResponse: ScheduleResponse = try await oauthClient.get(rawUrlString: eventRawUrlString, queryItems: [], isTokenRefreshEnabled: isTokenRefreshEnabled)
         
         guard let currentDay = date.weekday else { return [] }
         
@@ -57,5 +57,13 @@ public class DataProvider {
     /// Fetches the current cached `ScheduleItem`s
     public func fetchLocalScheduleItems() -> [ScheduleItem] {
         cacheProvider.scheduleItems()
+    }
+    
+    public func isTokenRefreshEnabled() -> Bool {
+        cacheProvider.isTokenRefreshEnabled()
+    }
+    
+    public func removeIsTokenRefreshEnabledToggle() {
+        cacheProvider.removeIsTokenRefreshEnabledToggle()
     }
 }

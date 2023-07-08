@@ -11,4 +11,6 @@ import Foundation
 struct MockedCacheProvider: CacheProvider {
     func save(scheduleItems: [ScheduleItem]) {}
     func scheduleItems() -> [ScheduleItem] { [] }
+    func isTokenRefreshEnabled() -> Bool { true }
+    func removeIsTokenRefreshEnabledToggle() {}
 }

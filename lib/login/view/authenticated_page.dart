@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:calender_repository/calender_repository.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
@@ -11,8 +12,8 @@ import 'package:studipadawan/calendar/bloc/calendar_state.dart';
 import 'package:studipadawan/calendar/view/calendar_page.dart';
 import 'package:studipadawan/courses/view/courses_page.dart';
 import 'package:studipadawan/home/view/home_page.dart';
-
 import 'package:studipadawan/messages/message_overview/view/messages_page.dart';
+import 'package:studipadawan/utils/home_widget_extension.dart';
 
 class AuthenticatedPage extends StatefulWidget {
   const AuthenticatedPage({super.key});
@@ -24,12 +25,15 @@ class AuthenticatedPage extends StatefulWidget {
   State<AuthenticatedPage> createState() => _AuthenticatedPageState();
 }
 
-class _AuthenticatedPageState extends State<AuthenticatedPage> {
+// Use of WidgetsBindingObserver based on https://stackoverflow.com/a/61481717
+class _AuthenticatedPageState extends State<AuthenticatedPage>
+    with WidgetsBindingObserver {
   int _selectedTab = 0;
   late CalendarBloc _calendarBloc;
 
   @override
   void initState() {
+    super.initState();
     _calendarBloc = CalendarBloc(
       calendarRepository: context.read<CalenderRepository>(),
       authenticationRepository: context.read<AuthenticationRepository>(),
@@ -39,7 +43,24 @@ class _AuthenticatedPageState extends State<AuthenticatedPage> {
           layout: CalendarBodyType.list,
         ),
       );
-    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      // reload Widget when user (re)opens app
+      unawaited(_reloadWidget());
+    }
+  }
+
+  Future<void> _reloadWidget() async {
+    // to avoid two token refreshes at the same time
+    await HomeWidget.saveWidgetData(
+      HomeWidgetName.iOSIsTokenRefreshEnabled,
+      false,
+    );
+    await HomeWidget.updateWidget(iOSName: HomeWidgetName.iOSCalendarWidget);
   }
 
   @override
@@ -52,6 +73,7 @@ class _AuthenticatedPageState extends State<AuthenticatedPage> {
   @override
   void dispose() {
     _calendarBloc.close();
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
