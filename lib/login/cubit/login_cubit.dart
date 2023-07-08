@@ -4,6 +4,7 @@ import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:home_widget/home_widget.dart';
 import 'package:studipadawan/login/cubit/login_state.dart';
+import 'package:studipadawan/utils/home_widget_extension.dart';
 
 class LoginCubit extends Cubit<LoginState> {
   factory LoginCubit(AuthenticationRepository authenticationRepository) {
@@ -17,7 +18,9 @@ class LoginCubit extends Cubit<LoginState> {
     emit(LoginState.inProgress);
     try {
       await _authenticationRepository.loginWithStudIp();
-      unawaited(HomeWidget.updateWidget(iOSName: 'StudipadawanWidgets'));
+      unawaited(
+        HomeWidget.updateWidget(iOSName: HomeWidgetName.iOSCalendarWidget),
+      );
 
       emit(LoginState.success);
     } catch (_) {

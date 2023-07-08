@@ -4,6 +4,7 @@ import 'package:authentication_repository/authentication_repository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:home_widget/home_widget.dart';
+import 'package:studipadawan/utils/home_widget_extension.dart';
 
 part 'app_event.dart';
 part 'app_state.dart';
@@ -42,9 +43,7 @@ class AppBloc extends Bloc<AppEvent, AppState> {
 
     // Reload of data should fail (meaning that no items are displayed), because tokens are already deleted at this point
     unawaited(
-      HomeWidget.updateWidget(
-        iOSName: 'StudipadawanWidgets',
-      ),
+      HomeWidget.updateWidget(iOSName: HomeWidgetName.iOSCalendarWidget),
     );
   }
 

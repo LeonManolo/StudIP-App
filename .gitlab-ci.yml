@@ -4,14 +4,14 @@ variables:
   TARGET_BRANCH: "main"
 
 stages:
-  - UnitTests
+  - Tests
   - Build
   - Release
 
-unit-tests:
-  stage: UnitTests
+tests:
+  stage: Tests
   script:
-    - echo "Running UnitTests"
+    - echo "Running Tests"
     - |
       flutter pub get
       cd packages/studip_api_client
